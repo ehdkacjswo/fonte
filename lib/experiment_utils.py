@@ -340,3 +340,110 @@ def weighted_bisection(commits: list, scores: list, BIC, verbose=False,
         return num_iterations, pivots
     else:
         return num_iterations
+
+# Offers more info for BIC
+def test_func(fault_dir, tool, formula, decay, voting_func, BIC,
+    use_method_level_score=False, excluded=[], adjust_depth=True,
+    in_class_only=False):
+    commit_df = load_commit_history(fault_dir, tool)
+
+    commit_df["excluded"] = commit_df["commit_hash"].isin(excluded)
+    commit_df["new_depth"] = commit_df["depth"]
+
+    if len(excluded) > 0 and adjust_depth:
+        # update commit depth
+        commit_df.loc[commit_df.excluded, "new_depth"] = None
+        commit_df["method_identifier"] = commit_df.class_file + ":" + \
+            commit_df.method_name + commit_df.method_signature + \
+            ":L" + commit_df.begin_line.astype(str) + "," + commit_df.end_line.astype(str)
+        for _, row in commit_df[commit_df.excluded].iterrows():
+            # print(row)
+            affected = (commit_df.method_identifier == row.method_identifier)\
+                & (commit_df.depth > row.depth)
+            commit_df.loc[affected, "new_depth"] = commit_df.loc[affected, "new_depth"] - 1
+
+    sbfl_df = get_sbfl_scores_from_coverage(
+        os.path.join(fault_dir, "coverage.pkl"),
+        formula=formula,
+        covered_by_failure_only=True,
+        in_class_only=in_class_only)
+
+    if use_method_level_score:
+        identifier = ["class_file", "method_name", "method_signature","begin_line", "end_line"]
+        l_sbfl_df = sbfl_df.reset_index()
+        l_sbfl_df["dense_rank"] = (-l_sbfl_df["score"]).rank(method="dense")
+        l_sbfl_df["max_rank"] = (-l_sbfl_df["score"]).rank(method="max")
+
+        l_sbfl_df["score"] = l_sbfl_df.apply(voting_func, axis=1)
+
+        method_sbfl_rows = []
+        for _, method in commit_df[identifier].drop_duplicates().iterrows():
+            method_score = l_sbfl_df[
+                (l_sbfl_df.class_file == method.class_file)
+                # & (l_sbfl_df.method_name == method.method_name)
+                # & (l_sbfl_df.method_signature == method.method_signature)   
+                & (l_sbfl_df.line >= method.begin_line)
+                & (l_sbfl_df.line <= method.end_line)
+            ].score.sum()
+            method_sbfl_rows.append([
+                method.class_file, method.method_name, method.method_signature,
+                method.begin_line, method.end_line, method_score
+            ])
+        sbfl_df = pd.DataFrame(method_sbfl_rows,columns=identifier+["score"])
+        sbfl_df = sbfl_df.set_index(identifier)
+
+    sbfl_df["dense_rank"] = (-sbfl_df["score"]).rank(method="dense")
+    sbfl_df["max_rank"] = (-sbfl_df["score"]).rank(method="max")
+    vote_rows = []
+    vote_rows_law = [] # Vote data with commit, vote, depth
+
+    for _, row in sbfl_df.reset_index().iterrows():
+        vote = voting_func(row)
+        if use_method_level_score:
+            com_df = commit_df[
+                (commit_df.class_file == row.class_file) \
+                & (commit_df.method_name == row.method_name) \
+                & (commit_df.method_signature == row.method_signature)
+            ]
+        else:
+            com_df = commit_df[
+                (commit_df.class_file == row.class_file) \
+                & (commit_df.begin_line <= row.line) \
+                & (commit_df.end_line >= row.line)
+            ]
+        for commit, depth in zip(com_df.commit_hash, com_df.new_depth):
+            if commit in excluded:
+                decayed_vote = 0
+            else:
+                decayed_vote = vote * ((1-decay) ** depth)
+            vote_rows.append([commit, decayed_vote])
+            vote_rows_law.append([commit, decayed_vote, vote, depth])
+    vote_df = pd.DataFrame(data=vote_rows, columns=["commit", "vote"])
+    agg_vote_df = vote_df.groupby("commit").sum("vote")
+    agg_vote_df.sort_values(by="vote", ascending=False, inplace=True)
+
+    # Vote data with commit, vote, depth
+    vote_df_law = pd.DataFrame(data=vote_rows_law, columns=["commit", "vote", "score", "depth"])
+
+    # Commit with highest vote
+    top_vote = agg_vote_df.iloc[0]
+    #print('Highest vote commit : {}, vote : {}'.format(top_vote.name, top_vote['vote']))
+
+    if top_vote.name == BIC:
+        return False
+
+    top_votes = vote_df_law.loc[vote_df_law.commit == top_vote.name].copy()
+    #top_votes.sort_values(by="vote", ascending=False, inplace=True)
+    #print('Top scores : {}'.format(top_votes.iloc[:5]))
+    top_score_sum = top_votes['score'].sum()
+    top_vote_sum = top_votes['vote'].sum()
+
+    # BIC
+    #print('BIC : {}, vote : {}'.format(BIC, agg_vote_df.loc[BIC].vote))
+
+    BIC_votes = vote_df_law.loc[vote_df_law.commit == BIC].copy()
+    #BIC_votes.sort_values(by="vote", ascending=False, inplace=True)
+    BIC_score_sum = BIC_votes['score'].sum()
+    BIC_vote_sum = BIC_votes['vote'].sum()
+
+    return top_score_sum <= BIC_score_sum and top_vote_sum >= BIC_vote_sum
