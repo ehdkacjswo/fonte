@@ -139,53 +139,6 @@ def get_style_change_commits(fault_dir, tool, with_Rewrite=True):
     agg_df = val_df.groupby("commit").all()[["unchanged"]]
     return agg_df.index[agg_df["unchanged"]].tolist()
 
-# Get Bug2Commit result
-def bug2commit(data_dir, score='score', mode='base'):
-    df = pd.read_csv(os.path.join(data_dir, 'ranking_Bug2Commit.csv'), names=['commit_hash', 'commit_file', 'rank', 'score'])
-    rank_dict = dict()
-
-    # No normalization
-    if mode == 'base':
-        for ind in df.index:
-            rank_dict[df['commit_hash'][ind]] = df[score][ind]
-    
-    # Softmax
-    elif mode == 'softmax':
-        score_sum = 0
-
-        for ind in df.index:
-            norm_score = math.exp(df[score][ind])
-            score_sum = score_sum + norm_score
-            rank_dict[df['commit_hash'][ind]] = norm_score
-    
-        if score_sum != 0:
-            for commit_hash, commit_score in rank_dict.items():
-                rank_dict[commit_hash] = commit_score / score_sum
-    
-    else:
-        max_score = df[score].max()
-        for ind in df.index:
-            rank_dict[df['commit_hash'][ind]] = math.exp(df[score][ind] - max_score)
-
-    return rank_dict
-
-# Get FBL-BERT results
-def fbl_bert(data_dir, score='score', mode='base'):
-    # load FBL-BERT ranking
-    fbl_bert_file = 'ranking_INDEX_FBLBERT_RN_bertoverflow_QARC_q256_d230_dim128_cosine_q256_d230_dim128_commits_token.tsv'
-    df = pd.read_csv(os.path.join(data_dir, fbl_bert_file), sep="\t", header=None)[[2, 4, 5]]
-    df.columns = ['commit', 'rank', 'score']
-    df['commit'] = df['commit'].apply(lambda x: x[:7])
-
-    rank_dict = dict()
-
-    max_score = df[score].max()
-    for ind in df.index:
-        #rank_dict[df['commit'][ind]] = df[score][ind]
-        rank_dict[df['commit'][ind]] = math.exp(df[score][ind] - max_score)
-    
-    return rank_dict
-
 # Extra score
 def extra_score(data_dir, score=None, norm_mode='base'):
     score_dict = dict()
@@ -231,7 +184,6 @@ def extra_score(data_dir, score=None, norm_mode='base'):
             score_dict[df['commit'][ind]] = math.exp(df['score'][ind] - max_score)
     
     return score_dict
-        
 
 # HSFL parameter means the score will be regularized similarly as HSFL
 def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
@@ -287,7 +239,7 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
     sbfl_df["dense_rank"] = (-sbfl_df["score"]).rank(method="dense")
     sbfl_df["max_rank"] = (-sbfl_df["score"]).rank(method="max")
     
-    extra_score_dict = extra_score(fault_dir.replace('core', 'baseline'), score='bug2commit')
+    extra_score_dict = extra_score(fault_dir.replace('core', 'baseline'), score=score)
     vote_dict = dict()
     vote_rows = []
     total_vote = 0
@@ -309,19 +261,31 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
             ]
         
         induce_sqrt = math.sqrt(com_df.shape[0])
+        induce_sqrt = 0
+        list_commits = []
+
         for commit, depth in zip(com_df.commit_hash, com_df.new_depth):
             if commit in excluded:
                 decayed_vote = 0
-            else:
+            else:       
                 if HSFL: # Apply regularization
                     decayed_vote = vote * ((1-decay) ** depth) / induce_sqrt
                 else:
                     decayed_vote = vote * ((1-decay) ** depth)
                 vote_dict[commit] = vote_dict.get(commit, 0) + decayed_vote
+                
+
+                """decayed_vote = vote * ((1-decay) ** depth)
+                list_commits.append(commit)
+        
+        for commit in list_commits:
+            induce_sqrt = induce_sqrt + """
 
     # Apply extra score
     for commit, vote in vote_dict.items():
         vote_rows.append([commit, vote * extra_score_dict.get(commit, min(extra_score_dict.values(), default=1))])
+        if commit not in extra_score_dict.keys():
+            print(fault_dir, commit)
 
     vote_df = pd.DataFrame(data=vote_rows, columns=["commit", "vote"])
     agg_vote_df = vote_df.groupby("commit").sum("vote")
@@ -463,7 +427,16 @@ voting_functions = {
 }
 
 # Run fonte for every projects
-def fonte(args, HSFL=True):
+# [C_BIC], [scores], [BIC], [BIC_rank]
+def fonte(args, HSFL=True, score=None, ignore=[0]):
+
+    # Return values
+    C_BIC_list = []
+    scores_list = []
+    BIC_list = []
+    BIC_rank_list = []
+
+    # Load BIC data
     GT = load_BIC_GT("./data/Defects4J/BIC_dataset")
 
     # Iterate through every projects
@@ -474,6 +447,7 @@ def fonte(args, HSFL=True):
         [pid, vid] = coredir[20:-1].split("-")
         fault = (pid, vid)
         BIC = GT.set_index(["pid", "vid"]).loc[fault, "commit"]
+        BIC_list.append(BIC)
 
         if args.skip_stage_2:
             style_change_commits = []
@@ -484,7 +458,7 @@ def fonte(args, HSFL=True):
         vote_df = vote_for_commits(coredir, args.tool, args.formula,
             args.lamb, voting_functions[(args.alpha, args.tau)],
             use_method_level_score=False,
-            excluded=style_change_commits, adjust_depth=True, HSFL=HSFL, BIC=BIC)
+            excluded=style_change_commits, adjust_depth=True, HSFL=HSFL, BIC=BIC, score=score)
     
         # Get the candidate list of commits
         all_commits = get_all_commits(coredir)
@@ -492,13 +466,16 @@ def fonte(args, HSFL=True):
             c for c in all_commits
             if c in vote_df.index and c not in style_change_commits
         ]
+        C_BIC_list.append(C_BIC)
 
+        # Get the rank of BIC
+        vote_df["rank"] = (-vote_df["vote"]).rank(method=args.tau)
+        BIC_rank_list.append(int(vote_df.loc[BIC, "rank"]))
+        
+        # Get number of iterations
         scores = [float(vote_df.loc[c, "vote"]) for c in C_BIC]
-        BIC_index = C_BIC.index(BIC)
-
-        standard_iter = standard_bisection(C_BIC, BIC)
-        weight_iter = weighted_bisection(C_BIC, scores, BIC)
-
-        print(coredir, weight_iter)
+        scores_list.append(scores)
+    
+    return C_BIC_list, scores_list, BIC_list, BIC_rank_list
         
     
