@@ -93,7 +93,26 @@ if __name__ == "__main__":
     assert args.tau in ["max", "dense"]
     assert 0 <= args.lamb < 1
 
-    C_BIC_list_score, scores_list_score, BIC_list_score, BIC_rank_list_score = fonte(args, HSFL=False, score='bug2commit')
+    res = aaa(args)
+
+    sbfl_res = res[0]
+    max_res = res[1]
+    sum_res = res[2]
+
+    for i in range(4):
+        print(i)
+        sbfl = [x[i] for x in sbfl_res]
+        max_ = [x[i] for x in max_res]
+        sum_ = [x[i] for x in sum_res]
+
+        analyze_ranks(sbfl)
+        analyze_ranks(max_)
+        analyze_ranks(sum_)
+
+        compare_iters(sbfl, max_)
+        compare_iters(sbfl, sum_)
+
+    """C_BIC_list_score, scores_list_score, BIC_list_score, BIC_rank_list_score = fonte(args, HSFL=False, score='bug2commit')
     C_BIC_list_base, scores_list_base, BIC_list_base, BIC_rank_list_base = fonte(args, HSFL=False, score='fbl_bert')
     C_BIC_list_base, scores_list_base, BIC_list_base, BIC_rank_list_base = fonte(args, HSFL=False, score=None)
     C_BIC_list_hsfl, scores_list_hsfl, BIC_list_hsfl, BIC_rank_list_hsfl = fonte(args, HSFL=True, score=None)
@@ -116,7 +135,7 @@ if __name__ == "__main__":
     
     for ig in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
         num_iters_new = ignore_bisection(C_BIC_list_all, scores_list_all, BIC_list_all, BIC_rank_list_all, ignore=ig)
-        compare_iters(num_iters_all, num_iters_new)
+        compare_iters(num_iters_all, num_iters_new)"""
 
     """x = numpy.array(x).reshape(-1, 1)
     y = numpy.array(y).reshape(-1, 1)

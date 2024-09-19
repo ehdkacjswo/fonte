@@ -1,4 +1,4 @@
-import os, math, copy
+import os, math, copy, json
 import numpy as np
 import pandas as pd
 from sbfl.base import SBFL
@@ -189,13 +189,15 @@ def extra_score(data_dir, score=None, norm_mode='base'):
 def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
     use_method_level_score=False, excluded=[], adjust_depth=True,
     in_class_only=False, HSFL=True, BIC=None, score=None):
+    
+    # Get commit history info
     commit_df = load_commit_history(fault_dir, tool)
 
     commit_df["excluded"] = commit_df["commit_hash"].isin(excluded)
     commit_df["new_depth"] = commit_df["depth"]
 
+    # Adjust depth of commits by ignoring excluded commits
     if len(excluded) > 0 and adjust_depth:
-        # update commit depth
         commit_df.loc[commit_df.excluded, "new_depth"] = None
         commit_df["method_identifier"] = commit_df.class_file + ":" + \
             commit_df.method_name + commit_df.method_signature + \
@@ -206,12 +208,15 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
                 & (commit_df.depth > row.depth)
             commit_df.loc[affected, "new_depth"] = commit_df.loc[affected, "new_depth"] - 1
 
+    # Get SBFL score
     sbfl_df = get_sbfl_scores_from_coverage(
         os.path.join(fault_dir, "coverage.pkl"),
         formula=formula,
         covered_by_failure_only=True,
         in_class_only=in_class_only)
 
+    # For method level score, each statements votes for the method
+    # And score of method will be sum of the votes from the statements
     if use_method_level_score:
         identifier = ["class_file", "method_name", "method_signature","begin_line", "end_line"]
         l_sbfl_df = sbfl_df.reset_index()
@@ -236,6 +241,7 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
         sbfl_df = pd.DataFrame(method_sbfl_rows,columns=identifier+["score"])
         sbfl_df = sbfl_df.set_index(identifier)
 
+    # Get the rank based on SBFL scores
     sbfl_df["dense_rank"] = (-sbfl_df["score"]).rank(method="dense")
     sbfl_df["max_rank"] = (-sbfl_df["score"]).rank(method="max")
     
@@ -263,6 +269,7 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
         induce_sqrt = math.sqrt(com_df.shape[0])
         induce_sqrt = 0
         list_commits = []
+        num_commits = 0
 
         for commit, depth in zip(com_df.commit_hash, com_df.new_depth):
             if commit in excluded:
@@ -454,7 +461,6 @@ def fonte(args, HSFL=True, score=None, ignore=[0]):
         else:
             style_change_commits = get_style_change_commits(coredir, args.tool, with_Rewrite=True)
 
-        # vote_for_commits
         vote_df = vote_for_commits(coredir, args.tool, args.formula,
             args.lamb, voting_functions[(args.alpha, args.tau)],
             use_method_level_score=False,
@@ -477,5 +483,211 @@ def fonte(args, HSFL=True, score=None, ignore=[0]):
         scores_list.append(scores)
     
     return C_BIC_list, scores_list, BIC_list, BIC_rank_list
+
+# Check whether the methods that were modified by more likely BICs are likely to be buggy
+# Return : Rank of buggy method (statement) based on
+# Score methods : SBFL, ensemble_max, ensemble_min
+# Rank methods : dense, max
+# Result methods : min, max
+def aaa(args, use_method_level_score=True, score='bug2commit', adjust_depth=True, in_class_only=False):
+
+    ##### Step 1 : Initialization #####
+    # Load 
+    GT = load_BIC_GT("./data/Defects4J/BIC_dataset")
+
+    # Load buggy method info
+    with open("data/Defects4J/buggy_methods.json", "r") as f:
+        buggy_method_infos = json.load(f)
+
+    # Get the list of fault directories
+    CORE_DATA_DIR = "./data/Defects4J/core"
+
+    fault_dirs = {}
+    for fault in os.listdir(CORE_DATA_DIR):
+        fault_dir = os.path.join(CORE_DATA_DIR, fault)
+        if not os.path.isdir(fault_dir):
+            continue
+        pid, vid = fault.split('-')
+        fault_dirs[(pid, vid[:-1])] = fault_dir
+
+    # Load buggy method infos
+    results = [[], [], []]
+
+    for _, row in GT.iterrows():
+        fault = (row.pid, row.vid)
+
+        # No data for current fault
+        if fault not in fault_dirs:
+            continue
         
+        if use_method_level_score:
+            # Load info of buggy methods for current fault
+            buggy_methods = [
+                (bm["class_file"], bm["method_name"], bm["arg_types"])
+                for bm in buggy_method_infos[f"{row.pid}-{row.vid}b"]
+            ]
+
+            # No buggy method info
+            if len(buggy_methods) == 0:
+                continue
+        
+        else:
+            # Load info of buggy statements for current fault
+            with open("./data/Defects4J/buggy-lines/{}-{}.buggy.lines".format(row.pid, row.vid), "r") as f:
+                for buggy_line in f.readlines():
+                    print(buggy_line.split('#'))
+
+        fault_dir = fault_dirs[fault]
+
+        # Get style change commits (to exclude)
+        if args.skip_stage_2:
+            excluded = []
+        else:
+            excluded = get_style_change_commits(fault_dir, args.tool, with_Rewrite=True)
+        
+        # Load commit history info
+        commit_df = load_commit_history(fault_dir, args.tool)
+
+        commit_df["excluded"] = commit_df["commit_hash"].isin(excluded)
+        commit_df["new_depth"] = commit_df["depth"]
+
+        # Adjust depth of commits by ignoring excluded commits
+        if len(excluded) > 0 and adjust_depth:
+            commit_df.loc[commit_df.excluded, "new_depth"] = None
+            commit_df["method_identifier"] = commit_df.class_file + ":" + \
+                commit_df.method_name + commit_df.method_signature + \
+                ":L" + commit_df.begin_line.astype(str) + "," + commit_df.end_line.astype(str)
+            for _, row in commit_df[commit_df.excluded].iterrows():
+                # print(row)
+                affected = (commit_df.method_identifier == row.method_identifier)\
+                    & (commit_df.depth > row.depth)
+                commit_df.loc[affected, "new_depth"] = commit_df.loc[affected, "new_depth"] - 1
+
+        ##### Step 2 : SBFL #####
+        # Get SBFL score
+        sbfl_df = get_sbfl_scores_from_coverage(
+            os.path.join(fault_dir, "coverage.pkl"),
+            formula=args.formula,
+            covered_by_failure_only=True,
+            in_class_only=in_class_only)
+
+        # For method level score, each statements votes for the method
+        # And score of method will be sum of the votes from the statements
+        if use_method_level_score:
+            identifier = ["class_file", "method_name", "method_signature","begin_line", "end_line"]
+            l_sbfl_df = sbfl_df.reset_index()
+            
+            # Apply voting function to get score for each statements
+            l_sbfl_df["dense_rank"] = (-l_sbfl_df["score"]).rank(method="dense")
+            l_sbfl_df["max_rank"] = (-l_sbfl_df["score"]).rank(method="max")
+
+            l_sbfl_df["score"] = l_sbfl_df.apply(voting_functions[(args.alpha, args.tau)], axis=1)
+
+            # Evaluate score of methods by adding scores of statements
+            method_sbfl_rows = []
+            for _, method in commit_df[identifier].drop_duplicates().iterrows():
+                method_score = l_sbfl_df[
+                    (l_sbfl_df.class_file == method.class_file)
+                    & (l_sbfl_df.line >= method.begin_line)
+                    & (l_sbfl_df.line <= method.end_line)
+                ].score.sum()
+                method_sbfl_rows.append([
+                    method.class_file, method.method_name, method.method_signature,
+                    method.begin_line, method.end_line, method_score
+                ])
+
+            sbfl_df = pd.DataFrame(method_sbfl_rows, columns=identifier+["score"])
+            sbfl_df = sbfl_df.set_index(identifier)
+            # index = ["class_file", "method_name", "method_signature","begin_line", "end_line"]
+            # data = ["score"]
+
+        ##### Step 3 : Ensemble #####
+        # Ensemble the original score with extra score
+        extra_score_dict = extra_score(fault_dir.replace('core', 'baseline'), score=score)
+        ensemble_max_rows = []
+        ensemble_sum_rows = []
+
+        for _, row in sbfl_df.reset_index().iterrows():
+            # Commits modified the method (statement)
+            if use_method_level_score:
+                com_df = commit_df[
+                    (commit_df.class_file == row.class_file) \
+                    & (commit_df.method_name == row.method_name) \
+                    & (commit_df.method_signature == row.method_signature)
+                ]
+
+            else:
+                com_df = commit_df[
+                    (commit_df.class_file == row.class_file) \
+                    & (commit_df.begin_line <= row.line) \
+                    & (commit_df.end_line >= row.line)
+                ]
+
+            # Get the extra scores from commits
+            max_vote = 0
+            sum_vote = 0
+            num_commits = 0
+            
+            for commit, depth in zip(com_df.commit_hash, com_df.new_depth):
+                if commit not in excluded:
+                    vote = extra_score_dict.get(commit, min(extra_score_dict.values(), default=1))
+
+                    max_vote = max(max_vote, vote)
+                    sum_vote = sum_vote + vote
+                    num_commits = num_commits + 1
+            
+            # Apply normalization
+            num_commits_sqrt = math.sqrt(num_commits)
+
+            if use_method_level_score:
+                ensemble_max_rows.append([row.class_file, row.method_name, row.method_signature, row.score * (max_vote * num_commits_sqrt)])
+                ensemble_sum_rows.append([row.class_file, row.method_name, row.method_signature, row.score * (sum_vote / num_commits_sqrt)])
+            
+            else:
+                ensemble_max_rows.append([row.class_file, row.line, row.score * (max_vote * num_commits_sqrt)])
+                ensemble_sum_rows.append([row.class_file, row.line, row.score * (sum_vote / num_commits_sqrt)])
+        
+        # Save the data as DataFrame
+        if use_method_level_score:
+            ensemble_max_df = pd.DataFrame(data=ensemble_max_rows, columns=["class_file", "method_name", "method_signature", "score"])
+            ensemble_sum_df = pd.DataFrame(data=ensemble_sum_rows, columns=["class_file", "method_name", "method_signature", "score"])
+        
+        else:
+            ensemble_max_df = pd.DataFrame(data=ensemble_max_rows, columns=["class_file", "line", "score"])
+            ensemble_sum_df = pd.DataFrame(data=ensemble_sum_rows, columns=["class_file", "line", "score"])
+        
+        ensemble_max_df.sort_values(by="score", ascending=False, inplace=True)
+        ensemble_sum_df.sort_values(by="score", ascending=False, inplace=True)
+
+        ##### Step 4 : Get rank #####
+        # method 찾아서 해당하는 score따라 rank 기록하면 끝
+        # 이건 per project로 실행된다
+        # Get the ranks for each scores (SBFL, ensemble_max, ensemble_sum)
+        score_data_list = [sbfl_df, ensemble_max_df, ensemble_sum_df]
+        
+        for i in range(len(score_data_list)):
+            score_data_list[i]["dense_rank"] = (-score_data_list[i]["score"]).rank(method="dense")
+            score_data_list[i]["max_rank"] = (-score_data_list[i]["score"]).rank(method="max")
+            score_data_list[i]["dense_rank_perc"] = (score_data_list[i]["dense_rank"]-1)/score_data_list[i].shape[0]
+            score_data_list[i]["max_rank_perc"] = (score_data_list[i]["max_rank"]-1)/score_data_list[i].shape[0]
+
+        # Get the rank of buggy method (statement)
+        for i in range(len(score_data_list)):
+            rank_df = score_data_list[i].reset_index()
+
+            if use_method_level_score:
+                rank_df["arg_types"] = rank_df["method_signature"].apply(
+                    lambda s: s.split(')')[0][1:]
+                )
+                rank_df = rank_df.set_index(["class_file", "method_name", "arg_types"])[
+                    ["dense_rank", "max_rank", "dense_rank_perc", "max_rank_perc"]]
+
+                for bm in buggy_methods:
+                    if bm in rank_df.index:
+                        results[i].append((rank_df.loc[bm, "dense_rank"].min(), rank_df.loc[bm, "dense_rank"].max(), rank_df.loc[bm, "max_rank"].min(), rank_df.loc[bm, "max_rank"].max()))
+
+            else:
+                rank_df = rank_df.set_index(["class_file", "method_name", "arg_types"])[
+                    ["dense_rank", "max_rank", "dense_rank_perc", "max_rank_perc"]]
     
+    return results
