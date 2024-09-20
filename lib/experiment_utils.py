@@ -151,6 +151,11 @@ def extra_score(data_dir, score=None, norm_mode='base'):
         if norm_mode == 'base':
             for ind in df.index:
                 score_dict[df['commit_hash'][ind]] = df['score'][ind]
+
+        # Rank
+        elif norm_mode == 'rank':
+            for ind in df.index:
+                score_dict[df['commit_hash'][ind]] = 1 / df['rank'][ind]
     
         # Softmax
         elif norm_mode == 'softmax':
@@ -489,7 +494,7 @@ def fonte(args, HSFL=True, score=None, ignore=[0]):
 # Score methods : SBFL, ensemble_max, ensemble_min
 # Rank methods : dense, max
 # Result methods : min, max
-def aaa(args, use_method_level_score=True, score='bug2commit', adjust_depth=True, in_class_only=False):
+def aaa(args, use_method_level_score=False, score='bug2commit', adjust_depth=True, in_class_only=False):
 
     ##### Step 1 : Initialization #####
     # Load 
@@ -533,9 +538,15 @@ def aaa(args, use_method_level_score=True, score='bug2commit', adjust_depth=True
         
         else:
             # Load info of buggy statements for current fault
-            with open("./data/Defects4J/buggy-lines/{}-{}.buggy.lines".format(row.pid, row.vid), "r") as f:
-                for buggy_line in f.readlines():
-                    print(buggy_line.split('#'))
+            try:
+                with open("./data/Defects4J/buggy-lines/{}-{}.buggy.lines".format(row.pid, row.vid), "r") as f:
+                    buggy_lines = [(buggy_line.split('#')[0], int(buggy_line.split('#')[1])) for buggy_line in f.readlines()]
+                    print(buggy_lines)
+
+            # No buggy method info
+            except:
+                print('No such file ./data/Defects4J/buggy-lines/{}-{}.buggy.lines'.format(row.pid, row.vid))
+                continue
 
         fault_dir = fault_dirs[fault]
 
@@ -602,12 +613,14 @@ def aaa(args, use_method_level_score=True, score='bug2commit', adjust_depth=True
             # data = ["score"]
 
         ##### Step 3 : Ensemble #####
-        # Ensemble the original score with extra score
-        extra_score_dict = extra_score(fault_dir.replace('core', 'baseline'), score=score)
+        # Ensemble the original SBFL score with extra score
+        extra_score_dict = extra_score(fault_dir.replace('core', 'baseline'), score=score, norm_mode='rank')
+
         ensemble_max_rows = []
         ensemble_sum_rows = []
 
         for _, row in sbfl_df.reset_index().iterrows():
+
             # Commits modified the method (statement)
             if use_method_level_score:
                 com_df = commit_df[
@@ -630,7 +643,7 @@ def aaa(args, use_method_level_score=True, score='bug2commit', adjust_depth=True
             
             for commit, depth in zip(com_df.commit_hash, com_df.new_depth):
                 if commit not in excluded:
-                    vote = extra_score_dict.get(commit, min(extra_score_dict.values(), default=1))
+                    vote = extra_score_dict.get(commit, min(extra_score_dict.values(), default=1)) * ((1 - args.lamb) ** depth)
 
                     max_vote = max(max_vote, vote)
                     sum_vote = sum_vote + vote
@@ -640,12 +653,12 @@ def aaa(args, use_method_level_score=True, score='bug2commit', adjust_depth=True
             num_commits_sqrt = math.sqrt(num_commits)
 
             if use_method_level_score:
-                ensemble_max_rows.append([row.class_file, row.method_name, row.method_signature, row.score * (max_vote * num_commits_sqrt)])
-                ensemble_sum_rows.append([row.class_file, row.method_name, row.method_signature, row.score * (sum_vote / num_commits_sqrt)])
+                ensemble_max_rows.append([row.class_file, row.method_name, row.method_signature, row.score * (max_vote * num_commits)])
+                ensemble_sum_rows.append([row.class_file, row.method_name, row.method_signature, row.score * sum_vote])
             
             else:
-                ensemble_max_rows.append([row.class_file, row.line, row.score * (max_vote * num_commits_sqrt)])
-                ensemble_sum_rows.append([row.class_file, row.line, row.score * (sum_vote / num_commits_sqrt)])
+                ensemble_max_rows.append([row.class_file, row.line, row.score * (max_vote * num_commits)])
+                ensemble_sum_rows.append([row.class_file, row.line, row.score * sum_vote])
         
         # Save the data as DataFrame
         if use_method_level_score:
@@ -660,8 +673,6 @@ def aaa(args, use_method_level_score=True, score='bug2commit', adjust_depth=True
         ensemble_sum_df.sort_values(by="score", ascending=False, inplace=True)
 
         ##### Step 4 : Get rank #####
-        # method 찾아서 해당하는 score따라 rank 기록하면 끝
-        # 이건 per project로 실행된다
         # Get the ranks for each scores (SBFL, ensemble_max, ensemble_sum)
         score_data_list = [sbfl_df, ensemble_max_df, ensemble_sum_df]
         
@@ -682,12 +693,34 @@ def aaa(args, use_method_level_score=True, score='bug2commit', adjust_depth=True
                 rank_df = rank_df.set_index(["class_file", "method_name", "arg_types"])[
                     ["dense_rank", "max_rank", "dense_rank_perc", "max_rank_perc"]]
 
+                rank_df.sort_index()
+                new_result = [math.inf, 0, math.inf, 0]
+                
                 for bm in buggy_methods:
                     if bm in rank_df.index:
-                        results[i].append((rank_df.loc[bm, "dense_rank"].min(), rank_df.loc[bm, "dense_rank"].max(), rank_df.loc[bm, "max_rank"].min(), rank_df.loc[bm, "max_rank"].max()))
+                        new_result[0] = min(new_result[0], rank_df.loc[bm, "dense_rank"].min())
+                        new_result[1] = max(new_result[1], rank_df.loc[bm, "dense_rank"].max())
+                        new_result[2] = min(new_result[2], rank_df.loc[bm, "max_rank"].min())
+                        new_result[3] = max(new_result[3], rank_df.loc[bm, "max_rank"].max())
+                
+                results[i].append(new_result)
 
             else:
-                rank_df = rank_df.set_index(["class_file", "method_name", "arg_types"])[
+                rank_df = rank_df.set_index(["class_file", "line"])[
                     ["dense_rank", "max_rank", "dense_rank_perc", "max_rank_perc"]]
+                
+                rank_df.sort_index()
+                new_result = [math.inf, 0, math.inf, 0]
+
+                # Some buggy lines are not found
+                for bl in buggy_lines:
+                    if bl in rank_df.index:
+                        new_result[0] = min(new_result[0], rank_df.loc[bl, "dense_rank"].min())
+                        new_result[1] = max(new_result[1], rank_df.loc[bl, "dense_rank"].max())
+                        new_result[2] = min(new_result[2], rank_df.loc[bl, "max_rank"].min())
+                        new_result[3] = max(new_result[3], rank_df.loc[bl, "max_rank"].max())
+                if new_result[1] == 0:
+                    continue
+                results[i].append(new_result)
     
     return results
