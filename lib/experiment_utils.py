@@ -490,7 +490,8 @@ def fonte(args, HSFL=True, score=None, ignore=[0]):
     return C_BIC_list, scores_list, BIC_list, BIC_rank_list
 
 # Check whether the methods that were modified by more likely BICs are likely to be buggy
-# Return : Rank of buggy method (statement) based on
+# Statement level is impossible since the projects are re-written by OpenRewrite
+# Return : Rank of buggy method based on
 # Score methods : SBFL, ensemble_max, ensemble_min
 # Rank methods : dense, max
 # Result methods : min, max
@@ -536,7 +537,7 @@ def aaa(args, use_method_level_score=False, score='bug2commit', adjust_depth=Tru
             if len(buggy_methods) == 0:
                 continue
         
-        else:
+        """else:
             # Load info of buggy statements for current fault
             try:
                 with open("./data/Defects4J/buggy-lines/{}-{}.buggy.lines".format(row.pid, row.vid), "r") as f:
@@ -546,7 +547,7 @@ def aaa(args, use_method_level_score=False, score='bug2commit', adjust_depth=Tru
             # No buggy method info
             except:
                 print('No such file ./data/Defects4J/buggy-lines/{}-{}.buggy.lines'.format(row.pid, row.vid))
-                continue
+                continue"""
 
         fault_dir = fault_dirs[fault]
 
@@ -629,12 +630,12 @@ def aaa(args, use_method_level_score=False, score='bug2commit', adjust_depth=Tru
                     & (commit_df.method_signature == row.method_signature)
                 ]
 
-            else:
+            """else:
                 com_df = commit_df[
                     (commit_df.class_file == row.class_file) \
                     & (commit_df.begin_line <= row.line) \
                     & (commit_df.end_line >= row.line)
-                ]
+                ]"""
 
             # Get the extra scores from commits
             max_vote = 0
@@ -643,7 +644,7 @@ def aaa(args, use_method_level_score=False, score='bug2commit', adjust_depth=Tru
             
             for commit, depth in zip(com_df.commit_hash, com_df.new_depth):
                 if commit not in excluded:
-                    vote = extra_score_dict.get(commit, min(extra_score_dict.values(), default=1)) * ((1 - args.lamb) ** depth)
+                    vote = extra_score_dict.get(commit, min(extra_score_dict.values(), default=1))
 
                     max_vote = max(max_vote, vote)
                     sum_vote = sum_vote + vote
@@ -656,18 +657,18 @@ def aaa(args, use_method_level_score=False, score='bug2commit', adjust_depth=Tru
                 ensemble_max_rows.append([row.class_file, row.method_name, row.method_signature, row.score * (max_vote * num_commits)])
                 ensemble_sum_rows.append([row.class_file, row.method_name, row.method_signature, row.score * sum_vote])
             
-            else:
+            """else:
                 ensemble_max_rows.append([row.class_file, row.line, row.score * (max_vote * num_commits)])
-                ensemble_sum_rows.append([row.class_file, row.line, row.score * sum_vote])
+                ensemble_sum_rows.append([row.class_file, row.line, row.score * sum_vote])"""
         
         # Save the data as DataFrame
         if use_method_level_score:
             ensemble_max_df = pd.DataFrame(data=ensemble_max_rows, columns=["class_file", "method_name", "method_signature", "score"])
             ensemble_sum_df = pd.DataFrame(data=ensemble_sum_rows, columns=["class_file", "method_name", "method_signature", "score"])
         
-        else:
+        """else:
             ensemble_max_df = pd.DataFrame(data=ensemble_max_rows, columns=["class_file", "line", "score"])
-            ensemble_sum_df = pd.DataFrame(data=ensemble_sum_rows, columns=["class_file", "line", "score"])
+            ensemble_sum_df = pd.DataFrame(data=ensemble_sum_rows, columns=["class_file", "line", "score"])"""
         
         ensemble_max_df.sort_values(by="score", ascending=False, inplace=True)
         ensemble_sum_df.sort_values(by="score", ascending=False, inplace=True)
@@ -705,7 +706,7 @@ def aaa(args, use_method_level_score=False, score='bug2commit', adjust_depth=Tru
                 
                 results[i].append(new_result)
 
-            else:
+            """else:
                 rank_df = rank_df.set_index(["class_file", "line"])[
                     ["dense_rank", "max_rank", "dense_rank_perc", "max_rank_perc"]]
                 
@@ -721,6 +722,6 @@ def aaa(args, use_method_level_score=False, score='bug2commit', adjust_depth=Tru
                         new_result[3] = max(new_result[3], rank_df.loc[bl, "max_rank"].max())
                 if new_result[1] == 0:
                     continue
-                results[i].append(new_result)
+                results[i].append(new_result)"""
     
     return results
