@@ -184,6 +184,7 @@ def extra_score(data_dir, score=None, norm_mode='base'):
         df['commit'] = df['commit'].apply(lambda x: x[:7])
 
         max_score = df['score'].max()
+        print('fbl_bert size : {}'.format(df.shape[0]))
         for ind in df.index:
             #rank_dict[df['commit'][ind]] = df[score][ind]
             score_dict[df['commit'][ind]] = math.exp(df['score'][ind] - max_score)
@@ -193,7 +194,7 @@ def extra_score(data_dir, score=None, norm_mode='base'):
 # HSFL parameter means the score will be regularized similarly as HSFL
 def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
     use_method_level_score=False, excluded=[], adjust_depth=True,
-    in_class_only=False, HSFL=True, BIC=None, score=None):
+    in_class_only=False, HSFL=True, BIC=None, score=None, beta=0.0):
     
     # Get commit history info
     commit_df = load_commit_history(fault_dir, tool)
@@ -274,20 +275,32 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
         induce_sqrt = math.sqrt(com_df.shape[0])
         induce_sqrt = 0
         list_commits = []
-        num_commits = 0
+        sum_score = 0
 
+        # Find commits that modified the statement(method) and not excluded
         for commit, depth in zip(com_df.commit_hash, com_df.new_depth):
-            if commit in excluded:
-                decayed_vote = 0
-            else:       
-                if HSFL: # Apply regularization
-                    decayed_vote = vote * ((1-decay) ** depth) / induce_sqrt
-                else:
-                    decayed_vote = vote * ((1-decay) ** depth)
-                vote_dict[commit] = vote_dict.get(commit, 0) + decayed_vote
+            if commit not in excluded:
+                list_commits.append((commit, depth))
+                sum_score = sum_score + extra_score_dict.get(commit, min(extra_score_dict.values(), default=1))
+                if commit not in extra_score_dict:
+                    print('FBL-BERT key doesn\'t exists : {} {}'.format(commit,fault_dir))
+        
+        induce_sqrt = math.sqrt(len(list_commits))
+        #sum_score = 1 if score is None else sum_score / induce_sqrt
+        sum_score = 1
+        
+        # Vote for commits
+        for commit, depth in list_commits:
+            if HSFL:
+                #decayed_vote = vote * ((1-decay) ** depth) * sum_score / induce_sqrt
+                decayed_vote = (vote * beta + extra_score_dict.get(commit, min(extra_score_dict.values(), default=0)) * (1 - beta)) * ((1-decay) ** depth) * sum_score / induce_sqrt
+            else:
+                #decayed_vote = vote * ((1-decay) ** depth) * sum_score
+                decayed_vote = (vote * beta + extra_score_dict.get(commit, min(extra_score_dict.values(), default=0)) * (1 - beta)) * ((1-decay) ** depth) * sum_score
+            vote_dict[commit] = vote_dict.get(commit, 0) + decayed_vote
                 
 
-                """decayed_vote = vote * ((1-decay) ** depth)
+        """decayed_vote = vote * ((1-decay) ** depth)
                 list_commits.append(commit)
         
         for commit in list_commits:
@@ -295,9 +308,10 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
 
     # Apply extra score
     for commit, vote in vote_dict.items():
-        vote_rows.append([commit, vote * extra_score_dict.get(commit, min(extra_score_dict.values(), default=1))])
-        if commit not in extra_score_dict.keys():
-            print(fault_dir, commit)
+        #vote_rows.append([commit, vote * extra_score_dict.get(commit, min(extra_score_dict.values(), default=1))])
+        vote_rows.append([commit, vote])
+        #if commit not in extra_score_dict.keys():
+            #print(fault_dir, commit)
 
     vote_df = pd.DataFrame(data=vote_rows, columns=["commit", "vote"])
     agg_vote_df = vote_df.groupby("commit").sum("vote")
@@ -469,7 +483,7 @@ def fonte(args, HSFL=True, score=None, ignore=[0]):
         vote_df = vote_for_commits(coredir, args.tool, args.formula,
             args.lamb, voting_functions[(args.alpha, args.tau)],
             use_method_level_score=False,
-            excluded=style_change_commits, adjust_depth=True, HSFL=HSFL, BIC=BIC, score=score)
+            excluded=style_change_commits, adjust_depth=True, HSFL=HSFL, BIC=BIC, score=score, beta=args.beta)
     
         # Get the candidate list of commits
         all_commits = get_all_commits(coredir)
@@ -495,7 +509,7 @@ def fonte(args, HSFL=True, score=None, ignore=[0]):
 # Score methods : SBFL, ensemble_max, ensemble_min
 # Rank methods : dense, max
 # Result methods : min, max
-def aaa(args, use_method_level_score=False, score='bug2commit', adjust_depth=True, in_class_only=False):
+def aaa(args, use_method_level_score=True, score='bug2commit', adjust_depth=True, in_class_only=False):
 
     ##### Step 1 : Initialization #####
     # Load 
@@ -610,8 +624,6 @@ def aaa(args, use_method_level_score=False, score='bug2commit', adjust_depth=Tru
 
             sbfl_df = pd.DataFrame(method_sbfl_rows, columns=identifier+["score"])
             sbfl_df = sbfl_df.set_index(identifier)
-            # index = ["class_file", "method_name", "method_signature","begin_line", "end_line"]
-            # data = ["score"]
 
         ##### Step 3 : Ensemble #####
         # Ensemble the original SBFL score with extra score
@@ -654,8 +666,10 @@ def aaa(args, use_method_level_score=False, score='bug2commit', adjust_depth=Tru
             num_commits_sqrt = math.sqrt(num_commits)
 
             if use_method_level_score:
-                ensemble_max_rows.append([row.class_file, row.method_name, row.method_signature, row.score * (max_vote * num_commits)])
-                ensemble_sum_rows.append([row.class_file, row.method_name, row.method_signature, row.score * sum_vote])
+                #ensemble_max_rows.append([row.class_file, row.method_name, row.method_signature, row.score * (max_vote * num_commits)])
+                #ensemble_sum_rows.append([row.class_file, row.method_name, row.method_signature, row.score * sum_vote])
+                ensemble_max_rows.append([row.class_file, row.method_name, row.method_signature, max_vote * num_commits])
+                ensemble_sum_rows.append([row.class_file, row.method_name, row.method_signature, sum_vote])
             
             """else:
                 ensemble_max_rows.append([row.class_file, row.line, row.score * (max_vote * num_commits)])

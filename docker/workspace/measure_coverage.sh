@@ -19,6 +19,7 @@ if [ -d ${tmpdir}/coverage_xmls ]; then
   mv ${tmpdir}/coverage_xmls /tmp/${project}-${version}-coverage_xmls
 fi
 
+# Checkout the faulty version to tmpdir
 [ -d $tmpdir ] && rm -rf $tmpdir
 defects4j checkout -p $project -v ${version}b -w ${tmpdir}
 if [ ! -d $tmpdir ]; then
