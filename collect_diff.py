@@ -59,6 +59,52 @@ if __name__ == "__main__":
 
     # repo.compare(<Later commit sha>, <>)
     for file in repo.compare('3771c57be864851f5cf2fc4151f0bda628d089ad', '1d9ecb5328bbde5ee84dbfe2d74bbd318b89b6d7').files:
-        print(file.filename)
-        print(file.patch)
+        print('filename :{}'.format(file.filename))
+
+        patch_list = file.patch.split('@@', maxsplit=2)
+        
+        # Get the line info of patch
+        start_line_org = None
+        num_line_org = None
+        start_line_new = None
+        num_line_new = None
+
+        for line_info in re.split(r'(?=[+-,])', patch_list[1].replace(' ', '')):
+            line_info = re.sub(r'[,\s]+', '', line_info)
+            
+            if line_info[0] == '-':
+                start_line_org = int(line_info[1:])
+            
+            elif line_info[0] == '+':
+                start_line_new = int(line_info[1:])
+            
+            elif start_line_new is not None:
+                num_line_new = int(line_info)
+            
+            else:
+                num_line_org = int(line_info)
+        
+        print(start_line_org, num_line_org, start_line_new, num_line_new)
+
+        # Get the patch diff
+        patch_info = patch_list[2]
+        line_org = start_line_org - 1
+        line_new = start_line_new - 1
+
+        for patch_line in patch_info.splitlines():
+            line_org = line_org + 1
+            line_new = line_new + 1
+
+            if len(patch_line) == 0:
+                continue
+
+            if patch_line[0] == '-':
+                line_new = line_new - 1
+                print('Deletion : {}'.format(patch_line[1:]))
+
+            elif patch_line[0] == '+':
+                line_org = line_org - 1
+                print('Addition : {}'.format(patch_line[1:]))
+
+
 
