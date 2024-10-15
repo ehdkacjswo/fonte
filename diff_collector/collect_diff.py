@@ -8,7 +8,7 @@ import subprocess
 import sys
 
 import pandas as pd
-from git import Repo
+import git
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from diff_parser import Diff
@@ -65,7 +65,7 @@ if __name__ == "__main__":
         help="Target buggy version (default: 21)")
     args = parser.parse_args()
 
-    repo = Repo.init('./')
+    repo = git.Repo.init('./')
 
     output_dir = '/root/workspace/data/Defects4J/diff/{}-{}b/'.format(args.project, args.version)
     commit_log_path = '/root/workspace/data/Defects4J/core/{}-{}b/commits.log'.format(args.project, args.version)
@@ -73,31 +73,32 @@ if __name__ == "__main__":
     # Load the list of past commits
     with open(commit_log_path) as file:
         commit_logs = file.readlines()
-
-    DIFF_CMD = 'git diff {0}...{1}'
+    
+    # Insert empty repo for initial commit
+    commit_logs.insert(0, '4b825dc642cb6eb9a060e54bf8d69288fbee4904')
 
     # Iterate through commits in reverse order
     for i in range(len(commit_logs) - 1, 0, -1):
-        target_commit = repo.commit(commit_logs[i][:-2])
-        past_commit = repo.commit(commit_logs[i - 1][:-2])
-
-        #print(repo.git.diff(commit_logs[i - 1][:-2], commit_logs[i][:-2]))
-
-        #for diff in past_commit.diff(commit_logs[i][:-2]):
-           #print(diff)
-        
         diff = Diff()
         diff.parse_diff(repo.git.diff(commit_logs[i - 1][:-2], commit_logs[i][:-2]))
-        """diff_cmd = DIFF_CMD.format(target_commit, past_commit)
-        cmd = f"{diff_cmd} | grep -e '^+' -e '^-' -e '^@@'"
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        stdout, _ = p.communicate()
-        try:
-            print(stdout.decode('utf-8'))
-        except UnicodeDecodeError as e:
-            print(cmd)
-            raise e"""
     
+        """diff_cmd = ['git', 'diff', '{}...{}'.format(commit_logs[i][:-2], commit_logs[i - 1][:-2])]
+        proc = subprocess.Popen('git diff {}...{}'.format(commit_logs[i][:-2], commit_logs[i - 1][:-2]), shell=True, stdout=subprocess.PIPE)
+        stdout, _ = proc.communicate()
+        diff = Diff()
+        try:
+            diff.parse_diff(stdout.decode('utf-8'))
+        except UnicodeDecodeError as e:
+            print(diff_cmd)
+            print(stdout)
+            raise e"""
+        
+    
+    """diff = Diff()
+    diff_cmd = ['git', 'diff', '{}...{}'.format(commit_logs[i][:-2], commit_logs[i - 1][:-2])]
+    with subprocess.Popen(diff_cmd, stdout=subprocess.PIPE, encoding='utf-8') as proc:
+        diff.parse_diff(proc.stdout.read())"""
+
     """# Iterate through commits in reverse order
     for i in range(len(commit_logs) - 1, 0, -1):
         target_commit = commit_logs[i][:-2]

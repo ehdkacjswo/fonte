@@ -51,7 +51,7 @@ class Diff():
         else:
             raise Exception('Unexpected type of input for Diff : {}'.format(type(diff)))
             return
-        
+
         # Start parsing
         for line in diff_lines:
             # New change block starts
@@ -81,8 +81,6 @@ class Diff():
             else:
                 self.old_path = line[4:]
             
-            print('Old path : {}'.format(self.old_path))
-            
         # File path on newer commit
         elif line.startswith('+++ '):
             assert(self.stage == 2)
@@ -92,8 +90,6 @@ class Diff():
                 self.new_path = line[5:]
             else:
                 self.new_path = line[4:]
-            
-            print('New path : {}'.format(self.new_path))
             
         # Line info of files
         elif line.startswith('@'):
@@ -113,7 +109,7 @@ class Diff():
                     self.start_line_new = int(line_info[1:])
                     self.cur_line_new = self.start_line_new
             
-        # Deletion on old version
+        # Deleted line on old version
         elif line.startswith('-'):
             assert(self.stage == 4)
             assert((self.old_path, self.cur_line_old) not in self.deletion)
@@ -121,7 +117,7 @@ class Diff():
             self.deletion[(self.old_path, self.cur_line_old)] = line[1:]
             self.cur_line_old = self.cur_line_old + 1
             
-        # Addition on new version
+        # Added line on new version
         elif line.startswith('+'):
             assert(self.stage == 4)
             assert((self.new_path, self.cur_line_new) not in self.addition)
@@ -129,21 +125,10 @@ class Diff():
             self.addition[(self.new_path, self.cur_line_new)] = line[1:]
             self.cur_line_new = self.cur_line_new + 1
             
+        # Maintained line
         elif self.stage == 4:
             if self.cur_line_old is not None:
                 self.cur_line_old = self.cur_line_old + 1
 
             if self.cur_line_new is not None:
                 self.cur_line_new = self.cur_line_new + 1
-            
-        """match = re.fullmatch(r'diff --git a\/([^ ]+) b\/([^ ]+)', line)
-
-        if match:
-            match = match.groups()
-            assert(len(match) == 2)
-
-            self.old_path = match[0]
-            self.new_path = match[1]
-
-        else:
-            return"""
