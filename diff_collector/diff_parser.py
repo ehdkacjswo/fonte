@@ -141,3 +141,16 @@ class Diff():
         
         with open(os.path.join(save_dir, 'addition.pkl'), 'wb') as f:
             pickle.dump(self.addition, f)
+        
+        # Check if dumping is done properly
+        try:
+            with open(os.path.join(save_dir, 'deletion.pkl'), 'rb') as f:
+                assert(pickle.load(f) == self.deletion)
+        
+            with open(os.path.join(save_dir, 'addition.pkl'), 'rb') as f:
+                assert(pickle.load(f) == self.addition)
+        
+        except:
+            with open('/root/workspace/data/Defects4J/diff/error.txt', 'a') as file:
+                file.write(save_dir)
+            

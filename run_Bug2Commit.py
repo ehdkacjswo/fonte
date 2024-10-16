@@ -8,9 +8,12 @@ from collections import Counter
 from scipy.spatial.distance import cosine
 from lib.experiment_utils import *
 
+import pickle
+
 CORE_DATA_DIR = "./data/Defects4J/core"
 BIC_GT_DIR = "./data/Defects4J/BIC_dataset"
 BASELINE_DATA_DIR = "./data/Defects4J/baseline"
+DIFF_DATA_DIR = './data/Defects4J/diff'
 
 def tokenize(text):
     return ronin.split(text)
@@ -106,6 +109,7 @@ def run_bug2commit(pid, vid):
 # 해당 
 def run_diff_bug2commit(pid, vid):
     core_data_dir = os.path.join(CORE_DATA_DIR, f"{pid}-{vid}b")
+    diff_data_dir = os.path.join(DIFF_DATA_DIR, f"{pid}-{vid}b")
     baseline_data_dir = os.path.join(BASELINE_DATA_DIR, f"{pid}-{vid}b")
     commit_dir = os.path.join(baseline_data_dir, "commits")
     
@@ -127,6 +131,10 @@ def run_diff_bug2commit(pid, vid):
                 if l.startswith("+++ ")
             ])))
             commit_features[filename] = [commit_message, modified_files]
+        
+        # Add diff data
+        with open(os.path.join(diff_data_dir, filename[2:-8], 'addition.pkl'), 'rb') as f:
+            diff_dict = pickle.load(f)
 
     print(f"{pid}-{vid}b: Collecting query features...........................")
     # get query (bug report) features
@@ -168,7 +176,7 @@ def run_diff_bug2commit(pid, vid):
     score_df.sort_values(by="rank", inplace=True)
     score_df = score_df[["commit", "filename", "rank", "score"]]
     if savepath:
-        score_df.to_csv(savepath, index=False, header=None)
+        #score_df.to_csv(savepath, index=False, header=None)
         print(f"{pid}-{vid}b: Saved to {savepath}")
     return score_df
 
@@ -176,4 +184,4 @@ if __name__ == "__main__":
     GT = load_BIC_GT(BIC_GT_DIR)
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
-        score_df = run_bug2commit(pid, vid)
+        score_df = run_diff_bug2commit(pid, vid)
