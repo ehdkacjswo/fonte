@@ -1,4 +1,4 @@
-import os, re
+import os, re, sys, pickle
 from collections.abc import Iterable
 from spiral import ronin
 
@@ -132,3 +132,12 @@ class Diff():
 
             if self.cur_line_new is not None:
                 self.cur_line_new = self.cur_line_new + 1
+    
+    def save(self, save_dir):
+        os.makedirs(save_dir, exist_ok=True)
+
+        with open(os.path.join(save_dir, 'deletion.pkl'), 'wb') as f:
+            pickle.dump(self.deletion, f)
+        
+        with open(os.path.join(save_dir, 'addition.pkl'), 'wb') as f:
+            pickle.dump(self.addition, f)

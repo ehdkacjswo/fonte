@@ -83,6 +83,7 @@ def run_bug2commit(pid, vid):
 
     print(f"{pid}-{vid}b: Calculating the scores of commits...................")
 
+    # filename : Name of the file in baseline/{pid}_{vid}b/commits/ (c_{commit_hash})
     score_rows = []
     for filename in commit_vectors:
         commit = filename[2:9]

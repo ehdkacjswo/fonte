@@ -14,7 +14,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from diff_parser import Diff
 #from github import Github, Auth, Commit
 
-# Additional code for diff added Bug2Commit
+"""
 proj_url_dict = {'Cli' : 'apache/commons-cli', \
 'Closure' : 'google/closure-compiler', \
 'Codec' : 'apache/commons-codec', \
@@ -24,39 +24,8 @@ proj_url_dict = {'Cli' : 'apache/commons-cli', \
 'Jsoup' : 'jhy/jsoup' , \
 'Lang' : 'apache/commons-lang', \
 'Math' : 'apache/commons-math', \
-'Time' : 'JodaOrg/joda-time'}
+'Time' : 'JodaOrg/joda-time'}"""
 
-
-
-"""def collect_commits(pid, vid, divide_commits=True):
-    logger.info('Processing {0}'.format(project_name))
-
-    project_dpath = os.path.join('../data', project_name)
-    if divide_commits is True:
-        output_dpath = os.path.join(project_dpath, 'hunks/')
-    else:
-        output_dpath = os.path.join(project_dpath, 'commits/')
-    limit_ts = get_limit_ts(project_dpath)
-    if not os.path.exists(output_dpath):
-        os.makedirs(output_dpath)
-
-    repo, ref_sha = load_repo(repo_url, ref)
-    sha_cnt = dict()
-
-    for commit, log, sha, date, metainfo in get_commits(repo, ref_sha, divide_commits=divide_commits):
-        if sha not in sha_cnt:
-            sha_cnt[sha] = 0
-        else:
-            sha_cnt[sha] = sha_cnt[sha] + 1
-
-        cnt = sha_cnt[sha]
-        if divide_commits is False and cnt == 1:
-            raise RuntimeError('More than one commit with the same sha? Something is wrong')
-
-        if valid_commit(date, limit_ts):
-            with open(os.path.join(output_dpath, 'c_{0}_{1}.json'.format(sha, cnt)), 'w') as f:
-                json.dump({'sha': sha, 'log': log, 'commit': commit, 'timestamp': date, 'metainfo': metainfo}, f)"""
-    
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compute commit scores")
     parser.add_argument('--project', '-p', type=str, default="Closure",
@@ -65,6 +34,10 @@ if __name__ == "__main__":
         help="Target buggy version (default: 21)")
     args = parser.parse_args()
 
+    print('Working on {}_{}b'.format(args.project, args.version))
+
+    # Current working directory has to be the directory of corresponding argument
+    # It's automatically set when it's called by collect_diff.sh
     repo = git.Repo.init('./')
 
     output_dir = '/root/workspace/data/Defects4J/diff/{}-{}b/'.format(args.project, args.version)
@@ -80,41 +53,10 @@ if __name__ == "__main__":
     # Iterate through commits in reverse order
     for i in range(len(commit_logs) - 1, 0, -1):
         diff = Diff()
+        
         diff.parse_diff(repo.git.diff(commit_logs[i - 1][:-2], commit_logs[i][:-2]))
-    
-        """diff_cmd = ['git', 'diff', '{}...{}'.format(commit_logs[i][:-2], commit_logs[i - 1][:-2])]
-        proc = subprocess.Popen('git diff {}...{}'.format(commit_logs[i][:-2], commit_logs[i - 1][:-2]), shell=True, stdout=subprocess.PIPE)
-        stdout, _ = proc.communicate()
-        diff = Diff()
-        try:
-            diff.parse_diff(stdout.decode('utf-8'))
-        except UnicodeDecodeError as e:
-            print(diff_cmd)
-            print(stdout)
-            raise e"""
-        
-    
-    """diff = Diff()
-    diff_cmd = ['git', 'diff', '{}...{}'.format(commit_logs[i][:-2], commit_logs[i - 1][:-2])]
-    with subprocess.Popen(diff_cmd, stdout=subprocess.PIPE, encoding='utf-8') as proc:
-        diff.parse_diff(proc.stdout.read())"""
+        diff.save(os.path.join(output_dir, commit_logs[i][:-2]))
 
-    """# Iterate through commits in reverse order
-    for i in range(len(commit_logs) - 1, 0, -1):
-        target_commit = commit_logs[i][:-2]
-        past_commit = commit_logs[i - 1][:-2]
-        
-        diff_cmd = DIFF_CMD.format(target_commit, past_commit)
-        cmd = f"{diff_cmd} | grep -e '^+' -e '^-' -e '^@@'"
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        stdout, _ = p.communicate()
-        try:
-            print(stdout.decode('utf-8'))
-        except UnicodeDecodeError as e:
-            print(cmd)
-            raise e"""
-
-    # 
 
     # Github API version (Deprecated due to possible inconsistency)
     """
