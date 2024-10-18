@@ -116,8 +116,24 @@ if __name__ == "__main__":
         compare_iters(sbfl, sum_)"""
 
     # Run Fonte with various settings
-    C_BIC_list_base, scores_list_base, BIC_list_base, BIC_rank_list_base = fonte(args, HSFL=False, score='fbl_bert')
+    C_BIC_list_base, scores_list_base, BIC_list_base, BIC_rank_list_base = fonte(args, HSFL=False, score=None)
+    C_BIC_list_score_base, scores_list_score_base, BIC_list_score_base, BIC_rank_list_score_base = fonte(args, HSFL=False, score='bug2commit')
+    C_BIC_list_score_diff, scores_list_score_diff, BIC_list_score_diff, BIC_rank_list_score_diff = fonte(args, HSFL=False, score='bug2commit_diff')
+    
+    # Analyze ranks
     analyze_ranks(BIC_rank_list_base)
+    analyze_ranks(BIC_rank_list_score_base)
+    analyze_ranks(BIC_rank_list_score_diff)
+
+    num_iters_base = ignore_bisection(C_BIC_list_base, scores_list_base, BIC_list_base, BIC_rank_list_base)
+    num_iters_score_base = ignore_bisection(C_BIC_list_score_base, scores_list_score_base, BIC_list_score_base, BIC_rank_list_score_base)
+    num_iters_score_diff = ignore_bisection(C_BIC_list_score_diff, scores_list_score_diff, BIC_list_score_diff, BIC_rank_list_score_diff)
+
+    compare_iters(num_iters_base, num_iters_score_base)
+    compare_iters(num_iters_base, num_iters_score_diff)
+    compare_iters(num_iters_score_base, num_iters_score_diff)
+    
+    """analyze_ranks(BIC_rank_list_base)
     num_iters_base = ignore_bisection(C_BIC_list_base, scores_list_base, BIC_list_base, BIC_rank_list_base)
 
     for beta in [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]:
@@ -126,7 +142,7 @@ if __name__ == "__main__":
         C_BIC_list_hsfl, scores_list_hsfl, BIC_list_hsfl, BIC_rank_list_hsfl = fonte(args, HSFL=False, score='fbl_bert')
         analyze_ranks(BIC_rank_list_hsfl)
         num_iters_hsfl = ignore_bisection(C_BIC_list_hsfl, scores_list_hsfl, BIC_list_hsfl, BIC_rank_list_hsfl)
-        compare_iters(num_iters_base, num_iters_hsfl)
+        compare_iters(num_iters_base, num_iters_hsfl)"""
 
     """C_BIC_list_base, scores_list_base, BIC_list_base, BIC_rank_list_base = fonte(args, HSFL=False, score=None)
     C_BIC_list_hsfl, scores_list_hsfl, BIC_list_hsfl, BIC_rank_list_hsfl = fonte(args, HSFL=True, score=None)

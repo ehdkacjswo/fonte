@@ -140,12 +140,15 @@ def get_style_change_commits(fault_dir, tool, with_Rewrite=True):
     return agg_df.index[agg_df["unchanged"]].tolist()
 
 # Extra score
-def extra_score(data_dir, score=None, norm_mode='base'):
+def extra_score(data_dir, score=None, norm_mode='rank'):
     score_dict = dict()
 
     # Use Bug2Commit
-    if score == 'bug2commit':
-        df = pd.read_csv(os.path.join(data_dir, 'ranking_Bug2Commit.csv'), names=['commit_hash', 'commit_file', 'rank', 'score'])
+    if score == 'bug2commit' or score == 'bug2commit_diff':
+        if score == 'bug2commit':
+            df = pd.read_csv(os.path.join(data_dir, 'ranking_Bug2Commit.csv'), names=['commit_hash', 'commit_file', 'rank', 'score'])
+        else:
+            df = pd.read_csv(os.path.join(data_dir, 'ranking_diff_Bug2Commit.csv'), names=['commit_hash', 'rank', 'score'])
 
         # No normalization
         if norm_mode == 'base':
@@ -282,8 +285,8 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
             if commit not in excluded:
                 list_commits.append((commit, depth))
                 sum_score = sum_score + extra_score_dict.get(commit, min(extra_score_dict.values(), default=1))
-                if commit not in extra_score_dict:
-                    print('FBL-BERT key doesn\'t exists : {} {}'.format(commit,fault_dir))
+                """if commit not in extra_score_dict:
+                    print('FBL-BERT key doesn\'t exists : {} {}'.format(commit,fault_dir))"""
         
         induce_sqrt = math.sqrt(len(list_commits))
         #sum_score = 1 if score is None else sum_score / induce_sqrt
@@ -292,11 +295,11 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
         # Vote for commits
         for commit, depth in list_commits:
             if HSFL:
-                #decayed_vote = vote * ((1-decay) ** depth) * sum_score / induce_sqrt
-                decayed_vote = (vote * beta + extra_score_dict.get(commit, min(extra_score_dict.values(), default=0)) * (1 - beta)) * ((1-decay) ** depth) * sum_score / induce_sqrt
+                decayed_vote = vote * ((1-decay) ** depth) * sum_score / induce_sqrt
+                #decayed_vote = (vote * beta + extra_score_dict.get(commit, min(extra_score_dict.values(), default=0)) * (1 - beta)) * ((1-decay) ** depth) * sum_score / induce_sqrt
             else:
-                #decayed_vote = vote * ((1-decay) ** depth) * sum_score
-                decayed_vote = (vote * beta + extra_score_dict.get(commit, min(extra_score_dict.values(), default=0)) * (1 - beta)) * ((1-decay) ** depth) * sum_score
+                decayed_vote = vote * ((1-decay) ** depth) * sum_score
+                #decayed_vote = (vote * beta + extra_score_dict.get(commit, min(extra_score_dict.values(), default=0)) * (1 - beta)) * ((1-decay) ** depth) * sum_score
             vote_dict[commit] = vote_dict.get(commit, 0) + decayed_vote
                 
 
@@ -308,8 +311,8 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
 
     # Apply extra score
     for commit, vote in vote_dict.items():
-        #vote_rows.append([commit, vote * extra_score_dict.get(commit, min(extra_score_dict.values(), default=1))])
-        vote_rows.append([commit, vote])
+        vote_rows.append([commit, vote * extra_score_dict.get(commit, min(extra_score_dict.values(), default=1))])
+        #vote_rows.append([commit, vote])
         #if commit not in extra_score_dict.keys():
             #print(fault_dir, commit)
 
@@ -467,10 +470,16 @@ def fonte(args, HSFL=True, score=None, ignore=[0]):
 
     # Iterate through every projects
     for folder in os.listdir('data/Defects4J/core/'):
+        
         coredir = os.path.join('data/Defects4J/core/', folder)
 
         # Get BIC data
         [pid, vid] = coredir[20:-1].split("-")
+
+        # diff data not fully handled
+        if not os.path.isfile(os.path.join('data/Defects4J/baseline/{}-{}b'.format(pid, vid), 'ranking_diff_Bug2Commit.csv')):
+            continue
+
         fault = (pid, vid)
         BIC = GT.set_index(["pid", "vid"]).loc[fault, "commit"]
         BIC_list.append(BIC)
