@@ -1,0 +1,134 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,11,mport java.io.ByteArrayOutputStream;
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,97,f (!(input instanceof ConstrainableInputStream))
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,98,"nput = new ConstrainableInputStream(input, bufferSize, 0);"
+True,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,95,"input = ConstrainableInputStream.wrap(input, bufferSize, 0);"
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,170,inal boolean capped = maxSize > 0;
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,171,inal byte[] buffer = new byte[capped && maxSize < bufferSize ? maxSize : bufferSize];
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,172,inal ByteArrayOutputStream outStream = new ByteArrayOutputStream(capped ? maxSize : bufferSize);
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,174,nt read;
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,175,nt remaining = maxSize;
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,177,hile (true) {
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,178,ead = inStream.read(buffer);
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,179,f (read == -1) break;
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,180,f (capped) { // todo - why not using ConstrainedInputStream?
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,181,f (read >= remaining) {
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,182,"utStream.write(buffer, 0, remaining);"
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,183,reak;
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,185,emaining -= read;
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,187,"utStream.write(buffer, 0, read);"
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,189,eturn ByteBuffer.wrap(outStream.toByteArray());
+True,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,167,"final ConstrainableInputStream input = ConstrainableInputStream.wrap(inStream, bufferSize, maxSize);"
+True,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,168,return input.readToByteBuffer(maxSize);
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,777,"es.bodyStream = new ConstrainableInputStream(res.bodyStream, DataUtil.bufferSize, req.maxBodySize());"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,777,"res.bodyStream = ConstrainableInputStream.wrap(res.bodyStream, DataUtil.bufferSize, req.maxBodySize());"
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,867,"eturn new ConstrainableInputStream(bodyStream, DataUtil.bufferSize, req.maxBodySize());"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,867,"return ConstrainableInputStream.wrap(bodyStream, DataUtil.bufferSize, req.maxBodySize());"
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,6,import java.io.ByteArrayOutputStream;
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,9,import java.nio.ByteBuffer;
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,16,private static final int DefaultSize = 1024 * 32;
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,19,private final int maxSize;
+False,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,17,"ublic ConstrainableInputStream(InputStream in, int bufferSize, int maxSize) {"
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,22,"private ConstrainableInputStream(InputStream in, int bufferSize, int maxSize) {"
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,25,this.maxSize = maxSize;
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,31,"* If this InputStream is not already a ConstrainableInputStream, let it be one."
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,32,* @param in the input stream to (maybe) wrap
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,33,* @param bufferSize the buffer size to use when reading
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,34,* @param maxSize the maximum size to allow to be read. 0 == infinite.
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,35,* @return a constrainable input stream
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,37,"public static ConstrainableInputStream wrap(InputStream in, int bufferSize, int maxSize) {"
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,38,return in instanceof ConstrainableInputStream
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,39,? (ConstrainableInputStream) in
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,40,": new ConstrainableInputStream(in, bufferSize, maxSize);"
+False,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,26,f (Thread.interrupted() || remaining < 0)
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,45,if (Thread.interrupted() || capped && remaining <= 0)
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,48,if (capped && len > remaining)
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,49,"len = remaining; // don't read more than desired, even if available"
+False,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,30,f (capped) {
+False,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,31,emaining -= read;
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,52,remaining -= read;
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,58,"* Reads this inputstream to a ByteBuffer. The supplied max may be less than the inputstream's max, to support"
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,59,* reading just the first bytes.
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,61,public ByteBuffer readToByteBuffer(int max) throws IOException {
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,62,"Validate.isTrue(max >= 0, ""maxSize must be 0 (unlimited) or larger"");"
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,63,final boolean localCapped = max > 0; // still possibly capped in total stream
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,64,final int bufferSize = localCapped && max < DefaultSize ? max : DefaultSize;
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,65,final byte[] readBuffer = new byte[bufferSize];
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,66,final ByteArrayOutputStream outStream = new ByteArrayOutputStream(bufferSize);
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,68,int read;
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,69,int remaining = max;
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,71,while (true) {
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,72,read = read(readBuffer);
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,73,if (read == -1) break;
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,74,if (localCapped) { // this local byteBuffer cap may be smaller than the overall maxSize (like when reading first bytes)
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,75,if (read >= remaining) {
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,76,"outStream.write(readBuffer, 0, remaining);"
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,77,break;
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,79,remaining -= read;
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,81,"outStream.write(readBuffer, 0, read);"
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,83,return ByteBuffer.wrap(outStream.toByteArray());
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,86,@Override
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,87,public void reset() throws IOException {
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,88,super.reset();
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,89,remaining = maxSize - markpos;
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,418,"ssertEquals(47200, smallRes.parse().text().length());"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,418,"assertEquals(49165, smallRes.parse().text().length());"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,1,package org.jsoup.internal;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,3,import org.jsoup.Jsoup;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,4,import org.junit.Ignore;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,5,import org.junit.Test;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,7,import java.io.BufferedInputStream;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,8,import java.io.IOException;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,9,import java.nio.ByteBuffer;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,11,import static org.junit.Assert.assertEquals;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,12,import static org.junit.Assert.assertFalse;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,13,import static org.junit.Assert.assertTrue;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,15,@Ignore
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,16,public class ConstrainableInputStreamTest {
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,17,"// todo - move these all to local jetty, don't ignore"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,19,@Test
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,20,public void remainingAfterFirstRead() throws IOException {
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,21,int bufferSize = 5 * 1024;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,22,int capSize = 100 * 1024;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,24,"String url = ""http://direct.infohound.net/tools/large.html""; // 280 K"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,25,BufferedInputStream inputStream = Jsoup.connect(url).maxBodySize(capSize)
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,26,.execute().bodyStream();
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,28,assertTrue(inputStream instanceof ConstrainableInputStream);
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,29,ConstrainableInputStream stream = (ConstrainableInputStream) inputStream;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,31,// simulates parse which does a limited read first
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,32,stream.mark(bufferSize);
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,33,ByteBuffer firstBytes = stream.readToByteBuffer(bufferSize);
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,35,byte[] array = firstBytes.array();
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,36,"String firstText = new String(array, ""UTF-8"");"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,37,"assertTrue(firstText.startsWith(""<html><head><title>Large""));"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,38,"assertEquals(bufferSize, array.length);"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,40,boolean fullyRead = stream.read() == -1;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,41,assertFalse(fullyRead);
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,43,// reset and read again
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,44,stream.reset();
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,45,ByteBuffer fullRead = stream.readToByteBuffer(0);
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,46,byte[] fullArray = fullRead.array();
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,47,"assertEquals(capSize, fullArray.length);"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,48,"String fullText = new String(fullArray, ""UTF-8"");"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,49,assertTrue(fullText.startsWith(firstText));
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,52,@Test
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,53,public void noLimitAfterFirstRead() throws IOException {
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,54,int bufferSize = 5 * 1024;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,56,"String url = ""http://direct.infohound.net/tools/large.html""; // 280 K"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,57,BufferedInputStream inputStream = Jsoup.connect(url).execute().bodyStream();
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,59,assertTrue(inputStream instanceof ConstrainableInputStream);
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,60,ConstrainableInputStream stream = (ConstrainableInputStream) inputStream;
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,62,// simulates parse which does a limited read first
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,63,stream.mark(bufferSize);
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,64,ByteBuffer firstBytes = stream.readToByteBuffer(bufferSize);
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,65,byte[] array = firstBytes.array();
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,66,"String firstText = new String(array, ""UTF-8"");"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,67,"assertTrue(firstText.startsWith(""<html><head><title>Large""));"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,68,"assertEquals(bufferSize, array.length);"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,70,// reset and read fully
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,71,stream.reset();
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,72,ByteBuffer fullRead = stream.readToByteBuffer(0);
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,73,byte[] fullArray = fullRead.array();
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,74,"assertEquals(280735, fullArray.length);"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,75,"String fullText = new String(fullArray, ""UTF-8"");"
+True,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,src/test/java/org/jsoup/internal/ConstrainableInputStreamTest.java,76,assertTrue(fullText.startsWith(firstText));

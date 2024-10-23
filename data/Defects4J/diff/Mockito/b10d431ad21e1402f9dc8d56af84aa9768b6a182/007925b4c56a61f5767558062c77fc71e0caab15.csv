@@ -1,0 +1,649 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,7,mport java.util.Arrays;
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,9,mport org.mockito.exceptions.Reporter;
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,10,mport org.mockito.exceptions.misusing.NotAMockException;
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,11,mport org.mockito.internal.MockHandler;
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,8,import org.mockito.internal.MockitoCore;
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,13,mport org.mockito.internal.progress.MockingProgress;
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,15,mport org.mockito.internal.progress.OngoingStubbing;
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,16,mport org.mockito.internal.progress.ThreadSafeMockingProgress;
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,13,import org.mockito.internal.returnvalues.MockReturnValues;
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,24,mport org.mockito.internal.stubbing.StubberImpl;
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,27,mport org.mockito.internal.util.MockUtil;
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,502,tatic final MockingProgress MOCKING_PROGRESS = new ThreadSafeMockingProgress();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,503,rivate static final Reporter REPORTER = new Reporter();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,496,"* Optional ReturnValues to be used with {@link Mockito#mock(Class, ReturnValues)}"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,497,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,498,* {@link ReturnValues} defines the return values of unstubbed invocations.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,499,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,500,* This implementation can be helpful when working with legacy code.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,501,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,502,* MockReturnValues first tries to return ordinary return values (see {@link MoreEmptyReturnValues})
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,503,* then it tries to return mocks. If the return type cannot be mocked (e.g. is final) then plain null is returned.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,504,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,506,public static final ReturnValues RETURNS_MOCKS = new MockReturnValues();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,514,"eturn mock(classToMock, null, null, RETURNS_DEFAULTS);"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,517,"return MockitoCore.mock(classToMock, null, null, RETURNS_DEFAULTS);"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,532,"eturn mock(classToMock, name, null, RETURNS_DEFAULTS);"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,535,"return MockitoCore.mock(classToMock, name, null, RETURNS_DEFAULTS);"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,555,"eturn mock(classToMock, null, (T) null, returnValues);"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,558,"return MockitoCore.mock(classToMock, null, (T) null, returnValues);"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,558,"rivate static <T> T mock(Class<T> classToMock, String name, T optionalInstance, ReturnValues returnValues) {"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,559,OCKING_PROGRESS.validateState();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,560,OCKING_PROGRESS.resetOngoingStubbing();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,561,"eturn MockUtil.createMock(classToMock, MOCKING_PROGRESS, name, optionalInstance, returnValues);"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,626,"eturn mock((Class<T>) object.getClass(), null, object, RETURNS_DEFAULTS);"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,623,"return MockitoCore.mock((Class<T>) object.getClass(), null, object, RETURNS_DEFAULTS);"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,630, <pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,631,   //Instead of:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,632,   stub(mock.count()).toReturn(10);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,634,   //Please do:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,635,   when(mock.count()).thenReturn(10);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,636, </pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,638, Many users found stub() confusing therefore stub() has been deprecated in favor of {@link Mockito#when(Object)}
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,639, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,640, How to fix deprecation warnings? Typically it's just few minutes of search & replace job:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,641, <pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,642,   Mockito.stub;  <i>replace with:</i>  Mockito.when;
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,643,   stub(          <i>replace with:</i>  when(
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,644,   .toReturn(     <i>replace with:</i>  .thenReturn(
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,645,   .toThrow(      <i>replace with:</i>  .thenThrow(
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,646,   .toAnswer(     <i>replace with:</i>  .thenAnswer(
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,647, </pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,648, If you're an existing user then sorry for making your code littered with deprecation warnings.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,649, This change was required to make Mockito better.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,651, @param methodCall
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,652,            method call
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,653, @return DeprecatedOngoingStubbing object to set stubbed value/exception
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,655,"SuppressWarnings(""unchecked"")"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,656,Deprecated
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,657,ublic static <T> DeprecatedOngoingStubbing<T> stub(T methodCall) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,658,OCKING_PROGRESS.stubbingStarted();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,659,eturn (DeprecatedOngoingStubbing) stub();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,627,* <pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,628,*   //Instead of:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,629,*   stub(mock.count()).toReturn(10);
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,631,*   //Please do:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,632,*   when(mock.count()).thenReturn(10);
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,633,* </pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,635,* Many users found stub() confusing therefore stub() has been deprecated in favor of {@link Mockito#when(Object)}
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,636,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,637,* How to fix deprecation warnings? Typically it's just few minutes of search & replace job:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,638,* <pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,639,*   Mockito.stub;  <i>replace with:</i>  Mockito.when;
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,640,*   stub(          <i>replace with:</i>  when(
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,641,*   .toReturn(     <i>replace with:</i>  .thenReturn(
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,642,*   .toThrow(      <i>replace with:</i>  .thenThrow(
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,643,*   .toAnswer(     <i>replace with:</i>  .thenAnswer(
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,644,* </pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,645,* If you're an existing user then sorry for making your code littered with deprecation warnings.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,646,* This change was required to make Mockito better.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,648,* @param methodCall
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,649,*            method call
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,650,* @return DeprecatedOngoingStubbing object to set stubbed value/exception
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,652,@Deprecated
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,653,public static <T> DeprecatedOngoingStubbing<T> stub(T methodCall) {
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,654,return MockitoCore.stub(methodCall);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,663, Enables stubbing methods. Use it when you want the mock to return particular value when particular method is called.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,664, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,665," Simply put: ""<b>When</b> the x method is called <b>then</b> return y""."
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,666, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,667, <b>when() is a successor of deprecated {@link Mockito#stub(Object)}</b>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,668, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,669, Examples:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,671, <pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,672, <b>when</b>(mock.someMethod()).<b>thenReturn</b>(10);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,674," //you can use flexible argument matchers, e.g:"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,675, when(mock.someMethod(<b>anyString()</b>)).thenReturn(10);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,677, //setting exception to be thrown:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,678," when(mock.someMethod(""some arg"")).thenThrow(new RuntimeException());"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,680, //you can set different behavior for consecutive method calls.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,681," //Last stubbing (e.g: thenReturn(""foo"")) determines the behavior of further consecutive calls."
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,682," when(mock.someMethod(""some arg""))"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,683,  .thenThrow(new RuntimeException())
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,684,"  .thenReturn(""foo"");"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,686," //Alternative, shorter version for consecutive stubbing:"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,687," when(mock.someMethod(""some arg""))"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,688,"  .thenReturn(""one"", ""two"");"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,689, //is the same as:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,690," when(mock.someMethod(""some arg""))"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,691,"  .thenReturn(""one"")"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,692,"  .thenReturn(""two"");"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,694, //shorter version for consecutive method calls throwing exceptions:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,695," when(mock.someMethod(""some arg""))"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,696,"  .thenThrow(new RuntimeException(), new NullPointerException();"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,698, </pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,700, For stubbing void methods with throwables see: {@link Mockito#doThrow(Throwable)}
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,701, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,702, Stubbing can be overridden: for example common stubbing can go to fixture
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,703, setup but the test methods can override it.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,704, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,705," Once stubbed, the method will always return stubbed value regardless"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,706, of how many times it is called.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,707, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,708, Last stubbing is more important - when you stubbed the same method with
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,709, the same arguments many times.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,710, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,711," Although it is possible to verify a stubbed invocation, usually <b>it's just redundant</b>."
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,712, Let's say you've stubbed foo.bar().
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,713, If your code cares what foo.bar() returns then something else breaks(often before even verify() gets executed).
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,714, If your code doesn't care what get(0) returns then it should not be stubbed.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,715," Not convinced? See <a href=""http://monkeyisland.pl/2008/04/26/asking-and-telling"">here</a>."
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,717, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,718, See examples in javadoc for {@link Mockito} class
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,719, @param methodCall method to be stubbed
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,721,ublic static <T> NewOngoingStubbing<T> when(T methodCall) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,722,OCKING_PROGRESS.stubbingStarted();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,723,eturn (NewOngoingStubbing) stub();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,726,rivate static OngoingStubbing stub() {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,727,ngoingStubbing stubbing = MOCKING_PROGRESS.pullOngoingStubbing();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,728,f (stubbing == null) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,729,OCKING_PROGRESS.reset();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,730,EPORTER.missingMethodInvocation();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,732,eturn stubbing;
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,658,* Enables stubbing methods. Use it when you want the mock to return particular value when particular method is called.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,659,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,660,"* Simply put: ""<b>When</b> the x method is called <b>then</b> return y""."
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,661,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,662,* <b>when() is a successor of deprecated {@link Mockito#stub(Object)}</b>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,663,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,664,* Examples:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,666,* <pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,667,* <b>when</b>(mock.someMethod()).<b>thenReturn</b>(10);
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,669,"* //you can use flexible argument matchers, e.g:"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,670,* when(mock.someMethod(<b>anyString()</b>)).thenReturn(10);
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,672,* //setting exception to be thrown:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,673,"* when(mock.someMethod(""some arg"")).thenThrow(new RuntimeException());"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,675,* //you can set different behavior for consecutive method calls.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,676,"* //Last stubbing (e.g: thenReturn(""foo"")) determines the behavior of further consecutive calls."
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,677,"* when(mock.someMethod(""some arg""))"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,678,*  .thenThrow(new RuntimeException())
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,679,"*  .thenReturn(""foo"");"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,681,"* //Alternative, shorter version for consecutive stubbing:"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,682,"* when(mock.someMethod(""some arg""))"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,683,"*  .thenReturn(""one"", ""two"");"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,684,* //is the same as:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,685,"* when(mock.someMethod(""some arg""))"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,686,"*  .thenReturn(""one"")"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,687,"*  .thenReturn(""two"");"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,689,* //shorter version for consecutive method calls throwing exceptions:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,690,"* when(mock.someMethod(""some arg""))"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,691,"*  .thenThrow(new RuntimeException(), new NullPointerException();"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,693,* </pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,695,* For stubbing void methods with throwables see: {@link Mockito#doThrow(Throwable)}
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,696,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,697,* Stubbing can be overridden: for example common stubbing can go to fixture
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,698,* setup but the test methods can override it.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,699,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,700,"* Once stubbed, the method will always return stubbed value regardless"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,701,* of how many times it is called.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,702,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,703,* Last stubbing is more important - when you stubbed the same method with
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,704,* the same arguments many times.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,705,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,706,"* Although it is possible to verify a stubbed invocation, usually <b>it's just redundant</b>."
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,707,* Let's say you've stubbed foo.bar().
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,708,* If your code cares what foo.bar() returns then something else breaks(often before even verify() gets executed).
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,709,* If your code doesn't care what get(0) returns then it should not be stubbed.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,710,"* Not convinced? See <a href=""http://monkeyisland.pl/2008/04/26/asking-and-telling"">here</a>."
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,712,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,713,* See examples in javadoc for {@link Mockito} class
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,714,* @param methodCall method to be stubbed
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,716,public static <T> NewOngoingStubbing<T> when(T methodCall) {
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,717,return MockitoCore.when(methodCall);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,761,"eturn verify(mock, times(1));"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,746,"return MockitoCore.verify(mock, times(1));"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,765, TODO javadoc
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,767, @param <T>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,768, @param mock
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,770,ublic static <T> void reset(T mock) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,771,/TODO Perhaps we should validate the state instead of resetting?
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,772,OCKING_PROGRESS.reset();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,773,OCKING_PROGRESS.resetOngoingStubbing();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,774,/TODO Perhaps we should maintain previous ReturnValues?
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,775,"ockUtil.resetMock(mock, MOCKING_PROGRESS, RETURNS_DEFAULTS);"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,750,* TODO javadoc
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,752,* @param <T>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,753,* @param mock
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,755,public static <T> void reset(T mock) {
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,756,MockitoCore.reset(mock);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,780, Verifies certain behavior happened at least once / exact number of times / never. E.g:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,781, <pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,782,"   verify(mock, times(5)).someMethod(""was called five times"");"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,784,"   verify(mock, atLeast(2)).someMethod(""was called at least two times"");"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,786,"   //you can use flexible argument matchers, e.g:"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,787,"   verify(mock, atLeastOnce()).someMethod(<b>anyString()</b>);"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,788, </pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,790, <b>times(1) is the default</b> and can be omitted
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,791, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,792, See examples in javadoc for {@link Mockito} class
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,794, @param mock to be verified
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,795," @param mode times(x), atLeastOnce() or never()"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,797, @return mock object itself
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,799,"ublic static <T> T verify(T mock, VerificationMode mode) {"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,800,f (mock == null) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,801,EPORTER.nullPassedToVerify();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,802, else if (!MockUtil.isMock(mock)) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,803,EPORTER.notAMockPassedToVerify();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,805,OCKING_PROGRESS.verificationStarted(mode);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,806,eturn mock;
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,761,* Verifies certain behavior happened at least once / exact number of times / never. E.g:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,762,* <pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,763,"*   verify(mock, times(5)).someMethod(""was called five times"");"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,765,"*   verify(mock, atLeast(2)).someMethod(""was called at least two times"");"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,767,"*   //you can use flexible argument matchers, e.g:"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,768,"*   verify(mock, atLeastOnce()).someMethod(<b>anyString()</b>);"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,769,* </pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,771,* <b>times(1) is the default</b> and can be omitted
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,772,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,773,* See examples in javadoc for {@link Mockito} class
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,775,* @param mock to be verified
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,776,"* @param mode times(x), atLeastOnce() or never()"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,778,* @return mock object itself
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,780,"public static <T> T verify(T mock, VerificationMode mode) {"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,781,"return MockitoCore.verify(mock, mode);"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,810, Checks if any of given mocks has any unverified interaction.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,811, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,812, You can use this method after you verified your mocks - to make sure that nothing
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,813, else was invoked on your mocks.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,814, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,815, See also {@link Mockito#never()} - it is more explicit and communicates the intent well.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,816, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,817, Stubbed invocations (if called) are also treated as interactions.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,818, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,819, A word of <b>warning</b>:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,820," Some users who did a lot of classic, expect-run-verify mocking tend to use verifyNoMoreInteractions() very often, even in every test method."
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,821, verifyNoMoreInteractions() is not recommended to use in every test method.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,822, verifyNoMoreInteractions() is a handy assertion from the interaction testing toolkit. Use it only when it's relevant.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,823," Abusing it leads to overspecified, less maintainable tests. You can find further reading"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,824," <a href=""http://monkeyisland.pl/2008/07/12/should-i-worry-about-the-unexpected/"">here</a>."
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,825, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,826," This method will also detect unverified invocations that occurred before the test method,"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,827," for example: in setUp(), &#064;Before method or in constructor."
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,828, Consider writing nice code that makes interactions only in test methods.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,830, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,831, Example:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,833, <pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,834, //interactions
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,835, mock.doSomething();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,836, mock.doSomethingUnexpected();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,838, //verification
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,839, verify(mock).doSomething();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,841, //following will fail because 'doSomethingUnexpected()' is unexpected
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,842, verifyNoMoreInteractions(mock);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,844, </pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,846, See examples in javadoc for {@link Mockito} class
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,848, @param mocks to be verified
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,850,ublic static void verifyNoMoreInteractions(Object... mocks) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,851,ssertMocksNotEmpty(mocks);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,852,OCKING_PROGRESS.validateState();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,853,or (Object mock : mocks) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,854,ry {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,855,f (mock == null) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,856,EPORTER.nullPassedToVerifyNoMoreInteractions();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,858,ockUtil.getMockHandler(mock).verifyNoMoreInteractions();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,859, catch (NotAMockException e) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,860,EPORTER.notAMockPassedToVerifyNoMoreInteractions();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,785,* Checks if any of given mocks has any unverified interaction.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,786,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,787,* You can use this method after you verified your mocks - to make sure that nothing
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,788,* else was invoked on your mocks.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,789,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,790,* See also {@link Mockito#never()} - it is more explicit and communicates the intent well.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,791,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,792,* Stubbed invocations (if called) are also treated as interactions.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,793,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,794,* A word of <b>warning</b>:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,795,"* Some users who did a lot of classic, expect-run-verify mocking tend to use verifyNoMoreInteractions() very often, even in every test method."
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,796,* verifyNoMoreInteractions() is not recommended to use in every test method.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,797,* verifyNoMoreInteractions() is a handy assertion from the interaction testing toolkit. Use it only when it's relevant.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,798,"* Abusing it leads to overspecified, less maintainable tests. You can find further reading"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,799,"* <a href=""http://monkeyisland.pl/2008/07/12/should-i-worry-about-the-unexpected/"">here</a>."
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,800,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,801,"* This method will also detect unverified invocations that occurred before the test method,"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,802,"* for example: in setUp(), &#064;Before method or in constructor."
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,803,* Consider writing nice code that makes interactions only in test methods.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,805,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,806,* Example:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,808,* <pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,809,* //interactions
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,810,* mock.doSomething();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,811,* mock.doSomethingUnexpected();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,813,* //verification
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,814,* verify(mock).doSomething();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,816,* //following will fail because 'doSomethingUnexpected()' is unexpected
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,817,* verifyNoMoreInteractions(mock);
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,819,* </pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,821,* See examples in javadoc for {@link Mockito} class
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,823,* @param mocks to be verified
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,825,public static void verifyNoMoreInteractions(Object... mocks) {
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,826,MockitoCore.verifyNoMoreInteractions(mocks);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,879,erifyNoMoreInteractions(mocks);
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,843,MockitoCore.verifyNoMoreInteractions(mocks);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,882,rivate static void assertMocksNotEmpty(Object[] mocks) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,883,f (mocks == null || mocks.length == 0) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,884,EPORTER.mocksHaveToBePassedToVerifyNoMoreInteractions();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,846,public static void assertMocksNotEmpty(Object[] mocks) {
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,847,MockitoCore.assertMocksNotEmpty(mocks);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,889, <pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,890,   //Instead of:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,891,   stubVoid(mock).toThrow(e).on().someVoidMethod();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,893,   //Please do:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,894,   doThrow(e).when(mock).someVoidMethod();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,895, </pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,897, doThrow() replaces stubVoid() because of improved readability and consistency with the family of doAnswer() methods.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,898, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,899," Originally, stubVoid() was used for stubbing void methods with exceptions. E.g:"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,901, <pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,902, stubVoid(mock).toThrow(new RuntimeException()).on().someMethod();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,904, //you can stub with different behavior for consecutive calls.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,905, //Last stubbing (e.g. toReturn()) determines the behavior for further consecutive calls.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,906, stubVoid(mock)
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,907,   .toThrow(new RuntimeException())
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,908,   .toReturn()
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,909,   .on().someMethod();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,910, </pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,912, See examples in javadoc for {@link Mockito} class
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,914, @deprecated Use {@link Mockito#doThrow(Throwable)} method for stubbing voids
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,916, @param mock
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,917,            to stub
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,918, @return stubbable object that allows stubbing with throwable
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,920,ublic static <T> VoidMethodStubbable<T> stubVoid(T mock) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,921,ockHandler<T> handler = MockUtil.getMockHandler(mock);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,922,OCKING_PROGRESS.stubbingStarted();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,923,eturn handler.voidMethodStubbable(mock);
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,851,* <pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,852,*   //Instead of:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,853,*   stubVoid(mock).toThrow(e).on().someVoidMethod();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,855,*   //Please do:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,856,*   doThrow(e).when(mock).someVoidMethod();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,857,* </pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,859,* doThrow() replaces stubVoid() because of improved readability and consistency with the family of doAnswer() methods.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,860,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,861,"* Originally, stubVoid() was used for stubbing void methods with exceptions. E.g:"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,863,* <pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,864,* stubVoid(mock).toThrow(new RuntimeException()).on().someMethod();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,866,* //you can stub with different behavior for consecutive calls.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,867,* //Last stubbing (e.g. toReturn()) determines the behavior for further consecutive calls.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,868,* stubVoid(mock)
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,869,*   .toThrow(new RuntimeException())
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,870,*   .toReturn()
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,871,*   .on().someMethod();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,872,* </pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,874,* See examples in javadoc for {@link Mockito} class
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,876,* @deprecated Use {@link Mockito#doThrow(Throwable)} method for stubbing voids
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,878,* @param mock
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,879,*            to stub
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,880,* @return stubbable object that allows stubbing with throwable
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,882,public static <T> VoidMethodStubbable<T> stubVoid(T mock) {
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,883,return MockitoCore.stubVoid(mock);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,941,eturn doAnswer(new ThrowsException(toBeThrown));
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,901,return MockitoCore.doAnswer(new ThrowsException(toBeThrown));
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,945, Use doAnswer() when you want to stub a void method with generic {@link Answer}.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,946, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,947, Stubbing voids requires different approach from {@link Mockito#when(Object)} because the compiler does not like void methods inside brackets...
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,948, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,949, Example:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,951, <pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,952,  doAnswer(new Answer() {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,953,      public Object answer(InvocationOnMock invocation) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,954,          Object[] args = invocation.getArguments();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,955,          Mock mock = invocation.getMock();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,956,          return null;
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,958,  .when(mock).someMethod();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,959, </pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,961, @param answer to answer when the stubbed method is called
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,962, @return stubber - to select a method for stubbing
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,964,ublic static Stubber doAnswer(Answer answer) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,965,OCKING_PROGRESS.stubbingStarted();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,966,OCKING_PROGRESS.resetOngoingStubbing();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,967,eturn new StubberImpl().doAnswer(answer);
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,905,* Use doAnswer() when you want to stub a void method with generic {@link Answer}.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,906,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,907,* Stubbing voids requires different approach from {@link Mockito#when(Object)} because the compiler does not like void methods inside brackets...
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,908,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,909,* Example:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,911,* <pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,912,*  doAnswer(new Answer() {
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,913,*      public Object answer(InvocationOnMock invocation) {
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,914,*          Object[] args = invocation.getArguments();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,915,*          Mock mock = invocation.getMock();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,916,*          return null;
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,918,*  .when(mock).someMethod();
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,919,* </pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,921,* @param answer to answer when the stubbed method is called
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,922,* @return stubber - to select a method for stubbing
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,924,public static Stubber doAnswer(Answer answer) {
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,925,return MockitoCore.doAnswer(answer);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1004,eturn doAnswer(new DoesNothing());
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,962,return MockitoCore.doAnswer(new DoesNothing());
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1048,eturn doAnswer(new Returns(toBeReturned));
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1006,return MockitoCore.doAnswer(new Returns(toBeReturned));
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1052, Creates InOrder object that allows verifying mocks in order.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1054, <pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1055,"   InOrder inOrder = inOrder(firstMock, secondMock);"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1057,"   inOrder.verify(firstMock).add(""was called first"");"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1058,"   inOrder.verify(secondMock).add(""was called second"");"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1059, </pre>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1061, Verification in order is flexible - <b>you don't have to verify all interactions</b> one-by-one
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1062, but only those that you are interested in testing in order.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1063, <p>
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1064," Also, you can create InOrder object passing only mocks that are relevant for in-order verification."
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1066, See examples in javadoc for {@link Mockito} class
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1068, @param mocks to be verified in order
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1070, @return InOrder object to be used to verify in order
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1072,ublic static InOrder inOrder(Object... mocks) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1073,f (mocks == null || mocks.length == 0) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1074,EPORTER.mocksHaveToBePassedWhenCreatingInOrder();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1076,or (Object mock : mocks) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1077,f (mock == null) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1078,EPORTER.nullPassedWhenCreatingInOrder();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1079, else if (!MockUtil.isMock(mock)) {
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1080,EPORTER.notAMockPassedWhenCreatingInOrder();
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1083,nOrder inOrder = new InOrderImpl(Arrays.asList(mocks));
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1084,eturn inOrder;
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1010,* Creates InOrder object that allows verifying mocks in order.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1012,* <pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1013,"*   InOrder inOrder = inOrder(firstMock, secondMock);"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1015,"*   inOrder.verify(firstMock).add(""was called first"");"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1016,"*   inOrder.verify(secondMock).add(""was called second"");"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1017,* </pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1019,* Verification in order is flexible - <b>you don't have to verify all interactions</b> one-by-one
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1020,* but only those that you are interested in testing in order.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1021,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1022,"* Also, you can create InOrder object passing only mocks that are relevant for in-order verification."
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1024,* See examples in javadoc for {@link Mockito} class
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1026,* @param mocks to be verified in order
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1028,* @return InOrder object to be used to verify in order
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1030,public static InOrder inOrder(Object... mocks) {
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1031,return MockitoCore.inOrder(mocks);
+False,src/org/mockito/InOrderImpl.java,src/org/mockito/internal/InOrderImpl.java,5,ackage org.mockito;
+True,src/org/mockito/InOrderImpl.java,src/org/mockito/internal/InOrderImpl.java,5,package org.mockito.internal;
+True,src/org/mockito/InOrderImpl.java,src/org/mockito/internal/InOrderImpl.java,10,import org.mockito.InOrder;
+False,src/org/mockito/InOrderImpl.java,src/org/mockito/internal/InOrderImpl.java,39,"eturn Mockito.verify(mock, new InOrderWrapper((VerificationInOrderMode) mode, mocksToBeVerifiedInOrder));"
+True,src/org/mockito/InOrderImpl.java,src/org/mockito/internal/InOrderImpl.java,40,"return MockitoCore.verify(mock, new InOrderWrapper((VerificationInOrderMode) mode, mocksToBeVerifiedInOrder));"
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,2,* Copyright (c) 2007 Mockito contributors
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,3,* This program is made available under the terms of the MIT License.
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,5,package org.mockito.internal;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,7,import java.util.Arrays;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,9,import org.mockito.InOrder;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,10,import org.mockito.Mockito;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,11,import org.mockito.ReturnValues;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,12,import org.mockito.exceptions.Reporter;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,13,import org.mockito.exceptions.misusing.NotAMockException;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,14,import org.mockito.internal.progress.DeprecatedOngoingStubbing;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,15,import org.mockito.internal.progress.MockingProgress;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,16,import org.mockito.internal.progress.NewOngoingStubbing;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,17,import org.mockito.internal.progress.OngoingStubbing;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,18,import org.mockito.internal.progress.ThreadSafeMockingProgress;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,19,import org.mockito.internal.stubbing.Stubber;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,20,import org.mockito.internal.stubbing.StubberImpl;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,21,import org.mockito.internal.stubbing.VoidMethodStubbable;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,22,import org.mockito.internal.util.MockUtil;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,23,import org.mockito.internal.verification.api.VerificationMode;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,24,import org.mockito.stubbing.Answer;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,26,"@SuppressWarnings(""unchecked"")"
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,27,public class MockitoCore {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,29,static final Reporter REPORTER = new Reporter();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,30,public static final MockingProgress MOCKING_PROGRESS = new ThreadSafeMockingProgress();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,32,"public static <T> T mock(Class<T> classToMock, String name, T optionalInstance, ReturnValues returnValues) {"
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,33,MOCKING_PROGRESS.validateState();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,34,MOCKING_PROGRESS.resetOngoingStubbing();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,35,"return MockUtil.createMock(classToMock, MOCKING_PROGRESS, name, optionalInstance, returnValues);"
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,38,public static OngoingStubbing stub() {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,39,OngoingStubbing stubbing = MOCKING_PROGRESS.pullOngoingStubbing();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,40,if (stubbing == null) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,41,MOCKING_PROGRESS.reset();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,42,REPORTER.missingMethodInvocation();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,44,return stubbing;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,47,@Deprecated
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,48,public static <T> DeprecatedOngoingStubbing<T> stub(T methodCall) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,49,MOCKING_PROGRESS.stubbingStarted();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,50,return (DeprecatedOngoingStubbing) stub();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,53,public static <T> NewOngoingStubbing<T> when(T methodCall) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,54,MOCKING_PROGRESS.stubbingStarted();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,55,return (NewOngoingStubbing) stub();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,59,"public static <T> T verify(T mock, VerificationMode mode) {"
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,60,if (mock == null) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,61,REPORTER.nullPassedToVerify();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,62,} else if (!MockUtil.isMock(mock)) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,63,REPORTER.notAMockPassedToVerify();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,65,MOCKING_PROGRESS.verificationStarted(mode);
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,66,return mock;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,69,public static <T> void reset(T mock) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,70,//TODO Perhaps we should validate the state instead of resetting?
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,71,MOCKING_PROGRESS.reset();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,72,MOCKING_PROGRESS.resetOngoingStubbing();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,73,//TODO Perhaps we should maintain previous ReturnValues?
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,74,"MockUtil.resetMock(mock, MOCKING_PROGRESS, Mockito.RETURNS_DEFAULTS);"
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,77,public static void verifyNoMoreInteractions(Object... mocks) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,78,MockitoCore.assertMocksNotEmpty(mocks);
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,79,MOCKING_PROGRESS.validateState();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,80,for (Object mock : mocks) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,81,try {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,82,if (mock == null) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,83,REPORTER.nullPassedToVerifyNoMoreInteractions();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,85,MockUtil.getMockHandler(mock).verifyNoMoreInteractions();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,86,} catch (NotAMockException e) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,87,REPORTER.notAMockPassedToVerifyNoMoreInteractions();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,92,public static void assertMocksNotEmpty(Object[] mocks) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,93,if (mocks == null || mocks.length == 0) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,94,REPORTER.mocksHaveToBePassedToVerifyNoMoreInteractions();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,98,public static InOrder inOrder(Object... mocks) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,99,if (mocks == null || mocks.length == 0) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,100,REPORTER.mocksHaveToBePassedWhenCreatingInOrder();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,102,for (Object mock : mocks) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,103,if (mock == null) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,104,REPORTER.nullPassedWhenCreatingInOrder();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,105,} else if (!MockUtil.isMock(mock)) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,106,REPORTER.notAMockPassedWhenCreatingInOrder();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,109,InOrder inOrder = new InOrderImpl(Arrays.asList(mocks));
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,110,return inOrder;
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,113,public static Stubber doAnswer(Answer answer) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,114,MOCKING_PROGRESS.stubbingStarted();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,115,MOCKING_PROGRESS.resetOngoingStubbing();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,116,return new StubberImpl().doAnswer(answer);
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,119,public static <T> VoidMethodStubbable<T> stubVoid(T mock) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,120,MockHandler<T> handler = MockUtil.getMockHandler(mock);
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,121,MOCKING_PROGRESS.stubbingStarted();
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,122,return handler.voidMethodStubbable(mock);
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,1,package org.mockito.internal.returnvalues;
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,3,import org.mockito.ReturnValues;
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,4,import org.mockito.internal.MockitoCore;
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,5,import org.mockito.internal.creation.jmock.ClassImposterizer;
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,6,import org.mockito.invocation.InvocationOnMock;
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,8,public class MockReturnValues implements ReturnValues {
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,10,private ReturnValues delegate = new MoreEmptyReturnValues();
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,12,public Object valueFor(InvocationOnMock invocation){
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,13,Object ret = delegate.valueFor(invocation);
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,14,if (ret != null) {
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,15,return ret;
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,18,return returnValueFor(invocation.getMethod().getReturnType());
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,21,"@SuppressWarnings(""unchecked"")"
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,22,Object returnValueFor(Class<?> class1) {
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,23,if (!ClassImposterizer.INSTANCE.canImposterise(class1)) {
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,24,return null;
+True,src/org/mockito/internal/returnvalues/MockReturnValues.java,src/org/mockito/internal/returnvalues/MockReturnValues.java,27,"return MockitoCore.mock((Class)class1, null, null, this);"
+False,test/org/mockito/MockitoTest.java,test/org/mockito/MockitoTest.java,7,mport static org.mockito.Mockito.*;
+True,test/org/mockito/MockitoTest.java,test/org/mockito/MockitoTest.java,7,import static org.mockito.Mockito.times;
+True,test/org/mockito/MockitoTest.java,test/org/mockito/MockitoTest.java,13,import org.mockito.internal.progress.ThreadSafeMockingProgress;
+False,test/org/mockito/MockitoTest.java,test/org/mockito/MockitoTest.java,23,ssertNull(Mockito.MOCKING_PROGRESS.pullOngoingStubbing());
+True,test/org/mockito/MockitoTest.java,test/org/mockito/MockitoTest.java,23,//FIXME Consider to move to separate test
+True,test/org/mockito/MockitoTest.java,test/org/mockito/MockitoTest.java,24,assertNull(new ThreadSafeMockingProgress().pullOngoingStubbing());
+True,test/org/mockito/StateMaster.java,test/org/mockito/StateMaster.java,7,import org.mockito.internal.MockitoCore;
+False,test/org/mockito/StateMaster.java,test/org/mockito/StateMaster.java,10,ockito.MOCKING_PROGRESS.reset();
+True,test/org/mockito/StateMaster.java,test/org/mockito/StateMaster.java,12,MockitoCore.MOCKING_PROGRESS.reset();
+False,test/org/mockito/StateMaster.java,test/org/mockito/StateMaster.java,14,ockito.MOCKING_PROGRESS.validateState();
+True,test/org/mockito/StateMaster.java,test/org/mockito/StateMaster.java,16,MockitoCore.MOCKING_PROGRESS.validateState();
+True,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,4,package org.mockito.internal.returnvalues;
+True,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,6,interface HasPrimitiveMethods {
+True,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,7,boolean booleanMethod();
+True,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,8,char charMethod();
+True,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,9,int intMethod();
+True,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,10,long longMethod();
+True,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,11,float floatMethod();
+True,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,test/org/mockito/internal/returnvalues/HasPrimitiveMethods.java,12,double doubleMethod();
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,1,package org.mockito.internal.returnvalues;
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,3,import java.lang.reflect.Method;
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,5,import org.junit.Test;
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,6,import org.mockito.internal.invocation.Invocation;
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,7,import org.mockito.internal.util.MockUtil;
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,8,import org.mockitoutil.TestBase;
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,10,public class MockReturnValuesTest extends TestBase {
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,11,private MockReturnValues values = new MockReturnValues();
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,13,interface FooInterface {
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,16,class BarClass {
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,19,final class Baz {
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,23,@Test
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,24,// FIXME split into separate
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,25,public void shouldReturnMockValueForInterface() throws Exception {
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,26,Object interfaceMock = values.returnValueFor(FooInterface.class);
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,27,assertTrue(MockUtil.isMock(interfaceMock));
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,30,public void shouldReturnMockValueForClass() throws Exception {
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,31,Object classMock = values.returnValueFor(BarClass.class);
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,32,assertTrue(MockUtil.isMock(classMock));
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,35,@Test
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,36,public void shouldReturnNullForFinalClass() throws Exception {
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,37,assertNull(values.returnValueFor(Baz.class));
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,40,"private Invocation invocationOf(Class<?> type, String methodName)"
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,41,throws NoSuchMethodException {
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,42,"return new Invocation(new Object(), type.getMethod(methodName,"
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,43,"new Class[0]), new Object[0], 1);"
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,46,@Test
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,47,public void shouldReturnTheUsualDefaultValuesForPrimitives()
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,48,throws Exception {
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,49,MockReturnValues returnValues = new MockReturnValues();
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,50,"assertEquals(false, returnValues.valueFor(invocationOf(HasPrimitiveMethods.class, ""booleanMethod"")));"
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,51,"assertEquals((char) 0, returnValues.valueFor(invocationOf(HasPrimitiveMethods.class, ""charMethod"")));"
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,52,"assertEquals(0, returnValues.valueFor(invocationOf(HasPrimitiveMethods.class, ""intMethod"")));"
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,53,"assertEquals(0, returnValues.valueFor(invocationOf(HasPrimitiveMethods.class, ""longMethod"")));"
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,54,"assertEquals(0, returnValues.valueFor(invocationOf(HasPrimitiveMethods.class, ""floatMethod"")));"
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,55,"assertEquals(0, returnValues.valueFor(invocationOf(HasPrimitiveMethods.class, ""doubleMethod"")));"
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,58,interface StringMethods {
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,59,String stringMethod();
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,60,String[] stringArrayMethod();
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,63,@Test
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,64,public void shouldReturnEmptyArray() throws Exception{
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,65,"String[] ret = (String[]) values.valueFor(invocationOf(StringMethods.class, ""stringArrayMethod""));"
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,67,assertTrue(ret.getClass().isArray());
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,68,assertTrue(ret.length == 0);
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,71,@Test
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,72,public void shouldReturnEmptyString() throws Exception{
+True,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,test/org/mockito/internal/returnvalues/MockReturnValuesTest.java,73,"assertEquals("""", values.valueFor(invocationOf(StringMethods.class, ""stringMethod"")));"
+False,test/org/mockito/internal/returnvalues/MoreEmptyReturnValuesTest.java,test/org/mockito/internal/returnvalues/MoreEmptyReturnValuesTest.java,17,et.getClass().isArray();
+True,test/org/mockito/internal/returnvalues/MoreEmptyReturnValuesTest.java,test/org/mockito/internal/returnvalues/MoreEmptyReturnValuesTest.java,17,assertTrue(ret.getClass().isArray());
+False,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,15,nterface HasPrimitiveMethods {
+False,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,16,oolean booleanMethod();
+False,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,17,har charMethod();
+False,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,18,nt intMethod();
+False,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,19,ong longMethod();
+False,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,20,loat floatMethod();
+False,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,test/org/mockito/internal/returnvalues/SmartNullReturnValuesTest.java,21,ouble doubleMethod();
+True,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,1,package org.mockitousage.stubbing;
+True,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,3,import static org.junit.Assert.*;
+True,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,5,import org.junit.Test;
+True,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,6,import org.mockitoutil.TestBase;
+True,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,8,//FIXME add test to demonstrate usage
+True,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,9,public class ReturningMockValuesTest extends TestBase {
+True,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,11,@Test
+True,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,test/org/mockitousage/stubbing/ReturningMockValuesTest.java,12,public void should() throws Exception {

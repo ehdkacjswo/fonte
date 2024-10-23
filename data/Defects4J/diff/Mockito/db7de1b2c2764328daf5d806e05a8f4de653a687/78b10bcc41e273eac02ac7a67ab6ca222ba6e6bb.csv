@@ -1,0 +1,119 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,14,tatic LastArguments INSTANCE = new LastArguments();
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,14,private static ThreadLocal<LastArguments> INSTANCE = new ThreadLocal<LastArguments>();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,16,rivate final ThreadLocal<Stack<IArgumentMatcher>> threadToArgumentMatcherStack = new ThreadLocal<Stack<IArgumentMatcher>>();
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,16,private Stack<IArgumentMatcher> matcherStack = new Stack<IArgumentMatcher>();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,18,/does everything needs to be synchronized
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,19,ublic static synchronized LastArguments instance() {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,20,eturn INSTANCE;
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,18,public static LastArguments instance() {
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,19,if (INSTANCE.get() == null) {
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,20,INSTANCE.set(new LastArguments());
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,23,return INSTANCE.get();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,23,ublic synchronized void reportMatcher(IArgumentMatcher matcher) {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,24,tack<IArgumentMatcher> stack = threadToArgumentMatcherStack.get();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,25,f (stack == null) {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,26,tack = new Stack<IArgumentMatcher>();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,27,hreadToArgumentMatcherStack.set(stack);
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,29,tack.push(matcher);
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,26,public void reportMatcher(IArgumentMatcher matcher) {
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,27,matcherStack.push(matcher);
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,32,ublic synchronized List<IArgumentMatcher> pullMatchers() {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,33,tack<IArgumentMatcher> stack = threadToArgumentMatcherStack.get();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,34,f (stack == null) {
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,30,public List<IArgumentMatcher> pullMatchers() {
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,31,if (matcherStack.isEmpty()) {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,38,hreadToArgumentMatcherStack.remove();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,39,eturn new ArrayList<IArgumentMatcher>(stack);
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,42,ublic synchronized void reportAnd(int count) {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,43,tack<IArgumentMatcher> stack = threadToArgumentMatcherStack.get();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,44,"ssertState(stack != null, missingMatchers());"
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,45,tack.push(new And(popLastArgumentMatchers(count)));
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,35,ArrayList<IArgumentMatcher> matchers = new ArrayList<IArgumentMatcher>(matcherStack);
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,36,matcherStack.clear();
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,37,return matchers;
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,48,rivate String missingMatchers() {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,49,"eturn ""No matchers found."";"
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,40,public void reportAnd(int count) {
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,41,"assertState(!matcherStack.isEmpty(), ""No matchers found for And(?)."");"
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,42,matcherStack.push(new And(popLastArgumentMatchers(count)));
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,52,ublic synchronized void reportNot() {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,53,tack<IArgumentMatcher> stack = threadToArgumentMatcherStack.get();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,54,"ssertState(stack != null, missingMatchers());"
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,55,tack.push(new Not(popLastArgumentMatchers(1).get(0)));
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,45,public void reportNot() {
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,46,"assertState(!matcherStack.isEmpty(), ""No matchers found for Not(?)."");"
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,47,matcherStack.push(new Not(popLastArgumentMatchers(1).get(0)));
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,59,tack<IArgumentMatcher> stack = threadToArgumentMatcherStack.get();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,60,"ssertState(stack != null, missingMatchers());"
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,61,"ssertState(stack.size() >= count,"
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,62,""" + count + "" matchers expected, "" + stack.size() + "" recorded."");"
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,51,"assertState(!matcherStack.isEmpty(), ""No matchers found."");"
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,52,"assertState(matcherStack.size() >= count,"
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,53,""""" + count + "" matchers expected, "" + matcherStack.size() + "" recorded."");"
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,64,"esult.addAll(stack.subList(stack.size() - count, stack.size()));"
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,55,"result.addAll(matcherStack.subList(matcherStack.size() - count, matcherStack.size()));"
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,66,tack.pop();
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,57,matcherStack.pop();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,73,f (threadToArgumentMatcherStack.get() != null)
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,74,hreadToArgumentMatcherStack.get().clear();
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,64,reset();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,79,ublic synchronized void reportOr(int count) {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,80,tack<IArgumentMatcher> stack = threadToArgumentMatcherStack.get();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,81,"ssertState(stack != null, missingMatchers());"
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,82,tack.push(new Or(popLastArgumentMatchers(count)));
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,85,tatic synchronized void setInstance(LastArguments lastArguments) {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,86,NSTANCE = lastArguments;
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,69,public void reportOr(int count) {
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,70,"assertState(!matcherStack.isEmpty(), ""No matchers found."");"
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,71,matcherStack.push(new Or(popLastArgumentMatchers(count)));
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,89,ublic synchronized void validateState() {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,90,f (threadToArgumentMatcherStack.get() != null && !threadToArgumentMatcherStack.get().isEmpty()) {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,91,hreadToArgumentMatcherStack.get().clear();
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,92,"hrow new MockitoException(""invalid arguments state"");"
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,74,public void validateState() {
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,75,if (!matcherStack.isEmpty()) {
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,76,reset();
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,77,"throw new InvalidUseOfMatchersException(""The way matchers were used is inapropriate!"");"
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,96,"/TODO crap, needs to be TL singleton"
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,97,ynchronized void reset() {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,98,f (threadToArgumentMatcherStack.get() != null) {
+False,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,99,hreadToArgumentMatcherStack.get().clear();
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,81,void reset() {
+True,src/org/mockito/internal/LastArguments.java,src/org/mockito/internal/LastArguments.java,82,matcherStack.clear();
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,15,rivate VerifyingMode verifyingModeLocal;
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,15,private VerifyingMode verifyingMode;
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,17,rivate boolean stubbingModeLocal = false;
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,17,private boolean stubbingInProgress = false;
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,38,erifyingModeLocal = verify;
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,38,verifyingMode = verify;
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,42,erifyingMode temp = verifyingModeLocal;
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,43,erifyingModeLocal = null;
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,42,VerifyingMode temp = verifyingMode;
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,43,verifyingMode = null;
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,53,tubbingModeLocal = true;
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,53,stubbingInProgress = true;
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,57,f (verifyingModeLocal != null) {
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,58,erifyingModeLocal = null;
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,57,if (verifyingMode != null) {
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,58,verifyingMode = null;
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,62,f (stubbingModeLocal) {
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,63,tubbingModeLocal = false;
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,62,if (stubbingInProgress) {
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,63,stubbingInProgress = false;
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,69,tubbingModeLocal = false;
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,69,stubbingInProgress = false;
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,74,", verifyingMode: "" + verifyingModeLocal +"
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,75,", invocationSequenceNumber: "" + invocationSequenceNumber +"
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,76,", stubbingModeLocal: "" + stubbingModeLocal;"
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,74,""", verifyingMode: "" + verifyingMode +"
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,75,""", invocationSequenceNumber: "" + invocationSequenceNumber +"
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,76,""", stubbingInProgress: "" + stubbingInProgress;"
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,79,ynchronized void reset() {
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,80,tubbingModeLocal = false;
+False,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,81,erifyingModeLocal = null;
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,79,void reset() {
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,80,stubbingInProgress = false;
+True,src/org/mockito/internal/MockitoState.java,src/org/mockito/internal/MockitoState.java,81,verifyingMode = null;
+False,test/org/mockitousage/matchers/InvalidUseOfMatchersTest.java,test/org/mockitousage/matchers/InvalidUseOfMatchersTest.java,62,"No matchers found."" +"
+True,test/org/mockitousage/matchers/InvalidUseOfMatchersTest.java,test/org/mockitousage/matchers/InvalidUseOfMatchersTest.java,62,"""No matchers found for Not(?)."" +"

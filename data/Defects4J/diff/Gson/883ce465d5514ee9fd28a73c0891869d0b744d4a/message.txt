@@ -1,0 +1,5 @@
+Second half of adopting Guice's types code.
+
+This removes a bunch of unnecessary public APIs and looks more like the GSON code that existed before this whole exercise. We no longer use TypeToken.isAssignable. I wrote a test that demonstrates at least one problem with that method, so I've deprecated it. We should be able to remove it release-after-next; nobody should be using this method anyway.
+
+There are still some things that are public that shouldn't be. In particular there's some APIs in Types that are needed by TypeToken, which is unfortunately in a different package. Traditionally the fix is to create an 'internal' package and make the shared code public in the internal package. I'm not sure what we want to do for GSON; we could also use reflection (yuck) or duplicate the code (yuck).

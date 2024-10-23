@@ -1,0 +1,28 @@
+After reading up what the InfoZIP people do I changed the data descriptor
+logic.  What seems to be the correct way is:
+
+If you use a data descriptor and don't use ZIP64:
+
+* set "version needed to extract" < 4.5
+
+* set CRC and sizes in LFH to 0
+
+* don't add any ZIP64 extended information extra field
+
+* use four byte sizes in data descriptor
+
+If you use a data descriptor and use ZIP64:
+
+* set "version needed to extract" >= 4.5
+
+* set CRC in LFH 0
+
+* set sizes in LFH to 0xFFFFFFFF
+
+* add a ZIP64 extended information extra field with sizes set to 0
+
+* use eight byte sizes in data descriptor
+
+
+
+git-svn-id: https://svn.apache.org/repos/asf/commons/proper/compress/trunk@1154435 13f79535-47bb-0310-9956-ffa450edef68

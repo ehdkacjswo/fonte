@@ -1,0 +1,90 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1435,* Allows checking if given method was the only one invoked. E.g:
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1436,* <pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1437,"*   verify(mock, only()).someMethod();"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1438,* </pre>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1440,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1441,* It is a shortened version for {@link Mockito#verifyNoMoreInteractions(Object[])}
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1442,* when only one method was invoked.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1443,* <p>
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1444,* See examples in javadoc for {@link Mockito} class
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1446,* @return verification mode
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1448,public static VerificationMode only() {
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,1449,return VerificationModeFactory.only();
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,1,package org.mockito.internal.verification;
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,3,import java.util.LinkedList;
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,4,import java.util.List;
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,6,import org.mockito.exceptions.Reporter;
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,7,import org.mockito.internal.invocation.Invocation;
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,8,import org.mockito.internal.invocation.InvocationMarker;
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,9,import org.mockito.internal.invocation.InvocationMatcher;
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,10,import org.mockito.internal.invocation.InvocationsFinder;
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,11,import org.mockito.internal.verification.api.VerificationData;
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,12,import org.mockito.internal.verification.api.VerificationMode;
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,14,public class Only implements VerificationMode {
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,16,private final InvocationsFinder finder = new InvocationsFinder();
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,17,private final InvocationMarker marker = new InvocationMarker();
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,18,private final Reporter reporter = new Reporter();
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,20,@Override
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,21,public void verify(VerificationData data) {
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,22,InvocationMatcher wantedMatcher = data.getWanted();
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,23,List<Invocation> invocations = data.getAllInvocations();
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,24,"List<Invocation> chunk = finder.findInvocations(invocations,wantedMatcher);"
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,25,if (invocations.size() != 1 && chunk.size() > 0) {
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,26,"markFirstOccurence(chunk, wantedMatcher);"
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,27,Invocation unverified = finder.findFirstUnverified(invocations);
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,28,reporter.noMoreInteractionsWanted(unverified);
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,29,} else if (invocations.size() != 1 || chunk.size() == 0) {
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,30,reporter.wantedButNotInvoked(wantedMatcher);
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,34,"private void markFirstOccurence(List<Invocation> chunk, InvocationMatcher wantedMatcher) {"
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,35,Invocation invocation = chunk.get(0);
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,36,List<Invocation> invocationsToMark = new LinkedList<Invocation>();
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,37,invocationsToMark.add(invocation);
+True,src/org/mockito/internal/verification/Only.java,src/org/mockito/internal/verification/Only.java,38,"marker.markVerified(invocationsToMark, wantedMatcher);"
+True,src/org/mockito/internal/verification/VerificationModeFactory.java,src/org/mockito/internal/verification/VerificationModeFactory.java,19,public static VerificationMode only() {
+True,src/org/mockito/internal/verification/VerificationModeFactory.java,src/org/mockito/internal/verification/VerificationModeFactory.java,20,return new Only();
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,2,* Copyright (c) 2007 Mockito contributors
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,3,* This program is made available under the terms of the MIT License.
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,5,package org.mockitousage.verification;
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,7,import static org.mockito.Matchers.anyInt;
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,8,import static org.mockito.Mockito.only;
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,9,import static org.mockito.Mockito.verify;
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,11,import java.util.List;
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,13,import org.junit.Test;
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,14,import org.mockito.Mock;
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,15,import org.mockito.exceptions.verification.NoInteractionsWanted;
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,16,import org.mockito.exceptions.verification.WantedButNotInvoked;
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,17,import org.mockitoutil.TestBase;
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,19,public class OnlyVerificationTest extends TestBase {
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,21,@Mock private List<Object> mock;
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,23,@Test
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,24,public void shouldVerifyMethodWasInvokedExclusively() {
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,25,mock.clear();
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,26,"verify(mock, only()).clear();"
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,29,@Test
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,30,public void shouldVerifyMethodWasInvokedExclusivelyWithMatchersUsage() {
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,31,mock.get(0);
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,32,"verify(mock, only()).get(anyInt());"
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,35,@Test
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,36,public void shouldFailIfMethodWasNotInvoked() {
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,37,mock.clear();
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,38,try {
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,39,"verify(mock, only()).get(0);"
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,40,fail();
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,41,} catch (WantedButNotInvoked e) {}
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,44,@Test
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,45,public void shouldFailIfMethodWasInvokedMoreThanOnce() {
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,46,mock.clear();
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,47,mock.clear();
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,48,try {
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,49,"verify(mock, only()).clear();"
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,50,fail();
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,51,} catch (NoInteractionsWanted e) {}
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,54,@Test
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,55,public void shouldFailIfMethodWasInvokedButWithDifferentArguments() {
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,56,mock.get(0);
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,57,mock.get(2);
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,58,try {
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,59,"verify(mock, only()).get(1);"
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,60,fail();
+True,test/org/mockitousage/verification/OnlyVerificationTest.java,test/org/mockitousage/verification/OnlyVerificationTest.java,61,} catch (WantedButNotInvoked e) {}

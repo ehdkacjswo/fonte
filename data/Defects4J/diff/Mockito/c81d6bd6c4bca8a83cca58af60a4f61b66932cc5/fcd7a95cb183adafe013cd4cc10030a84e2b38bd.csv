@@ -1,0 +1,127 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,12,mport org.mockito.internal.configuration.GlobalConfiguration;
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,13,import org.mockito.internal.progress.HandyReturnValues;
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,520,/TODO test
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,521,lobalConfiguration.init();
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,1,package org.mockito.internal.configuration;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,3,import org.mockito.IMockitoConfiguration;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,4,import org.mockito.exceptions.misusing.MockitoConfigurationException;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,6,public class ClassPathLoader {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,9,* @param defaultConfiguration - to be used if no config found on classpath
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,10,* @return
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,12,"@SuppressWarnings({""unchecked""})"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,13,public IMockitoConfiguration loadConfiguration(IMockitoConfiguration defaultConfiguration) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,14,//Trying to get config from classpath
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,15,Class configClass = null;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,16,try {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,17,"configClass = (Class) Class.forName(""org.mockito.MockitoConfiguration"");"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,18,} catch (ClassNotFoundException e) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,19,"//that's ok, it means there is no global config, using default one."
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,20,return defaultConfiguration;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,23,try {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,24,return (IMockitoConfiguration) configClass.newInstance();
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,25,} catch (ClassCastException e) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,26,"throw new MockitoConfigurationException(""\n"" +"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,27,"""MockitoConfiguration class must implement org.mockito.configuration.IMockitoConfiguration interface."", e);"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,28,} catch (Exception e) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,29,"throw new MockitoConfigurationException(""\n"" +"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,30,"""Unable to instantianate org.mockito.MockitoConfiguration class. Does it have a safe, no-arg constructor?"", e);"
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,4,mport org.mockito.exceptions.misusing.MockitoConfigurationException;
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,4,import org.mockito.ReturnValues;
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,6,ublic class GlobalConfiguration {
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,6,public class GlobalConfiguration implements IMockitoConfiguration {
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,8,rivate static IMockitoConfiguration globalConfiguration;
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,9,rivate static boolean initialized = false;
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,8,private static ThreadLocal<IMockitoConfiguration> globalConfiguration = new ThreadLocal<IMockitoConfiguration>();
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,11,"SuppressWarnings(""unchecked"")"
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,12,rivate static IMockitoConfiguration readFromClasspath() {
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,13,/Trying to get config from classpath
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,14,lass configClass = null;
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,15,ry {
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,16,"onfigClass = (Class) Class.forName(""org.mockito.MockitoConfiguration"");"
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,17, catch (ClassNotFoundException e) {
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,18,"/that's ok, it means there is no global config,"
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,19,eturn null;
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,22,ry {
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,23,eturn (IMockitoConfiguration) configClass.newInstance();
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,24, catch (ClassCastException e) {
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,25,"hrow new MockitoConfigurationException(""\n"" +"
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,26,"MockitoConfiguration class must implement org.mockito.configuration.IMockitoConfiguration interface."", e);"
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,27, catch (Exception e) {
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,28,"hrow new MockitoConfigurationException(""\n"" +"
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,29,"Unable to instantianate org.mockito.MockitoConfiguration class. Does it have a safe, no-arg constructor?"", e);"
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,10,public GlobalConfiguration() {
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,11,//Configuration should be loaded only once but I cannot really test it
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,12,if (globalConfiguration.get() == null) {
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,13,globalConfiguration.set(getConfig());
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,17,"@SuppressWarnings(""deprecation"")"
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,18,IMockitoConfiguration getConfig() {
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,19,IMockitoConfiguration defaultConfiguration = new IMockitoConfiguration() {
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,20,public ReturnValues getReturnValues() {
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,21,"//For now, let's leave the deprecated way of getting return values,"
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,22,"//it will go away, replaced simply by return new DefaultReturnValues()"
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,23,return Configuration.instance().getReturnValues();
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,26,IMockitoConfiguration config = new ClassPathLoader().loadConfiguration(defaultConfiguration);
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,27,return config;
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,33,ublic static IMockitoConfiguration getConfig() {
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,34,f (!initialized) {
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,35,"hrow new IllegalStateException(""Something went wrong. GlobalConfiguration should be initialised by now.\n"" +"
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,36,"Please report issue at http://mockito.org or write an email to mockito@googlegroups.com"");"
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,38,eturn globalConfiguration;
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,30,public ReturnValues getReturnValues() {
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,31,return globalConfiguration.get().getReturnValues();
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,41,ublic static void init() {
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,42,f (!initialized) {
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,43,lobalConfiguration = readFromClasspath();
+False,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,44,nitialized = true;
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,34,public static void validate() {
+True,src/org/mockito/internal/configuration/GlobalConfiguration.java,src/org/mockito/internal/configuration/GlobalConfiguration.java,35,new GlobalConfiguration();
+True,src/org/mockito/internal/progress/MockingProgressImpl.java,src/org/mockito/internal/progress/MockingProgressImpl.java,8,import org.mockito.internal.configuration.GlobalConfiguration;
+True,src/org/mockito/internal/progress/MockingProgressImpl.java,src/org/mockito/internal/progress/MockingProgressImpl.java,60,//State is cool when GlobalConfiguration is already loaded
+True,src/org/mockito/internal/progress/MockingProgressImpl.java,src/org/mockito/internal/progress/MockingProgressImpl.java,61,//this cannot really be tested functionally because I cannot dynamically mess up org.mockito.MockitoConfiguration class
+True,src/org/mockito/internal/progress/MockingProgressImpl.java,src/org/mockito/internal/progress/MockingProgressImpl.java,62,GlobalConfiguration.validate();
+False,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,7,mport org.mockito.internal.configuration.Configuration;
+False,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,15,f (GlobalConfiguration.getConfig() != null) {
+False,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,16,eturn GlobalConfiguration.getConfig().getReturnValues().valueFor(invocation);
+False,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,19,"/For now, let's leave the deprecated way of getting return values,"
+False,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,20,"/it will go away, replaced simply by return new DefaultReturnValues()"
+False,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,21,eturn Configuration.instance().getReturnValues().valueFor(invocation);
+True,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,src/org/mockito/internal/returnvalues/GloballyConfiguredReturnValues.java,14,return new GlobalConfiguration().getReturnValues().valueFor(invocation);
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,7,mport static org.mockito.Mockito.*;
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,9,mport org.junit.After;
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,11,mport org.mockito.MockitoConfiguration;
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,12,mport org.mockito.ReturnValues;
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,14,mport org.mockito.invocation.InvocationOnMock;
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,15,mport org.mockitousage.IMethods;
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,31,Test
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,32,ublic void shouldReadConfigurationClassFromClassPath() {
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,33,ockitoConfiguration.overrideReturnValues(new ReturnValues() {
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,34,ublic Object valueFor(InvocationOnMock invocation) {
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,35,"eturn ""foo"";"
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,38,Methods mock = mock(IMethods.class);
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,39,"ssertEquals(""foo"", mock.simpleMethod());"
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,42,After
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,43,ublic void cleanUpConfig() {
+False,test/org/mockito/configuration/experimental/ConfigurationTest.java,test/org/mockito/configuration/experimental/ConfigurationTest.java,44,ockitoConfiguration.overrideReturnValues(null);
+False,test/org/mockitousage/stubbing/GloballyConfiguredReturnValuesTest.java,test/org/mockitousage/configuration/GloballyConfiguredReturnValuesTest.java,1,ackage org.mockitousage.stubbing;
+True,test/org/mockitousage/stubbing/GloballyConfiguredReturnValuesTest.java,test/org/mockitousage/configuration/GloballyConfiguredReturnValuesTest.java,1,package org.mockitousage.configuration;
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,1,package org.mockitousage.configuration;
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,3,import static org.mockito.Mockito.*;
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,5,import org.junit.After;
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,6,import org.junit.Test;
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,7,import org.mockito.MockitoConfiguration;
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,8,import org.mockito.ReturnValues;
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,9,import org.mockito.invocation.InvocationOnMock;
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,10,import org.mockitousage.IMethods;
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,11,import org.mockitoutil.TestBase;
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,13,public class MockitoConfigurationTest extends TestBase {
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,15,@After
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,16,public void cleanUpConfig() {
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,17,MockitoConfiguration.overrideReturnValues(null);
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,20,@Test
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,21,public void shouldReadConfigurationClassFromClassPath() {
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,22,MockitoConfiguration.overrideReturnValues(new ReturnValues() {
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,23,public Object valueFor(InvocationOnMock invocation) {
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,24,"return ""foo"";"
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,27,IMethods mock = mock(IMethods.class);
+True,test/org/mockitousage/configuration/MockitoConfigurationTest.java,test/org/mockitousage/configuration/MockitoConfigurationTest.java,28,"assertEquals(""foo"", mock.simpleMethod());"

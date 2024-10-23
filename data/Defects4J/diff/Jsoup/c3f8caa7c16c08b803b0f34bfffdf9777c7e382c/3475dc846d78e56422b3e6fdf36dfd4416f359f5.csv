@@ -1,0 +1,19 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,131,public static boolean isInvisibleChar(int c) {
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,132,return Character.getType(c) == 16 && (c == 8203 || c == 8204 || c == 8205 || c == 173);
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,133,"// zero width sp, zw non join, zw join, soft hyphen"
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,163,lse {
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,168,else if (!isInvisibleChar(c)) {
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,1204,@Test public void testNormalizesInvisiblesInText() {
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,1205,// return Character.getType(c) == 16 && (c == 8203 || c == 8204 || c == 8205 || c == 173);
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,1206,"String escaped = ""This&shy;is&#x200b;one&#x200c;long&#x200d;word"";"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,1207,"String decoded = ""This\u00ADis\u200Bone\u200Clong\u200Dword""; // browser would not display those soft hyphens / other chars, so we don't want them in the text"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,1209,"Document doc = Jsoup.parse(""<p>"" + escaped);"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,1210,"Element p = doc.select(""p"").first();"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,1211,"doc.outputSettings().charset(""ascii""); // so that the outer html is easier to see with escaped invisibles"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,1212,"assertEquals(""Thisisonelongword"", p.text()); // text is normalized"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,1213,"assertEquals(""<p>"" + escaped + ""</p>"", p.outerHtml()); // html / whole text keeps &shy etc;"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,1214,"assertEquals(decoded, p.textNodes().get(0).getWholeText());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,1216,"Element matched = doc.select(""p:contains(Thisisonelongword)"").first(); // really just oneloneword, no invisibles"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,1217,"assertEquals(""p"", matched.nodeName());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,1218,"assertTrue(matched.is("":containsOwn(Thisisonelongword)""));"

@@ -1,0 +1,32 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,448,* Get a CSS selector that will uniquely select this element.
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,449,"* <p/>If the element has an ID, returns #id;"
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,450,"* otherwise returns the parent (if any) CSS selector, followed by '>',"
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,451,* followed by a unique selector for the element (tag.class.class:nth-child(n)).
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,453,* @return the CSS Path that can be used to retrieve the element in a selector.
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,455,public String cssSelector() {
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,456,if (!id().isEmpty())
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,457,"return ""#"" + id();"
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,459,StringBuilder selector = new StringBuilder(tagName());
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,460,"String classes = StringUtil.join(classNames(), ""."");"
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,461,if (!classes.isEmpty())
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,462,selector.append('.').append(classes);
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,464,"if (parent() == null || parent() instanceof Document) // don't add Document to selector, as will always have a html node"
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,465,return selector.toString();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,467,"selector.insert(0, "" > "");"
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,468,if (parent().select(selector.toString()).size() > 1)
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,469,selector.append(String.format(
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,470,""":nth-child(%d)"", elementSiblingIndex() + 1));"
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,472,return parent().cssSelector() + selector.toString();
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,684,@Test
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,685,public void testCssPath() {
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,686,"Document doc = Jsoup.parse(""<div id=\""id1\"">A</div><div>B</div><div class=\""c1 c2\"">C</div>"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,687,"Element divA = doc.select(""div"").get(0);"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,688,"Element divB = doc.select(""div"").get(1);"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,689,"Element divC = doc.select(""div"").get(2);"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,690,"assertEquals(divA.cssSelector(), ""#id1"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,691,"assertEquals(divB.cssSelector(), ""html > body > div:nth-child(2)"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,692,"assertEquals(divC.cssSelector(), ""html > body > div.c1.c2"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,694,assertTrue(divA == doc.select(divA.cssSelector()).first());
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,695,assertTrue(divB == doc.select(divB.cssSelector()).first());
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,696,assertTrue(divC == doc.select(divC.cssSelector()).first());

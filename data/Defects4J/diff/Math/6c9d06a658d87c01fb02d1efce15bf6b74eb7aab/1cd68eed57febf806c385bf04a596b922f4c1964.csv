@@ -1,0 +1,732 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,2,* Licensed to the Apache Software Foundation (ASF) under one or more
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,3,* contributor license agreements.  See the NOTICE file distributed with
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,4,* this work for additional information regarding copyright ownership.
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,5,"* The ASF licenses this file to You under the Apache License, Version 2.0"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,6,"* (the ""License""); you may not use this file except in compliance with"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,7,* the License.  You may obtain a copy of the License at
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,9,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,11,"* Unless required by applicable law or agreed to in writing, software"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,12,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,13,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,14,* See the License for the specific language governing permissions and
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,15,* limitations under the License.
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,18,package org.apache.commons.math3.ode.events;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,20,import java.util.Arrays;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,22,import org.apache.commons.math3.ode.FirstOrderIntegrator;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,25,/** Wrapper used to detect only increasing or decreasing events.
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,27,* <p>General {@link EventHandler events} are defined implicitely
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,28,"* by a {@link EventHandler#g(double, double[]) g function} crossing"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,29,"* zero. This function needs to be continuous in the event neighborhood,"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,30,* and its sign must remain consistent between events. This implies that
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,31,"* during an ODE integration, events triggered are alternately events"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,32,"* for which the function increases from negative to positive values,"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,33,* and events for which the function decreases from positive to
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,34,* negative values.
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,35,* </p>
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,37,"* <p>Sometimes, users are only interested in one type of event (say"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,38,* increasing events for example) and not in the other type. In these
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,39,"* cases, looking precisely for all events location and triggering"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,40,* events that will later be ignored is a waste of computing time.</p>
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,42,* <p>Users can wrap a regular {@link EventHandler event handler} in
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,43,* an instance of this class and provide this wrapping instance to
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,44,* the {@link FirstOrderIntegrator ODE solver} in order to avoid wasting
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,45,* time looking for uninteresting events. The wrapper will intercept
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,46,"* the calls to the {@link EventHandler#g(double, double[]) g function}"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,47,"* and to the {@link EventHandler#eventOccurred(double, double[], boolean)"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,48,* eventOccurred} method in order to ignore uninteresting events. The
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,49,* wrapped regular {@link EventHandler event handler} will the see only
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,50,"* the interesting events, i.e. either only {@code increasing} events or"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,51,* {@code decreasing} events. the number of calls to the {@link
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,52,"* EventHandler#g(double, double[]) g function} will also be reduced.</p>"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,54,* @version $Id$
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,55,* @since 3.2
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,58,public class EventFilter implements EventHandler {
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,60,/** Number of past transformers updates stored. */
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,61,private static final int HISTORY_SIZE = 100;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,63,/** Wrapped event handler. */
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,64,private final EventHandler rawHandler;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,66,/** Filter to use. */
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,67,private final FilterType filter;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,69,/** Transformers of the g function. */
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,70,private final Transformer[] transformers;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,72,/** Update time of the transformers. */
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,73,private final double[] updates;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,75,/** Indicator for forward integration. */
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,76,private boolean forward;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,78,/** Extreme time encountered so far. */
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,79,private double extremeT;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,81,/** Wrap an {@link EventHandler event handler}.
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,82,* @param rawHandler event handler to wrap
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,83,* @param filter filter to use
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,85,"public EventFilter(final EventHandler rawHandler, final FilterType filter) {"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,86,this.rawHandler   = rawHandler;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,87,this.filter       = filter;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,88,this.transformers = new Transformer[HISTORY_SIZE];
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,89,this.updates      = new double[HISTORY_SIZE];
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,92,/**  {@inheritDoc} */
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,93,"public void init(double t0, double[] y0, double t) {"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,95,// delegate to raw handler
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,96,"rawHandler.init(t0, y0, t);"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,98,// initialize events triggering logic
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,99,forward  = t >= t0;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,100,extremeT = forward ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,101,"Arrays.fill(transformers, Transformer.UNINITIALIZED);"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,102,"Arrays.fill(updates, extremeT);"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,106,/**  {@inheritDoc} */
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,107,"public double g(double t, double[] y) {"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,109,"final double rawG = rawHandler.g(t, y);"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,111,// search which transformer should be applied to g
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,112,if (forward) {
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,113,final int last = transformers.length - 1;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,114,if (extremeT < t) {
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,115,// we are at the forward end of the history
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,117,// check if a new rough root has been crossed
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,118,final Transformer previous = transformers[last];
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,119,"final Transformer next     = filter.selectTransformer(previous, rawG, forward);"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,120,if (next != previous) {
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,121,// there is a root somewhere between extremeT end t
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,122,"// the new transformer, which is valid on both sides of the root,"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,123,"// so it is valid for t (this is how we have just computed it above),"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,124,"// but it was already valid before, so we store the switch at extremeT"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,125,"// for safety, to ensure the previous transformer is not applied too"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,126,// close of the root
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,127,"System.arraycopy(updates,      1, updates,      0, last);"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,128,"System.arraycopy(transformers, 1, transformers, 0, last);"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,129,updates[last]      = extremeT;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,130,transformers[last] = next;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,133,extremeT = t;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,135,// apply the transform
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,136,return next.transformed(rawG);
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,138,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,139,// we are in the middle of the history
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,141,// select the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,142,for (int i = last; i > 0; --i) {
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,143,if (updates[i] <= t) {
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,144,// apply the transform
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,145,return transformers[i].transformed(rawG);
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,149,return transformers[0].transformed(rawG);
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,152,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,153,if (t < extremeT) {
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,154,// we are at the backward end of the history
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,156,// check if a new rough root has been crossed
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,157,final Transformer previous = transformers[0];
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,158,"final Transformer next     = filter.selectTransformer(previous, rawG, forward);"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,159,if (next != previous) {
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,160,// there is a root somewhere between extremeT end t
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,161,"// the new transformer, which is valid on both sides of the root,"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,162,"// so it is valid for t (this is how we have just computed it above),"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,163,"// but it was already valid before, so we store the switch at extremeT"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,164,"// for safety, to ensure the previous transformer is not applied too"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,165,// close of the root
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,166,"System.arraycopy(updates,      0, updates,      1, updates.length - 1);"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,167,"System.arraycopy(transformers, 0, transformers, 1, transformers.length - 1);"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,168,updates[0]      = extremeT;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,169,transformers[0] = next;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,172,extremeT = t;
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,174,// apply the transform
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,175,return next.transformed(rawG);
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,177,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,178,// we are in the middle of the history
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,180,// select the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,181,for (int i = 0; i < updates.length - 1; ++i) {
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,182,if (t <= updates[i]) {
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,183,// apply the transform
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,184,return transformers[i].transformed(rawG);
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,188,return transformers[updates.length - 1].transformed(rawG);
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,195,/**  {@inheritDoc} */
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,196,"public Action eventOccurred(double t, double[] y, boolean increasing) {"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,197,"// delegate to raw handler, fixing increasing status on the fly"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,198,"return rawHandler.eventOccurred(t, y, filter.getTriggeredIncreasing());"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,201,/**  {@inheritDoc} */
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,202,"public void resetState(double t, double[] y) {"
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,203,// delegate to raw handler
+True,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,src/main/java/org/apache/commons/math3/ode/events/EventFilter.java,204,"rawHandler.resetState(t, y);"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,2,* Licensed to the Apache Software Foundation (ASF) under one or more
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,3,* contributor license agreements.  See the NOTICE file distributed with
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,4,* this work for additional information regarding copyright ownership.
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,5,"* The ASF licenses this file to You under the Apache License, Version 2.0"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,6,"* (the ""License""); you may not use this file except in compliance with"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,7,* the License.  You may obtain a copy of the License at
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,9,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,11,"* Unless required by applicable law or agreed to in writing, software"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,12,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,13,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,14,* See the License for the specific language governing permissions and
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,15,* limitations under the License.
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,18,package org.apache.commons.math3.ode.events;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,20,import org.apache.commons.math3.exception.MathInternalError;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,21,import org.apache.commons.math3.util.Precision;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,24,/** Enumerate for {@link EventFilter filtering events}.
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,26,* @version $Id$
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,27,* @since 3.2
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,30,public enum FilterType {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,32,/** Constant for triggering only decreasing events.
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,33,"* <p>When this filter is used, the wrapped {@link EventHandler"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,34,"* event handler} {@link EventHandler#eventOccurred(double, double[],"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,35,* boolean) eventOccurred} method will be called <em>only</em> with
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,36,* its {@code increasing} argument set to false.</p>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,38,TRIGGER_ONLY_DECREASING_EVENTS {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,40,/**  {@inheritDoc} */
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,41,protected boolean getTriggeredIncreasing() {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,42,return false;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,45,/** {@inheritDoc}
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,46,* <p>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,47,"* states scheduling for computing h(t,y) as an altered version of g(t, y)"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,48,* <ul>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,49,* <li>0 are triggered events for which a zero is produced (here decreasing events)</li>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,50,* <li>X are ignored events for which zero is masked (here increasing events)</li>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,51,* </ul>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,52,* </p>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,53,* <pre>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,54,*  g(t)
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,58,*          /  g>0  \               /  g>0  \               /  g>0  \
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,60,*  ----- X --------- 0 --------- X --------- 0 --------- X --------- 0 ---
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,62,*      /               \ g<0   /               \  g<0  /               \ g<0
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,65,* </pre>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,66,* <pre>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,67,"*  h(t,y)) as an alteration of g(t,y)"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,70,*     \     /     \ h=+g                        /     \     /     \
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,71,"*      \   /       \      h=min(-s,-g,+g)      /       \   /       \"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,73,*  ------ ---------- 0 ----------_---------- 0 --------------------- 0 ---
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,75,"*   h=max(+s,-g,+g)    \       /   \       /       h=max(+s,-g,+g)     \"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,76,*                       \     /     \     / h=-g                        \     /
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,78,* </pre>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,79,* <p>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,80,"* As shown by the figure above, several expressions are used to compute h,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,81,* depending on the current state:
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,82,* <ul>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,83,"*   <li>h = max(+s,-g,+g)</li>"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,84,*   <li>h = +g</li>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,85,"*   <li>h = min(-s,-g,+g)</li>"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,86,*   <li>h = -g</li>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,87,* </ul>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,88,* where s is a tiny positive value: {@link Precision#SAFE_MIN}.
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,89,* </p>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,91,"protected  Transformer selectTransformer(final Transformer previous,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,92,"final double g, final boolean forward) {"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,93,if (forward) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,94,switch (previous) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,95,case UNINITIALIZED :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,96,// we are initializing the first point
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,97,if (g > 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,98,// initialize as if previous root (i.e. backward one) was an ignored increasing event
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,99,return Transformer.MAX;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,100,} else if (g < 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,101,// initialize as if previous root (i.e. backward one) was a triggered decreasing event
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,102,return Transformer.PLUS;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,103,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,104,"// we are exactly at a root, we don't know if it is an increasing"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,105,"// or a decreasing event, we remain in uninitialized state"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,106,return Transformer.UNINITIALIZED;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,108,case PLUS  :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,109,if (g >= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,110,"// we have crossed the zero line on an ignored increasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,111,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,112,return Transformer.MIN;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,113,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,114,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,115,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,117,case MINUS :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,118,if (g >= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,119,"// we have crossed the zero line on an ignored increasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,120,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,121,return Transformer.MAX;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,122,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,123,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,124,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,126,case MIN   :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,127,if (g <= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,128,"// we have crossed the zero line on a triggered decreasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,129,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,130,return Transformer.MINUS;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,131,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,132,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,133,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,135,case MAX   :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,136,if (g <= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,137,"// we have crossed the zero line on a triggered decreasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,138,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,139,return Transformer.PLUS;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,140,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,141,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,142,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,144,default    :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,145,// this should never happen
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,146,throw new MathInternalError();
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,148,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,149,switch (previous) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,150,case UNINITIALIZED :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,151,// we are initializing the first point
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,152,if (g > 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,153,// initialize as if previous root (i.e. forward one) was a triggered decreasing event
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,154,return Transformer.MINUS;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,155,} else if (g < 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,156,// initialize as if previous root (i.e. forward one) was an ignored increasing event
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,157,return Transformer.MIN;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,158,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,159,"// we are exactly at a root, we don't know if it is an increasing"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,160,"// or a decreasing event, we remain in uninitialized state"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,161,return Transformer.UNINITIALIZED;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,163,case PLUS  :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,164,if (g <= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,165,"// we have crossed the zero line on an ignored increasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,166,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,167,return Transformer.MAX;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,168,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,169,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,170,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,172,case MINUS :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,173,if (g <= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,174,"// we have crossed the zero line on an ignored increasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,175,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,176,return Transformer.MIN;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,177,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,178,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,179,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,181,case MIN   :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,182,if (g >= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,183,"// we have crossed the zero line on a triggered decreasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,184,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,185,return Transformer.PLUS;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,186,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,187,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,188,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,190,case MAX   :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,191,if (g >= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,192,"// we have crossed the zero line on a triggered decreasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,193,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,194,return Transformer.MINUS;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,195,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,196,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,197,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,199,default    :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,200,// this should never happen
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,201,throw new MathInternalError();
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,208,/** Constant for triggering only increasing events.
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,209,"* <p>When this filter is used, the wrapped {@link EventHandler"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,210,"* event handler} {@link EventHandler#eventOccurred(double, double[],"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,211,* boolean) eventOccurred} method will be called <em>only</em> with
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,212,* its {@code increasing} argument set to true.</p>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,214,TRIGGER_ONLY_INCREASING_EVENTS {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,216,/**  {@inheritDoc} */
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,217,protected boolean getTriggeredIncreasing() {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,218,return true;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,221,/** {@inheritDoc}
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,222,* <p>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,223,"* states scheduling for computing h(t,y) as an altered version of g(t, y)"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,224,* <ul>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,225,* <li>0 are triggered events for which a zero is produced (here increasing events)</li>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,226,* <li>X are ignored events for which zero is masked (here decreasing events)</li>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,227,* </ul>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,228,* </p>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,229,* <pre>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,230,*  g(t)
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,234,*          /  g>0  \               /  g>0  \               /  g>0  \
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,236,*  ----- 0 --------- X --------- 0 --------- X --------- 0 --------- X ---
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,238,*      /               \ g<0   /               \  g<0  /               \ g<0
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,241,* </pre>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,242,* <pre>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,243,"*  h(t,y)) as an alteration of g(t,y)"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,246,*     \ h=-g                        /     \     /     \ h=-g
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,247,"*      \      h=min(-s,-g,+g)      /       \   /       \      h=min(-s,-g,+g)"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,249,*  ------0 ----------_---------- 0 --------------------- 0 --------- _ ---
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,251,"*          \       /   \       /       h=max(+s,-g,+g)     \       /   \"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,252,*           \     /     \     / h=+g                        \     /     \     /
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,254,* </pre>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,255,* <p>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,256,"* As shown by the figure above, several expressions are used to compute h,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,257,* depending on the current state:
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,258,* <ul>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,259,"*   <li>h = max(+s,-g,+g)</li>"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,260,*   <li>h = +g</li>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,261,"*   <li>h = min(-s,-g,+g)</li>"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,262,*   <li>h = -g</li>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,263,* </ul>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,264,* where s is a tiny positive value: {@link Precision#SAFE_MIN}.
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,265,* </p>
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,267,"protected  Transformer selectTransformer(final Transformer previous,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,268,"final double g, final boolean forward) {"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,269,if (forward) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,270,switch (previous) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,271,case UNINITIALIZED :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,272,// we are initializing the first point
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,273,if (g > 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,274,// initialize as if previous root (i.e. backward one) was a triggered increasing event
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,275,return Transformer.PLUS;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,276,} else if (g < 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,277,// initialize as if previous root (i.e. backward one) was an ignored decreasing event
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,278,return Transformer.MIN;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,279,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,280,"// we are exactly at a root, we don't know if it is an increasing"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,281,"// or a decreasing event, we remain in uninitialized state"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,282,return Transformer.UNINITIALIZED;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,284,case PLUS  :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,285,if (g <= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,286,"// we have crossed the zero line on an ignored decreasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,287,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,288,return Transformer.MAX;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,289,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,290,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,291,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,293,case MINUS :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,294,if (g <= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,295,"// we have crossed the zero line on an ignored decreasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,296,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,297,return Transformer.MIN;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,298,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,299,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,300,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,302,case MIN   :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,303,if (g >= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,304,"// we have crossed the zero line on a triggered increasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,305,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,306,return Transformer.PLUS;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,307,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,308,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,309,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,311,case MAX   :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,312,if (g >= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,313,"// we have crossed the zero line on a triggered increasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,314,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,315,return Transformer.MINUS;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,316,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,317,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,318,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,320,default    :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,321,// this should never happen
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,322,throw new MathInternalError();
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,324,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,325,switch (previous) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,326,case UNINITIALIZED :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,327,// we are initializing the first point
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,328,if (g > 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,329,// initialize as if previous root (i.e. forward one) was an ignored decreasing event
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,330,return Transformer.MAX;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,331,} else if (g < 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,332,// initialize as if previous root (i.e. forward one) was a triggered increasing event
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,333,return Transformer.MINUS;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,334,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,335,"// we are exactly at a root, we don't know if it is an increasing"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,336,"// or a decreasing event, we remain in uninitialized state"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,337,return Transformer.UNINITIALIZED;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,339,case PLUS  :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,340,if (g >= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,341,"// we have crossed the zero line on an ignored decreasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,342,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,343,return Transformer.MIN;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,344,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,345,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,346,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,348,case MINUS :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,349,if (g >= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,350,"// we have crossed the zero line on an ignored decreasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,351,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,352,return Transformer.MAX;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,353,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,354,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,355,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,357,case MIN   :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,358,if (g <= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,359,"// we have crossed the zero line on a triggered increasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,360,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,361,return Transformer.MINUS;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,362,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,363,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,364,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,366,case MAX   :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,367,if (g <= 0) {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,368,"// we have crossed the zero line on a triggered increasing event,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,369,// we must change the transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,370,return Transformer.PLUS;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,371,} else {
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,372,// we are still in the same status
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,373,return previous;
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,375,default    :
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,376,// this should never happen
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,377,throw new MathInternalError();
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,384,/** Get the increasing status of triggered events.
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,385,* @return true if triggered events are increasing events
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,387,protected abstract boolean getTriggeredIncreasing();
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,389,/** Get next function transformer in the specified direction.
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,390,* @param previous transformer active on the previous point with respect
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,391,* to integration direction (may be null if no previous point is known)
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,392,* @param g current value of the g function
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,393,* @param forward true if integration goes forward
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,394,* @return next transformer transformer
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,396,"protected abstract Transformer selectTransformer(Transformer previous,"
+True,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,src/main/java/org/apache/commons/math3/ode/events/FilterType.java,397,"double g, boolean forward);"
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,2,* Licensed to the Apache Software Foundation (ASF) under one or more
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,3,* contributor license agreements.  See the NOTICE file distributed with
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,4,* this work for additional information regarding copyright ownership.
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,5,"* The ASF licenses this file to You under the Apache License, Version 2.0"
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,6,"* (the ""License""); you may not use this file except in compliance with"
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,7,* the License.  You may obtain a copy of the License at
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,9,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,11,"* Unless required by applicable law or agreed to in writing, software"
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,12,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,13,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,14,* See the License for the specific language governing permissions and
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,15,* limitations under the License.
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,18,package org.apache.commons.math3.ode.events;
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,20,import org.apache.commons.math3.util.FastMath;
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,21,import org.apache.commons.math3.util.Precision;
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,24,"/** Transformer for {@link EventHandler#g(double, double[]) g functions}."
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,25,* @see EventFilter
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,26,* @see FilterType
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,27,* @version $Id$
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,28,* @since 3.2
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,30,enum Transformer {
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,32,/** Transformer computing transformed = 0.
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,33,* <p>
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,34,"* This transformer is used when we initialize the filter, until we get at"
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,35,* least one non-zero value to select the proper transformer.
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,36,* </p>
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,38,UNINITIALIZED {
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,39,/**  {@inheritDoc} */
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,40,protected double transformed(final double g) {
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,41,return 0;
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,45,/** Transformer computing transformed = g.
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,46,* <p>
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,47,"* When this transformer is applied, the roots of the original function"
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,48,"* are preserved, with the same {@code increasing/decreasing} status."
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,49,* </p>
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,51,PLUS {
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,52,/**  {@inheritDoc} */
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,53,protected double transformed(final double g) {
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,54,return g;
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,58,/** Transformer computing transformed = -g.
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,59,* <p>
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,60,"* When this transformer is applied, the roots of the original function"
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,61,"* are preserved, with reversed {@code increasing/decreasing} status."
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,62,* </p>
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,64,MINUS {
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,65,/**  {@inheritDoc} */
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,66,protected double transformed(final double g) {
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,67,return -g;
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,71,"/** Transformer computing transformed = min(-{@link Precision#SAFE_MIN}, -g, +g)."
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,72,* <p>
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,73,"* When this transformer is applied, the transformed function is"
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,74,* guaranteed to be always strictly negative (i.e. there are no roots).
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,75,* </p>
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,77,MIN {
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,78,/**  {@inheritDoc} */
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,79,protected double transformed(final double g) {
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,80,"return FastMath.min(-Precision.SAFE_MIN, FastMath.min(-g, +g));"
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,84,"/** Transformer computing transformed = max(+{@link Precision#SAFE_MIN}, -g, +g)."
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,85,* <p>
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,86,"* When this transformer is applied, the transformed function is"
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,87,* guaranteed to be always strictly positive (i.e. there are no roots).
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,88,* </p>
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,90,MAX {
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,91,/**  {@inheritDoc} */
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,92,protected double transformed(final double g) {
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,93,"return FastMath.max(+Precision.SAFE_MIN, FastMath.max(-g, +g));"
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,97,/** Transform value of function g.
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,98,* @param g raw value of function g
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,99,* @return transformed value of function g
+True,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,src/main/java/org/apache/commons/math3/ode/events/Transformer.java,101,protected abstract double transformed(double g);
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,2,* Licensed to the Apache Software Foundation (ASF) under one or more
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,3,* contributor license agreements.  See the NOTICE file distributed with
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,4,* this work for additional information regarding copyright ownership.
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,5,"* The ASF licenses this file to You under the Apache License, Version 2.0"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,6,"* (the ""License""); you may not use this file except in compliance with"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,7,* the License.  You may obtain a copy of the License at
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,9,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,11,"* Unless required by applicable law or agreed to in writing, software"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,12,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,13,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,14,* See the License for the specific language governing permissions and
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,15,* limitations under the License.
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,17,package org.apache.commons.math3.ode.events;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,19,import java.io.IOException;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,20,import java.io.PrintStream;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,22,import org.apache.commons.math3.analysis.solvers.BracketingNthOrderBrentSolver;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,23,import org.apache.commons.math3.exception.DimensionMismatchException;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,24,import org.apache.commons.math3.exception.MaxCountExceededException;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,25,import org.apache.commons.math3.exception.NoBracketingException;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,26,import org.apache.commons.math3.exception.NumberIsTooSmallException;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,27,import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,28,import org.apache.commons.math3.ode.FirstOrderIntegrator;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,29,import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,30,import org.apache.commons.math3.random.RandomGenerator;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,31,import org.apache.commons.math3.random.Well19937a;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,32,import org.apache.commons.math3.util.FastMath;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,33,import org.junit.Assert;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,34,import org.junit.Test;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,36,public class EventFilterTest {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,38,@Test
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,39,public void testHistoryIncreasingForward() {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,41,// start point: g > 0
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,42,"testHistory(FilterType.TRIGGER_ONLY_INCREASING_EVENTS,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,43,"0.5 * FastMath.PI, 30.5 * FastMath.PI, FastMath.PI, -1);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,45,// start point: g = 0
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,46,"testHistory(FilterType.TRIGGER_ONLY_INCREASING_EVENTS,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,47,"0, 30.5 * FastMath.PI, FastMath.PI, -1);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,49,// start point: g < 0
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,50,"testHistory(FilterType.TRIGGER_ONLY_INCREASING_EVENTS,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,51,"1.5 * FastMath.PI, 30.5 * FastMath.PI, FastMath.PI, +1);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,55,@Test
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,56,public void testHistoryIncreasingBackward() {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,58,// start point: g > 0
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,59,"testHistory(FilterType.TRIGGER_ONLY_INCREASING_EVENTS,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,60,"0.5 * FastMath.PI, -30.5 * FastMath.PI, FastMath.PI, -1);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,62,// start point: g = 0
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,63,"testHistory(FilterType.TRIGGER_ONLY_INCREASING_EVENTS,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,64,"0, -30.5 * FastMath.PI, FastMath.PI, +1);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,66,// start point: g < 0
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,67,"testHistory(FilterType.TRIGGER_ONLY_INCREASING_EVENTS,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,68,"1.5 * FastMath.PI, -30.5 * FastMath.PI, FastMath.PI, -1);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,72,@Test
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,73,public void testHistoryDecreasingForward() {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,75,// start point: g > 0
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,76,"testHistory(FilterType.TRIGGER_ONLY_DECREASING_EVENTS,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,77,"0.5 * FastMath.PI, 30.5 * FastMath.PI, 0, +1);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,79,// start point: g = 0
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,80,"testHistory(FilterType.TRIGGER_ONLY_DECREASING_EVENTS,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,81,"0, 30.5 * FastMath.PI, 0, +1);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,83,// start point: g < 0
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,84,"testHistory(FilterType.TRIGGER_ONLY_DECREASING_EVENTS,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,85,"1.5 * FastMath.PI, 30.5 * FastMath.PI, 0, +1);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,89,@Test
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,90,public void testHistoryDecreasingBackward() {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,92,// start point: g > 0
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,93,"testHistory(FilterType.TRIGGER_ONLY_DECREASING_EVENTS,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,94,"0.5 * FastMath.PI, -30.5 * FastMath.PI, 0, -1);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,96,// start point: g = 0
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,97,"testHistory(FilterType.TRIGGER_ONLY_DECREASING_EVENTS,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,98,"0, -30.5 * FastMath.PI, 0, -1);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,100,// start point: g < 0
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,101,"testHistory(FilterType.TRIGGER_ONLY_DECREASING_EVENTS,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,102,"1.5 * FastMath.PI, -30.5 * FastMath.PI, 0, +1);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,106,"public void testHistory(FilterType type, double t0, double t1, double refSwitch, double signEven) {"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,107,"Event onlyIncreasing = new Event(false, true);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,108,EventFilter eventFilter =
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,109,"new EventFilter(onlyIncreasing, type);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,110,"eventFilter.init(t0, new double[] {1.0,  0.0}, t1);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,112,// first pass to set up switches history for a long period
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,113,"double h = FastMath.copySign(0.05, t1 - t0);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,114,double n = (int) FastMath.floor((t1 - t0) / h);
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,115,for (int i = 0; i < n; ++i) {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,116,double t = t0 + i * h;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,117,"eventFilter.g(t, new double[] { FastMath.sin(t), FastMath.cos(t) });"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,120,"// verify old events are preserved, even if randomly accessed"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,121,RandomGenerator rng = new Well19937a(0xb0e7401265af8cd3l);
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,122,try {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,123,"PrintStream out = new PrintStream(""/home/luc/x.dat"");"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,124,for (int i = 0; i < 5000; i++) {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,125,double t = t0 + (t1 - t0) * rng.nextDouble();
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,126,"double g = eventFilter.g(t, new double[] { FastMath.sin(t), FastMath.cos(t) });"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,127,int turn = (int) FastMath.floor((t - refSwitch) / (2 * FastMath.PI));
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,128,"out.println(t + "" "" + g);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,129,if (turn % 2 == 0) {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,130,"Assert.assertEquals( signEven * FastMath.sin(t), g, 1.0e-10);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,131,} else {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,132,"Assert.assertEquals(-signEven * FastMath.sin(t), g, 1.0e-10);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,135,out.close();
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,136,} catch (IOException ioe) {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,137,Assert.fail(ioe.getLocalizedMessage());
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,142,@Test
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,143,public void testIncreasingOnly()
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,144,"throws DimensionMismatchException, NumberIsTooSmallException,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,145,"MaxCountExceededException, NoBracketingException {"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,146,double e = 1e-15;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,147,FirstOrderIntegrator integrator;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,148,"integrator = new DormandPrince853Integrator(1.0e-3, 100.0, 1e-7, 1e-7);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,149,"Event allEvents = new Event(true, true);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,150,"integrator.addEventHandler(allEvents, 0.1, e, 1000,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,151,"new BracketingNthOrderBrentSolver(1.0e-7, 5));"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,152,"Event onlyIncreasing = new Event(false, true);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,153,"integrator.addEventHandler(new EventFilter(onlyIncreasing,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,154,"FilterType.TRIGGER_ONLY_INCREASING_EVENTS),"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,155,"0.1, e, 100,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,156,"new BracketingNthOrderBrentSolver(1.0e-7, 5));"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,157,double t0 = 0.5 * FastMath.PI;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,158,double tEnd = 5.5 * FastMath.PI;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,159,"double[] y = { 0.0, 1.0 };"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,160,"Assert.assertEquals(tEnd,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,161,"integrator.integrate(new SineCosine(), t0, y, tEnd, y),"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,162,1.0e-7);
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,164,"Assert.assertEquals(5, allEvents.getEventCount());"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,165,"Assert.assertEquals(2, onlyIncreasing.getEventCount());"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,169,@Test
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,170,public void testDecreasingOnly()
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,171,"throws DimensionMismatchException, NumberIsTooSmallException,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,172,"MaxCountExceededException, NoBracketingException {"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,173,double e = 1e-15;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,174,FirstOrderIntegrator integrator;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,175,"integrator = new DormandPrince853Integrator(1.0e-3, 100.0, 1e-7, 1e-7);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,176,"Event allEvents = new Event(true, true);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,177,"integrator.addEventHandler(allEvents, 0.1, e, 1000,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,178,"new BracketingNthOrderBrentSolver(1.0e-7, 5));"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,179,"Event onlyDecreasing = new Event(true, false);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,180,"integrator.addEventHandler(new EventFilter(onlyDecreasing,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,181,"FilterType.TRIGGER_ONLY_DECREASING_EVENTS),"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,182,"0.1, e, 1000,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,183,"new BracketingNthOrderBrentSolver(1.0e-7, 5));"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,184,double t0 = 0.5 * FastMath.PI;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,185,double tEnd = 5.5 * FastMath.PI;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,186,"double[] y = { 0.0, 1.0 };"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,187,"Assert.assertEquals(tEnd,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,188,"integrator.integrate(new SineCosine(), t0, y, tEnd, y),"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,189,1.0e-7);
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,191,"Assert.assertEquals(5, allEvents.getEventCount());"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,192,"Assert.assertEquals(3, onlyDecreasing.getEventCount());"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,196,@Test
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,197,public void testTwoOppositeFilters()
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,198,"throws DimensionMismatchException, NumberIsTooSmallException,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,199,"MaxCountExceededException, NoBracketingException {"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,200,double e = 1e-15;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,201,FirstOrderIntegrator integrator;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,202,"integrator = new DormandPrince853Integrator(1.0e-3, 100.0, 1e-7, 1e-7);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,203,"Event allEvents = new Event(true, true);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,204,"integrator.addEventHandler(allEvents, 0.1, e, 1000,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,205,"new BracketingNthOrderBrentSolver(1.0e-7, 5));"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,206,"Event onlyIncreasing = new Event(false, true);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,207,"integrator.addEventHandler(new EventFilter(onlyIncreasing,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,208,"FilterType.TRIGGER_ONLY_INCREASING_EVENTS),"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,209,"0.1, e, 1000,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,210,"new BracketingNthOrderBrentSolver(1.0e-7, 5));"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,211,"Event onlyDecreasing = new Event(true, false);"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,212,"integrator.addEventHandler(new EventFilter(onlyDecreasing,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,213,"FilterType.TRIGGER_ONLY_DECREASING_EVENTS),"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,214,"0.1, e, 1000,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,215,"new BracketingNthOrderBrentSolver(1.0e-7, 5));"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,216,double t0 = 0.5 * FastMath.PI;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,217,double tEnd = 5.5 * FastMath.PI;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,218,"double[] y = { 0.0, 1.0 };"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,219,"Assert.assertEquals(tEnd,"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,220,"integrator.integrate(new SineCosine(), t0, y, tEnd, y),"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,221,1.0e-7);
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,223,"Assert.assertEquals(5, allEvents.getEventCount());"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,224,"Assert.assertEquals(2, onlyIncreasing.getEventCount());"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,225,"Assert.assertEquals(3, onlyDecreasing.getEventCount());"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,229,private static class SineCosine implements FirstOrderDifferentialEquations {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,230,public int getDimension() {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,231,return 2;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,234,"public void computeDerivatives(double t, double[] y, double[] yDot) {"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,235,yDot[0] =  y[1];
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,236,yDot[1] = -y[0];
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,240,/** State events for this unit test. */
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,241,protected static class Event implements EventHandler {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,243,private final boolean expectDecreasing;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,244,private final boolean expectIncreasing;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,245,private int eventCount;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,247,"public Event(boolean expectDecreasing, boolean expectIncreasing) {"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,248,this.expectDecreasing = expectDecreasing;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,249,this.expectIncreasing = expectIncreasing;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,252,public int getEventCount() {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,253,return eventCount;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,256,"public void init(double t0, double[] y0, double t) {"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,257,eventCount = 0;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,260,"public double g(double t, double[] y) {"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,261,return y[0];
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,264,"public Action eventOccurred(double t, double[] y, boolean increasing) {"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,265,if (increasing) {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,266,Assert.assertTrue(expectIncreasing);
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,267,} else {
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,268,Assert.assertTrue(expectDecreasing);
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,270,eventCount++;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,271,return Action.RESET_STATE;
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,274,"public void resetState(double t, double[] y) {"
+True,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,src/test/java/org/apache/commons/math3/ode/events/EventFilterTest.java,275,"// in fact, we don't really reset anything for this test"

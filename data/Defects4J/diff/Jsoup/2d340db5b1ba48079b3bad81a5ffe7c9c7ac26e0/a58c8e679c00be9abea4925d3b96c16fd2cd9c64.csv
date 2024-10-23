@@ -1,0 +1,37 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1401,@Override
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1402,public Element shallowClone() {
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1403,// simpler than implementing a clone version with no child copy
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1404,"return new Element(tag, baseUri, attributes);"
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1407,lone.childNodes.addAll(childNodes);
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1413,clone.childNodes.addAll(childNodes); // the children then get iterated and cloned in Node.clone
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,642, @return stand-alone cloned node
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,642,"* @return a stand-alone cloned node, including clones of any children"
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,643,* @see #shallowClone()
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,669,"* Create a stand-alone, shallow copy of this node. None of its children (if any) will be cloned, and it will have"
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,670,* no parent or sibling nodes.
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,671,* @return a single independent copy of this node
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,672,* @see #clone()
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,674,public Node shallowClone() {
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,675,return doClone(null);
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,642,@Test public void testShallowClone() {
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,643,"String base = ""http://example.com/"";"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,644,"Document doc = Jsoup.parse(""<div id=1 class=one><p id=2 class=two>One"", base);"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,645,"Element d = doc.selectFirst(""div"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,646,"Element p = doc.selectFirst(""p"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,647,TextNode t = p.textNodes().get(0);
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,649,Element d2 = d.shallowClone();
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,650,Element p2 = p.shallowClone();
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,651,TextNode t2 = (TextNode) t.shallowClone();
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,653,"assertEquals(1, d.childNodeSize());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,654,"assertEquals(0, d2.childNodeSize());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,656,"assertEquals(1, p.childNodeSize());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,657,"assertEquals(0, p2.childNodeSize());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,658,"assertEquals("""", p2.text());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,660,"assertEquals(""two"", p2.className());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,661,"assertEquals(""One"", t2.text());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,663,"d2.append(""<p id=3>Three"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,664,"assertEquals(1, d2.childNodeSize());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,665,"assertEquals(""Three"", d2.text());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,666,"assertEquals(""One"", d.text());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,667,"assertEquals(base, d2.baseUri());"

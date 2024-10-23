@@ -1,0 +1,20 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1046,"* Get the (unencoded) text of all children of this element, including any newlines and spaces present in the original."
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1048,* @return text
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1050,public String getWholeText(){
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1051,final StringBuilder accum = new StringBuilder();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1052,new NodeTraversor(new NodeVisitor() {
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1053,"public void head(Node node, int depth) {"
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1054,if (node instanceof TextNode) {
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1055,TextNode textNode = (TextNode) node;
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1056,accum.append(textNode.getWholeText());
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1060,"public void tail(Node node, int depth) {"
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1062,}).traverse(this);
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1063,return accum.toString();
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,123,@Test public void testGetWholeText() {
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,124,"Document doc = Jsoup.parse(""<p>Hello\nthere</p>"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,125,"assertEquals(""Hello\nthere"", doc.getWholeText());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,127,"doc = Jsoup.parse(""<p>Hello  \n  there</p>"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,128,"assertEquals(""Hello  \n  there"", doc.getWholeText());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,130,"doc = Jsoup.parse(""<p>Hello  <div>\n  there</div></p>"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,131,"assertEquals(""Hello  \n  there"", doc.getWholeText());"

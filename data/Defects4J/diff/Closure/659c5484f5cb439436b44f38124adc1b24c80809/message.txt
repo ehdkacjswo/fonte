@@ -1,0 +1,16 @@
+Introduce an experimental option to use externs to export mutable properties and/or properties not on global names.
+
+This differs from @expose in that it does not interfere with CollapseProperties or other optimizations that can ignore externs (generally, objects known not to escape) and pattern matching that doesn't expect GETELEM.
+
+A finalized version of this combined with a @nocollapse annotation will allow us to remove @expose support.
+
+Several simplification are made here:
+1) only properties that would not otherwise have been legal to export are exportable using this new approach so this can't introduce problems for existing @export usage.
+2) the properties are "exported" by creating synthetic properties on "Object.prototype".
+
+Exporting on "Object.prototype" is not ideal as it prevents property disambiguation and thus renaming of the property globally, however it is sufficient to validate this approach. What should happen, once we have a mechanism for adding an synthetic interface declaration, is that each "class" would implement a specific "exports" interface just for that class.  Only object literal properties would be exported to Object.prototype.
+
+Alternately, in an ES5 world these properties could be exported by introducing ES5 getters/setters for the properties to "alias" the name (this gets a little tricky as we would need to handle the case where the property is not actually renamed).
+-------------
+Created by MOE: http://code.google.com/p/moe-java
+MOE_MIGRATED_REVID=50904100

@@ -1,0 +1,63 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,627,// Output the manifest if requested.
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,628,outputManifest();
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,728,/** Expansion function for the manifest. */
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,729,@VisibleForTesting
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,730,String expandManifest(JSModule forModule) {
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,731,if (Strings.isEmpty(config.outputManifest)) {
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,732,return null;
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,734,"return expandCommandLinePath(config.outputManifest, forModule);"
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,928,* Returns true if and only if a manifest should be generated for each
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,929,"* module, as opposed to one unified manifest."
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,931,private boolean shouldGenerateManifestPerModule() {
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,932,return !config.module.isEmpty()
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,933,&& config.outputManifest != null
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,934,"&& config.outputManifest.contains(""%outname%"");"
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,938,* Writes the manifest of all compiler input files that survived
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,939,"* manage_closure_dependencies, if requested."
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,941,private void outputManifest() throws IOException {
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,942,String outputManifest = config.outputManifest;
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,943,if (Strings.isEmpty(outputManifest)) {
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,944,return;
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,947,if (shouldGenerateManifestPerModule()) {
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,948,// Generate per-module manifests.
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,949,Iterable<JSModule> modules = compiler.getModuleGraph().getAllModules();
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,950,for (JSModule module : modules) {
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,951,"printManifestTo(module.getInputs(), expandManifest(module));"
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,953,} else {
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,954,// Generate a single file manifest.
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,955,"printManifestTo(compiler.getInputsInOrder(), expandManifest(null));"
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,960,"* Prints a list of input names, delimited by newlines, to the manifest file."
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,962,"private void printManifestTo(Iterable<CompilerInput> inputs, String path)"
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,963,throws IOException {
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,964,List<String> names = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,965,for (CompilerInput input : inputs) {
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,966,names.add(input.getName());
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,968,"String result = Joiner.on(""\n"").join(names);"
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,969,PrintStream out = toPrintStream(path);
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,970,out.append(result);
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,971,out.close();
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,1344,"private String outputManifest = """";"
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,1347,* Sets whether to print an output manifest file.
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,1349,CommandLineConfig setOutputManifest(String outputManifest) {
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,1350,this.outputManifest = outputManifest;
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,1351,return this;
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,25,import java.util.List;
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,63,* Gets the inputs in the order in which they are being processed.
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,64,* Only for use by {@code AbstractCompilerRunner}.
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,66,abstract List<CompilerInput> getInputsInOrder();
+True,src/com/google/javascript/jscomp/CommandLineRunner.java,src/com/google/javascript/jscomp/CommandLineRunner.java,285,"@Option(name = ""--output_manifest"","
+True,src/com/google/javascript/jscomp/CommandLineRunner.java,src/com/google/javascript/jscomp/CommandLineRunner.java,286,"usage = ""Prints out a list of all the files in the compilation. """
+True,src/com/google/javascript/jscomp/CommandLineRunner.java,src/com/google/javascript/jscomp/CommandLineRunner.java,287,"+ ""If --manage_closure_dependencies is on, this will not include """
+True,src/com/google/javascript/jscomp/CommandLineRunner.java,src/com/google/javascript/jscomp/CommandLineRunner.java,288,"+ ""files that got dropped because they were not required. """
+True,src/com/google/javascript/jscomp/CommandLineRunner.java,src/com/google/javascript/jscomp/CommandLineRunner.java,289,"+ ""The %outname% placeholder expands to the js output file. """
+True,src/com/google/javascript/jscomp/CommandLineRunner.java,src/com/google/javascript/jscomp/CommandLineRunner.java,290,"+ ""If you're using modularization, using %outname% will create """
+True,src/com/google/javascript/jscomp/CommandLineRunner.java,src/com/google/javascript/jscomp/CommandLineRunner.java,291,"+ ""a manifest for each module."")"
+True,src/com/google/javascript/jscomp/CommandLineRunner.java,src/com/google/javascript/jscomp/CommandLineRunner.java,292,"private String output_manifest = """";"
+False,src/com/google/javascript/jscomp/CommandLineRunner.java,src/com/google/javascript/jscomp/CommandLineRunner.java,434,setManageClosureDependencies(flags.manage_closure_dependencies);
+True,src/com/google/javascript/jscomp/CommandLineRunner.java,src/com/google/javascript/jscomp/CommandLineRunner.java,443,.setManageClosureDependencies(flags.manage_closure_dependencies)
+True,src/com/google/javascript/jscomp/CommandLineRunner.java,src/com/google/javascript/jscomp/CommandLineRunner.java,444,.setOutputManifest(flags.output_manifest);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,36,import java.util.Collections;
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1726,@Override
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1727,List<CompilerInput> getInputsInOrder() {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1728,return Collections.<CompilerInput>unmodifiableList(inputs);

@@ -1,0 +1,65 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,934,* Computes the inverse of the given matrix by splitting it into
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,935,* 4 sub-matrices.
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,937,* @param m Matrix whose inverse must be computed.
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,938,"* @param splitIndex Index that determines the ""split"" line and"
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,939,* column.
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,940,* The element corresponding to this index will part of the
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,941,* upper-left sub-matrix.
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,942,* @return the inverse of {@code m}.
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,943,* @throws NonSquareMatrixException if {@code m} is not square.
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,945,"public static RealMatrix blockInverse(RealMatrix m,"
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,946,int splitIndex) {
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,947,final int n = m.getRowDimension();
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,948,if (m.getColumnDimension() != n) {
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,949,"throw new NonSquareMatrixException(m.getRowDimension(),"
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,950,m.getColumnDimension());
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,953,final int splitIndex1 = splitIndex + 1;
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,955,"final RealMatrix a = m.getSubMatrix(0, splitIndex, 0, splitIndex);"
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,956,"final RealMatrix b = m.getSubMatrix(0, splitIndex, splitIndex1, n - 1);"
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,957,"final RealMatrix c = m.getSubMatrix(splitIndex1, n - 1, 0, splitIndex);"
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,958,"final RealMatrix d = m.getSubMatrix(splitIndex1, n - 1, splitIndex1, n - 1);"
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,960,final SingularValueDecomposition aDec = new SingularValueDecomposition(a);
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,961,final RealMatrix aInv = aDec.getSolver().getInverse();
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,963,final SingularValueDecomposition dDec = new SingularValueDecomposition(d);
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,964,final RealMatrix dInv = dDec.getSolver().getInverse();
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,966,final RealMatrix tmp1 = a.subtract(b.multiply(dInv).multiply(c));
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,967,final SingularValueDecomposition tmp1Dec = new SingularValueDecomposition(tmp1);
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,968,final RealMatrix result00 = tmp1Dec.getSolver().getInverse();
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,970,final RealMatrix tmp2 = d.subtract(c.multiply(aInv).multiply(b));
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,971,final SingularValueDecomposition tmp2Dec = new SingularValueDecomposition(tmp2);
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,972,final RealMatrix result11 = tmp2Dec.getSolver().getInverse();
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,974,final RealMatrix result01 = aInv.multiply(b).multiply(result11).scalarMultiply(-1);
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,975,final RealMatrix result10 = dInv.multiply(c).multiply(result00).scalarMultiply(-1);
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,977,"final RealMatrix result = new Array2DRowRealMatrix(n, n);"
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,978,"result.setSubMatrix(result00.getData(), 0, 0);"
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,979,"result.setSubMatrix(result01.getData(), 0, splitIndex1);"
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,980,"result.setSubMatrix(result10.getData(), splitIndex1, 0);"
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,981,"result.setSubMatrix(result11.getData(), splitIndex1, splitIndex1);"
+True,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,src/main/java/org/apache/commons/math3/linear/MatrixUtils.java,983,return result;
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,330,* This test should probably be replaced by one that could show
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,331,* whether this algorithm can sometimes perform better (precision- or
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,332,* performance-wise) than the direct inversion of the whole matrix.
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,334,@Test
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,335,public void testBlockInverse() {
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,336,final double[][] data = {
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,337,"{ -1, 0, 123, 4 },"
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,338,"{ -56, 78.9, -0.1, -23.4 },"
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,339,"{ 5.67, 8, -9, 1011 },"
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,340,"{ 12, 345, -67.8, 9 },"
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,343,final RealMatrix m = new Array2DRowRealMatrix(data);
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,344,final int len = data.length;
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,345,final double tol = 1e-14;
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,347,for (int splitIndex = 0; splitIndex < 3; splitIndex++) {
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,348,"final RealMatrix mInv = MatrixUtils.blockInverse(m, splitIndex);"
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,349,final RealMatrix id = m.multiply(mInv);
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,351,// Check that we recovered the identity matrix.
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,352,for (int i = 0; i < len; i++) {
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,353,for (int j = 0; j < len; j++) {
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,354,"final double entry = id.getEntry(i, j);"
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,355,if (i == j) {
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,356,"Assert.assertEquals(""["" + i + ""]["" + j + ""]"","
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,357,"1, entry, tol);"
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,358,} else {
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,359,"Assert.assertEquals(""["" + i + ""]["" + j + ""]"","
+True,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,src/test/java/org/apache/commons/math3/linear/MatrixUtilsTest.java,360,"0, entry, tol);"

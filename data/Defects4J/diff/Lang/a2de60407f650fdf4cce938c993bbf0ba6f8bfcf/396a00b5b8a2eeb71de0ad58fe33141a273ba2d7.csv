@@ -1,0 +1,26 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,452,"f (str.startsWith(""0x"") || str.startsWith(""-0x"") || str.startsWith(""0X"") || str.startsWith(""-0X"")) {"
+False,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,453,nt hexDigits = str.length() - 2; // drop 0x
+False,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,454,"f (str.startsWith(""-"")) { // drop -"
+False,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,455,exDigits--;
+True,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,452,// Need to deal with all possible hex prefixes here
+True,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,453,"final String[] hex_prefixes = {""0x"", ""0X"", ""-0x"", ""-0X"", ""#"", ""-#""};"
+True,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,454,int pfxLen = 0;
+True,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,455,for(String pfx : hex_prefixes) {
+True,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,456,if (str.startsWith(pfx)) {
+True,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,457,pfxLen += pfx.length();
+True,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,458,break;
+True,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,461,if (pfxLen > 0) {
+True,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,462,int hexDigits = str.length() - pfxLen;
+True,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,463,if (hexDigits > 16) { // too many for Long
+True,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,src/main/java/org/apache/commons/lang3/math/NumberUtils.java,464,return createBigInteger(str);
+True,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,261,"assertEquals(Integer.class, NumberUtils.createNumber(""0x12345678"").getClass());"
+True,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,262,"assertEquals(Long.class,    NumberUtils.createNumber(""0x123456789"").getClass());"
+True,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,264,"assertEquals(Long.class,       NumberUtils.createNumber(""0x7fffffffffffffff"").getClass());"
+True,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,265,"assertEquals(BigInteger.class, NumberUtils.createNumber(""0x7fffffffffffffff0"").getClass());"
+True,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,267,"assertEquals(Long.class,       NumberUtils.createNumber(""#7fffffffffffffff"").getClass());"
+True,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,268,"assertEquals(BigInteger.class, NumberUtils.createNumber(""#7fffffffffffffff0"").getClass());"
+True,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,270,"assertEquals(Integer.class, NumberUtils.createNumber(""017777777777"").getClass()); // 31 bits"
+True,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,271,"assertEquals(Long.class,    NumberUtils.createNumber(""037777777777"").getClass()); // 32 bits"
+True,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,273,"assertEquals(Long.class,       NumberUtils.createNumber(""0777777777777777777777"").getClass()); // 63 bits"
+True,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java,274,"assertEquals(BigInteger.class, NumberUtils.createNumber(""01777777777777777777777"").getClass());// 64 bits"

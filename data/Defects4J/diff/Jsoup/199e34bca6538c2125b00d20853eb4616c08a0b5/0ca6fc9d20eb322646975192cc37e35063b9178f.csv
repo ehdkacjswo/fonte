@@ -1,0 +1,29 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,382,<p/>
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,383,"To allow a link to an in-page URL anchor (i.e. <code>&lt;a href=""#anchor""&gt;</code>, add a <code>#</code>:<br>"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,384,"E.g.: <code>addProtocols(""a"", ""href"", ""#"")</code>"
+False,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,501,"tring prot = protocol.toString() + "":"";"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,504,String prot = protocol.toString();
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,506,"if (prot.equals(""#"")) { // allows anchor links"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,507,if (isValidAnchor(value)) {
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,508,return true;
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,509,} else {
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,510,continue;
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,514,"prot += "":"";"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,523,private boolean isValidAnchor(String value) {
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,524,"return value.startsWith(""#"") && !value.matches("".*\\s.*"");"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,109,@Test public void testCleanAnchorProtocol() {
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,110,"String validAnchor = ""<a href=\""#valid\"">Valid anchor</a>"";"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,111,"String invalidAnchor = ""<a href=\""#anchor with spaces\"">Invalid anchor</a>"";"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,113,// A Whitelist that does not allow anchors will strip them out.
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,114,"String cleanHtml = Jsoup.clean(validAnchor, Whitelist.relaxed());"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,115,"assertEquals(""<a>Valid anchor</a>"", cleanHtml);"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,117,"cleanHtml = Jsoup.clean(invalidAnchor, Whitelist.relaxed());"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,118,"assertEquals(""<a>Invalid anchor</a>"", cleanHtml);"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,120,// A Whitelist that allows them will keep them.
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,121,"Whitelist relaxedWithAnchor = Whitelist.relaxed().addProtocols(""a"", ""href"", ""#"");"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,123,"cleanHtml = Jsoup.clean(validAnchor, relaxedWithAnchor);"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,124,"assertEquals(validAnchor, cleanHtml);"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,126,// An invalid anchor is never valid.
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,127,"cleanHtml = Jsoup.clean(invalidAnchor, relaxedWithAnchor);"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,128,"assertEquals(""<a>Invalid anchor</a>"", cleanHtml);"

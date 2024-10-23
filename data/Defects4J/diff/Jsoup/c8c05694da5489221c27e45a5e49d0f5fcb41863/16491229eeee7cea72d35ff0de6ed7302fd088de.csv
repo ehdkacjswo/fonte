@@ -1,0 +1,138 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,232,inal StringBuilder mime = new StringBuilder(boundaryLength);
+True,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,232,final StringBuilder mime = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,237,eturn mime.toString();
+True,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,237,return StringUtil.releaseBuilder(mime);
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,1069,tringBuilder sb = StringUtil.stringBuilder();
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,1069,StringBuilder sb = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,1079,eturn sb.toString();
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,1079,return StringUtil.releaseBuilder(sb);
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,1085,tringBuilder url = StringUtil.stringBuilder();
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,1085,StringBuilder url = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,1109,eq.url(new URL(url.toString()));
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,1109,req.url(new URL(StringUtil.releaseBuilder(url)));
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,8,import java.util.Stack;
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,42,tringBuilder sb = new StringBuilder(64).append(start);
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,43,StringBuilder sb = StringUtil.borrowBuilder().append(start);
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,47,eturn sb.toString();
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,48,return StringUtil.releaseBuilder(sb);
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,143,tringBuilder sb = StringUtil.stringBuilder();
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,144,StringBuilder sb = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,145,eturn sb.toString();
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,146,return StringUtil.releaseBuilder(sb);
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,230,private static final Stack<StringBuilder> builders = new Stack<>();
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,230," Maintains a cached StringBuilder, to minimize new StringBuilder GCs. Prevents it from growing too big per thread."
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,231, Care must be taken to not grab more than one in the same stack (not locked or mutexed or anything).
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,233,"* Maintains cached StringBuilders in a flyweight pattern, to minimize new StringBuilder GCs. The StringBuilder is"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,234,* prevented from growing too large.
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,235,* <p>
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,236,"* Care must be taken to release the builder once its work has been completed, with {@see #releaseBuilder}"
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,234,ublic static StringBuilder stringBuilder() {
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,235,tringBuilder sb = stringLocal.get();
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,236,f (sb.length() > MaxCachedBuilderSize) {
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,237,b = new StringBuilder(MaxCachedBuilderSize);
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,238,tringLocal.set(sb);
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,239, else {
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,240,"b.delete(0, sb.length());"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,240,public static StringBuilder borrowBuilder() {
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,241,synchronized (builders) {
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,242,return builders.empty() ?
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,243,new StringBuilder(MaxCachedBuilderSize) :
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,244,builders.pop();
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,242,eturn sb;
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,246,rivate static final int MaxCachedBuilderSize = 8 * 1024;
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,247,rivate static final ThreadLocal<StringBuilder> stringLocal = new ThreadLocal<StringBuilder>(){
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,248,Override
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,249,rotected StringBuilder initialValue() {
+False,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,250,eturn new StringBuilder(MaxCachedBuilderSize);
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,249,"* Release a borrowed builder. Care must be taken not to use the builder after it has been returned, as its"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,250,"* contents may be changed by this method, or by a concurrent thread."
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,251,* @param sb the StringBuilder to release.
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,252,* @return the string value of the released String Builder (as an incentive to release it!).
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,254,public static String releaseBuilder(StringBuilder sb) {
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,255,Validate.notNull(sb);
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,256,String string = sb.toString();
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,258,if (sb.length() > MaxCachedBuilderSize)
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,259,sb = new StringBuilder(MaxCachedBuilderSize); // make sure it hasn't grown too big
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,260,else
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,261,"sb.delete(0, sb.length()); // make sure it's emptied on release"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,263,synchronized (builders) {
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,264,builders.push(sb);
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,266,while (builders.size() > MaxIdleBuilders) {
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,267,builders.pop();
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,270,return string;
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,273,private static final int MaxCachedBuilderSize = 8 * 1024;
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,274,private static final int MaxIdleBuilders = 8;
+True,src/main/java/org/jsoup/nodes/Attribute.java,src/main/java/org/jsoup/nodes/Attribute.java,4,import org.jsoup.helper.StringUtil;
+False,src/main/java/org/jsoup/nodes/Attribute.java,src/main/java/org/jsoup/nodes/Attribute.java,101,tringBuilder accum = new StringBuilder();
+True,src/main/java/org/jsoup/nodes/Attribute.java,src/main/java/org/jsoup/nodes/Attribute.java,102,StringBuilder sb = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/nodes/Attribute.java,src/main/java/org/jsoup/nodes/Attribute.java,104,"tml(accum, (new Document("""")).outputSettings());"
+True,src/main/java/org/jsoup/nodes/Attribute.java,src/main/java/org/jsoup/nodes/Attribute.java,105,"html(sb, (new Document("""")).outputSettings());"
+False,src/main/java/org/jsoup/nodes/Attribute.java,src/main/java/org/jsoup/nodes/Attribute.java,108,eturn accum.toString();
+True,src/main/java/org/jsoup/nodes/Attribute.java,src/main/java/org/jsoup/nodes/Attribute.java,109,return StringUtil.releaseBuilder(sb);
+True,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,4,import org.jsoup.helper.StringUtil;
+False,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,301,tringBuilder accum = new StringBuilder();
+True,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,302,StringBuilder sb = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,303,"tml(accum, (new Document("""")).outputSettings()); // output settings a bit funky, but this html() seldom used"
+True,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,304,"html(sb, (new Document("""")).outputSettings()); // output settings a bit funky, but this html() seldom used"
+False,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,307,eturn accum.toString();
+True,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,308,return StringUtil.releaseBuilder(sb);
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1023,inal StringBuilder accum = new StringBuilder();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1023,final StringBuilder accum = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1048,eturn accum.toString().trim();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1049,return StringUtil.releaseBuilder(accum).trim();
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1059,inal StringBuilder accum = new StringBuilder();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1060,final StringBuilder accum = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1071,eturn accum.toString();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1073,return StringUtil.releaseBuilder(accum);
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1086,tringBuilder sb = new StringBuilder();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1088,StringBuilder sb = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1088,eturn sb.toString().trim();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1090,return StringUtil.releaseBuilder(sb).trim();
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1175,tringBuilder sb = new StringBuilder();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1177,StringBuilder sb = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1195,eturn sb.toString();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1197,return StringUtil.releaseBuilder(sb);
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1398,tringBuilder accum = StringUtil.stringBuilder();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1400,StringBuilder accum = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1400,eturn NodeUtils.outputSettings(this).prettyPrint() ? accum.toString().trim() : accum.toString();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1402,String html = StringUtil.releaseBuilder(accum);
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1403,return NodeUtils.outputSettings(this).prettyPrint() ? html.trim() : html;
+False,src/main/java/org/jsoup/nodes/Entities.java,src/main/java/org/jsoup/nodes/Entities.java,152,tringBuilder accum = new StringBuilder(string.length() * 2);
+True,src/main/java/org/jsoup/nodes/Entities.java,src/main/java/org/jsoup/nodes/Entities.java,152,StringBuilder accum = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/nodes/Entities.java,src/main/java/org/jsoup/nodes/Entities.java,158,eturn accum.toString();
+True,src/main/java/org/jsoup/nodes/Entities.java,src/main/java/org/jsoup/nodes/Entities.java,158,return StringUtil.releaseBuilder(accum);
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,569,tringBuilder accum = StringUtil.stringBuilder();
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,569,StringBuilder accum = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,571,eturn accum.toString();
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,571,return StringUtil.releaseBuilder(accum);
+True,src/main/java/org/jsoup/nodes/XmlDeclaration.java,src/main/java/org/jsoup/nodes/XmlDeclaration.java,4,import org.jsoup.helper.StringUtil;
+False,src/main/java/org/jsoup/nodes/XmlDeclaration.java,src/main/java/org/jsoup/nodes/XmlDeclaration.java,55,tringBuilder sb = new StringBuilder();
+True,src/main/java/org/jsoup/nodes/XmlDeclaration.java,src/main/java/org/jsoup/nodes/XmlDeclaration.java,56,StringBuilder sb = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/nodes/XmlDeclaration.java,src/main/java/org/jsoup/nodes/XmlDeclaration.java,61,eturn sb.toString().trim();
+True,src/main/java/org/jsoup/nodes/XmlDeclaration.java,src/main/java/org/jsoup/nodes/XmlDeclaration.java,62,return StringUtil.releaseBuilder(sb).trim();
+False,src/main/java/org/jsoup/parser/TokenQueue.java,src/main/java/org/jsoup/parser/TokenQueue.java,305,tringBuilder out = StringUtil.stringBuilder();
+True,src/main/java/org/jsoup/parser/TokenQueue.java,src/main/java/org/jsoup/parser/TokenQueue.java,305,StringBuilder out = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/parser/TokenQueue.java,src/main/java/org/jsoup/parser/TokenQueue.java,316,eturn out.toString();
+True,src/main/java/org/jsoup/parser/TokenQueue.java,src/main/java/org/jsoup/parser/TokenQueue.java,316,return StringUtil.releaseBuilder(out);
+False,src/main/java/org/jsoup/parser/Tokeniser.java,src/main/java/org/jsoup/parser/Tokeniser.java,278,tringBuilder builder = StringUtil.stringBuilder();
+True,src/main/java/org/jsoup/parser/Tokeniser.java,src/main/java/org/jsoup/parser/Tokeniser.java,278,StringBuilder builder = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/parser/Tokeniser.java,src/main/java/org/jsoup/parser/Tokeniser.java,294,eturn builder.toString();
+True,src/main/java/org/jsoup/parser/Tokeniser.java,src/main/java/org/jsoup/parser/Tokeniser.java,294,return StringUtil.releaseBuilder(builder);
+True,src/main/java/org/jsoup/select/Elements.java,src/main/java/org/jsoup/select/Elements.java,3,import org.jsoup.helper.StringUtil;
+False,src/main/java/org/jsoup/select/Elements.java,src/main/java/org/jsoup/select/Elements.java,208,tringBuilder sb = new StringBuilder();
+True,src/main/java/org/jsoup/select/Elements.java,src/main/java/org/jsoup/select/Elements.java,209,StringBuilder sb = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/select/Elements.java,src/main/java/org/jsoup/select/Elements.java,214,eturn sb.toString();
+True,src/main/java/org/jsoup/select/Elements.java,src/main/java/org/jsoup/select/Elements.java,215,return StringUtil.releaseBuilder(sb);
+False,src/main/java/org/jsoup/select/Elements.java,src/main/java/org/jsoup/select/Elements.java,254,tringBuilder sb = new StringBuilder();
+True,src/main/java/org/jsoup/select/Elements.java,src/main/java/org/jsoup/select/Elements.java,255,StringBuilder sb = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/select/Elements.java,src/main/java/org/jsoup/select/Elements.java,260,eturn sb.toString();
+True,src/main/java/org/jsoup/select/Elements.java,src/main/java/org/jsoup/select/Elements.java,261,return StringUtil.releaseBuilder(sb);
+False,src/main/java/org/jsoup/select/Elements.java,src/main/java/org/jsoup/select/Elements.java,270,tringBuilder sb = new StringBuilder();
+True,src/main/java/org/jsoup/select/Elements.java,src/main/java/org/jsoup/select/Elements.java,271,StringBuilder sb = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/select/Elements.java,src/main/java/org/jsoup/select/Elements.java,276,eturn sb.toString();
+True,src/main/java/org/jsoup/select/Elements.java,src/main/java/org/jsoup/select/Elements.java,277,return StringUtil.releaseBuilder(sb);
+False,src/main/java/org/jsoup/select/QueryParser.java,src/main/java/org/jsoup/select/QueryParser.java,134,tringBuilder sq = new StringBuilder();
+True,src/main/java/org/jsoup/select/QueryParser.java,src/main/java/org/jsoup/select/QueryParser.java,134,StringBuilder sq = StringUtil.borrowBuilder();
+False,src/main/java/org/jsoup/select/QueryParser.java,src/main/java/org/jsoup/select/QueryParser.java,145,eturn sq.toString();
+True,src/main/java/org/jsoup/select/QueryParser.java,src/main/java/org/jsoup/select/QueryParser.java,145,return StringUtil.releaseBuilder(sq);

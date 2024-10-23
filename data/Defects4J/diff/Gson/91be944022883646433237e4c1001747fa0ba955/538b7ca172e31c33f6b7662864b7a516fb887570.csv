@@ -1,0 +1,96 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,19,mport com.google.gson.internal.bind.JsonElementWriter;
+False,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,20,mport com.google.gson.internal.bind.JsonTreeReader;
+False,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,21,mport com.google.gson.reflect.TypeToken;
+False,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,22,mport com.google.gson.stream.JsonReader;
+False,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,23,mport com.google.gson.stream.JsonWriter;
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,25,import com.google.gson.internal.bind.JsonElementWriter;
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,26,import com.google.gson.internal.bind.JsonTreeReader;
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,27,import com.google.gson.reflect.TypeToken;
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,28,import com.google.gson.stream.JsonReader;
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,29,import com.google.gson.stream.JsonToken;
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,30,import com.google.gson.stream.JsonWriter;
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,141,"* This wrapper method is used to make a type adapter null tolerant. In general, a"
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,142,* type adapter is required to handle nulls in write and read methods. Here is how this
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,143,* is typically done:<br>
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,144,* <pre>{@code
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,145,"Gson gson = new GsonBuilder().registerTypeAdapter(Foo.class,"
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,146,new TypeAdapter<Foo>() {
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,147,public Foo read(JsonReader in) throws IOException {
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,148,if (in.peek() == JsonToken.NULL) {
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,149,in.nextNull();
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,150,return null;
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,152,// read a Foo from in and return it
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,154,"public void write(JsonWriter out, Foo src) throws IOException {"
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,155,if (src == null) {
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,156,out.nullValue();
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,157,return;
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,159,// write src as JSON to out
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,161,).create();
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,162,* }</pre>
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,163,* You can avoid this boilerplate handling of nulls by wrapping your type adapter with
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,164,* {@link #nullSafe(TypeAdapter)} method. Here is how we will rewrite the above example:
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,165,* <pre>{@code
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,166,"Gson gson = new GsonBuilder().registerTypeAdapter(Foo.class,"
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,167,TypeAdapter.nullSafe(new TypeAdapter<Foo>() {
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,168,public Foo read(JsonReader in) throws IOException {
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,169,// read a Foo from in and return it
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,171,"public void write(JsonWriter out, Foo src) throws IOException {"
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,172,// write src as JSON to out
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,174,)).create();
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,175,* }</pre>
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,176,* Note that we didn't need to check for nulls in our type adapter after we used nullSafe.
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,178,public static <T> TypeAdapter<T> nullSafe(final TypeAdapter<T> typeAdapter) {
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,179,return new TypeAdapter<T>() {
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,180,"@Override public void write(JsonWriter out, T value) throws IOException {"
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,181,if (value == null) {
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,182,out.nullValue();
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,183,} else {
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,184,"typeAdapter.write(out, value);"
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,187,@Override public T read(JsonReader reader) throws IOException {
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,188,if (reader.peek() == JsonToken.NULL) {
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,189,reader.nextNull();
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,190,return null;
+True,gson/src/main/java/com/google/gson/TypeAdapter.java,gson/src/main/java/com/google/gson/TypeAdapter.java,192,return typeAdapter.read(reader);
+False,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,19,mport com.google.gson.Gson;
+False,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,20,mport com.google.gson.GsonBuilder;
+False,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,21,mport com.google.gson.TypeAdapter;
+False,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,22,mport com.google.gson.reflect.TypeToken;
+False,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,23,mport com.google.gson.stream.JsonReader;
+False,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,24,mport com.google.gson.stream.JsonWriter;
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,20,import java.util.ArrayList;
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,29,import com.google.gson.Gson;
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,30,import com.google.gson.GsonBuilder;
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,31,import com.google.gson.JsonSyntaxException;
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,32,import com.google.gson.TypeAdapter;
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,33,import com.google.gson.reflect.TypeToken;
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,34,import com.google.gson.stream.JsonReader;
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,35,import com.google.gson.stream.JsonWriter;
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,151,public void testNullSafe() {
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,152,TypeAdapter<Person> typeAdapter = new TypeAdapter<Person>() {
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,153,@Override public Person read(JsonReader in) throws IOException {
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,154,"String[] values = in.nextString().split("","");"
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,155,"return new Person(values[0], Integer.parseInt(values[1]));"
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,157,"public void write(JsonWriter out, Person person) throws IOException {"
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,158,"out.value(person.name + "","" + person.age);"
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,161,Gson gson = new GsonBuilder().registerTypeAdapter(
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,162,"Person.class, typeAdapter).create();"
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,163,Truck truck = new Truck();
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,164,truck.horsePower = 1.0D;
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,165,truck.passengers = new ArrayList<Person>();
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,166,truck.passengers.add(null);
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,167,try {
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,168,"gson.toJson(truck, Truck.class);"
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,169,fail();
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,170,} catch (NullPointerException expected) {}
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,171,"String json = ""{horsePower:1.0,passengers:[null,null]}"";"
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,172,try {
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,173,"gson.fromJson(json, Truck.class);"
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,174,fail();
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,175,} catch (JsonSyntaxException expected) {}
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,176,gson = new GsonBuilder().registerTypeAdapter(
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,177,"Person.class, TypeAdapter.nullSafe(typeAdapter)).create();"
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,178,"assertEquals(""{\""horsePower\"":1.0,\""passengers\"":[null]}"", gson.toJson(truck, Truck.class));"
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,179,"truck = gson.fromJson(json, Truck.class);"
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,180,"assertEquals(1.0D, truck.horsePower);"
+True,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java,181,assertNull(truck.passengers.get(0));

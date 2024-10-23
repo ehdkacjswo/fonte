@@ -1,0 +1,121 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,3,import org.mockito.internal.stubbing.defaultanswers.ForwardsInvocations;
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,104,* An answer that directly forwards the calls to the delegate.
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,106,* Makes sense only for spies or partial mocks of objects that are difficult to mock or spy using the usual spy API.
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,107,* Possible use cases:
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,108,* <ul>
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,109,*     <li>Final classes but with an interface</li>
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,110,*     <li>Already custom proxied object</li>
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,111,"*     <li>Special objects with a finalize method, i.e. to avoid executing it 2 times</li>"
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,112,*     <li>...</li>
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,113,* </ul>
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,114,* Sets the real implementation to be called when the method is called on a mock object.
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,115,* <p>
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,116,"* <pre class=""code""><code class=""java"">"
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,117,*   final class DontMessTheCodeOfThisList implements list { ... }
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,119,*   DontMessTheCodeOfThisList awesomeList = new DontMessTheCodeOfThisList();
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,121,"*   List listWithDelegate = mock(List.class, delegatesTo(awesomeList));"
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,122,* </code></pre>
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,124,* <p>
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,125,* This features suffer from the same drawback as the spy.
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,126,* The mock will call the delegate if you use regular when().then() stubbing style.
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,127,* Since the real implementation is called this might have some side effects.
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,128,* Therefore you should to use the doReturn|Throw|Answer|CallRealMethod stubbing style. Example:
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,130,"* <pre class=""code""><code class=""java"">"
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,131,"*   List listWithDelegate = mock(List.class, AdditionalAnswers.delegatesTo(awesomeList));"
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,133,*   //Impossible: real method is called so listWithDelegate.get(0) throws IndexOutOfBoundsException (the list is yet empty)
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,134,"*   when(listWithDelegate.get(0)).thenReturn(""foo"");"
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,136,*   //You have to use doReturn() for stubbing
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,137,"*   doReturn(""foo"").when(listWithDelegate).get(0);"
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,138,* </code></pre>
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,140,* @param delegate The delegate to forward calls to.
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,141,* @return the answer
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,143,* @since 1.9.5
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,145,public static <T> Answer<T> delegatesTo(Object delegate) {
+True,src/org/mockito/AdditionalAnswers.java,src/org/mockito/AdditionalAnswers.java,146,return (Answer<T>) new ForwardsInvocations(delegate);
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,202, Specifies the delegated instance on which a mock should forward calls.
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,204, Makes sense only for spies or partial mocks of objects that are difficult to mock or spy using the usual spy API.
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,205, Possible use cases :
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,206, <ul>
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,207,     <li>Final classes but with an interface</li>
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,208,     <li>Already custom proxied object</li>
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,209,"     <li>Special objects with a finalize method, i.e. to avoid executing it 2 times</li>"
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,210,     <li>...</li>
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,211, </ul>
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,212, Sets the real implementation to be called when the method is called on a mock object.
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,213, <p>
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,214, As usual you are going to read <b>the partial mock warning</b>:
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,215," Object oriented programming is more or less about tackling complexity by dividing the complexity into separate, specific, SRPy objects."
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,216," How does partial mock fit into this paradigm? Well, it just doesn't..."
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,217, Partial mock usually means that the complexity has been moved to a different method on the same object.
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,218," In most cases, this is not the way you want to design your application."
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,219, <p>
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,220," However, there are rare cases when partial mocks come handy:"
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,221," dealing with code you cannot change easily (3rd party interfaces, interim refactoring of legacy code etc.)"
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,222," However, I wouldn't use partial mocks for new, test-driven & well-designed code."
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,223, <p>
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,224," Enough warnings about partial mocks, see an example how spiedInstance() works:"
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,225," <pre class=""code""><code class=""java"">"
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,226,   final class DontMessTheCodeOfThisList implements list { ... }
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,228,   DontMessTheCodeOfThisList awesomeList = new DontMessTheCodeOfThisList();
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,230,"   List listWithDelegate = mock(List.class, withSettings().forwardTo(awesomeList));"
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,231, </code></pre>
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,233, <p>
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,234, This features suffer from the same drawback as the spy. The mock will always call the delegate.
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,235, This mean that you have to use the doReturn|Throw|Answer|CallRealMethod stubbing style. Example:
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,237," <pre class=""code""><code class=""java"">"
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,238,"   List listWithDelegate = mock(List.class, withSettings().forwardTo(awesomeList));"
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,240,   //Impossible: real method is called so listWithDelegate.get(0) throws IndexOutOfBoundsException (the list is yet empty)
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,241,"   when(listWithDelegate.get(0)).thenReturn(""foo"");"
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,243,   //You have to use doReturn() for stubbing
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,244,"   doReturn(""foo"").when(listWithDelegate).get(0);"
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,245, </code></pre>
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,247, @param delegate The delegate to forward calls to.
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,248, @return settings instance so that you can fluently specify other settings
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,250, @since 1.9.5
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,252,ockSettings forwardTo(Object delegate);
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,885," <h3 id=""27"">27. (**New**) <a class=""meaningful_link"" href=""#forwarding_call_to_real_instance"">Forward calls to real instance</a> (Since 1.9.5)</h3>"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,886, <p>Now mockito offer a specific way to forward calls to a concrete instance. This is different than than a
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,887, spy because the spy creation syntax discard the to be spied instance.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,885,"* <h3 id=""27"">27. (**New**) <a class=""meaningful_link"" href=""#delegating_call_to_real_instance"">Delegate calls to real instance</a> (Since 1.9.5)</h3>"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,886,* <p>Now mockito offer a specific way to delegate calls to a concrete instance. This is different than the
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,887,* spy because the regular spy contains all the state of the spied instance. TODO SF - add more information.
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,891, Possible use cases :
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,891,* Possible use cases:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,899, Possible example with an object interacting with native objects and spy that would not work :
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,899,* Possible example with an object interacting with native objects and spy that would not work:
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,906,"   // Later on, it's finally the psy to be garbage collected, finalize method is called again,"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,906,"*   // Later on, it's finally the spy to be garbage collected, finalize method is called again,"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,911,"   InteractingWithNativeStuff native = mock(InteractingWithNativeStuff.class, withSettings().forwardTo(interactingWithNativeStuff));"
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,911,"*   InteractingWithNativeStuff native = mock(InteractingWithNativeStuff.class, AdditionalAnswers.delegateTo(interactingWithNativeStuff));"
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,913,"   // OK, the mock keeps a reference to the interactingWithNativeStuff, so the finalize method never kick-in."
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,913,*   //TODO SF - I don't quite follow this example... spied instance is also something we hold in the MockSettings...
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,914,"*   // OK, the mock keeps a reference to the interactingWithNativeStuff, so the finalize method never kicks in."
+False,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,920, See more information there {@link MockSettings#forwardTo}.
+True,src/org/mockito/Mockito.java,src/org/mockito/Mockito.java,921,* See more information there {@link AdditionalAnswers#delegatesTo(Object)}.
+False,src/org/mockito/internal/creation/MockSettingsImpl.java,src/org/mockito/internal/creation/MockSettingsImpl.java,30,rivate Object delegatedInstance;
+False,src/org/mockito/internal/creation/MockSettingsImpl.java,src/org/mockito/internal/creation/MockSettingsImpl.java,73,ublic Object getDelegatedInstance() {
+False,src/org/mockito/internal/creation/MockSettingsImpl.java,src/org/mockito/internal/creation/MockSettingsImpl.java,74,eturn this.delegatedInstance ;
+False,src/org/mockito/internal/creation/MockSettingsImpl.java,src/org/mockito/internal/creation/MockSettingsImpl.java,149,ublic MockSettings forwardTo(Object delegatedInstance) {
+False,src/org/mockito/internal/creation/MockSettingsImpl.java,src/org/mockito/internal/creation/MockSettingsImpl.java,150,his.delegatedInstance = delegatedInstance;
+False,src/org/mockito/internal/creation/MockSettingsImpl.java,src/org/mockito/internal/creation/MockSettingsImpl.java,151,eturn defaultAnswer(new ForwardsInvocations(this.delegatedInstance));
+False,src/org/mockito/internal/util/MockCreationValidator.java,src/org/mockito/internal/util/MockCreationValidator.java,56,ublic void validateMutualExclusionForSpyOrDelegate(MockSettingsImpl settings) {
+False,src/org/mockito/internal/util/MockCreationValidator.java,src/org/mockito/internal/util/MockCreationValidator.java,57,f (settings.getDelegatedInstance() != null && settings.getSpiedInstance() != null) {
+False,src/org/mockito/internal/util/MockCreationValidator.java,src/org/mockito/internal/util/MockCreationValidator.java,58,ew Reporter().spyAndDelegateAreMutuallyExclusive() ;
+False,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,41,"reationValidator.validateDelegatedInstance(classToMock, settings.getDelegatedInstance()) ;"
+False,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,42,reationValidator.validateMutualExclusionForSpyOrDelegate(settings) ;
+True,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,41,//TODO SF - add this validation and also add missing coverage
+True,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,42,"//        creationValidator.validateDelegatedInstance(classToMock, settings.getDelegatedInstance()) ;"
+False,src/org/mockito/mock/MockSettingsInfo.java,src/org/mockito/mock/MockSettingsInfo.java,9,mport org.mockito.internal.util.MockNameImpl;
+False,src/org/mockito/mock/MockSettingsInfo.java,src/org/mockito/mock/MockSettingsInfo.java,48,/TODO SF - forward needs to be consistently named with delegate
+False,src/org/mockito/mock/MockSettingsInfo.java,src/org/mockito/mock/MockSettingsInfo.java,49,/also figure this thing out.
+False,src/org/mockito/mock/MockSettingsInfo.java,src/org/mockito/mock/MockSettingsInfo.java,50,bject getDelegatedInstance();
+True,test/org/mockitousage/stubbing/StubbingWithDelegate.java,test/org/mockitousage/stubbing/StubbingWithDelegate.java,14,import static org.mockito.AdditionalAnswers.delegatesTo;
+False,test/org/mockitousage/stubbing/StubbingWithDelegate.java,test/org/mockitousage/stubbing/StubbingWithDelegate.java,26,"ist<String> mock = mock(List.class, withSettings().forwardTo(delegatedList)) ;"
+True,test/org/mockitousage/stubbing/StubbingWithDelegate.java,test/org/mockitousage/stubbing/StubbingWithDelegate.java,27,"List<String> mock = mock(List.class, delegatesTo(delegatedList)) ;"
+False,test/org/mockitousage/stubbing/StubbingWithDelegate.java,test/org/mockitousage/stubbing/StubbingWithDelegate.java,37,"ist<String> mock = mock(List.class, withSettings().forwardTo(delegatedList)) ;"
+True,test/org/mockitousage/stubbing/StubbingWithDelegate.java,test/org/mockitousage/stubbing/StubbingWithDelegate.java,38,"List<String> mock = mock(List.class, delegatesTo(delegatedList)) ;"
+False,test/org/mockitousage/stubbing/StubbingWithDelegate.java,test/org/mockitousage/stubbing/StubbingWithDelegate.java,51,"ist<String> mockedList = mock(List.class, withSettings().forwardTo(delegatedList)) ;"
+True,test/org/mockitousage/stubbing/StubbingWithDelegate.java,test/org/mockitousage/stubbing/StubbingWithDelegate.java,52,"List<String> mockedList = mock(List.class, delegatesTo(delegatedList)) ;"
+False,test/org/mockitousage/stubbing/StubbingWithDelegate.java,test/org/mockitousage/stubbing/StubbingWithDelegate.java,63,"Methods methods = mock(IMethods.class, withSettings().forwardTo(new MethodsImpl()));"
+True,test/org/mockitousage/stubbing/StubbingWithDelegate.java,test/org/mockitousage/stubbing/StubbingWithDelegate.java,64,"IMethods methods = mock(IMethods.class, delegatesTo(new MethodsImpl()));"

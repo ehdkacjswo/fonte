@@ -1,0 +1,25 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,214,private boolean forceAllElementAsBlock = false;
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,299,"* Get if forceAllElementAsBlock is enabled. Default is false. If enable, the HTML output methods will consider"
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,300,* all tags as block.
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,301,* @return if pretty printing is enabled.
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,303,public boolean forceAllElementAsBlock() {
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,304,return forceAllElementAsBlock;
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,308,* force or unforce rendering all elements as block.
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,309,* @param forceBlock new forceAllElementAsBlock setting
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,310,"* @return this, for chaining"
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,312,public OutputSettings forceAllElementAsBlock(boolean forceBlock) {
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,313,forceAllElementAsBlock = forceBlock;
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,314,return this;
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1070,f (accum.length() > 0 && out.prettyPrint() && (tag.formatAsBlock() || (parent() != null && parent().tag().formatAsBlock())))
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1070,if (accum.length() > 0 && out.prettyPrint() && (tag.formatAsBlock() || (parent() != null && parent().tag().formatAsBlock()) || out.forceAllElementAsBlock()) )
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1085,f (out.prettyPrint() && !childNodes.isEmpty() && tag.formatAsBlock())
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1085,if (out.prettyPrint() && (!childNodes.isEmpty() && (tag.formatAsBlock() || (out.forceAllElementAsBlock() && childNodes.size()>1) || (out.forceAllElementAsBlock() && childNodes.size()==1 && !(childNodes.iterator().next() instanceof TextNode) ) )))
+False,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1105,or (Node node : childNodes)
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,1105,for (Node node : childNodes)
+False,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,98,f (out.prettyPrint() && siblingIndex() == 0 && parentNode instanceof Element && ((Element) parentNode).tag().formatAsBlock() && !isBlank())
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,98,if (out.prettyPrint() && ((siblingIndex() == 0 && parentNode instanceof Element && ((Element) parentNode).tag().formatAsBlock() && !isBlank()) || (out.forceAllElementAsBlock() && siblingNodes().size()>0 && !isBlank()) ))
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,229,@Test public void testForceAllElementAsBlock() {
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,230,"Document doc = Jsoup.parse(""<title>Format test</title><div><p>Hello <span>jsoup <span>users</span></span></p><p>Good.</p></div>"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,231,doc.outputSettings().forceAllElementAsBlock(true);
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,232,"assertEquals(""<html>\n <head>\n  <title>Format test</title>\n </head>\n <body>\n  <div>\n   <p>\n    Hello \n    <span>\n     jsoup \n     <span>users</span>\n    </span>\n   </p>\n   <p>Good.</p>\n  </div>\n </body>\n</html>"", doc.html());"

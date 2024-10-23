@@ -1,0 +1,53 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,329,"// [core#191]: similarly, but for ""short"" symbols:"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,330,public void testShortNameCollisionsViaParser() throws Exception
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,332,JsonFactory f = new JsonFactory();
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,333,String json = _shortDoc191();
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,334,JsonParser p;
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,336,// First: ensure that char-based is fine
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,337,p = f.createParser(json);
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,338,while (p.nextToken() != null) { }
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,339,p.close();
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,341,// and then that byte-based
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,342,"p = f.createParser(json.getBytes(""UTF-8""));"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,343,while (p.nextToken() != null) { }
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,344,p.close();
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,347,// [core#191]
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,348,public void testShortNameCollisionsDirect() throws IOException
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,350,final int COUNT = 400;
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,352,"// First, char-based"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,354,CharsToNameCanonicalizer symbols = CharsToNameCanonicalizer.createRoot(1);
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,355,for (int i = 0; i < COUNT; ++i) {
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,356,String id = String.valueOf((char) i);
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,357,char[] ch = id.toCharArray();
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,358,"symbols.findSymbol(ch, 0, ch.length, symbols.calcHash(id));"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,360,"assertEquals(COUNT, symbols.size());"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,361,"assertEquals(1024, symbols.bucketCount());"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,363,"assertEquals(0, symbols.collisionCount());"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,364,"assertEquals(0, symbols.maxCollisionLength());"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,367,// then byte-based
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,369,BytesToNameCanonicalizer symbols =
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,370,BytesToNameCanonicalizer.createRoot(1).makeChild(JsonFactory.Feature.collectDefaults());
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,371,for (int i = 0; i < COUNT; ++i) {
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,372,String id = String.valueOf((char) i);
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,373,"int[] quads = BytesToNameCanonicalizer.calcQuads(id.getBytes(""UTF-8""));"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,374,"symbols.addName(id, quads, quads.length);"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,376,"assertEquals(COUNT, symbols.size());"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,377,"assertEquals(1024, symbols.bucketCount());"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,379,"assertEquals(15, symbols.collisionCount());"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,380,"assertEquals(1, symbols.maxCollisionLength());"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,384,private String _shortDoc191() {
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,385,StringBuilder sb = new StringBuilder();
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,386,"sb.append(""{\n"");"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,387,for (int i = 0; i < 400; ++i) {
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,388,if (i > 0) {
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,389,"sb.append("",\n"");"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,391,"sb.append('""');"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,392,char c = (char) i;
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,393,if (Character.isLetterOrDigit(c)) {
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,394,sb.append((char) i);
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,395,} else {
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,396,"sb.append(String.format(""\\u%04x"", i));"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,398,"sb.append(""\"" : ""+i);"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,400,"sb.append(""}\n"");"
+True,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,src/test/java/com/fasterxml/jackson/core/sym/TestSymbolTables.java,401,return sb.toString();

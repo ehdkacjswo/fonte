@@ -1,0 +1,178 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,27,import com.google.javascript.jscomp.NameReferenceGraph.Name;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,187,fillInFunctionInformation(definitionProvider);
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,313, If the definitionProvider determins that the target of a Callsite
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,316,* If the definitionProvider determines that the target of a Callsite
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,361,* Fills in function information (such as whether the function is ever
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,362,* aliased or whether it is exposed to .call or .apply) using the
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,363,* definition provider.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,365,"* We do this here, rather than when connecting the callgraph, to make sure"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,366,"* that we have correct information for all functions, rather than just"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,367,* functions that are actually called.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,369,private void fillInFunctionInformation(DefinitionProvider provider) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,370,if (useNameReferenceGraph) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,371,NameReferenceGraph referenceGraph = (NameReferenceGraph) provider;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,373,for (Function function : getAllFunctions()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,374,if (!function.isMain()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,375,String functionName = function.getName();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,377,if (functionName != null) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,378,Name symbol = referenceGraph.getSymbol(functionName);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,379,"updateFunctionForName(function, symbol);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,383,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,384,SimpleDefinitionFinder finder = (SimpleDefinitionFinder) provider;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,386,for (DefinitionSite definitionSite : finder.getDefinitionSites()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,387,Definition definition = definitionSite.definition;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,389,Function function = lookupFunctionForDefinition(definition);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,391,if (function != null) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,392,for (UseSite useSite : finder.getUseSites(definition)) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,393,"updateFunctionForUse(function, useSite.node);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,401,* Updates {@link Function} information (such as whether is is aliased
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,402,* or exposed to .apply or .call from a {@link NameReferenceGraph.Name}.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,404,"* Note: this method may be called multiple times per Function, each time"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,405,* with a different name.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,407,"private void updateFunctionForName(Function function, Name name) {"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,408,if (name.isAliased()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,409,function.isAliased = true;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,412,if (name.exposedToCallOrApply()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,413,function.isExposedToCallOrApply = true;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,418,* Updates {@link Function} information (such as whether is is aliased
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,419,* or exposed to .apply or .call based a site where the function is used.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,421,"* Note: this method may be called multiple times per Function, each time"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,422,* with a different useNode.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,424,"private void updateFunctionForUse(Function function, Node useNode) {"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,425,Node useParent = useNode.getParent();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,426,int parentType = useParent.getType();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,428,if ((parentType == Token.CALL || parentType == Token.NEW)
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,429,&& useParent.getFirstChild() == useNode) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,430,// Regular call sites don't count as aliases
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,431,} else if (NodeUtil.isGet(useParent)) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,432,"// GET{PROP,ELEM} don't count as aliases"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,433,// but we have to check for using them in .call and .apply.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,435,if (NodeUtil.isGetProp(useParent)) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,436,Node gramps = useParent.getParent();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,437,if (NodeUtil.isFunctionObjectApply(gramps) ||
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,438,NodeUtil.isFunctionObjectCall(gramps)) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,439,function.isExposedToCallOrApply = true;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,442,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,443,function.isAliased = true;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,448,* Returns a {@link CallGraph.Function} for the passed in {@link Definition}
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,449,* or null if the definition isn't for a function.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,451,private Function lookupFunctionForDefinition(Definition definition) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,452,if (definition != null && !definition.isExtern()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,453,Node rValue = definition.getRValue();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,455,if (rValue != null && NodeUtil.isFunction(rValue)) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,456,Function function = functionsByNode.get(rValue);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,457,Preconditions.checkNotNull(function);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,459,return function;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,463,return null;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,656,private boolean isAliased = false;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,658,private boolean isExposedToCallOrApply = false;
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,619,/ TODO(dcc): Add supported for querying whether a function is aliased
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,620,"/ or exported. (If a function is not aliased or exported, then"
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,621,/ getCallsitesPossiblyTargetingFunction() truly contains all possible
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,622,/ targets that could call the function).
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,733,* Returns true if the function is aliased.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,735,public boolean isAliased() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,736,return isAliased;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,740,"* Returns true if the function is ever exposed to "".call"" or "".apply""."
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,742,public boolean isExposedToCallOrApply() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,743,return isExposedToCallOrApply;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,832,public void testFunctionGetIsAliased() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,833,// Aliased by VAR assignment
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,834,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,835,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,836,"""var ns = {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,837,"""ns.B = function() {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,838,"""var C = function() {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,839,"""var D = function() {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,840,"""var aliasA = A;\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,841,"""var aliasB = ns.B;\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,842,"""var aliasC = C;\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,843,"""D();"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,845,compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,847,"assertFunctionAliased(true, ""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,848,"assertFunctionAliased(true, ""ns.B"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,849,"assertFunctionAliased(true, ""C"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,850,"assertFunctionAliased(false, ""D"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,852,// Aliased by normal assignment
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,853,source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,854,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,855,"""var ns = {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,856,"""ns.B = function() {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,857,"""var C = function() {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,858,"""ns.D = function() {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,859,"""var aliasA;\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,860,"""aliasA = A;\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,861,"""var aliasB = {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,862,"""aliasB.foo = ns.B;\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,863,"""var aliasC;\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,864,"""aliasC = C;\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,865,"""ns.D();"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,867,compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,869,"assertFunctionAliased(true, ""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,870,"assertFunctionAliased(true, ""ns.B"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,871,"assertFunctionAliased(true, ""C"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,872,"assertFunctionAliased(false, ""ns.D"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,874,// Aliased by passing as parameter
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,875,source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,876,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,877,"""var ns = {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,878,"""ns.B = function() {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,879,"""var C = function() {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,880,"""function D() {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,881,"""var foo = function(a) {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,882,"""foo(A);\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,883,"""foo(ns.B)\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,884,"""foo(C);\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,885,"""D();"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,887,compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,889,"assertFunctionAliased(true, ""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,890,"assertFunctionAliased(true, ""ns.B"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,891,"assertFunctionAliased(true, ""C"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,892,"assertFunctionAliased(false, ""D"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,894,// Not aliased by being target of call
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,895,source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,896,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,897,"""var ns = {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,898,"""ns.B = function() {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,899,"""var C = function() {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,900,"""A();\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,901,"""ns.B();\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,902,"""C();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,904,compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,906,"assertFunctionAliased(false, ""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,907,"assertFunctionAliased(false, ""ns.B"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,908,"assertFunctionAliased(false, ""C"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,910,"// Not aliased by GET{PROP,ELEM}"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,911,source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,912,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,913,"""var ns = {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,914,"""ns.B = function() {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,915,"""var C = function() {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,916,"""A.foo;\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,917,"""ns.B.prototype;\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,918,"""C[0];\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,920,compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,922,"assertFunctionAliased(false, ""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,923,"assertFunctionAliased(false, ""ns.B"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,924,"assertFunctionAliased(false, ""C"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,927,public void testFunctionGetIsExposedToCallOrApply() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,928,// Exposed to call
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,929,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,930,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,931,"""function B(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,932,"""function C(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,933,"""var x;\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,934,"""A.call(x);\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,935,"""B.apply(x);\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,936,"""C();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,938,CallGraph callGraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,940,"Function functionA = callGraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,941,"Function functionB = callGraph.getUniqueFunctionWithName(""B"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,942,"Function functionC = callGraph.getUniqueFunctionWithName(""C"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,944,assertTrue(functionA.isExposedToCallOrApply());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,945,assertTrue(functionB.isExposedToCallOrApply());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,946,assertFalse(functionC.isExposedToCallOrApply());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1131,"private void assertFunctionAliased(boolean aliased, String name) {"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1132,Function function = currentProcessor.getUniqueFunctionWithName(name);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1134,"assertEquals(aliased, function.isAliased());"

@@ -1,0 +1,36 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,375,"rivate final ThreadLocal<CharsetEncoder> encoder = new ThreadLocal<>(); // enables the doc to be shared in multiple threads, without creating new encoders on every travers"
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,375,"// enables the doc to be shared in multiple threads, without creating new encoders on every traverse"
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,376,private final ThreadLocal<CharsetEncoder> encoder = new ThreadLocal<CharsetEncoder>() {
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,377,@Override
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,378,protected CharsetEncoder initialValue() {
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,379,return charset.newEncoder();
+False,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,427,ncoder.set(charset.newEncoder());
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,433,encoder.remove();
+False,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,442,eturn encoder.get();
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,448,CharsetEncoder ce = encoder.get();
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,449,// check that the charset wasn't changed since accessed in this thread
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,450,// (this is probably overkill for something we're not advertising as threadsafe)
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,451,if (!ce.charset().equals(charset)) {
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,452,encoder.remove();
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,453,ce = encoder.get(); // retrips initialValue()
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,455,return ce;
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,8,import org.jsoup.select.Elements;
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,18,import java.nio.charset.StandardCharsets;
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,440,@Test public void parseAndHtmlOnDifferentThreads() throws InterruptedException {
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,441,"String html = ""<p>Alrighty then it's not \uD83D\uDCA9. <span>Next</span></p>""; // 💩"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,442,"String asci = ""<p>Alrighty then it's not &#x1f4a9;. <span>Next</span></p>"";"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,444,final Document doc = Jsoup.parse(html);
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,445,final String[] out = new String[1];
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,446,"final Elements p = doc.select(""p"");"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,447,"assertEquals(html, p.outerHtml());"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,449,Thread thread = new Thread(new Runnable() {
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,450,@Override
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,451,public void run() {
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,452,out[0] = p.outerHtml();
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,453,doc.outputSettings().charset(StandardCharsets.US_ASCII);
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,456,thread.start();
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,457,thread.join();
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,458,"assertEquals(html, out[0]);"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,459,"assertEquals(StandardCharsets.US_ASCII, doc.outputSettings().charset());"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,460,"assertEquals(asci, p.outerHtml());"

@@ -1,0 +1,10 @@
+Optimize Attribute#iterator
+It allocates a lot of memory during the parsing through
+ParseSettings#normalizeAttributes.
+this new implementation just wrap the LinkedHashMap values iterator in a
+read-only iterator.
+
+Iterating 1000 times over htmltests/yahoo-article-1.html was allocating
+970Mb, with this optimization it's now 350Mb
+
+Fixes #754

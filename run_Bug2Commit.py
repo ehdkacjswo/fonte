@@ -75,9 +75,9 @@ def run_bug2commit(pid, vid):
     bm25.vocab = list(set( # collect all words appearning in the corpus
         sum([list(doc.keys()) for doc in bm25.doc_freqs], [])))
 
+    # vectorize the features (using the vector_complex)
     print(f"{pid}-{vid}b: Vectorizing the features............................")
 
-    # vectorize the features (using the vector_complex)
     commit_vectors = {
         filename: vectorize_complex(bm25, commit_features[filename])
         for filename in commit_features

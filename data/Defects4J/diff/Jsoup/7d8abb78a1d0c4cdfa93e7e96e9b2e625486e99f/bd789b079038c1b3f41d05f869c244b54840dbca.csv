@@ -1,0 +1,118 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,21,private boolean interrupted;
+False,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,45,f (Thread.interrupted() || capped && remaining <= 0)
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,46,if (interrupted || capped && remaining <= 0)
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,48,if (Thread.interrupted()) {
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,49,"// tracks if this read was interrupted, because parse() may call twice (and we still want the thread interupt to clear)"
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,50,interrupted = true;
+True,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,src/main/java/org/jsoup/internal/ConstrainableInputStream.java,51,return -1;
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,7,import org.jsoup.integration.servlets.SlowRider;
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,12,import org.junit.Ignore;
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,177,// Slow Rider tests. Ignored by default so tests don't take aaages
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,178,@Ignore
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,179,"@Test public void canInterruptBodyStringRead() throws IOException, InterruptedException {"
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,180,"// todo - implement in interruptable channels, so it's immediate"
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,181,final String[] body = new String[1];
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,182,Thread runner = new Thread(new Runnable() {
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,183,public void run() {
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,184,try {
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,185,Connection.Response res = Jsoup.connect(SlowRider.Url)
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,186,.timeout(15 * 1000)
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,187,.execute();
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,188,body[0] = res.body();
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,189,} catch (IOException e) {
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,190,throw new RuntimeException(e);
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,196,runner.start();
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,197,Thread.sleep(1000 * 3);
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,198,runner.interrupt();
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,199,assertTrue(runner.isInterrupted());
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,200,runner.join();
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,202,assertTrue(body[0].length() > 0);
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,203,"assertTrue(body[0].contains(""<p>Are you still there?""));"
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,206,@Ignore
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,207,"@Test public void canInterruptDocumentRead() throws IOException, InterruptedException {"
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,208,"// todo - implement in interruptable channels, so it's immediate"
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,209,final String[] body = new String[1];
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,210,Thread runner = new Thread(new Runnable() {
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,211,public void run() {
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,212,try {
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,213,Connection.Response res = Jsoup.connect(SlowRider.Url)
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,214,.timeout(15 * 1000)
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,215,.execute();
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,216,body[0] = res.parse().text();
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,217,} catch (IOException e) {
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,218,throw new RuntimeException(e);
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,224,runner.start();
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,225,Thread.sleep(1000 * 3);
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,226,runner.interrupt();
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,227,assertTrue(runner.isInterrupted());
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,228,runner.join();
+True,src/test/java/org/jsoup/integration/ConnectTest.java,src/test/java/org/jsoup/integration/ConnectTest.java,230,assertTrue(body[0].length() == 0); // doesn't ready a failed doc
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,657,"Test public void canInterruptBodyStringRead() throws IOException, InterruptedException {"
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,658,"/ todo - implement in interruptable channels, so it's immediate"
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,659,inal String[] body = new String[1];
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,660,hread runner = new Thread(new Runnable() {
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,661,ublic void run() {
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,662,ry {
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,663,"onnection.Response res = Jsoup.connect(""http://jsscxml.org/serverload.stream"")"
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,664,timeout(15 * 1000)
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,665,execute();
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,666,ody[0] = res.body();
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,667, catch (IOException e) {
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,668,hrow new RuntimeException(e);
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,674,unner.start();
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,675,hread.sleep(1000 * 7);
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,676,unner.interrupt();
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,677,ssertTrue(runner.isInterrupted());
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,678,unner.join();
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,680,ssertTrue(body[0].length() > 0);
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,683,"Test public void canInterruptDocumentRead() throws IOException, InterruptedException {"
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,684,"/ todo - implement in interruptable channels, so it's immediate"
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,685,inal String[] body = new String[1];
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,686,hread runner = new Thread(new Runnable() {
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,687,ublic void run() {
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,688,ry {
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,689,"onnection.Response res = Jsoup.connect(""http://jsscxml.org/serverload.stream"")"
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,690,timeout(15 * 1000)
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,691,execute();
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,692,ody[0] = res.parse().text();
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,693, catch (IOException e) {
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,694,hrow new RuntimeException(e);
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,700,unner.start();
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,701,hread.sleep(1000 * 7);
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,702,unner.interrupt();
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,703,ssertTrue(runner.isInterrupted());
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,704,unner.join();
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,706,ssertTrue(body[0].length() > 0);
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,709,Test public void handlesEscapedRedirectUrls() throws IOException {
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,657,@Test public void handlesEscapedRedirectUrls() throws IOException {
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,1,package org.jsoup.integration.servlets;
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,3,import org.jsoup.integration.TestServer;
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,5,import javax.servlet.ServletException;
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,6,import javax.servlet.http.HttpServletRequest;
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,7,import javax.servlet.http.HttpServletResponse;
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,8,import java.io.IOException;
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,9,import java.io.PrintWriter;
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,12,"* Slowly, interminably writes output. For the purposes of testing timeouts and interrupts."
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,14,public class SlowRider extends BaseServlet {
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,15,public static final String Url = TestServer.map(SlowRider.class);
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,16,private static final int SleepTime = 1000;
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,18,@Override
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,19,"protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {"
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,20,res.setContentType(TextHtml);
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,21,res.setStatus(HttpServletResponse.SC_OK);
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,22,PrintWriter w = res.getWriter();
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,24,while (true) {
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,25,"w.println(""<p>Are you still there?"");"
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,26,boolean err = w.checkError(); // flush and check still ok
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,27,if (err) {
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,28,"log(""Remote connection lost"");"
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,29,break;
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,31,try {
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,32,Thread.sleep(SleepTime);
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,33,} catch (InterruptedException e) {
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,34,break;
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,39,"// allow the servlet to run as a main program, for local test"
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,40,public static void main(String[] args) {
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,41,TestServer.start();
+True,src/test/java/org/jsoup/integration/servlets/SlowRider.java,src/test/java/org/jsoup/integration/servlets/SlowRider.java,42,System.out.println(Url);
