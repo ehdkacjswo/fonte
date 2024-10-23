@@ -1,0 +1,24 @@
+Another change to the stored Univariates.  The calculations are now abstracted
+into an AbstractStoreUnivariate class which take responsibility for
+all statistical calculations.  AbstractStoreUnivariate is implemented by
+two classes:
+
+* StoreUnivariateImpl - This class uses a ExpandableDoubleArray for
+internal storage.  This class is a more efficient class in terms
+of storage and cycles for users who are interested in gathering statistics
+not available in the UnivariateImpl implementation.
+
+* ListUnivariateImpl - This class is for a situation where a user might
+wish to maintain a List of numeric objects outside of a StoreUnivariate
+instance.  We still need to add serious error checking in the absence of
+1.5's generics, but this implementation will work with any list that
+contains Number objects - (BigDecimal, BigInteger, Byte, Double, Float,
+Integer, Long, Short).  This implementation ultimately transforms all
+numeric objects into double primitives via Number.doubleValue().
+
+Becuase AbstractStoreUnivariate does not hold on to any state, a user
+can add values through the Univariate.addValue() function OR one can
+directly manipulate the contents of the List directly.
+
+
+git-svn-id: https://svn.apache.org/repos/asf/jakarta/commons/proper/math/trunk@140830 13f79535-47bb-0310-9956-ffa450edef68

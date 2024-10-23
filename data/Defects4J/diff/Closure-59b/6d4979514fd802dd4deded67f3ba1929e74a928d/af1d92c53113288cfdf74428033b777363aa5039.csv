@@ -1,0 +1,710 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,2,* Copyright 2010 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,19,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,20,import com.google.common.collect.HashMultimap;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,21,import com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,22,import com.google.common.collect.Multimap;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,23,import com.google.common.collect.Sets;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,24,import com.google.javascript.jscomp.Scope.Var;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,25,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,26,import com.google.javascript.rhino.Token;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,28,import java.util.Collection;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,29,import java.util.List;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,30,import java.util.Set;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,33,* Keeps track of a function's known side effects by type and the
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,34,* list of calls that appear in a function's body.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,37,class FunctionSideEffectData {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,38,private final boolean extern;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,39,private final List<Node> callsInFunctionBody = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,40,private final Scope localScope;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,41,private Set<ValueEntry> nonLocalValues = Sets.newHashSet();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,42,private Set<ValueEntry> modifiedLocals = Sets.newHashSet();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,43,"private Multimap<ValueEntry, ValueEntry> valueInfluenceMap ="
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,44,HashMultimap.create();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,45,private boolean pureFunction = false;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,46,private boolean functionThrows = false;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,47,private boolean taintsGlobalState = false;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,48,private boolean taintsThis = false;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,49,private boolean taintsArguments = false;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,50,private boolean taintsUnknown = false;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,51,private boolean taintsReturn = false;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,54,* Represents a value in the value locality and modification structures:
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,55,"* #nonLocalValues, #modifiedLocals, #valueInfluenceMap"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,57,interface ValueEntry {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,61,* A representation of the values associated with these the: this and return
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,62,* keywords and the arguments pseudo-keyword.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,64,static class KeywordValueEntry implements ValueEntry {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,65,// These special token objects are used to track values that we care about
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,66,// that are not represented by Vars.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,67,final static ValueEntry THIS = new KeywordValueEntry();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,68,final static ValueEntry RETURN = new KeywordValueEntry();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,69,final static ValueEntry ARGUMENTS = new KeywordValueEntry();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,71,KeywordValueEntry() {}
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,75,"* A named value (vars, functions) entry."
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,77,static class NameValueEntry implements ValueEntry {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,78,private final String name;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,80,NameValueEntry(Node node) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,81,Preconditions.checkState(node.getType() == Token.NAME);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,82,this.name = node.getString();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,85,NameValueEntry(Var var) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,86,this.name = var.name;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,89,@Override
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,90,public int hashCode() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,91,return name.hashCode();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,94,@Override
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,95,public boolean equals(Object o) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,96,return o != null
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,97,&& o instanceof NameValueEntry
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,98,&& name.equals(((NameValueEntry)o).name);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,101,@Override
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,102,public String toString() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,103,return name;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,108,* An entry representing a NEW or CALL.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,110,static class CallValueEntry implements ValueEntry {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,111,private final Node node;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,113,CallValueEntry(Node node) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,114,Preconditions.checkState(
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,115,node.getType() == Token.CALL || node.getType() == Token.NEW);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,116,this.node = node;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,119,@Override
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,120,public int hashCode() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,121,return node.hashCode();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,124,@Override
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,125,public boolean equals(Object o) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,126,return o != null
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,127,&& o instanceof CallValueEntry
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,128,&& node.equals(((CallValueEntry)o).node);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,131,@Override
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,132,public String toString() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,133,return node.toString();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,137,"FunctionSideEffectData(boolean extern, Scope scope) {"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,138,this.extern = extern;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,139,this.localScope = scope;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,140,checkInvariant();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,143,Scope getScope() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,144,return localScope;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,147,"private Multimap<ValueEntry, ValueEntry> getValueInfluenceMap() {"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,148,return valueInfluenceMap;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,151,// TODO(johnlenz): The use of isInformationStable and clearLocalityState
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,152,// is fragile.  Consider using a singleton instance of FunctionSideEffectData
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,153,// that represents this state (everything is mutating).
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,155,boolean isInformationStable() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,156,// Once we know there are global changes and the result is non-local
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,157,// there is no point in looking for additional information.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,158,return (mutatesGlobalState() && taintsReturn);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,162,* Free up the data structure that are used to calculate value locality.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,164,void clearLocalityState() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,165,nonLocalValues = null;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,166,modifiedLocals = null;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,167,valueInfluenceMap = null;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,171,* @param var
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,173,void addModified(Var var) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,174,Preconditions.checkState(var.scope == localScope);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,175,modifiedLocals.add(new NameValueEntry(var));
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,179,* @param var
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,181,void addNonLocalValue(Var var) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,182,Preconditions.checkState(var.scope == localScope);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,183,nonLocalValues.add(new NameValueEntry(var));
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,187,* Add a value dependency from the source ValueEntry to the sink
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,188,* ValueEntry.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,189,* @param source
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,190,* @param sink
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,192,"void addInfluence(ValueEntry source, ValueEntry sink) {"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,193,"valueInfluenceMap.put(source, sink);"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,197,* For use with NodeUtil#evaluatesToLocalValue
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,198,* @return Whether the node represents a value that is currently considered
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,199,*     a known-local-unescaped value.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,201,boolean isLocalValue(Node value) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,202,switch (value.getType()) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,203,case Token.NAME:
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,204,String name = value.getString();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,205,"return getScope().isDeclared(name, false)"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,206,&& !nonLocalValues.contains(new NameValueEntry(value));
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,207,case Token.CALL:
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,208,return !nonLocalValues.contains(new CallValueEntry(value));
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,210,return false;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,214,* @returns false if function known to have side effects.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,216,boolean mayBePure() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,217,return !(functionThrows ||
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,218,taintsGlobalState ||
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,219,taintsThis ||
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,220,taintsArguments ||
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,221,taintsUnknown);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,225,* @returns false if function known to be pure.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,227,boolean mayHaveSideEffects() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,228,return !pureFunction;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,232,* Mark the function as being pure.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,234,void setIsPure() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,235,pureFunction = true;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,236,checkInvariant();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,240,"* Marks the function as having ""modifies globals"" side effects."
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,242,void setTaintsGlobalState() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,243,taintsGlobalState = true;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,244,checkInvariant();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,248,"* Marks the function as having ""modifies this"" side effects."
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,250,void setTaintsThis() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,251,taintsThis = true;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,252,checkInvariant();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,256,"* Marks the function as having ""modifies arguments"" side effects."
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,258,void setTaintsArguments() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,259,taintsArguments = true;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,260,checkInvariant();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,264,"* Marks the function as having ""throw"" side effects."
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,266,void setFunctionThrows() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,267,functionThrows = true;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,268,checkInvariant();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,272,"* Marks the function as having ""complex"" side effects that are"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,273,* not otherwise explicitly tracked.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,275,void setTaintsUnknown() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,276,taintsUnknown = true;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,277,checkInvariant();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,281,* Marks the function as having non-local return result.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,283,void setTaintsReturn() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,284,taintsReturn = true;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,285,checkInvariant();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,289,* @return Whether the function has a non-local return value.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,291,boolean hasNonLocalReturnValue() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,292,return taintsReturn;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,296,* Returns true if function mutates global state.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,298,boolean mutatesGlobalState() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,299,// TODO(johnlenz): track arguments separately.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,300,return taintsGlobalState || taintsArguments || taintsUnknown;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,304,"* Returns true if function mutates ""this""."
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,306,boolean mutatesThis() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,307,return taintsThis;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,311,"* Returns true if function has an explicit ""throw""."
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,313,boolean functionThrows() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,314,return functionThrows;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,318,* Verify internal consistency.  Should be called at the end of
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,319,* every method that mutates internal state.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,321,private void checkInvariant() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,322,boolean invariant = mayBePure() || mayHaveSideEffects();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,323,if (!invariant) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,324,"throw new IllegalStateException(""Invariant failed.  "" + toString());"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,329,* Add a CALL or NEW node to the list of calls this function makes.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,331,void appendCall(Node callNode) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,332,callsInFunctionBody.add(callNode);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,336,* Gets the list of CALL and NEW nodes.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,338,List<Node> getCallsInFunctionBody() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,339,return callsInFunctionBody;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,342,@Override
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,343,public String toString() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,344,List<String> status = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,345,if (extern) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,346,"status.add(""extern"");"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,349,if (pureFunction) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,350,"status.add(""pure"");"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,353,if (taintsThis) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,354,"status.add(""this"");"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,357,if (taintsGlobalState) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,358,"status.add(""global"");"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,361,if (functionThrows) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,362,"status.add(""throw"");"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,365,if (taintsUnknown) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,366,"status.add(""complex"");"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,369,"return ""Side effects: "" + status.toString();"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,373,* Normalize the ValueEntry maps relation using the value dependencies
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,374,* so that any non-local-value that may have been modified has been
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,375,* accounted for.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,377,void normalizeValueMaps() {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,379,// Normalize the value influence map.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,381,if (!mutatesGlobalState() || !taintsReturn) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,382,// propagate non-local objects values
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,383,// Note: propagateNonLocal adds entries so grap a snapshot
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,384,// as an array to interate over.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,385,for (ValueEntry entry : nonLocalValues.toArray(new ValueEntry[0])) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,386,propagateNonLocal(entry);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,390,if (!mutatesGlobalState()) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,391,// propagate object modification
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,392,// Note: propagateNonLocal adds entries so grap a snapshot
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,393,// as an array to interate over.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,394,for (ValueEntry entry : modifiedLocals.toArray(new ValueEntry[0])) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,395,propagateModified(entry);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,399,// Don't retain information that won't be used.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,400,if (isInformationStable()){
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,401,// a global state change maybe a inner function modifying these local
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,402,"// names, or a call to eval,  so there are locals that are known to be"
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,403,// unmodified.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,404,clearLocalityState();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,409,* @param value A Var or token representing the value.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,410,* @return Whether the FunctionInformation was updated.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,412,boolean maybePropagateNonLocal(ValueEntry value) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,413,if (!nonLocalValues.contains(value)) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,414,nonLocalValues.add(value);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,415,return propagateNonLocal(value);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,417,return false;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,421,* @param value The ValueEntry of interest.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,422,* @return Whether the FunctionInformation was updated.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,424,boolean propagateNonLocal(ValueEntry value) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,425,Preconditions.checkState(nonLocalValues != null);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,426,Preconditions.checkState(modifiedLocals != null);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,428,boolean changed = false;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,429,if (modifiedLocals.contains(value)) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,430,if (!mutatesGlobalState()) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,431,setTaintsGlobalState();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,432,changed = true;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,436,if (value == KeywordValueEntry.RETURN) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,437,if (!taintsReturn) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,438,setTaintsReturn();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,439,changed = true;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,443,// Add the value now to prevent recursion
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,444,Collection<ValueEntry> dependents = getValueInfluenceMap().get(value);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,445,if (dependents != null) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,446,for (ValueEntry dependent : dependents) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,447,if (!nonLocalValues.contains(dependent)) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,448,nonLocalValues.add(dependent);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,449,changed = propagateNonLocal(dependent) || changed;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,454,return changed;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,458,* @param value A Var or token representing the value.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,459,* @return Whether the FunctionInformation was updated.
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,461,private boolean propagateModified(ValueEntry value) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,462,Preconditions.checkState(nonLocalValues != null);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,463,Preconditions.checkState(modifiedLocals != null);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,465,boolean changed = false;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,466,if (nonLocalValues != null
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,467,&& nonLocalValues.contains(value)) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,468,if (!mutatesGlobalState()) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,469,setTaintsUnknown();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,470,changed = true;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,472,} else if (value == KeywordValueEntry.THIS) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,473,if (!taintsThis) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,474,setTaintsThis();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,475,changed = true;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,477,} else if (value == KeywordValueEntry.ARGUMENTS) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,478,if (!taintsArguments) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,479,setTaintsArguments();
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,480,changed = true;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,483,// Add the value now to prevent recursion
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,484,Collection<ValueEntry> dependents = getValueInfluenceMap().get(value);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,485,if (dependents != null) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,486,for (ValueEntry dependent : dependents) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,487,if (!modifiedLocals.contains(dependent)) {
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,488,modifiedLocals.add(dependent);
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,489,changed = propagateModified(dependent) || changed;
+True,src/com/google/javascript/jscomp/FunctionSideEffectData.java,src/com/google/javascript/jscomp/FunctionSideEffectData.java,493,return changed;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,27,import com.google.javascript.jscomp.FunctionSideEffectData.CallValueEntry;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,28,import com.google.javascript.jscomp.FunctionSideEffectData.KeywordValueEntry;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,29,import com.google.javascript.jscomp.FunctionSideEffectData.ValueEntry;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,30,import com.google.javascript.jscomp.FunctionSideEffectData.NameValueEntry;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,43,mport java.util.Collections;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,79,"rivate final Map<Node, FunctionInformation> functionSideEffectMap;"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,82,"private final Map<Node, FunctionSideEffectData> functionSideEffectMap;"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,135,"or (Map.Entry<Node, FunctionInformation> entry :"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,138,"for (Map.Entry<Node, FunctionSideEffectData> entry :"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,138,unctionInformation functionInfo = entry.getValue();
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,141,FunctionSideEffectData functionInfo = entry.getValue();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,148,"or (Map.Entry<Node, FunctionInformation> entry :"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,151,"for (Map.Entry<Node, FunctionSideEffectData> entry :"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,151,unctionInformation functionInfo = entry.getValue();
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,154,FunctionSideEffectData functionInfo = entry.getValue();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,254,"iGraph<FunctionInformation, Node> sideEffectGraph ="
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,255,"ew LinkedDirectedGraph<FunctionInformation, Node>();"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,257,"DiGraph<FunctionSideEffectData, Node> sideEffectGraph ="
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,258,"new LinkedDirectedGraph<FunctionSideEffectData, Node>();"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,258,or (FunctionInformation functionInfo : functionSideEffectMap.values()) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,261,for (FunctionSideEffectData functionInfo : functionSideEffectMap.values()) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,263,or (FunctionInformation functionInfo : functionSideEffectMap.values()) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,266,for (FunctionSideEffectData functionInfo : functionSideEffectMap.values()) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,285,unctionInformation dep = functionSideEffectMap.get(defValue);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,288,FunctionSideEffectData dep = functionSideEffectMap.get(defValue);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,297,or (FunctionInformation functionInfo : functionSideEffectMap.values()) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,300,for (FunctionSideEffectData functionInfo : functionSideEffectMap.values()) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,321,unctionInformation functionInfo =
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,324,FunctionSideEffectData functionInfo =
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,330,f (functionInfo.functionThrows) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,333,if (functionInfo.functionThrows()) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,335,f (functionInfo.taintsThis) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,338,if (functionInfo.mutatesThis()) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,340,f (functionInfo.taintsReturn) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,343,if (functionInfo.hasNonLocalReturnValue()) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,384,/ Functions need to be processed as part of pre-traversal so an
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,385,/ entry for the enclosing function exists in the
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,386,/ FunctionInformation map when processing assignments and calls
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,387,/ inside visit.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,388,f (NodeUtil.isFunction(node)) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,389,ode gramp = parent.getParent();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,390,"isitFunction(traversal, node, parent, gramp);"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,414,unctionInformation sideEffectInfo =
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,410,FunctionSideEffectData sideEffectInfo =
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,445,f (value != null && !NodeUtil.evaluatesToLocalValue(value)) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,441,if (value != null && !analyzeSet(
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,442,"new NameValueEntry(node), value, sideEffectInfo)) {"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,448,ideEffectInfo.blacklistLocal(var);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,445,sideEffectInfo.addNonLocalValue(var);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,455,f (node.hasChildren()
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,456,& !NodeUtil.evaluatesToLocalValue(node.getFirstChild())) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,452,if (node.hasChildren() && !analyzeSet(
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,453,"KeywordValueEntry.RETURN, node.getFirstChild(),"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,454,sideEffectInfo)) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,470,ublic void enterScope(NodeTraversal t) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,471,/ Nothing to do.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,468,public void enterScope(NodeTraversal traversal) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,469,Node enclosingFunction = traversal.getEnclosingFunction();
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,470,if (enclosingFunction != null) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,471,// Functions need to be processed as part of pre-traversal so an
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,472,// entry for the enclosing function exists in the
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,473,// FunctionInformation map when processing assignments and calls
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,474,// inside visit.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,475,"visitFunction(traversal, enclosingFunction);"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,476,f (t.inGlobalScope()) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,481,if (t.inGlobalScope() || inExterns) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,480,/ Handle deferred local variable modifications:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,482,unctionInformation sideEffectInfo =
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,483,unctionSideEffectMap.get(t.getScopeRoot());
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,484,f (sideEffectInfo.mutatesGlobalState()){
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,485,ideEffectInfo.resetLocalVars();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,486,eturn;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,485,FunctionSideEffectData sideEffectInfo =
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,486,functionSideEffectMap.get(t.getScopeRoot());
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,489,or (Iterator<Var> i = t.getScope().getVars(); i.hasNext();) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,490,ar v = i.next();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,491,oolean localVar = false;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,492,/ Parameters and catch values come can from other scopes.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,493,f (v.getParentNode().getType() == Token.VAR) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,494,/ TODO(johnlenz): create a useful parameter list
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,495,ideEffectInfo.knownLocals.add(v.getName());
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,496,ocalVar = true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,499,/ Take care of locals that might have been tainted.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,500,f (!localVar || sideEffectInfo.blacklisted.contains(v)) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,501,f (sideEffectInfo.taintedLocals.contains(v)) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,502,/ If the function has global side-effects
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,503,/ don't bother with the local side-effects.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,504,ideEffectInfo.setTaintsUnknown();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,505,ideEffectInfo.resetLocalVars();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,506,reak;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,511,ideEffectInfo.taintedLocals = null;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,512,ideEffectInfo.blacklisted = null;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,488,sideEffectInfo.normalizeValueMaps();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,518, assigment or mutating unary operator.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,493,* assignment or mutating unary operator.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,527,"unctionInformation sideEffectInfo,"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,502,"FunctionSideEffectData sideEffectInfo,"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,545,& !NodeUtil.evaluatesToLocalValue(rhs)) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,546,ideEffectInfo.blacklistLocal(var);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,520,&& !analyzeSet(
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,521,"new NameValueEntry(lhs), rhs, sideEffectInfo)) {"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,522,sideEffectInfo.addNonLocalValue(var);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,564,ideEffectInfo.addTaintedLocalObject(var);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,540,sideEffectInfo.addModified(var);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,582,"rivate void visitCall(FunctionInformation sideEffectInfo, Node node) {"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,558,"private void visitCall(FunctionSideEffectData sideEffectInfo, Node node) {"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,601,"rivate void visitFunction(NodeTraversal traversal,"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,602,"ode node,"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,603,"ode parent,"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,604,ode gramp) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,577,"private void visitFunction(NodeTraversal traversal, Node node) {"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,607,unctionInformation sideEffectInfo = new FunctionInformation(inExterns);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,580,FunctionSideEffectData sideEffectInfo = new FunctionSideEffectData(
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,581,"inExterns, traversal.getScope());"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,584,if (!inExterns) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,585,Scope localScope = traversal.getScope();
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,587,// Only vars and function declarations maybe known to be local.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,588,// Parameters and catch exception definitions are are not tracked
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,589,// so mark them non-local immediately.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,590,Iterator<Var> i = localScope.getVars();
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,591,while (i.hasNext()) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,592,Var v = i.next();
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,593,Node parent = v.getParentNode();
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,594,if (parent.getType() == Token.LP
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,595,|| parent.getType() == Token.CATCH) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,596,// TODO(johnlenz): Allow function parameters
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,597,sideEffectInfo.addNonLocalValue(v);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,602,"processFunctionAnnotations(sideEffectInfo, traversal, node);"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,606,* Update the function side effect info for any user provided annotations.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,607,* Reports discovered invalid usages of these annotations.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,609,private void processFunctionAnnotations(
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,610,"FunctionSideEffectData sideEffectInfo,"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,611,"NodeTraversal traversal, Node function) {"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,612,// Infer the locality of the return type
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,611,SType jstype = node.getJSType();
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,614,JSType jstype = function.getJSType();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,625,"SDocInfo info = getJSDocInfoForFunction(node, parent, gramp);"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,628,JSDocInfo info = getJSDocInfoForFunction(function);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,633,"raversal.report(node, INVALID_MODIFIES_ANNOTATION);"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,636,"traversal.report(function, INVALID_MODIFIES_ANNOTATION);"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,642,"raversal.report(node, INVALID_MODIFIES_ANNOTATION);"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,645,"traversal.report(function, INVALID_MODIFIES_ANNOTATION);"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,651,"raversal.report(node, INVALID_NO_SIDE_EFFECT_ANNOTATION);"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,654,"traversal.report(function, INVALID_NO_SIDE_EFFECT_ANNOTATION);"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,679,rivate void visitThrow(FunctionInformation sideEffectInfo) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,682,private void visitThrow(FunctionSideEffectData sideEffectInfo) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,686,rivate JSDocInfo getJSDocInfoForFunction(
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,687,"ode node, Node parent, Node gramp) {"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,689,private JSDocInfo getJSDocInfoForFunction(Node node) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,690,Node parent = node.getParent();
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,695,Node gramp = parent.getParent();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,738, @return Whether the node is known to be a value that is not a reference
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,739,     outside the local scope.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,742,* Check local values and updates the value influence map.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,743,* @param lValue A var name or token value used in the value influence map.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,745,* @return Whether the node is maybe to be a value that has not escaped
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,746,*     the local scope.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,741,rivate static boolean isKnownLocalValue(final Node value) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,742,redicate<Node> taintingPredicate = new Predicate<Node>() {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,748,private static boolean analyzeSet(
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,749,"final ValueEntry lValue,"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,750,"Node rValue,"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,751,final FunctionSideEffectData info) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,753,final boolean isReturnResult = lValue.equals(KeywordValueEntry.RETURN);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,755,// Create a predicate for NodeUtil#evaluatesToLocalValue.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,756,final Predicate<Node> taintingPredicate = new Predicate<Node>() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,747,"/ The assignment might cause an alias, look at the lhs."
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,761,"// Check the LHS of the assignment, the RHS will be evaluated"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,762,// separately.  If the LHS is a local NAME add that dependency on
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,763,// that value as it is a alias of the RHS value.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,765,"// Aliases of immutable RHS values don't matter, but should already"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,766,// be filtered out.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,767,Preconditions.checkState(
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,768,!NodeUtil.isImmutableValue(value.getLastChild()));
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,769,Node lhs = value.getFirstChild();
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,770,if (NodeUtil.isName(lhs)
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,771,"&& info.getScope().isDeclared(lhs.getString(), false)) {"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,772,addValue(lhs);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,773,return true;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,775,// Don't attempt to track an aliasing property assignment.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,750,/ TODO(johnlenz): maybe redirect this to be a tainting list for 'this'.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,751,eturn false;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,778,"// changes to ""this"" now change ""key"", changes to ""key"" will"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,779,"// also infer a change to ""this""."
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,780,addValue(KeywordValueEntry.THIS);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,781,return true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,753,"/ TODO(johnlenz): add to local tainting list, if the NAME"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,783,"// add to local tainting list, if the NAME"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,785,"if (info.getScope().isDeclared(value.getString(), false)) {"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,786,addValue(value);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,787,return true;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,790,case Token.CALL:
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,791,// For calls the taint is the actual call node.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,792,addCall(value);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,793,return true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,760,ase Token.CALL:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,761,"/ TODO(johnlenz): add to local tainting list, if the call result"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,762,/ is not known to be a local result.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,763,eturn false;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,798,default:
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,799,"throw new IllegalStateException(""unexpected"");"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,803,private void addCall(Node callNode) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,804,Preconditions.checkState(callNode.getType() == Token.CALL);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,805,"info.addInfluence(new CallValueEntry(callNode), lValue);"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,808,private void addValue(Node name) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,809,ValueEntry value = new NameValueEntry(name);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,810,addValue(value);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,813,private void addValue(ValueEntry value) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,814,// The value and keys maybe aliases
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,815,"info.addInfluence(value, lValue);"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,816,if (!isReturnResult) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,817,"info.addInfluence(lValue, value);"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,765,eturn false;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,769,"eturn NodeUtil.evaluatesToLocalValue(value, taintingPredicate);"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,822,// Walk the expression with the provided predicate.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,823,"return NodeUtil.evaluatesToLocalValue(rValue, taintingPredicate);"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,826,private static Predicate<Node> getLocalPredicate(
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,827,final FunctionSideEffectData caller) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,828,return new Predicate<Node>() {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,829,@Override
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,830,public boolean apply(Node value) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,831,return caller.isLocalValue(value);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,776,"mplements EdgeCallback<FunctionInformation, Node> {"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,777,"ublic boolean traverseEdge(FunctionInformation callee,"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,778,"ode callSite,"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,779,unctionInformation caller) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,840,"implements EdgeCallback<FunctionSideEffectData, Node> {"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,841,"public boolean traverseEdge(final FunctionSideEffectData callee,"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,842,"final Node callSite,"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,843,final FunctionSideEffectData caller) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,848,if (caller.isInformationStable()) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,849,// There is no more useful information to be gathered.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,850,return false;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,863,Predicate<Node> locals = getLocalPredicate(caller);
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,864,if (callee.hasNonLocalReturnValue()) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,865,if (caller.maybePropagateNonLocal(new CallValueEntry(callSite))) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,866,changed = true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,799,f (objectNode != null && NodeUtil.isName(objectNode)
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,800,& !isCallOrApply(callSite)) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,875,if (objectNode != null && NodeUtil.isThis(objectNode)) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,876,if (!caller.mutatesThis()) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,877,caller.setTaintsThis();
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,878,changed = true;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,880,} else if (objectNode != null && !isCallOrApply(callSite)) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,805,tring name = objectNode.getString();
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,885,// TODO(johnlenz): We can improve this by including literal values
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,886,// that we know for sure are not null.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,807,/ TODO(nicksantos): Turn this back on when locals-tracking
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,808,/ is fixed. See testLocalizedSideEffects11.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,809,/if (!caller.knownLocals.contains(name)) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,888,// Modifying 'this' on a known local object doesn't change any
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,889,// significant state.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,890,"if (!NodeUtil.evaluatesToLocalValue(objectNode, locals)) {"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,815, else if (objectNode != null && NodeUtil.isThis(objectNode)) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,816,f (!caller.mutatesThis()) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,817,aller.setTaintsThis();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,818,hanged = true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,820, else if (objectNode != null
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,821,& NodeUtil.evaluatesToLocalValue(objectNode)
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,822,& !isCallOrApply(callSite)) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,823,/ Modifying 'this' on a known local object doesn't change any
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,824,/ significant state.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,825,/ TODO(johnlenz): We can improve this by including literal values
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,826,/ that we know for sure are not null.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,903,if (caller.isInformationStable()) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,904,"// Once the caller has reach a stable state, clear the local state"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,905,// to avoid memory being a memory hog.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,906,caller.clearLocalityState();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,875, Keeps track of a function's known side effects by type and the
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,876, list of calls that appear in a function's body.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,878,rivate static class FunctionInformation {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,879,rivate final boolean extern;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,880,rivate final List<Node> callsInFunctionBody = Lists.newArrayList();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,881,rivate Set<Var> blacklisted = Sets.newHashSet();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,882,rivate Set<Var> taintedLocals = Sets.newHashSet();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,883,rivate Set<String> knownLocals = Sets.newHashSet();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,884,rivate boolean pureFunction = false;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,885,rivate boolean functionThrows = false;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,886,rivate boolean taintsGlobalState = false;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,887,rivate boolean taintsThis = false;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,888,rivate boolean taintsArguments = false;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,889,rivate boolean taintsUnknown = false;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,890,rivate boolean taintsReturn = false;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,892,unctionInformation(boolean extern) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,893,his.extern = extern;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,894,heckInvariant();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,898, @param var
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,900,oid addTaintedLocalObject(Var var) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,901,aintedLocals.add(var);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,904,oid resetLocalVars() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,905,lacklisted = null;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,906,aintedLocals = null;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,907,nownLocals = Collections.emptySet();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,911, @param var
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,913,ublic void blacklistLocal(Var var) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,914,lacklisted.add(var);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,918, @returns false if function known to have side effects.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,920,oolean mayBePure() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,921,eturn !(functionThrows ||
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,922,aintsGlobalState ||
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,923,aintsThis ||
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,924,aintsArguments ||
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,925,aintsUnknown);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,929, @returns false if function known to be pure.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,931,oolean mayHaveSideEffects() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,932,eturn !pureFunction;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,936, Mark the function as being pure.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,938,oid setIsPure() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,939,ureFunction = true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,940,heckInvariant();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,944," Marks the function as having ""modifies globals"" side effects."
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,946,oid setTaintsGlobalState() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,947,aintsGlobalState = true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,948,heckInvariant();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,952," Marks the function as having ""modifies this"" side effects."
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,954,oid setTaintsThis() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,955,aintsThis = true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,956,heckInvariant();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,960," Marks the function as having ""modifies arguments"" side effects."
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,962,oid setTaintsArguments() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,963,aintsArguments = true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,964,heckInvariant();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,968," Marks the function as having ""throw"" side effects."
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,970,oid setFunctionThrows() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,971,unctionThrows = true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,972,heckInvariant();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,976," Marks the function as having ""complex"" side effects that are"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,977, not otherwise explicitly tracked.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,979,oid setTaintsUnknown() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,980,aintsUnknown = true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,981,heckInvariant();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,985, Marks the function as having non-local return result.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,987,oid setTaintsReturn() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,988,aintsReturn = true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,989,heckInvariant();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,994, Returns true if function mutates global state.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,996,oolean mutatesGlobalState() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,997,/ TODO(johnlenz): track arguments separately.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,998,eturn taintsGlobalState || taintsArguments || taintsUnknown;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1002," Returns true if function mutates ""this""."
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1004,oolean mutatesThis() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1005,eturn taintsThis;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1009," Returns true if function has an explicit ""throw""."
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1011,oolean functionThrows() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1012,eturn functionThrows;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1016, Verify internal consistency.  Should be called at the end of
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1017, every method that mutates internal state.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1019,rivate void checkInvariant() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1020,oolean invariant = mayBePure() || mayHaveSideEffects();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1021,f (!invariant) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1022,"hrow new IllegalStateException(""Invariant failed.  "" + toString());"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1027, Add a CALL or NEW node to the list of calls this function makes.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1029,oid appendCall(Node callNode) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1030,allsInFunctionBody.add(callNode);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1034, Gets the list of CALL and NEW nodes.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1036,ist<Node> getCallsInFunctionBody() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1037,eturn callsInFunctionBody;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1040,Override
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1041,ublic String toString() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1042,ist<String> status = Lists.newArrayList();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1043,f (extern) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1044,"tatus.add(""extern"");"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1047,f (pureFunction) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1048,"tatus.add(""pure"");"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1051,f (taintsThis) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1052,"tatus.add(""this"");"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1055,f (taintsGlobalState) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1056,"tatus.add(""global"");"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1059,f (functionThrows) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1060,"tatus.add(""throw"");"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1063,f (taintsUnknown) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1064,"tatus.add(""complex"");"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,1067,"eturn ""Side effects: "" + status.toString();"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,240,"mmutableList.<String>of(""externObjSEThis""));"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,240,"ImmutableList.<String>of(""externObjSEThis"", ""f""));"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,536,public void testResultLocalitySimpleSample() throws Exception {
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,537,"String prefix = ""var g; function f(){"";"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,538,"String suffix = ""} f()"";"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,539,"List<String> expected = ImmutableList.of(""f"");"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,540,List<String> notExpected = ImmutableList.of();
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,542,// global result
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,543,checkLocalityOfMarkedCalls(
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,544,"prefix + ""var a = (g = []); return a"" + suffix, notExpected);"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,562,"/ local var, not yet."
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,573,// local var.
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,564,"refix + ""var a = 1; return a"" + suffix, notExpected);"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,575,"prefix + ""var a = 1; return a"" + suffix, expected);"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,566,"/ mutate local var, not yet."
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,577,// mutate local var.
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,568,"refix + ""var a = 1; a = 2; return a"" + suffix, notExpected);"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,579,"prefix + ""var a = 1; a = 2; return a"" + suffix, expected);"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,583,// Global aliases of immutables is ok.
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,584,checkLocalityOfMarkedCalls(
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,585,"prefix + ""var a = (g = 2); return a"" + suffix, expected);"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,587,checkLocalityOfMarkedCalls(
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,588,"prefix + ""var a = (g = []); return a"" + suffix, notExpected);"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,758,"mmutableList.<String>of(""A""));"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,777,"ImmutableList.<String>of(""A"", ""f""));"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,797,public void testLocalizedSideEffects12() throws Exception {
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,798,// A expression containing an assignment is an alias of the value
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,799,"checkMarkedCalls(""var g = 1;"" +"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,800,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,801,"""  var a = (g = new Foo); return a;"" +"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,803,"""f()"","
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,804,ImmutableList.<String>of());
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,807,public void testLocalizedSideEffects13() throws Exception {
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,808,"// A expression containing an assignment is an alias of the value, but"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,809,"// aliasing an immutable value doesn't matter, but the global side-effect"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,810,// does.
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,811,"checkMarkedCalls(""var g = 1;"" +"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,812,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,813,"""  var a = (g = 2); return a;"" +"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,815,"""f()"","
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,816,ImmutableList.<String>of());
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1032,"heckMarkedCalls(source, ImmutableList.<String>of(""A"", ""A"", ""f""));"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1073,"checkMarkedCalls(source, ImmutableList.<String>of(""A"", ""A"", ""f"", ""g""));"

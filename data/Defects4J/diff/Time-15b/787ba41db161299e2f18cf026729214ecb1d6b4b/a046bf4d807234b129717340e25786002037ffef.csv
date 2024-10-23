@@ -1,0 +1,163 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,18,import java.util.Calendar;
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,19,import java.util.Date;
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,20,import java.util.GregorianCalendar;
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,21,import java.util.TimeZone;
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,337,* Converts the instant value to a <code>GregorianCalendar</code>
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,338,* adjusting to take into account the different time zone rules.
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,339,* <p>
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,340,* Note that this method may not be reversible if the zone rules differ
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,341,"* around a daylight savings, or other, change."
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,343,* @param instant  the instant to convert
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,344,* @return the offset to add to UTC
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,345,* @throws IllegalArgumentException if the instant is null
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,346,* @since 1.2
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,348,public static GregorianCalendar toGregorianCalendar(ReadableInstant instant) {
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,349,if (instant == null) {
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,350,"throw new IllegalArgumentException(""The zone must not be null"");"
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,352,DateTimeZone zone = instant.getZone();
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,353,TimeZone jdkZone = zone.toTimeZone();
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,354,GregorianCalendar cal = new GregorianCalendar(jdkZone);
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,355,"long jdkMillis = zone.getMillisJDKKeepLocal(jdkZone, instant.getMillis());"
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,356,cal.setTime(new Date(jdkMillis));
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,357,return cal;
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,362,* Converts a <code>Calendar</code> to a <code>DateTime</code> adjusting
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,363,* the millisecond value to preserve the local time.
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,364,* <p>
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,365,* <code>DateTimeZone</code> and JDK <code>TimeZone</code> have
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,366,* different time zone rules. When converting to and from the JDK this
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,367,* can cause unexpected and undesired consequences. This method seeks
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,368,* to adjust for the differences in the rules by maintaining the same
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,369,* field values in the resultant <code>DateTime</code>.
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,370,* <p>
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,371,* Note that this method may not be reversible if the zone rules differ
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,372,"* around a daylight savings, or other, change."
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,374,* @param calendar  the JDK calendar to convert
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,375,* @return the converted datetime
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,376,* @throws IllegalArgumentException if the calendar is null
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,377,* @since 1.2
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,379,public static DateTime toDateTime(Calendar calendar) {
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,380,if (calendar == null) {
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,381,"throw new IllegalArgumentException(""The calendar must not be null"");"
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,383,long millisLocal = calendar.getTime().getTime() +
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,384,calendar.get(Calendar.ZONE_OFFSET) + calendar.get(Calendar.DST_OFFSET);
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,385,DateTimeZone zone = DateTimeZone.forTimeZone(calendar.getTimeZone());
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,386,long millis = millisLocal - zone.getOffsetFromLocal(millisLocal);
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,387,"return new DateTime(millis, zone);"
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,392,* Converts a <code>Date</code> to a <code>DateTime</code> adjusting
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,393,* the millisecond value to preserve the local time.
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,394,* <p>
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,395,* <code>DateTimeZone</code> and JDK <code>TimeZone</code> have
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,396,* different time zone rules. When converting to and from the JDK this
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,397,* can cause unexpected and undesired consequences. This method seeks
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,398,* to adjust for the differences in the rules by maintaining the same
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,399,* field values in the resultant <code>DateTime</code>.
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,400,* <p>
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,401,* Note that this method may not be reversible if the zone rules differ
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,402,"* around a daylight savings, or other, change."
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,404,* @param date  the JDK date to convert
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,405,* @return the converted datetime
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,406,* @throws IllegalArgumentException if the calendar is null
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,407,* @since 1.2
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,409,public static DateTime toDateTime(Date date) {
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,410,if (date == null) {
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,411,"throw new IllegalArgumentException(""The date must not be null"");"
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,413,long millisLocal = date.getTime() - date.getTimezoneOffset() * 60000;
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,414,DateTimeZone zone = DateTimeZone.forTimeZone(TimeZone.getDefault());
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,415,long millis = millisLocal - zone.getOffsetFromLocal(millisLocal);
+True,JodaTime/src/java/org/joda/time/DateTimeUtils.java,JodaTime/src/java/org/joda/time/DateTimeUtils.java,416,"return new DateTime(millis, zone);"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,25,import java.lang.reflect.InvocationTargetException;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,26,import java.lang.reflect.Method;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,27,import java.util.Date;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,32,import java.util.SimpleTimeZone;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,138,/** The method to call as TimeZone.getOffset is only from JDK 1.4. */
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,139,private static final Method OFFSET_METHOD;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,140,static {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,141,Method m = null;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,142,try {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,143,"m = TimeZone.class.getDeclaredMethod(""getOffset"", new Class[] {Long.TYPE});"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,144,} catch (SecurityException ex) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,145,// ignore
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,146,} catch (NoSuchMethodException ex) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,147,try {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,148,Method[] ms = TimeZone.class.getDeclaredMethods();
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,149,"m = TimeZone.class.getDeclaredMethod(""getOffsets"", new Class[] {Long.TYPE, int[].class});"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,150,m.setAccessible(true);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,151,} catch (SecurityException e) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,152,// ignore
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,153,} catch (NoSuchMethodException e) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,154,// ignore
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,157,OFFSET_METHOD = m;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,871,* Gets the millisecond instant in the equivalent JDK <code>TimeZone</code>
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,872,* keeping the same local time.
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,873,* <p>
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,874,* This method adjusts for time zone difference between the JDK and
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,875,* Joda-Time zone rules. The aim of this method is to keep the same
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,876,* local time but using the JDK time zone class. The result of this
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,877,"* method should be used to pass into a <code>Date</code>,"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,878,* <code>Calendar</code> or other JDK class.
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,879,"* See the <a href=""http://joda-time.sourceforge.net/jdk_conversion.html"">JDK conversion reference</a> for details."
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,881,* @param instant  the Joda-Time millisecond instant to convert
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,882,* @return the JDK millisecond instant with the same local time
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,883,* @since 1.2
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,885,public long getMillisJDKKeepLocal(long instant) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,886,"return getMillisJDKKeepLocal(toTimeZone(), instant);"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,890,* Gets the millisecond instant in the specified JDK <code>TimeZone</code>
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,891,* keeping the same local time. You should typically pass in the
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,892,* JDK zone that is returned by {@link #toTimeZone()}.
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,893,* <p>
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,894,* This method adjusts for time zone difference between the JDK and
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,895,* Joda-Time zone rules. The aim of this method is to keep the same
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,896,* local time but using the JDK time zone class. The result of this
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,897,"* method should be used to pass into a <code>Date</code>,"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,898,* <code>Calendar</code> or other JDK class.
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,899,"* See the <a href=""http://joda-time.sourceforge.net/jdk_conversion.html"">JDK conversion reference</a> for details."
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,901,"* @param jdkZone  the JDK zone to convert to, normally as per toTimezone()"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,902,* @param instant  the Joda-Time millisecond instant to convert
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,903,* @return the JDK millisecond instant with the same local time
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,904,* @since 1.2
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,906,"public long getMillisJDKKeepLocal(TimeZone jdkZone, long instant) {"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,907,if (jdkZone == null) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,908,jdkZone = toTimeZone();
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,910,Integer val;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,911,if (OFFSET_METHOD == null) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,912,if (jdkZone instanceof SimpleTimeZone) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,913,SimpleTimeZone zone = (SimpleTimeZone) jdkZone;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,914,long offset = zone.getRawOffset();
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,915,if (zone.inDaylightTime(new Date(instant)))  {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,916,offset += zone.getDSTSavings();
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,918,long millisLocal = instant - offset;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,919,return millisLocal + getOffsetFromLocal(millisLocal);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,921,return instant;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,922,} else {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,923,try {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,924,val = (Integer) OFFSET_METHOD.invoke(
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,925,"jdkZone, new Object[] {new Long(instant)});"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,926,} catch (IllegalAccessException ex) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,927,return instant;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,928,} catch (InvocationTargetException ex) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,929,return instant;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,932,long millisLocal = instant - val.intValue();
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,933,return millisLocal + getOffsetFromLocal(millisLocal);
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,31,import java.util.Date;
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,693,public void testGetMillisJDKKeepLocal() {
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,694,TimeZone jdkZone = TimeZone.getDefault();
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,695,try {
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,696,"TimeZone.setDefault(TimeZone.getTimeZone(""Europe/Paris""));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,697,"DateTime dt = new DateTime(1970, 1, 1, 2, 30, 0, 0, PARIS);"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,698,"Date date = new Date(70, 0, 1, 2, 30, 0);  // same field values"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,700,System.out.println(dt.getMillis());
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,701,System.out.println(date.getTime());
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,703,"assertEquals(date.getTime(), PARIS.getMillisJDKKeepLocal(dt.getMillis()));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,704,"assertEquals(date.getTime(), PARIS.getMillisJDKKeepLocal(PARIS.toTimeZone(), dt.getMillis()));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,705,"assertEquals(date.getTime(), PARIS.getMillisJDKKeepLocal(null, dt.getMillis()));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,707,"TimeZone.setDefault(TimeZone.getTimeZone(""Europe/London""));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,708,"dt = new DateTime(1970, 1, 1, 2, 30, 0, 0, LONDON);"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,709,"date = new Date(70, 0, 1, 2, 30, 0);  // same field values"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,711,System.out.println(dt.getMillis());
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,712,System.out.println(date.getTime());
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,714,"assertEquals(date.getTime(), LONDON.getMillisJDKKeepLocal(dt.getMillis()));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,715,"assertEquals(date.getTime(), LONDON.getMillisJDKKeepLocal(LONDON.toTimeZone(), dt.getMillis()));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,716,"assertEquals(date.getTime(), LONDON.getMillisJDKKeepLocal(null, dt.getMillis()));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,718,} finally {
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,719,TimeZone.setDefault(jdkZone);

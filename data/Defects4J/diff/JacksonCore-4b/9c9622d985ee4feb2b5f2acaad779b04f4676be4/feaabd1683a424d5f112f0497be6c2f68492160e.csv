@@ -1,0 +1,185 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,202,"* Construction, merging"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,202,/* Life-cycle: constructors
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,207, Factory method to call to create a symbol table instance with a
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,208, randomized seed value.
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,210,ublic static BytesToNameCanonicalizer createRoot()
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,212,"* [Issue-21]: Need to use a variable seed, to thwart hash-collision"
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,213, based attacks.
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,215,ong now = System.currentTimeMillis();
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,216,/ ensure it's not 0; and might as well require to be odd so:
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,217,nt seed = (((int) now) + ((int) now >>> 32)) | 1;
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,218,eturn createRoot(seed);
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,222," Factory method that should only be called from unit tests, where seed"
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,223, value should remain the same.
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,225,rotected static BytesToNameCanonicalizer createRoot(int hashSeed) {
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,226,"eturn new BytesToNameCanonicalizer(DEFAULT_TABLE_SIZE, true, hashSeed);"
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,230, @param intern Whether canonical symbol Strings should be interned
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,231,   or not
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,233,"ublic synchronized BytesToNameCanonicalizer makeChild(boolean canonicalize,"
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,234,oolean intern)
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,236,"eturn new BytesToNameCanonicalizer(this, intern, _hashSeed);"
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,240, Method called by the using code to indicate it is done
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,241, with this instance. This lets instance merge accumulated
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,242," changes into parent (if need be), safely and efficiently,"
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,243, and without calling code having to know about parent
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,244, information
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,207,"* Constructor used for creating per-<code>JsonFactory</code> ""root"""
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,208,* symbol tables: ones used for merging and sharing common symbols
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,210,* @param hashSize Initial hash area size
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,211,* @param intern Whether Strings contained should be {@link String#intern}ed
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,212,* @param seed Random seed valued used to make it more difficult to cause
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,213,*   collisions (used for collision-based DoS attacks).
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,246,ublic void release()
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,248,f (maybeDirty() && _parent != null) {
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,249,parent.mergeChild(this);
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,250,"* Let's also mark this instance as dirty, so that just in"
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,251," case release was too early, there's no corruption"
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,252, of possibly shared data.
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,254,arkAsShared();
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,284,"rivate BytesToNameCanonicalizer(BytesToNameCanonicalizer parent, boolean intern,"
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,285,nt seed)
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,241,"private BytesToNameCanonicalizer(BytesToNameCanonicalizer parent, boolean intern, int seed,"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,242,"int count, int mainHashMask,"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,243,"int[] mainHash, Name[] mainNames,"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,244,"Bucket[] collList, int collCount, int collEnd, int longestCollisionList)"
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,291,"/ First, let's copy the state as is:"
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,292,count = parent._count;
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,293,mainHashMask = parent._mainHashMask;
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,294,mainHash = parent._mainHash;
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,295,mainNames = parent._mainNames;
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,296,collList = parent._collList;
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,297,collCount = parent._collCount;
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,298,collEnd = parent._collEnd;
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,299,longestCollisionList = parent._longestCollisionList;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,250,// Then copy shared state
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,251,_count = count;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,252,_mainHashMask = mainHashMask;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,253,_mainHash = mainHash;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,254,_mainNames = mainNames;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,255,_collList = collList;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,256,_collCount = collCount;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,257,_collEnd = collEnd;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,258,_longestCollisionList = longestCollisionList;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,260,// and then set other state to reflect sharing status
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,301,"/ And consider all shared, so far:"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,286,"/* Life-cycle: factory methods, merging"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,291,* Factory method to call to create a symbol table instance with a
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,292,* randomized seed value.
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,294,public static BytesToNameCanonicalizer createRoot()
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,296,"/* [Issue-21]: Need to use a variable seed, to thwart hash-collision"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,297,* based attacks.
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,299,long now = System.currentTimeMillis();
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,300,// ensure it's not 0; and might as well require to be odd so:
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,301,int seed = (((int) now) + ((int) now >>> 32)) | 1;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,302,return createRoot(seed);
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,324,rivate synchronized void mergeChild(BytesToNameCanonicalizer child)
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,306,"* Factory method that should only be called from unit tests, where seed"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,307,* value should remain the same.
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,309,protected static BytesToNameCanonicalizer createRoot(int hashSeed) {
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,310,"return new BytesToNameCanonicalizer(DEFAULT_TABLE_SIZE, true, hashSeed);"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,314,* Factory method used to create actual symbol table instance to
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,315,* use for parsing.
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,317,* @param intern Whether canonical symbol Strings should be interned
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,318,*   or not
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,320,"public BytesToNameCanonicalizer makeChild(boolean canonicalize,"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,321,boolean intern)
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,323,final int hashSeed;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,324,final int count;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,325,final int mainHashMask;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,326,final int[] mainHash;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,327,final Name[] mainNames;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,328,final Bucket[] collList;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,329,final int collCount;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,330,final int collEnd;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,331,final int longestCollisionList;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,333,"// 24-Jul-2012, tatu: Try to reduce synchronized scope, to exclude actual ctor:"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,334,synchronized (this) {
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,335,hashSeed = _hashSeed;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,336,count = _count;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,337,mainHashMask = _mainHashMask;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,338,mainHash = _mainHash;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,339,mainNames = _mainNames;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,340,collList = _collList;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,341,collCount = _collCount;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,342,collEnd = _collEnd;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,343,longestCollisionList = _longestCollisionList;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,345,"return new BytesToNameCanonicalizer(this, intern, hashSeed,"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,346,"count,mainHashMask, mainHash, mainNames,"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,347,"collList,collCount, collEnd, longestCollisionList);"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,351,* Method called by the using code to indicate it is done
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,352,* with this instance. This lets instance merge accumulated
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,353,"* changes into parent (if need be), safely and efficiently,"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,354,* and without calling code having to know about parent
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,355,* information
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,357,public void release()
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,359,if (maybeDirty() && _parent != null) {
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,360,_parent.mergeChild(this);
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,361,"/* Let's also mark this instance as dirty, so that just in"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,362,"* case release was too early, there's no corruption"
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,363,* of possibly shared data.
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,365,markAsShared();
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,369,private void mergeChild(BytesToNameCanonicalizer child)
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,345,nitTables(DEFAULT_TABLE_SIZE);
+False,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,346, else {
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,390,synchronized (this) {
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,391,initTables(DEFAULT_TABLE_SIZE);
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,393,return;
+True,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/BytesToNameCanonicalizer.java,396,synchronized (this) {
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,299,"ublic synchronized CharsToNameCanonicalizer makeChild(boolean canonicalize, boolean intern)"
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,299,"public synchronized CharsToNameCanonicalizer makeChild(final boolean canonicalize,"
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,300,final boolean intern)
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,302,"/* 24-Jul-2012, tatu: Trying to reduce scope of synchronization, assuming"
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,303,"*   that synchronizing construction is the (potentially) expensive part,"
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,304,*   and not so much short copy-the-variables thing.
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,306,final String[] symbols;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,307,final Bucket[] buckets;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,308,final int size;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,309,final int hashSeed;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,310,final int longestCollisionList;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,312,synchronized (this) {
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,313,symbols = _symbols;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,314,buckets = _buckets;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,315,size = _size;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,316,hashSeed = _hashSeed;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,317,longestCollisionList = _longestCollisionList;
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,302,"symbols, _buckets, _size, _hashSeed, _longestCollisionList);"
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,321,"symbols, buckets, size, hashSeed, longestCollisionList);"
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,318,rivate synchronized void mergeChild(CharsToNameCanonicalizer child)
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,337,private void mergeChild(CharsToNameCanonicalizer child)
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,328,* Should there be a way to get notified about this
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,329," event, to log it or such? (as it's somewhat abnormal"
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,330, thing to happen)
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,347,"// Should there be a way to get notified about this event, to log it or such?"
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,348,// (as it's somewhat abnormal thing to happen)
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,333,nitTables(DEFAULT_TABLE_SIZE);
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,350,synchronized (this) {
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,351,initTables(DEFAULT_TABLE_SIZE);
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,352,"// Dirty flag... well, let's just clear it. Shouldn't really matter for master tables"
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,353,"// (which this is, given something is merged to it)"
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,354,_dirty = false;
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,335,"* Otherwise, we'll merge changed stuff in, if there are"
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,336, more entries (which may not be the case if one of siblings
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,337, has added symbols first or such)
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,357,"// Otherwise, we'll merge changed stuff in, if there are  more entries (which"
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,358,// may not be the case if one of siblings has added symbols first or such)
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,343,symbols = child._symbols;
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,344,buckets = child._buckets;
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,345,size = child._size;
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,346,sizeThreshold = child._sizeThreshold;
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,347,indexMask = child._indexMask;
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,348,longestCollisionList = child._longestCollisionList;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,363,synchronized (this) {
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,364,_symbols = child._symbols;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,365,_buckets = child._buckets;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,366,_size = child._size;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,367,_sizeThreshold = child._sizeThreshold;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,368,_indexMask = child._indexMask;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,369,_longestCollisionList = child._longestCollisionList;
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,370,"// Dirty flag... well, let's just clear it. Shouldn't really matter for master tables"
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,371,"// (which this is, given something is merged to it)"
+True,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,372,_dirty = false;
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,350,"* Dirty flag... well, let's just clear it, to force copying just"
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,351," in case. Shouldn't really matter, for master tables."
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,352," (which this is, given something is merged to it etc)"
+False,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,src/main/java/com/fasterxml/jackson/core/sym/CharsToNameCanonicalizer.java,354,dirty = false;

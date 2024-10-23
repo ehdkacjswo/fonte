@@ -1,0 +1,589 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,2, Copyright 2008 The Closure Compiler Authors.
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,4," Licensed under the Apache License, Version 2.0 (the ""License"");"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,5, you may not use this file except in compliance with the License.
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,6, You may obtain a copy of the License at
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,8,     http://www.apache.org/licenses/LICENSE-2.0
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,10," Unless required by applicable law or agreed to in writing, software"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,11," distributed under the License is distributed on an ""AS IS"" BASIS,"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,12," WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,13, See the License for the specific language governing permissions and
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,14, limitations under the License.
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,17,ackage com.google.javascript.jscomp;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,19,mport com.google.common.base.Joiner;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,20,mport com.google.common.base.Preconditions;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,21,mport com.google.common.collect.Lists;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,22,mport com.google.common.collect.Sets;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,23,mport com.google.javascript.jscomp.DataFlowAnalysis.FlowState;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,24,mport com.google.javascript.jscomp.JoinOp.BinaryJoinOp;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,25,mport com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,26,mport com.google.javascript.jscomp.graph.Annotation;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,27,mport com.google.javascript.rhino.Node;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,28,mport com.google.javascript.rhino.Token;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,29,mport com.google.javascript.rhino.jstype.FunctionType;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,30,mport com.google.javascript.rhino.jstype.JSType;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,31,mport com.google.javascript.rhino.jstype.ObjectType;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,33,mport java.util.Collections;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,34,mport java.util.List;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,35,mport java.util.Set;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,36,mport java.util.Stack;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,39, Checks that all paths through a constructor add properties in the same order.
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,41, Background: one of the key elements of the design of V8 that improves
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,42, performance is that it attempts to discover the classes of the objects
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,43," created at run time.  Rather than implementing an object as a hash table,"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,44," most objects have a reference to a ""hidden class"" that stores the list of"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,45, properties so that the object itself can maintain only a list of property
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,46," values.  If many objects share the same hidden class, then this reduces"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,47," memory usage.  Furthermore, at a get-prop site, if only one hidden class ever"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,48," occurs for the receiver, then it can speed up the dispatch process, compiling"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,49," it into only 3 instructions.  (For more information, see this"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,50," <a href=""http://www.youtube.com/watch?v=hWhMKalEicY"">video</a>.)"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,52, The key point relating to this pass is that a hidden class is not a set of
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,53, properties but rather an ordered list.  This is necesary so that iterating
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,54," over an object produces its keys in insertion order, as expected.  As a"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,55," result, if two different paths through the constructor generate different"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,56," ordered lists of properties, then the objects created via those paths will"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,57," have different hidden classes, defeating the optimizations described above."
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,58, This pass attempts to find and warn the user about such code.
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,61,lass CheckPropertyOrder extends AbstractPostOrderCallback
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,62,mplements CompilerPass {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,63,tatic final DiagnosticType UNASSIGNED_PROPERTY = DiagnosticType.error(
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,64,"UNASSIGNED_PROPERTY"","
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,65,"not all control paths assign property {1} in function {0}"");"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,66,tatic final DiagnosticType UNEQUAL_PROPERTIES = DiagnosticType.error(
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,67,"UNEQUAL_PROPERTIES"","
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,68,"different control paths produce different (ordered) property lists:"""
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,69," "" {0} vs. {1}"");"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,71,rivate final AbstractCompiler compiler;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,72,rivate final CheckLevel level;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,73,rivate final boolean onlyOneError;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,74,rivate int errorCount;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,76,"heckPropertyOrder(AbstractCompiler compiler, CheckLevel level) {"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,77,"his(compiler, level, false);"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,80,heckPropertyOrder(
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,81,"bstractCompiler compiler, CheckLevel level, boolean onlyOneError) {"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,82,his.compiler = compiler;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,83,his.level = level;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,84,his.onlyOneError = onlyOneError;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,87,Override
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,88,"ublic void process(Node externs, Node root) {"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,89,"odeTraversal.traverse(compiler, root, this);"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,92,Override
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,93,"ublic void visit(NodeTraversal t, Node n, Node parent) {"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,94,/ Look for both top-level functions and assignments of functions to
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,95,/ qualified names.
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,96,ode func = null;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,97,tring funcName = null;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,98,f (n.isFunction() && isConstructor(n)) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,99,unc = n;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,100,uncName = n.getFirstChild().getString();
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,101, else if (n.isAssign()
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,102,& n.getFirstChild().getNext().isFunction()
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,103,& isConstructor(n)) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,104,unc = n.getFirstChild().getNext();
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,105,uncName = n.getFirstChild().getQualifiedName();
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,108,f (func != null) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,109,unctionType funcType = JSType.toMaybeFunctionType(func.getJSType());
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,110,heckConstructor(
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,111,"unc, (funcType != null) ? funcType.getInstanceType() : null,"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,112,".getSourceName(), funcName);"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,116,** Determines whether the given node is jsdoc-ed as a constructor. */
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,117,rivate static boolean isConstructor(Node n) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,118,eturn (n.getJSDocInfo() != null) && n.getJSDocInfo().isConstructor();
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,121,"SuppressWarnings(""unchecked"")"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,122,"rivate void checkConstructor(Node func, ObjectType objType,"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,123,"tring sourceName, String funcName) {"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,124,reconditions.checkArgument(func.isFunction());
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,126,"ontrolFlowAnalysis cfa = new ControlFlowAnalysis(compiler, false, false);"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,127,"fa.process(null, func.getFirstChild().getNext().getNext());"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,128,ontrolFlowGraph<Node> cfg = cfa.getCfg();
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,130,ew PropertyOrdersFlowAnalysis(cfa.getCfg()).analyze();
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,132,nnotation ann = cfa.getCfg().getImplicitReturn().getAnnotation();
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,133,ist<String>[] orders =
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,134,(FlowState<PropertyOrders>) ann).getIn().getOrders();
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,135,f (orders.length == 0) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,136,hrow new AssertionError(
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,137,"no paths through constructor "" + funcName + ""?"");"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,139,f (orders.length > 1) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,140,"eport(sourceName, func, UNEQUAL_PROPERTIES,"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,141,"everse(orders[0]).toString(), reverse(orders[1]).toString());"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,143,f (objType != null) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,144,or (String propName : objType.getOwnPropertyNames()) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,145,f (!orders[0].contains(propName)) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,146,"eport(sourceName, func, UNASSIGNED_PROPERTY, funcName, propName);"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,152,** Reports the given error. Returns whether to continue. */
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,153,rivate void report(
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,154,"tring srcName, Node node, DiagnosticType type, String... args) {"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,155,f (!onlyOneError || (++errorCount <= 1)) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,156,"ompiler.report(JSError.make(srcName, node, level, type, args));"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,160,** Returns the given List in the reverse order. */
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,161,rivate static <T> List<T> reverse(List<T> seq) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,162,f (seq.isEmpty()) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,163,eturn seq;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,165,ist<T> rev = Lists.newArrayList(seq);
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,166,ollections.reverse(seq);
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,167,eturn rev;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,170,rivate static class OrdersJoinOp extends BinaryJoinOp<PropertyOrders> {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,171,Override
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,172,"ublic PropertyOrders apply(PropertyOrders a, PropertyOrders b) {"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,173,eturn new PropertyOrders(
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,174,"ets.newHashSet(Sets.union(a.orders, b.orders)));"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,179, Stores all possible (ordered) lists of properties that may have been added
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,180, to <code>this</code> at some point in the code.
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,182," The bottom element of the lattice is an empty set, meaning no"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,183," possibilities.  At the first statement in the constructor, we start with a"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,184, set containing only one possibility: an empty list of properties.  (Note
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,185," that we do not model the properties of the superclass, if any.)  Each"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,186," assignment, say, <code>this.a = ...</code> adds <code>a</code> to the end"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,187, of all lists in the set.  Joining two results in the union of the
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,188, possibilities of those results.
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,190," For example, if the constructor body contained just the code <code><pre>"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,191,   if (x) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,192,     this.a = 1;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,193,     this.b = 2;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,194,   } else {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,195,     this.b = 2;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,196,     this.a = 1;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,198," </pre></code>, then at the end of the constructor, the possibilities would"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,199," be {['a', 'b'], ['b', 'a']} because there are two possible orderings,"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,200, based on which path is taken in the <code>if</code>.
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,202,rivate static class PropertyOrders implements LatticeElement {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,203,** The bottom element of the lattice: an empty set of lists. */
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,204,ublic static final PropertyOrders EMPTY =
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,205,ew PropertyOrders(Sets.<List<String>>newHashSet());
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,207,** A set of possible ordered lists of properties. */
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,208,rivate final Set<List<String>> orders;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,210,rivate PropertyOrders(Set<List<String>> orders) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,211,his.orders = orders;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,214,Override
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,215,ublic boolean equals(Object other) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,216,f (!(other instanceof PropertyOrders)) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,217,eturn false;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,219,eturn orders.equals(((PropertyOrders) other).orders);
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,223, Returns a new set of possible orders with the given string added at the
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,224, end of each possibility.
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,226,ublic PropertyOrders copyAndAdd(String propName) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,227,et<List<String>> orders = Sets.newHashSet();
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,228,or (List<String> order : this.orders) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,229,f (!order.contains(propName)) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,230,ist<String> nOrder = Lists.newArrayList(order);
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,231,Order.add(propName);
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,232,rder = nOrder;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,234,rders.add(order);
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,236,eturn new PropertyOrders(orders);
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,240, Returns all possible orders over the first N properties that are
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,241, definitely assigned over all paths.
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,243,"SuppressWarnings(""unchecked"")"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,244,ublic List<String>[] getOrders() {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,245,nt minSize = Integer.MAX_VALUE;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,246,or (List<String> seq : this.orders) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,247,"inSize = Math.min(minSize, seq.size());"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,249,et<List<String>> orders = Sets.newHashSet();
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,250,or (List<String> seq : this.orders) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,251,"/orders.add(seq.subList(seq.size() - minSize, seq.size()));"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,252,"rders.add(seq.subList(0, minSize));"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,254,eturn orders.toArray(
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,255,List<String>[]) new List<?>[orders.size()]);
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,258,Override
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,259,ublic String toString() {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,260,"eturn ""{"" + Joiner.on("", "").join(orders) + ""}"";"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,264,** Implements a data flow analysis over PropertyOrders. */
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,265,rivate static class PropertyOrdersFlowAnalysis
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,266,"xtends DataFlowAnalysis<Node, PropertyOrders> {"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,267,ublic PropertyOrdersFlowAnalysis(ControlFlowGraph<Node> cfg) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,268,"uper(cfg, new OrdersJoinOp());"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,271,Override
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,272,ublic boolean isForward() { return true; }
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,274,Override
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,275,ublic PropertyOrders createInitialEstimateLattice() {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,276,/ An empty orders means no possibilities at all.
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,277,eturn PropertyOrders.EMPTY;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,280,Override
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,281,ublic PropertyOrders createEntryLattice() {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,282,"/ Initially, we have only one possibility:  no properties."
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,283,et<List<String>> orders = Sets.newHashSet();
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,284,rders.add(new Stack<String>());
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,285,eturn new PropertyOrders(orders);
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,288,** Computes the orders after executing the given node. */
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,289,Override
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,290,"ublic PropertyOrders flowThrough(Node node, PropertyOrders input) {"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,291,witch (node.getType()) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,292,ase Token.BLOCK:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,293,ase Token.LABEL:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,294,ase Token.FUNCTION:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,295,eturn input;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,297,ase Token.IF:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,298,ase Token.WHILE:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,299,ase Token.DO:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,300,"eturn flowThrough(NodeUtil.getConditionExpression(node), input);"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,302,ase Token.SWITCH:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,303,ase Token.WITH:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,304,"eturn flowThrough(node.getFirstChild(), input);"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,306,ase Token.FOR:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,307,f (node.getChildCount() == 4) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,308,/ Note that the post-loop expression is not considered here.  That
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,309,/ is handled in the branched version above.
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,310,"ode pre = node.getFirstChild(), cond = pre.getNext();"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,311,"eturn flowThrough(cond, flowThrough(pre, input));"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,312, else {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,313,"ode lhs = node.getFirstChild(), rhs = lhs.getNext();"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,314,"eturn flowThrough(rhs, flowThrough(lhs, input));"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,317,ase Token.HOOK:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,318,ode cond = node.getFirstChild();
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,319,"nput = flowThrough(cond, input);"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,320,"ode ifTrue = cond.getNext(), ifFalse = ifTrue.getNext();"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,321,"eturn join(flowThrough(ifTrue, input), flowThrough(ifFalse, input));"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,323,ase Token.AND:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,324,ase Token.OR:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,325,"ode left = node.getFirstChild(), right = left.getNext();"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,326,"nput = flowThrough(left, input);"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,327,"eturn join(input, flowThrough(right, input));"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,329,ase Token.ASSIGN:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,330,"/ If the left hand side is ""this.x"", then add x to the lists."
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,331,"ode lhs = node.getFirstChild(), rhs = lhs.getNext();"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,332,f (lhs.isGetProp()) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,333,"ode llhs = lhs.getFirstChild(), lrhs = llhs.getNext();"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,334,f ((llhs.isThis())
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,335,& (lrhs.isString())
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,336,& (lrhs.getNext() == null)) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,337,"eturn flowThrough(rhs, input.copyAndAdd(lrhs.getString()));"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,340,"eturn flowThrough(rhs, flowThrough(lhs, input));"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,342,efault:
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,343,or (node = node.getFirstChild();
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,344,ode != null;
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,345,ode = node.getNext()) {
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,346,"nput = flowThrough(node, input);"
+False,src/com/google/javascript/jscomp/CheckPropertyOrder.java,src/com/google/javascript/jscomp/CheckPropertyOrder.java,348,eturn input;
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,2, Copyright 2008 The Closure Compiler Authors.
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,4," Licensed under the Apache License, Version 2.0 (the ""License"");"
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,5, you may not use this file except in compliance with the License.
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,6, You may obtain a copy of the License at
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,8,     http://www.apache.org/licenses/LICENSE-2.0
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,10," Unless required by applicable law or agreed to in writing, software"
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,11," distributed under the License is distributed on an ""AS IS"" BASIS,"
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,12," WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,13, See the License for the specific language governing permissions and
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,14, limitations under the License.
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,17,ackage com.google.javascript.jscomp;
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,20, Unit test for the JSCompiler CheckPropertyOrder pass.
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,23,ublic class CheckPropertyOrderTest extends CompilerTestCase {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,24,ublic CheckPropertyOrderTest() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,25,"uper("""", true);"
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,26,nableTypeCheck(CheckLevel.WARNING);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,29,Override
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,30,ublic CompilerPass getProcessor(Compiler compiler) {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,31,eturn new CheckPropertyOrder(
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,32,"ompiler, CheckLevel.WARNING, true);"
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,35,Override
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,36,rotected int getNumRepetitions() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,37,eturn 1;
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,40,ublic void testNoBranches() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,41,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,42," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,43," ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,44," ""  this.a = 'a';"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,45," ""  this.b = 3;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,46," ""  this.c = null;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,50,ublic void testIfBranchDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,51,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,52," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,53," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,54," ""  if (a < 10) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,55," ""    this.a = a;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,58,heckPropertyOrder.UNASSIGNED_PROPERTY);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,61,ublic void testIfBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,62,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,63," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,64," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,65," ""  if (a < 10) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,66," ""    this.a = a;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,67," ""  } else {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,68," ""    this.a = 10;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,73,ublic void testHookBranchDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,74,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,75," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,76," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,77," ""  var b = (a < 10) ? (this.a = 1) : 2"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,79,heckPropertyOrder.UNASSIGNED_PROPERTY);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,82,ublic void testHookBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,83,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,84," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,85," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,86," ""  var b = (a < 10) ? (this.a = 1) : (this.a = 2)"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,90,ublic void testAndBranchDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,91,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,92," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,93," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,94," ""  (a < 10) && (this.a = 1);"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,96,heckPropertyOrder.UNASSIGNED_PROPERTY);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,99,ublic void testOrBranchDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,100,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,101," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,102," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,103," ""  (a < 10) || (this.a = 1);"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,105,heckPropertyOrder.UNASSIGNED_PROPERTY);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,108,ublic void testAndOrBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,109,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,110," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,111," ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,112," ""  (this.a = 0) && (this.a = 1);"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,113," ""  (this.b = 2) || (this.b = 3);"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,117,ublic void testWhileBranchDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,118,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,119," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,120," ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,121," ""  this.a = 0;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,122," ""  while (this.a < 10) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,123," ""    this.b = 3;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,124," ""    ++this.a;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,127,heckPropertyOrder.UNASSIGNED_PROPERTY);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,130,ublic void testWhileBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,131,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,132," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,133," ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,134," ""  this.a = 0;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,135," ""  this.b = 0;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,136," ""  while (this.a < 10) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,137," ""    this.b = 3;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,138," ""    ++this.a;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,143,ublic void testForBranchDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,144,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,145," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,146," ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,147," ""  for (this.a = 0; this.a < 10; ++this.a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,148," ""    this.b = 3;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,151,heckPropertyOrder.UNASSIGNED_PROPERTY);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,152,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,153," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,154," ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,155," ""  for (; !this.b; this.b = 1) {}"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,156," ""  this.a = 1;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,158,heckPropertyOrder.UNEQUAL_PROPERTIES);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,161,ublic void testForBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,162,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,163," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,164," ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,165," ""  this.b = 0;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,166," ""  for (this.a = 0; this.a < 10; ++this.a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,167," ""    this.b = 3;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,172,ublic void testDoBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,173,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,174," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,175," ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,176," ""  this.a = 1;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,177," ""  do {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,178," ""    this.a = 2;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,179," ""  } while (false);"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,183,ublic void testReturnBranchDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,184,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,185," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,186," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,187," ""  this.a = 1;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,188," ""  if (a < 10) return;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,189," ""  this.b = 2;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,191,heckPropertyOrder.UNASSIGNED_PROPERTY);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,194,ublic void testReturnBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,195,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,196," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,197," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,198," ""  this.a = 1;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,199," ""  if (a < 10) return;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,200," ""  this.a = 2;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,204,/ TODO(user): The type registery is behaves a bit different than before.
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,205,"/ The .b property is no longer on the InstanceObject instead, it is stored in"
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,206,/ JSTypeRegistry.typesIndexedByProperty. Fix this when we want to use this
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,207,/ pass for real.
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,208,/  public void testUnassigned() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,209,"/    testSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,210,"/             + ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,211,"/             + ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,212,"/             + ""  this.a = 10;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,214,"/             + ""function bar() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,215,"/             + ""  var f = new a.F();"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,216,"/             + ""  f.b = 11;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,218,/             CheckPropertyOrder.UNASSIGNED_PROPERTY);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,221,ublic void testUnequalProperty() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,222,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,223," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,224," ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,225," ""  if (1) { this.a = 1; }"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,226," ""  else { this.b = 1; }"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,228,heckPropertyOrder.UNEQUAL_PROPERTIES);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,231,ublic void testAssignedAfterMerge() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,232,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,233," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,234," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,235," ""  if (a > 0) { this.a = 1; }"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,236," ""  this.a = 2;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,240,ublic void testBreakBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,241,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,242," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,243," ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,244," ""  this.a = 1;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,245," ""  do {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,246," ""    if (true) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,247," ""      this.a = 2;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,248," ""      break;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,250," ""  } while (false);"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,254,ublic void testContinueBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,255,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,256," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,257," ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,258," ""  this.a = 1;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,259," ""  do {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,260," ""    if (true) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,261," ""      this.a = 2;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,262," ""      continue;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,264," ""  } while (false);"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,268,ublic void testLabeledBreakBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,269,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,270," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,271," ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,272," ""  this.a = 1;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,273," ""  foo: while (1) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,274," ""    while (0) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,275," ""      this.a = 2;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,276," ""      break foo;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,282,ublic void testLabeledContinueBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,283,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,284," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,285," ""a.F = function() {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,286," ""  this.a = 1;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,287," ""  foo: while (1) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,288," ""    while (0) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,289," ""      this.a = 2;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,290," ""      continue foo;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,296,ublic void testSwitchBranchDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,297,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,298," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,299," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,300," ""  switch (a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,301," ""    case 0:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,302," ""    case 1:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,303," ""      break;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,304," ""    case 2:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,305," ""      this.a = 2;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,306," ""      break;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,307," ""    default:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,308," ""      this.a = 3;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,311,heckPropertyOrder.UNASSIGNED_PROPERTY);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,312,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,313," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,314," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,315," ""  switch (a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,316," ""    case 0:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,317," ""    case 1:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,318," ""      this.a = 1;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,319," ""      break;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,320," ""    case 2:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,321," ""      break;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,322," ""    default:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,323," ""      this.a = 3;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,326,heckPropertyOrder.UNASSIGNED_PROPERTY);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,327,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,328," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,329," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,330," ""  switch (a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,331," ""    case 0:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,332," ""    case 1:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,333," ""      this.a = 1;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,334," ""      break;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,335," ""    case 2:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,336," ""      this.a = 2;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,337," ""      break;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,338," ""    default:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,341,heckPropertyOrder.UNASSIGNED_PROPERTY);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,344,ublic void testSwitchBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,345,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,346," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,347," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,348," ""  switch (a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,349," ""    case 0:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,350," ""    case 1:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,351," ""      this.a = 1;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,352," ""      break;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,353," ""    case 2:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,354," ""      this.a = 2;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,355," ""      break;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,356," ""    default:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,357," ""      this.a = 3;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,360,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,361," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,362," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,363," ""  switch (a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,364," ""    case 0:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,365," ""    case 1:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,366," ""      this.a = 1;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,367," ""      break;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,368," ""    case 2:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,369," ""      this.a = 2;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,370," ""    default:"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,371," ""      this.a = 3;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,376,ublic void testTryCatchBranchDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,377,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,378," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,379," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,380," ""  try { if (1){ throw Error(); } }"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,381," ""  catch (ex) { this.a = 1; }"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,383,heckPropertyOrder.UNASSIGNED_PROPERTY);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,386,ublic void testTryCatchBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,387,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,388," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,389," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,390," ""  try { throw Error(); }"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,391," ""  catch (ex) { this.a = 1; }"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,393,/ TODO(user): Fix this test case.
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,394,"/testSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,395,"/         + ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,396,"/         + ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,397,"/         + ""  try {}"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,398,"/         + ""  catch (ex) { this.a = 1; }""  // never executed"
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,400,/         CheckPropertyOrder.UNASSIGNED_PROPERTY);
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,403,ublic void testTryFinallyBranchNoDifference() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,404,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,405," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,406," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,407," ""  if (1) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,408," ""    try { this.a = 2; }"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,409," ""    finally { }"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,410," ""  } else {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,411," ""    this.a = 3;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,414,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,415," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,416," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,417," ""  if (1) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,418," ""    try {}"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,419," ""    finally { this.a = 2; }"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,420," ""  } else {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,421," ""    this.a = 3;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,424,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,425," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,426," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,427," ""  if (1) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,428," ""    do {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,429," ""      try { break; }"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,430," ""      finally {this.a = 2; }"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,431," ""    } while(1);"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,432," ""  } else {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,433," ""    this.a = 3;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,436,"estSame(""var a = {};"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,437," ""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,438," ""a.F = function(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,439," ""  if (a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,440," ""    this.a = 1;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,441," ""  } else {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,442," ""    try {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,443," ""      this.a = (function() { throw 1; })();"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,444," ""    } finally {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,450,ublic void testGlobalFunction() {
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,451,"estSame(""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,452," ""function F(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,453," ""  if (a < 10) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,454," ""    this.a = a;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,455," ""  } else {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,456," ""    this.a = 10;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,459,"estSame(""/** @constructor */"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,460," ""function F(a) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,461," ""  if (a < 10) {"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,462," ""    this.a = a;"""
+False,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,test/com/google/javascript/jscomp/CheckPropertyOrderTest.java,465,heckPropertyOrder.UNASSIGNED_PROPERTY);

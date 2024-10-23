@@ -1,0 +1,68 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,611,* <p>Removes the accents from a string. </p>
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,612,"* <p>NOTE: This is a JDK 1.6 method, it will fail on JDK 1.5. </p>"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,614,* <pre>
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,615,* StringUtils.stripAccents(null)                = null
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,616,"* StringUtils.stripAccents("""")                  = """""
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,617,"* StringUtils.stripAccents(""control"")           = ""control"""
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,618,"* StringUtils.stripAccents(""&ecute;clair"")      = ""eclair"""
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,619,* </pre>
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,621,* @param input String to be stripped
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,622,* @return String without accents on the text
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,624,* @since 3.0
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,626,public static String stripAccents(String input) {
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,627,if(input == null) {
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,628,return null;
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,630,if(SystemUtils.isJavaVersionAtLeast(1.6f)) {
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,632,"// String decomposed = Normalizer.normalize(input, Normalizer.Form.NFD);"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,634,// START of 1.5 reflection - in 1.6 use the line commented out above
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,635,try {
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,636,// get java.text.Normalizer.Form class
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,637,"Class normalizerFormClass = ClassUtils.getClass(""java.text.Normalizer$Form"", false);"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,639,// get Normlizer class
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,640,"Class normalizerClass = ClassUtils.getClass(""java.text.Normalizer"", false);"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,642,// get static method on Normalizer
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,643,"java.lang.reflect.Method method = normalizerClass.getMethod(""normalize"", CharSequence.class, normalizerFormClass );"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,645,// get Normalizer.NFD field
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,646,"java.lang.reflect.Field nfd = normalizerFormClass.getField(""NFD"");"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,648,// invoke method
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,649,"String decomposed = (String) method.invoke( null, input, nfd.get(null) );"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,650,// END of 1.5 reflection
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,652,"java.util.regex.Pattern accentPattern = java.util.regex.Pattern.compile(""\\p{InCombiningDiacriticalMarks}+"");"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,653,"return accentPattern.matcher(decomposed).replaceAll("""");"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,654,} catch(ClassNotFoundException cnfe) {
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,655,"throw new RuntimeException(""ClassNotFoundException occurred during 1.6 backcompat code"", cnfe);"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,656,} catch(NoSuchMethodException nsme) {
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,657,"throw new RuntimeException(""NoSuchMethodException occurred during 1.6 backcompat code"", nsme);"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,658,} catch(NoSuchFieldException nsfe) {
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,659,"throw new RuntimeException(""NoSuchFieldException occurred during 1.6 backcompat code"", nsfe);"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,660,} catch(IllegalAccessException iae) {
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,661,"throw new RuntimeException(""IllegalAccessException occurred during 1.6 backcompat code"", iae);"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,662,} catch(IllegalArgumentException iae) {
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,663,"throw new RuntimeException(""IllegalArgumentException occurred during 1.6 backcompat code"", iae);"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,664,} catch(java.lang.reflect.InvocationTargetException ite) {
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,665,"throw new RuntimeException(""InvocationTargetException occurred during 1.6 backcompat code"", ite);"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,666,} catch(SecurityException se) {
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,667,"throw new RuntimeException(""SecurityException occurred during 1.6 backcompat code"", se);"
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,669,} else {
+True,src/java/org/apache/commons/lang3/StringUtils.java,src/java/org/apache/commons/lang3/StringUtils.java,670,"throw new UnsupportedOperationException(""The stripAccents(String) method is not supported until Java 1.6"");"
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,267,public void testStripAccents() {
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,268,if(SystemUtils.isJavaVersionAtLeast(1.6f)) {
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,269,"String cue = ""\u00C7\u00FA\u00EA"";"
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,270,"assertEquals( ""Failed to strip accents from "" + cue, ""Cue"", StringUtils.stripAccents(cue));"
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,272,"String lots = ""\u00C0\u00C1\u00C2\u00C3\u00C4\u00C5\u00C7\u00C8\u00C9"" +"
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,273,"""\u00CA\u00CB\u00CC\u00CD\u00CE\u00CF\u00D1\u00D2\u00D3"" +"
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,274,"""\u00D4\u00D5\u00D6\u00D9\u00DA\u00DB\u00DC\u00DD"";"
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,275,"assertEquals( ""Failed to strip accents from "" + lots,"
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,276,"""AAAAAACEEEEIIIINOOOOOUUUUY"","
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,277,StringUtils.stripAccents(lots));
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,279,"assertNull( ""Failed null safety"", StringUtils.stripAccents(null) );"
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,280,"assertEquals( ""Failed empty String"", """", StringUtils.stripAccents("""") );"
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,281,"assertEquals( ""Failed to handle non-accented text"", ""control"", StringUtils.stripAccents(""control"") );"
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,282,"assertEquals( ""Failed to handle easy example"", ""eclair"", StringUtils.stripAccents(""\u00E9clair"") );"
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,283,} else {
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,284,try {
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,285,"StringUtils.stripAccents(""string"");"
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,286,"fail(""Before JDK 1.6, stripAccents is not expected to work"");"
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,287,} catch(UnsupportedOperationException uoe) {
+True,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,src/test/org/apache/commons/lang3/StringUtilsTrimEmptyTest.java,288,"assertEquals(""The stripAccents(String) method is not supported until Java 1.6"", uoe.getMessage());"

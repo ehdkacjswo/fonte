@@ -1,0 +1,65 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,98,"@FlagSpec(help = ""Prints a dot file describing the passes that will get run"""
+True,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,99,"+ "" and exits"","
+True,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,100,docLevel = DocLevel.SECRET)
+True,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,101,static final Flag<Boolean> FLAG_print_pass_graph = Flag.value(false);
+True,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,681,if (FLAG_print_pass_graph.get()) {
+True,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,682,if (compiler.getRoot() == null) {
+True,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,683,return 1;
+True,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,684,} else {
+True,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,685,out.append(DotFormatter.toDot(compiler.getPassConfig().getPassGraph()));
+True,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,686,out.println();
+True,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,src/com/google/javascript/jscomp/AbstractCompilerRunner.java,687,return 0;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,21,import com.google.common.collect.Iterables;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,22,import com.google.javascript.jscomp.graph.DiGraph;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,23,import com.google.javascript.jscomp.graph.GraphvizGraph;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,24,import com.google.javascript.jscomp.graph.LinkedDirectedGraph;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,90,* Gets a graph of the passes run. For debugging.
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,92,GraphvizGraph getPassGraph() {
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,93,"LinkedDirectedGraph<String, String> graph = LinkedDirectedGraph.create();"
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,94,Iterable<PassFactory> allPasses =
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,95,"Iterables.concat(getChecks(), getOptimizations());"
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,96,String lastPass = null;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,97,String loopStart = null;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,98,for (PassFactory pass : allPasses) {
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,99,String passName = pass.getName();
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,100,int i = 1;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,101,while (graph.hasNode(passName)) {
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,102,passName = pass.getName() + (i++);
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,104,graph.createNode(passName);
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,106,if (loopStart == null && !pass.isOneTimePass()) {
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,107,loopStart = passName;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,108,} else if (loopStart != null && pass.isOneTimePass()) {
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,109,"graph.connect(lastPass, ""loop"", loopStart);"
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,110,loopStart = null;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,113,if (lastPass != null) {
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,114,"graph.connect(lastPass, """", passName);"
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,116,lastPass = passName;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,118,return graph;
+False,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,119,his.unflowableVarNames.add(unflowableVar.getName());
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,119,String name = unflowableVar.getName();
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,120,if (functionScope.getVar(name) == unflowableVar) {
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,121,this.unflowableVarNames.add(name);
+False,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,630,f (var != null) {
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,633,if (var != null &&
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,634,!(var.isTypeInferred() && unflowableVarNames.contains(varName))) {
+True,src/com/google/javascript/jscomp/TypeInferencePass.java,src/com/google/javascript/jscomp/TypeInferencePass.java,21,import com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/TypeInferencePass.java,src/com/google/javascript/jscomp/TypeInferencePass.java,27,import java.util.Collection;
+True,src/com/google/javascript/jscomp/TypeInferencePass.java,src/com/google/javascript/jscomp/TypeInferencePass.java,28,import java.util.List;
+True,src/com/google/javascript/jscomp/TypeInferencePass.java,src/com/google/javascript/jscomp/TypeInferencePass.java,83,private Collection<Var> getUnflowableVars(Scope scope) {
+True,src/com/google/javascript/jscomp/TypeInferencePass.java,src/com/google/javascript/jscomp/TypeInferencePass.java,84,List<Var> vars = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/TypeInferencePass.java,src/com/google/javascript/jscomp/TypeInferencePass.java,85,for (Scope current = scope;
+True,src/com/google/javascript/jscomp/TypeInferencePass.java,src/com/google/javascript/jscomp/TypeInferencePass.java,86,current.isLocal(); current = current.getParent()) {
+True,src/com/google/javascript/jscomp/TypeInferencePass.java,src/com/google/javascript/jscomp/TypeInferencePass.java,87,vars.addAll(escapedLocalVars.get(current));
+True,src/com/google/javascript/jscomp/TypeInferencePass.java,src/com/google/javascript/jscomp/TypeInferencePass.java,89,return vars;
+False,src/com/google/javascript/jscomp/TypeInferencePass.java,src/com/google/javascript/jscomp/TypeInferencePass.java,83,scapedLocalVars.get(scope));
+True,src/com/google/javascript/jscomp/TypeInferencePass.java,src/com/google/javascript/jscomp/TypeInferencePass.java,96,getUnflowableVars(scope));
+True,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,48,"public static <N, E> LinkedDirectedGraph<N, E> create() {"
+True,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,49,"return new LinkedDirectedGraph<N, E>();"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,1602,public void testInnerFunction9() throws Exception {
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,1603,testTypes(
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,1604,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,1605,""" var x = 3;\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,1606,""" function g() { x = null; };\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,1607,""" function h() { return x == null; }"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,1608,""" return h();"" +"

@@ -1,0 +1,537 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,21,import com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,22,import com.google.common.collect.Maps;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,30,import java.util.Map;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,35," (1) Scan the variable/function declarations at that scope, but do not"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,36,     recurse into the function definitions.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,37, (2) Mark all referenced variables and functions calls. Recurse into the
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,38,     scopes of those function calls.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,39," (3) When leaving the scope, remove any variables in that scope that were"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,40,     never referenced.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,38,* (1) Scan the variable/function declarations at that scope.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,39,"* (2) Traverse the scope for references, marking all referenced variables."
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,40,"*     Unlike other compiler passes, this is a pre-order traversal, not a"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,41,*     post-order traversal.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,42,"* (3) If the traversal encounters an assign without other side-effects,"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,43,*     create a continuation. Continue the continuation iff the assigned
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,44,*     variable is referenced.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,45,"* (4) When the traversal completes, remove all unreferenced variables."
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,42," Multiple passes are performed until no variables are removed, indicating a"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,43, convergence.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,47,"* If it makes it easier, you can think of the continuations of the traversal"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,48,"* as a reference graph. Each continuation represents a set of edges, where the"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,49,"* source node is a known variable, and the destination nodes are lazily"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,50,* evaluated when the continuation is executed.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,52,* This algorithm is similar to the algorithm used by {@code SmartNameRemoval}.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,53,* {@code SmartNameRemoval} maintains an explicit graph of dependencies
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,54,"* between global symbols. However, {@code SmartNameRemoval} cannot handle"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,55,"* non-trivial edges in the reference graph (""A is referenced iff both B and C"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,56,"* are referenced""), or local variables. {@code SmartNameRemoval} is also"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,57,* substantially more complicated because it tries to handle namespaces
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,58,* (which is largely unnecessary in the presence of {@code CollapseProperties}.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,60,"* This pass also uses a more complex analysis of assignments, where"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,61,* an assignment to a variable or a property of that variable does not
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,62,"* necessarily count as a reference to that variable, unless we can prove"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,63,* that it modifies external state. This is similar to
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,64,"* {@code FlowSensitiveInlineVariables}, except that it works for variables"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,65,* used across scopes.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,68,* @author nicksantos@google.com (Nick Santos)
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,86,* Keep track of variables that might be unreferenced.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,88,private final List<Var> maybeUnreferenced = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,91,* Keep track of scopes that we've traversed.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,93,private final List<Scope> allFunctionScopes = Lists.newArrayList();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,65,"rivate final Multimap<Var, Assign> assigns = ArrayListMultimap.create();"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,98,"private final Multimap<Var, Assign> assignsByVar ="
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,99,ArrayListMultimap.create();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,102,"* The assigns, indexed by the NAME node that they assign to."
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,104,"private final Map<Node, Assign> assignsByNode = Maps.newHashMap();"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,107,* Keep track of continuations that are finished iff the variable they're
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,108,* indexed by is referenced.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,110,"private final Multimap<Var, Continuation> continuations ="
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,111,ArrayListMultimap.create();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,92,nterpretAssigns(scope);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,93,emoveUnreferencedVars(scope);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,138,collectMaybeUnreferencedVars(scope);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,141,interpretAssigns();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,142,removeUnreferencedVars();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,143,for (Scope fnScope : allFunctionScopes) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,144,removeUnreferencedFunctionArgs(fnScope);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,99," are referenced. Functions create their own scope, so we don't"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,100, recurse into them unless they are called.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,150,* are referenced.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,152,"* During traversal, we identify subtrees that will only be"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,153,* referenced if their enclosing variables are referenced. Instead of
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,154,"* traversing those subtrees, we create a continuation for them,"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,155,* and traverse them lazily.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,159,Var var = null;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,105,/ We traverse a function only if the function definition is
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,106,"/ immediately being referenced, e.g."
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,107,/ - return function() { ... };
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,108,/ - foo( function() { ... } )
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,109,/ - array[ function() { ... } ];
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,111,/ Otherwise we traverse into the function only when we encounter
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,112,/ a reference to it (see markReferencedVar())
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,114,"/ If it's an exported function, or an function expression, assume"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,115,/ that it'll be called.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,116,"f (traverseFunctionWhenFirstSeen(n, scope)) {"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,162,"// If this function is a removable var, then create a continuation"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,163,// for it instead of traversing immediately.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,164,if (NodeUtil.isFunctionDeclaration(n)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,165,var = scope.getVar(n.getFirstChild().getString());
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,168,if (var != null && isRemovableVar(var)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,169,"continuations.put(var, new Continuation(n, scope));"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,170,} else {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,175,case Token.ASSIGN:
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,176,Assign maybeAssign = Assign.maybeCreateAssign(n);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,177,if (maybeAssign != null) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,178,"// Put this in the assign map. It might count as a reference,"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,179,// but we won't know that until we have an index of all assigns.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,180,var = scope.getVar(maybeAssign.nameNode.getString());
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,181,if (var != null) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,182,"assignsByVar.put(var, maybeAssign);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,183,"assignsByNode.put(maybeAssign.nameNode, maybeAssign);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,185,if (isRemovableVar(var) &&
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,186,!maybeAssign.mayHaveSecondarySideEffects) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,187,// If the var is unreferenced and performing this assign has
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,188,"// no secondary side effects, then we can create a continuation"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,189,// for it instead of traversing immediately.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,190,"continuations.put(var, new Continuation(n, scope));"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,191,return;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,195,break;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,122,f (parent.getType() != Token.VAR) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,198,var = scope.getVar(n.getString());
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,199,if (parent.getType() == Token.VAR) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,200,Node value = n.getFirstChild();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,201,if (value != null && var != null && isRemovableVar(var) &&
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,202,!NodeUtil.mayHaveSideEffects(value)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,203,// If the var is unreferenced and creating its value has no side
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,204,"// effects, then we can create a continuation for it instead"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,205,// of traversing immediately.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,206,"continuations.put(var, new Continuation(n, scope));"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,207,return;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,209,} else {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,124,/ are references to other vars. If that var hasn't already been
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,125,"/ marked referenced, then start tracking it."
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,126,ar var = scope.getVar(n.getString());
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,127,f (var != null && !referenced.contains(var)) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,128,ssign maybeAssign = Assign.maybeCreateAssign(n);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,129,f (maybeAssign == null) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,130,arkReferencedVar(var);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,211,// are references to other vars.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,212,if (var != null) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,213,"// If that var hasn't already been marked referenced, then"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,214,"// start tracking it.  If this is an assign, do nothing"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,215,// for now.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,216,if (isRemovableVar(var)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,217,if (!assignsByNode.containsKey(n)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,218,markReferencedVar(var);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,132,"/ Put this in the assign map. It might count as a reference,"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,133,/ but we won't know that until we have an index of all assigns.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,134,"ssigns.put(var, maybeAssign);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,221,markReferencedVar(var);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,147, @param n The function node.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,148, @return Whether to traverse the function immediately.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,150,"rivate boolean traverseFunctionWhenFirstSeen(Node n, Scope scope) {"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,151,"eturn NodeUtil.isFunctionExpression(n) || isExportedFunction(n, scope);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,233,private boolean isRemovableVar(Var var) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,234,// Global variables are off-limits if the user might be using them.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,235,if (!removeGlobals && var.isGlobal()) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,236,return false;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,155, @param n The function node.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,156, @return Whether the function is exported.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,158,"rivate boolean isExportedFunction(Node n, Scope scope) {"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,159,reconditions.checkState(NodeUtil.isFunctionDeclaration(n));
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,160,"/ If we aren't removing global names, assume that all global functions"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,161,/ are exported.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,162,eturn (!removeGlobals && scope.isGlobal()) ||
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,163,ompiler.getCodingConvention().isExported(
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,164,.getFirstChild().getString());
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,239,// Referenced variables are off-limits.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,240,if (referenced.contains(var)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,241,return false;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,244,// Exported variables are off-limits.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,245,if (compiler.getCodingConvention().isExported(var.getName())) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,246,return false;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,249,return true;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,175,"rivate void traverseFunction(Node n, Scope scope) {"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,260,"private void traverseFunction(Node n, Scope parentScope) {"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,183,"cope fnScope = new SyntacticScopeCreator(compiler).createScope(n, scope);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,268,Scope fnScope =
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,269,"new SyntacticScopeCreator(compiler).createScope(n, parentScope);"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,186,nterpretAssigns(fnScope);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,187,"emoveUnreferencedFunctionArgs(n, fnScope);"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,188,emoveUnreferencedVars(fnScope);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,272,collectMaybeUnreferencedVars(fnScope);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,273,allFunctionScopes.add(fnScope);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,277,* For each variable in this scope that we haven't found a reference
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,278,"* for yet, add it to the list of variables to check later."
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,280,private void collectMaybeUnreferencedVars(Scope scope) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,281,for (Iterator<Var> it = scope.getVars(); it.hasNext(); ) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,282,Var var = it.next();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,283,if (isRemovableVar(var)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,284,maybeUnreferenced.add(var);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,194, @param function The FUNCTION node
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,197,"rivate void removeUnreferencedFunctionArgs(Node function, Scope fnScope) {"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,294,private void removeUnreferencedFunctionArgs(Scope fnScope) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,296,Node function = fnScope.getRootNode();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,297,Preconditions.checkState(function.getType() == Token.FUNCTION);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,210,nScope.undeclare(var);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,211,inishRemove(var);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,310,compiler.reportCodeChange();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,219, Look at all the property assigns to all variables in the given
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,220," scope. These may or may not count as references. For example,"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,318,* Look at all the property assigns to all variables.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,319,"* These may or may not count as references. For example,"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,328,* Interpreting assigments could mark a variable as referenced that
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,329,"* wasn't referenced before, in order to keep it alive. Because we find"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,330,"* references by lazily traversing subtrees, marking a variable as"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,331,"* referenced could trigger new traversals of new subtrees, which could"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,332,* find new references.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,334,"* Therefore, this interpretation needs to be run to a fixed point."
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,229,rivate void interpretAssigns(Scope scope) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,230,or (Iterator<Var> it = scope.getVars(); it.hasNext(); ) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,231,ar var = it.next();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,232,f (!referenced.contains(var)) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,233,oolean assignedToUnknownValue = false;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,234,oolean hasPropertyAssign = false;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,236,f (var.getParentNode().getType() == Token.VAR) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,237,ode value = var.getInitialValue();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,238,ssignedToUnknownValue = value != null &&
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,239,"NodeUtil.isLiteralValue(value, true);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,336,private void interpretAssigns() {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,337,boolean changes = false;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,338,do {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,339,changes = false;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,341,"// We can't use traditional iterators and iterables for this list,"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,342,// because our lazily-evaluated continuations will modify it while
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,343,// we traverse it.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,344,for (int current = 0; current < maybeUnreferenced.size(); current++) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,345,Var var = maybeUnreferenced.get(current);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,346,if (referenced.contains(var)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,347,maybeUnreferenced.remove(current);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,348,current--;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,241,/ This was initialized to a function arg or a catch param.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,242,ssignedToUnknownValue = true;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,245,or (Assign assign : assigns.get(var)) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,246,f (assign.isPropertyAssign) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,247,asPropertyAssign = true;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,248, else if (!NodeUtil.isLiteralValue(
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,249,"ssign.assignNode.getLastChild(), true)) {"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,350,boolean assignedToUnknownValue = false;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,351,boolean hasPropertyAssign = false;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,353,if (var.getParentNode().getType() == Token.VAR) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,354,Node value = var.getInitialValue();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,355,assignedToUnknownValue = value != null &&
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,356,"!NodeUtil.isLiteralValue(value, true);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,357,} else {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,358,// This was initialized to a function arg or a catch param.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,254,f (assignedToUnknownValue && hasPropertyAssign) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,255,arkReferencedVar(var);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,362,for (Assign assign : assignsByVar.get(var)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,363,if (assign.isPropertyAssign) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,364,hasPropertyAssign = true;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,365,} else if (!NodeUtil.isLiteralValue(
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,366,"assign.assignNode.getLastChild(), true)) {"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,367,assignedToUnknownValue = true;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,371,if (assignedToUnknownValue && hasPropertyAssign) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,372,changes = markReferencedVar(var) || changes;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,373,maybeUnreferenced.remove(current);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,374,current--;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,378,} while (changes);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,263, Finishes removal of a var by removing all assigns to it and reporting
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,264, a code change.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,382,* Remove all assigns to a var.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,266,rivate void finishRemove(Var var) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,267,or (Assign assign : assigns.get(var)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,384,private void removeAllAssigns(Var var) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,385,for (Assign assign : assignsByVar.get(var)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,387,compiler.reportCodeChange();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,270,ompiler.reportCodeChange();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,274," Marks a var as referenced, recursing into any functions."
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,392,"* Marks a var as referenced, recursing into any values of this var"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,393,* that we skipped.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,394,* @return True if this variable had not been referenced before.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,276,rivate void markReferencedVar(Var var) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,277,eferenced.add(var);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,279,ode parent = var.getParentNode();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,280,f (parent.getType() == Token.FUNCTION) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,281,/ Now that the function has been referenced traverse it if it won't be
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,282,/ traversed otherwise.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,283,"f (!traverseFunctionWhenFirstSeen(parent, var.getScope())) {"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,284,"raverseFunction(parent, var.scope);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,396,private boolean markReferencedVar(Var var) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,397,if (referenced.add(var)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,398,for (Continuation c : continuations.get(var)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,399,c.apply();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,401,return true;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,403,return false;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,290, Removes any vars in the scope that were not referenced.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,407,* Removes any vars in the scope that were not referenced. Removes any
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,408,* assigments to those variables as well.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,292,rivate void removeUnreferencedVars(Scope scope) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,410,private void removeUnreferencedVars() {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,295,or (Iterator<Var> it = scope.getVars(); it.hasNext(); ) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,413,for (Iterator<Var> it = maybeUnreferenced.iterator(); it.hasNext(); ) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,298,f (!referenced.contains(var) &&
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,299,var.isLocal() || !convention.isExported(var.name))) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,301,"ompiler.addToDebugLog(""Unreferenced var: "" + var.name);"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,302,ode nameNode = var.nameNode;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,303,ode toRemove = nameNode.getParent();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,304,ode parent = toRemove.getParent();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,306,reconditions.checkState(
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,307,oRemove.getType() == Token.VAR ||
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,308,oRemove.getType() == Token.FUNCTION ||
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,309,oRemove.getType() == Token.LP &&
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,310,"arent.getType() == Token.FUNCTION,"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,311,"We should only declare vars and functions and function args"");"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,313,f (toRemove.getType() == Token.LP &&
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,314,arent.getType() == Token.FUNCTION) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,315,/ Don't remove function arguments here. That's a special case
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,316,/ that's taken care of in removeUnreferencedFunctionArgs.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,317, else if (NodeUtil.isFunctionExpression(toRemove)) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,318,f (!preserveFunctionExpressionNames) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,319,"oRemove.getFirstChild().setString("""");"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,320,inishRemove(var);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,322,/ Don't remove bleeding functions.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,323, else if (parent != null &&
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,324,arent.getType() == Token.FOR &&
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,325,arent.getChildCount() < 4) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,326,/ foreach iterations have 3 children. Leave them alone.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,327, else if (toRemove.getType() == Token.VAR &&
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,328,ameNode.hasChildren() &&
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,329,odeUtil.mayHaveSideEffects(nameNode.getFirstChild())) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,330,"/ If this is a single var declaration, we can at least remove the"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,331,"/ declaration itself and just leave the value, e.g.,"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,332,/ var a = foo(); => foo();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,333,f (toRemove.getChildCount() == 1) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,334,"arent.replaceChild(toRemove,"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,335,"ew Node(Token.EXPR_RESULT, nameNode.removeFirstChild()));"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,336,inishRemove(var);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,338, else if (toRemove.getType() == Token.VAR &&
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,339,oRemove.getChildCount() > 1) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,340,"/ For var declarations with multiple names (i.e. var a, b, c),"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,341,/ only remove the unreferenced name
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,342,oRemove.removeChild(nameNode);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,343,inishRemove(var);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,344, else if (parent != null) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,345,"odeUtil.removeChild(parent, toRemove);"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,346,inishRemove(var);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,416,"// Regardless of what happens to the original declaration,"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,417,"// we need to remove all assigns, because they may contain references"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,418,// to other unreferenced variables.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,419,removeAllAssigns(var);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,421,"compiler.addToDebugLog(""Unreferenced var: "" + var.name);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,422,Node nameNode = var.nameNode;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,423,Node toRemove = nameNode.getParent();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,424,Node parent = toRemove.getParent();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,426,Preconditions.checkState(
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,427,toRemove.getType() == Token.VAR ||
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,428,toRemove.getType() == Token.FUNCTION ||
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,429,toRemove.getType() == Token.LP &&
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,430,"parent.getType() == Token.FUNCTION,"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,431,"""We should only declare vars and functions and function args"");"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,433,if (toRemove.getType() == Token.LP &&
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,434,parent.getType() == Token.FUNCTION) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,435,// Don't remove function arguments here. That's a special case
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,436,// that's taken care of in removeUnreferencedFunctionArgs.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,437,} else if (NodeUtil.isFunctionExpression(toRemove)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,438,if (!preserveFunctionExpressionNames) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,439,"toRemove.getFirstChild().setString("""");"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,440,compiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,442,// Don't remove bleeding functions.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,443,} else if (parent != null &&
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,444,parent.getType() == Token.FOR &&
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,445,parent.getChildCount() < 4) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,446,// foreach iterations have 3 children. Leave them alone.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,447,} else if (toRemove.getType() == Token.VAR &&
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,448,nameNode.hasChildren() &&
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,449,NodeUtil.mayHaveSideEffects(nameNode.getFirstChild())) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,450,"// If this is a single var declaration, we can at least remove the"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,451,"// declaration itself and just leave the value, e.g.,"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,452,// var a = foo(); => foo();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,453,if (toRemove.getChildCount() == 1) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,454,"parent.replaceChild(toRemove,"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,455,"new Node(Token.EXPR_RESULT, nameNode.removeFirstChild()));"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,456,compiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,458,} else if (toRemove.getType() == Token.VAR &&
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,459,toRemove.getChildCount() > 1) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,460,"// For var declarations with multiple names (i.e. var a, b, c),"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,461,// only remove the unreferenced name
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,462,toRemove.removeChild(nameNode);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,463,compiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,464,} else if (parent != null) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,465,"NodeUtil.removeChild(parent, toRemove);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,466,compiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,472,* Our progress in a traversal can be expressed completely as the
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,473,* current node and scope. The continuation lets us save that
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,474,* information so that we can continue the traversal later.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,476,private class Continuation {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,477,private final Node node;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,478,private final Scope scope;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,480,"Continuation(Node node, Scope scope) {"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,481,this.node = node;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,482,this.scope = scope;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,485,void apply() {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,486,if (NodeUtil.isFunctionDeclaration(node)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,487,"traverseFunction(node, scope);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,488,} else {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,489,for (Node child = node.getFirstChild();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,490,child != null; child = child.getNext()) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,491,"traverseNode(child, node, scope);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,501,final Node nameNode;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,360,"ssign(Node assignNode, boolean isPropertyAssign) {"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,507,// Secondary side effects are any side effects in this assign statement
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,508,"// that aren't caused by the assignment operation itself. For example,"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,509,// a().b = 3;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,510,// a = b();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,511,// var foo = (a = b);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,512,"// In the first two cases, the sides of the assignment have side-effects."
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,513,"// In the last one, the result of the assignment is used, so we"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,514,// are conservative and assume that it may be used in a side-effecting
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,515,// way.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,516,final boolean mayHaveSecondarySideEffects;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,518,"Assign(Node assignNode, Node nameNode, boolean isPropertyAssign) {"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,521,this.nameNode = nameNode;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,524,this.mayHaveSecondarySideEffects =
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,525,assignNode.getParent().getType() != Token.EXPR_RESULT ||
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,526,NodeUtil.mayHaveSideEffects(assignNode.getFirstChild()) ||
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,527,NodeUtil.mayHaveSideEffects(assignNode.getLastChild());
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,367," If this is an assign to the given name, return that name."
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,531,"* If this is an assign to a variable or its property, return it."
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,370,tatic Assign maybeCreateAssign(Node name) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,371,reconditions.checkState(name.getType() == Token.NAME);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,534,static Assign maybeCreateAssign(Node assignNode) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,535,Preconditions.checkState(NodeUtil.isAssignmentOp(assignNode));
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,375,ode previous = name;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,376,ode current = name.getParent();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,377,hile (previous == current.getFirstChild() &&
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,378,odeUtil.isGet(current)) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,379,revious = current;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,380,urrent = current.getParent();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,539,Node current = assignNode.getFirstChild();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,540,while (NodeUtil.isGet(current)) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,541,current = current.getFirstChild();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,384,f (previous == current.getFirstChild() &&
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,385,odeUtil.isAssignmentOp(current)) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,386,"eturn new Assign(current, isPropAssign);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,545,if (current.getType() == Token.NAME) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,546,"return new Assign(assignNode, current, isPropAssign);"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,395,ode replacement = assignNode.getLastChild().detachFromParent();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,397,/ Aggregate any expressions in GETELEMs.
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,398,or (Node current = assignNode.getFirstChild();
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,399,urrent.getType() != Token.NAME;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,400,urrent = current.getFirstChild()) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,401,f (current.getType() == Token.GETELEM) {
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,402,"eplacement = new Node(Token.COMMA,"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,403,"urrent.getLastChild().detachFromParent(), replacement);"
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,404,eplacement.copyInformationFrom(current);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,555,Node parent = assignNode.getParent();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,556,if (mayHaveSecondarySideEffects) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,557,Node replacement = assignNode.getLastChild().detachFromParent();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,559,// Aggregate any expressions in GETELEMs.
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,560,for (Node current = assignNode.getFirstChild();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,561,current.getType() != Token.NAME;
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,562,current = current.getFirstChild()) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,563,if (current.getType() == Token.GETELEM) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,564,"replacement = new Node(Token.COMMA,"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,565,"current.getLastChild().detachFromParent(), replacement);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,566,replacement.copyInformationFrom(current);
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,408,ssignNode.getParent().replaceChild(
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,409,"ssignNode, replacement);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,570,"parent.replaceChild(assignNode, replacement);"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,571,} else {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,572,Node gramps = parent.getParent();
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,573,if (parent.getType() == Token.EXPR_RESULT) {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,574,gramps.removeChild(parent);
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,575,} else {
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,576,"parent.replaceChild(assignNode,"
+True,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,577,assignNode.getLastChild().detachFromParent());
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,26,"uper("""");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,26,"super(""function alert() {}"");"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,104,"var b,c,d;var f=[d];print(f[0])"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,104,"""var d;var f=[d];print(f[0])"");"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,126,"var d,e,f,h;"" +"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,127,"e=function(){print(e)};"" +"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,126,"""var f,h;"" +"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,267,"est(""var x = 3; x = 5;"", ""5"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,266,"test(""var x = 3; x = 5;"", """");"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,272,"function f(){3}this.x=f"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,271,"""function f(){}this.x=f"");"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,283,"/ b can't be removed, so a can't be removed either. We might be able"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,284,/ to improve on this case.
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,286,"function f(a,b){this.foo(b);a=3}this.x=f"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,283,"""function f(a,b){this.foo(b);}this.x=f"");"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,291,"var z=function(){3};z()"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,288,"""var z=function(){};z()"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,291,public void testUnusedAssign5b() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,292,"test(""var z = function f() { f = alert(); }; z();"","
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,293,"""var z=function(){alert()};z()"");"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,295,"est(""var z; z = 3;"", ""3"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,297,"test(""var z; z = 3;"", """");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,300,public void testUnusedAssign6b() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,301,"test(""var z; z = alert();"", ""alert()"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,304,public void testUnusedAssign7() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,305,"test(""var a = 3; for (var i in {}) { i = a; }"","
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,306,"""for (var i in {}) {}"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,309,public void testUnusedAssign8() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,310,"test(""var a = 3; for (var i in {}) { i = a; } alert(a);"","
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,311,"""var a = 3; for (var i in {}) {} alert(a);"");"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,299,"est(""var x = {}; x.foo = 3;"", ""3"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,315,"test(""var x = {}; x.foo = 3;"", """");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,318,public void testUnusedPropAssign1b() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,319,"test(""var x = {}; x.foo = alert();"", ""alert()"");"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,303,"est(""var x = {}; x['foo'] = 3;"", ""\""foo\"",3"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,323,"test(""var x = {}; x['foo'] = 3;"", """");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,326,public void testUnusedPropAssign2b() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,327,"test(""var x = {}; x[alert()] = alert();"", ""alert(),alert()"");"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,307,"est(""var x = {}; x['foo'] = {}; x['foo'].baz['bar'] = 3"","
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,308,"\""foo\"",{};\""foo\"",(\""bar\"",3)"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,331,"test(""var x = {}; x['foo'] = {}; x['foo'].baz['bar'] = 3"", """");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,334,public void testUnusedPropAssign3b() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,335,"test(""var x = {}; x[alert()] = alert(); x[alert()].baz[alert()] = alert()"","
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,336,"""alert(),alert();alert(),(alert(),alert())"");"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,312,"est(""var x = {foo: 3}; x['foo'] = 5;"", ""\""foo\"",5"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,340,"test(""var x = {foo: 3}; x['foo'] = 5;"", """");"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,316,"/ Because bar() has a side-effect, the whole variable stays in. We might"
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,317,/ be able to improve on this case.
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,323,"est(""var x = function() {}; x.prototype.bar = function() {};"","
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,324,"(function(){})"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,349,"test(""var x = function() {}; x.prototype.bar = function() {};"", """");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,352,public void testUnusedPropAssign7() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,353,"test(""var x = {}; x[x.foo] = x.bar;"", """");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,356,public void testUnusedPropAssign7b() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,357,"testSame(""var x = {}; x[x.foo] = alert(x.bar);"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,360,public void testUnusedPropAssign7c() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,361,"test(""var x = {}; x[alert(x.foo)] = x.bar;"","
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,362,"""var x={};x[alert(x.foo)]=x.bar"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,396,public void testDependencies1() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,397,"test(""var a = 3; var b = function() { alert(a); };"", """");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,400,public void testDependencies1b() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,401,"test(""var a = 3; var b = alert(function() { alert(a); });"","
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,402,"""var a=3;alert(function(){alert(a)})"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,405,public void testDependencies1c() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,406,"test(""var a = 3; var _b = function() { alert(a); };"","
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,407,"""var a=3;var _b=function(){alert(a)}"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,410,public void testDependencies2() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,411,"test(""var a = 3; var b = 3; b = function() { alert(a); };"", """");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,414,public void testDependencies2b() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,415,"test(""var a = 3; var b = 3; b = alert(function() { alert(a); });"","
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,416,"""var a=3;alert(function(){alert(a)})"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,419,public void testDependencies2c() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,420,"testSame(""var a=3;var _b=3;_b=function(){alert(a)}"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,423,public void testGlobalVarReferencesLocalVar() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,424,"testSame(""var a=3;function f(){var b=4;a=b}alert(a + f())"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,427,public void testLocalVarReferencesGlobalVar1() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,428,"testSame(""var a=3;function f(b, c){b=a; alert(b + c);} f();"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,431,public void testLocalVarReferencesGlobalVar2() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,432,"test(""var a=3;function f(b, c){b=a; alert(c);} f();"","
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,433,"""function f(b, c) { alert(c); } f();"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,436,public void testNestedAssign1() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,437,"test(""var b = null; var a = (b = 3); alert(a);"","
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,438,"""var a = 3; alert(a);"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,441,public void testNestedAssign2() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,442,"test(""var a = 1; var b = 2; var c = (b = a); alert(c);"","
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,443,"""var a = 1; var c = a; alert(c);"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,446,public void testNestedAssign3() {
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,447,"test(""var b = 0; var z; z = z = b = 1; alert(b);"","
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,448,"""var b = 0; b = 1; alert(b);"");"

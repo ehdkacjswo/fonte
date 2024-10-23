@@ -1,0 +1,28 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,69,efault:
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,69,case Token.TRY:
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,70,return tryFoldTry(subtree);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,71,default:
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,77,* Remove try blocks without catch blocks and with empty or not
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,78,* existent finally blocks.
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,79,"* @return the replacement node, if changed, or the original if not"
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,81,private Node tryFoldTry(Node n) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,82,// Removes TRYs that had its CATCH removed and/or empty FINALLY.
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,83,Preconditions.checkState(n.getType() == Token.TRY);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,84,Node body = n.getFirstChild();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,85,Node catchBlock = body.getNext();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,86,Node finallyBlock = catchBlock.getNext();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,88,if (!catchBlock.hasChildren() &&
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,89,(finallyBlock == null || !finallyBlock.hasChildren())) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,90,n.removeChild(body);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,91,"n.getParent().replaceChild(n, body);"
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,92,reportCodeChange();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,93,return body;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,96,return n;
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,601,public void testTryCatchFinally() {
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,602,"testSame(""try {foo()} catch (e) {bar()}"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,603,"testSame(""try { try {foo()} catch (e) {bar()}} catch (x) {bar()}"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,604,"test(""try {var x = 1} finally {}"", ""var x = 1;"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,605,"testSame(""try {var x = 1} finally {x()}"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,606,"test(""function f() { return; try{var x = 1}finally{} }"","
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,607,"""function f() { return; var x = 1; }"");"

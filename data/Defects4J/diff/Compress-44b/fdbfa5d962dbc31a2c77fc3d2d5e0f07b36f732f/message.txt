@@ -1,0 +1,10 @@
+COMPRESS-375 Allow the deferred creation of `ZipArchiveEntry` for parallel zips
+
+In some cases when creating parallel zip archive the `ZipArchiveEntry`
+to be added could not be created before the `InputStream` is read.
+In those cases there is no point in passing `ZipArchiveEntry` and
+`InputStreamSupplier` as you can't actually defer the creation
+of the `InputStream` as it's needed for the `ZipArchiveEntry`.
+
+Add `ZipArchiveEntryRequestSupplier` to allow the deferred
+creation of both `ZipArchiveEntry` and `InputStream`.

@@ -1,0 +1,150 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,255,f (options.checkShadowVars.isOn()) {
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,256,hecks.add(checkShadowVars);
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1033,** Checks that no vars are illegally shadowed. */
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1034,inal PassFactory checkShadowVars =
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1035,"ew PassFactory(""variableShadowDeclarationCheck"", true) {"
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1036,Override
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1037,rotected CompilerPass createInternal(AbstractCompiler compiler) {
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1038,eturn new VariableShadowDeclarationCheck(
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1039,"ompiler, options.checkShadowVars);"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,2, Copyright 2008 The Closure Compiler Authors.
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,4," Licensed under the Apache License, Version 2.0 (the ""License"");"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,5, you may not use this file except in compliance with the License.
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,6, You may obtain a copy of the License at
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,8,     http://www.apache.org/licenses/LICENSE-2.0
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,10," Unless required by applicable law or agreed to in writing, software"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,11," distributed under the License is distributed on an ""AS IS"" BASIS,"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,12," WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,13, See the License for the specific language governing permissions and
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,14, limitations under the License.
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,17,ackage com.google.javascript.jscomp;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,19,mport com.google.javascript.jscomp.CheckLevel;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,20,mport com.google.common.collect.Sets;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,21,mport com.google.javascript.jscomp.NodeTraversal.ScopedCallback;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,22,mport com.google.javascript.jscomp.Scope.Var;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,23,mport com.google.javascript.rhino.Node;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,25,mport java.util.Iterator;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,26,mport java.util.Set;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,30, Warn the user if a local variable declaration that shadows a global variable
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,31, that has been marked with {@code @noshadow}.
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,33, <p>Browser global variables such as {@code self} shouldn't be shadowed
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,34, because it is highly error prone to do so.
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,37,lass VariableShadowDeclarationCheck implements CompilerPass {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,39,tatic final DiagnosticType SHADOW_VAR_ERROR = DiagnosticType.error(
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,40,"JSC_REDECL_NOSHADOW_VARIABLE"","
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,41,"Highly error prone shadowing of variable name {0}."" +"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,42,"Consider using a different local variable name."");"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,44,rivate final AbstractCompiler compiler;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,45,rivate final CheckLevel checkLevel;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,46,rivate final Set<String> externalNoShadowVariableNames;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,49,"ariableShadowDeclarationCheck(AbstractCompiler compiler,"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,50,heckLevel checkLevel) {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,51,his.compiler = compiler;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,52,his.checkLevel = checkLevel;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,53,his.externalNoShadowVariableNames = Sets.newHashSet();
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,56,Override
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,57,"ublic void process(Node externs, Node root) {"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,58,"odeTraversal.traverse(compiler, externs,"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,59,ew NoShadowAnnotationGatheringCallback());
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,60,"odeTraversal.traverse(compiler, root,"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,61,ew ShadowDeclarationCheckingCallback());
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,65, Callback that gathers @noshadow annotations that appear in the
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,66, externs tree.
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,68,rivate class NoShadowAnnotationGatheringCallback implements ScopedCallback {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,69,Override
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,70,ublic void enterScope(NodeTraversal t) {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,71,cope scope = t.getScope();
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,72,or (Iterator<Var> vars = scope.getVars(); vars.hasNext();) {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,73,ar var = vars.next();
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,74,f (var.isNoShadow()) {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,75,xternalNoShadowVariableNames.add(var.getName());
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,80,Override
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,81,ublic void exitScope(NodeTraversal t) {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,84,Override
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,85,ublic boolean shouldTraverse(
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,86,"odeTraversal nodeTraversal, Node n, Node parent) {"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,87,eturn true;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,90,Override
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,91,"ublic void visit(NodeTraversal t, Node n, Node parent) {"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,96, Callback that emits warnings for shadowed global variables
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,97," with @noshadow annotations, and shadowed local variables."
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,99,rivate class ShadowDeclarationCheckingCallback implements ScopedCallback {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,100,Override
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,101,ublic void enterScope(NodeTraversal t) {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,102,f (t.inGlobalScope()) {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,103,eturn;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,106,cope scope = t.getScope();
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,107,cope parentScope = scope.getParent();
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,108,or (Iterator<Var> vars = scope.getVars(); vars.hasNext();) {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,109,ar var = vars.next();
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,111,f (externalNoShadowVariableNames.contains(var.getName())) {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,112,ompiler.report(
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,113,".makeError(var.nameNode, checkLevel,"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,114,"HADOW_VAR_ERROR, var.getName()));"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,115,ontinue;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,118,ar shadowedVar = parentScope.getVar(var.getName());
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,119,f ((shadowedVar != null) &&
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,120,shadowedVar.isNoShadow() || shadowedVar.isLocal())) {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,121,ompiler.report(
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,122,".makeError(var.nameNode, checkLevel,"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,123,"HADOW_VAR_ERROR, var.getName()));"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,124,ontinue;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,129,Override
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,130,ublic void exitScope(NodeTraversal t) {
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,133,Override
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,134,ublic boolean shouldTraverse(
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,135,"odeTraversal nodeTraversal, Node n, Node parent) {"
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,136,eturn true;
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,139,Override
+False,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,src/com/google/javascript/jscomp/VariableShadowDeclarationCheck.java,140,"ublic void visit(NodeTraversal t, Node n, Node parent) {"
+False,src/com/google/javascript/jscomp/WarningLevel.java,src/com/google/javascript/jscomp/WarningLevel.java,61,/ NOTE: options.checkShadowVars is not in this list as it produces an
+False,src/com/google/javascript/jscomp/WarningLevel.java,src/com/google/javascript/jscomp/WarningLevel.java,62,/ error.
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,2, Copyright 2008 The Closure Compiler Authors.
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,4," Licensed under the Apache License, Version 2.0 (the ""License"");"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,5, you may not use this file except in compliance with the License.
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,6, You may obtain a copy of the License at
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,8,     http://www.apache.org/licenses/LICENSE-2.0
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,10," Unless required by applicable law or agreed to in writing, software"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,11," distributed under the License is distributed on an ""AS IS"" BASIS,"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,12," WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,13, See the License for the specific language governing permissions and
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,14, limitations under the License.
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,17,ackage com.google.javascript.jscomp;
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,20, Tests for {@link VariableShadowDeclarationCheck}
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,23,ublic class VariableShadowDeclarationCheckTest extends CompilerTestCase {
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,25,Override
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,26,rotected CompilerPass getProcessor(Compiler compiler) {
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,27,"eturn new VariableShadowDeclarationCheck(compiler, CheckLevel.WARNING);"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,30,ublic void testNoWarnShadowGlobal() {
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,31,/ shadowing a global should not produce a warning unless the
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,32,/ global is marked @noshadow.
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,33,"ssertNoError("""", ""var x; function foo() { var x } "");"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,34,"ssertNoError(""var x"", ""function foo() { var x } "");"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,37,ublic void testWarnShadowLocal1() {
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,38,"ssertError("""", ""function a(){ var x; function b() { var x = 1; } }"");"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,41,ublic void testWarnShadowLocal2() {
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,42,"ssertError("""","
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,43,"function a(){"" +"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,44,"  /** @noshadow */ var x;"" +"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,45,"  function b() {"" +"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,46,"    var x = 1;"" +"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,51,ublic void testUseShadowGlobals1() {
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,52,"ssertNoError("""", ""/** @noshadow */ var x; function foo() { x = 1 } "");"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,53,"ssertNoError("""", ""function a() { var x; function b() { x = 1; } }"");"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,56,ublic void testNoShadowAnnotation() {
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,57,"ssertError("""","
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,58,"/** @noshadow */ var x; function a() { var x } "");"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,60,"ssertError("""","
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,61,"/** @noshadow */ var x; function a() {function b(){var x}} "");"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,64,ublic void testNoShadowAnnotationInExterns1() {
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,65,"ssertError(""/** @noshadow */ var x"","
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,66,"function a() { var x } "");"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,69,ublic void testNoShadowAnnotationInExterns2() {
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,70,"ssertError(""/** @noshadow */ var x"","
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,71,"function a() {function b(){var x}} "");"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,74,"rivate void assertError(String externs, String js) {"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,75,"est(externs, js, js, null,"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,76,ariableShadowDeclarationCheck.SHADOW_VAR_ERROR);
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,79,"rivate void assertNoError(String externs, String js) {"
+False,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,test/com/google/javascript/jscomp/VariableShadowDeclarationCheckTest.java,80,"est(externs, js, js, null, null);"

@@ -1,0 +1,14 @@
+COMPRESS-405 Create Fixed Length Block OutputStream / WriteableByteChannel
+
+This commit provides a new class that is an OutputStream and WritableByteChannel, and which supports writing to a destination output stream or byte channel in fixed size blocks. Internally, all writes are made using NIO.
+If the destination is a  FileOutputStream the existing channel is used.
+Other OutputStreams are wrapped with a custom channel implementation which does not attempt to split writes into chunks.
+
+If the target channel fails to write the entire buffer in a single call, an exception is thrown,
+
+Incoming data is accumulated in a ByteBuffer until a complete block is ready, then written to the target.
+If  WritableByteChannel::write(ByteBuffer)  method is called, the code will attempt to avoid copying data into the buffer if the buffer is empty, and a complete block is available.
+
+The class and UnitTest are in compress/utils . This is a MINOR change - thus the version number for the package should be increated to 1.15.0.
+
+Signed-off-by: Simon Spero <sesuncedu@gmail.com>

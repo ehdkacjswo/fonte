@@ -1,0 +1,33 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,19,import com.google.common.base.Predicate;
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,25,import com.google.javascript.jscomp.graph.GraphReachability.EdgeTuple;
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,74,"ew GraphReachability<Node, ControlFlowGraph.Branch>(curCfg)"
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,75,compute(curCfg.getEntry().getValue());
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,76,"new GraphReachability<Node, ControlFlowGraph.Branch>("
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,77,"curCfg, new ReachablePredicate()).compute(curCfg.getEntry().getValue());"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,149,private final class ReachablePredicate implements
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,150,"Predicate<EdgeTuple<Node, ControlFlowGraph.Branch>> {"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,152,@Override
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,153,"public boolean apply(EdgeTuple<Node, Branch> input) {"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,154,Branch branch = input.edge;
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,155,if (!branch.isConditional()) {
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,156,return true;
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,158,Node predecessor = input.sourceNode;
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,159,Node condition = NodeUtil.getConditionExpression(predecessor);
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,161,"// TODO(user): Handle more complicated expression like true == true,"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,162,// etc....
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,163,if (condition != null && NodeUtil.isImmutableValue(condition)) {
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,164,return NodeUtil.getBooleanValue(condition).toBoolean(true) ==
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,165,(branch == Branch.ON_TRUE);
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,167,return true;
+False,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,136,"est(""function f() { if (1) return; else return; x = 1}"","
+False,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,137,"function f() { if (1) return; else return; }"");"
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,136,"test(""function f() { if (x) return; else return; x = 1}"","
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,137,"""function f() { if (x) return; else return; }"");"
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,140,public void testKnownIf() {
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,141,"test(""if(0) {alert(1)}"", """");"
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,142,"test(""if(0) if(0) {{alert(1)}}"", """");"
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,145,public void testKnownWhile() {
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,146,// TODO(user): Improve elimination method to clean these up.
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,147,"test(""while(0) {alert(1)}"", ""while(0);"");"
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,148,"test(""while(0) while(0) {{alert(1)}}"", ""while(0);"");"

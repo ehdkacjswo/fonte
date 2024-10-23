@@ -1,0 +1,183 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,2,* Copyright 2010 Google Inc.
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,19,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,20,import com.google.javascript.jscomp.NodeTraversal.Callback;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,21,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,22,import com.google.javascript.rhino.Token;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,25,* Transforms compound assignments into simple ones.
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,26,* <p>
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,27,* {@code x++} and {@code x--} are unfolded to {@code x = +x + 1} and {@code x =
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,28,"* x - 1}, and assignments such as {@code x += y} are expanded to {@code x = x +"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,29,* y}.
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,30,* <p>
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,31,* Notice the prefix '+' when unfolding ++. This is needed because the operand
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,32,* is implicitly converted to a number.
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,34,* @author elnatan@google.com (Elnatan Reisner)
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,36,"class UnfoldCompoundAssignments implements Callback, CompilerPass {"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,37,private final AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,39,public UnfoldCompoundAssignments(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,40,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,43,/* (non-Javadoc)
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,44,"* @see Callback#shouldTraverse(NodeTraversal, Node, Node)"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,46,@Override
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,47,"public boolean shouldTraverse(NodeTraversal nodeTraversal, Node n,"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,48,Node parent) {
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,49,return true;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,52,/* (non-Javadoc)
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,53,"* @see Callback#visit(NodeTraversal, Node, Node)"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,55,@Override
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,56,"public void visit(NodeTraversal t, Node node, Node parent) {"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,57,switch (node.getType()) {
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,58,case Token.INC:
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,59,case Token.DEC:
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,60,"unfoldIncrDecr(node, node.getType() == Token.INC);"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,61,break;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,62,case Token.ASSIGN_BITOR:  // |=
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,63,case Token.ASSIGN_BITXOR: // ^=
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,64,case Token.ASSIGN_BITAND: // &=
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,65,case Token.ASSIGN_LSH:    // <<=
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,66,case Token.ASSIGN_RSH:    // >>=
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,67,case Token.ASSIGN_URSH:   // >>>=
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,68,case Token.ASSIGN_ADD:    // +=
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,69,case Token.ASSIGN_SUB:    // -=
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,70,case Token.ASSIGN_MUL:    // *=
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,71,case Token.ASSIGN_DIV:    // /=
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,72,case Token.ASSIGN_MOD:    // %=
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,73,unfoldCompoundAssignment(node);
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,74,break;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,79,* Unfolds ++ and -- operators into {@code x = +x + 1} and {@code x = x - 1}.
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,80,* <p>
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,81,* The operand gets a prefix {@code +} when unfolding an increment because
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,82,* {@code ++} converts its operand to a number but binary {@code +} does not.
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,83,"* ({@code -} <em>does</em> convert its operands to numbers, so we don't need"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,84,* to add a prefix {@code +} when unfolding {@code --}.)
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,86,* @param node an increment or decrement node
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,87,* @param isIncrement true if the operator is ++; false if it is --
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,88,* @throws RuntimeException if node is a postfix expression whose value is
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,89,"*         used (that is, node is <em>not</em> used only for its side-effect)"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,91,"private void unfoldIncrDecr(Node node, boolean isIncrement) {"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,92,Preconditions.checkArgument(
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,93,"isPrefix(node) || valueIsDiscarded(node),"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,94,"""Unfolding postfix ++/-- requires that the result be ignored."");"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,95,Node lhs = node.getFirstChild().cloneTree();
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,96,// TODO(elnatan): We might want to use type information to only add this '+'
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,97,// when lhs isn't already a number.
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,98,if (isIncrement) {
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,99,"lhs = new Node(Token.POS, lhs);"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,101,node.setType(Token.ASSIGN);
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,102,"Node rhs = new Node(isIncrement ? Token.ADD : Token.SUB,"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,103,"lhs, Node.newNumber(1));"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,104,rhs.copyInformationFromForTree(node);
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,105,node.addChildToBack(rhs);
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,106,compiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,110,* Returns true if the node's value is discarded.
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,111,* <p>
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,112,* The value is discarded if node is
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,113,* <ul>
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,114,"* <li>the child of an EXPR_RESULT,"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,115,"* <li>the first child of a COMMA, or"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,116,* <li>the increment of a FOR loop.
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,117,* </ul>
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,119,private boolean valueIsDiscarded(Node node) {
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,120,Node parent = node.getParent();
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,121,switch (parent.getType()) {
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,122,case Token.EXPR_RESULT:
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,123,return true;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,124,case Token.COMMA:
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,125,return parent.getFirstChild() == node;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,126,case Token.FOR:
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,127,"Preconditions.checkArgument(!NodeUtil.isForIn(parent),"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,128,"""Error: the child of a FOR-IN cannot be an INC or DEC"");"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,129,return parent.getChildAtIndex(2) == node;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,131,return false;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,135,* @param node an INC or DEC node
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,136,* @return true if the increment/decrement is prefix; false if postfix
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,138,private boolean isPrefix(Node node) {
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,139,Preconditions.checkArgument(
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,140,"node.getType() == Token.INC || node.getType() == Token.DEC,"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,141,"""isPrefix can only be called on INC and DEC nodes"");"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,142,// According to CodeGenerator:
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,143,"// A non-zero post-prop value indicates a post inc/dec, default of zero is a"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,144,// pre-inc/dec.
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,145,return node.getIntProp(Node.INCRDECR_PROP) == 0;
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,149,* Unfolds a compound assignment node {@code lhs op= rhs} to {@code lhs = lhs
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,150,* op rhs}.
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,152,* @param node a compound assignment node
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,154,private void unfoldCompoundAssignment(Node node) {
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,155,Node newRhs = node.cloneTree();
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,156,newRhs.setType(NodeUtil.getOpFromAssignmentOp(node));
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,157,Node lhs = node.getFirstChild();
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,158,"node.replaceChildAfter(lhs, newRhs);"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,159,node.setType(Token.ASSIGN);
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,160,compiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,163,/* (non-Javadoc)
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,164,"* @see CompilerPass#process(Node, Node)"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,166,@Override
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,167,"public void process(Node externs, Node root) {"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,168,"Preconditions.checkState(compiler.isNormalized(),"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,169,"""UnfoldCompoundAssignments requires a normalized AST"");"
+True,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,src/com/google/javascript/jscomp/UnfoldCompoundAssignments.java,170,"NodeTraversal.traverse(compiler, root, this);"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,2,* Copyright 2010 Google Inc.
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,17,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,20,* @author elnatan@google.com (Elnatan Reisner)
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,23,public class UnfoldCompoundAssignmentsTest extends CompilerTestCase {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,24,public UnfoldCompoundAssignmentsTest() {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,25,enableNormalize();
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,28,/* (non-Javadoc)
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,29,* @see CompilerTestCase#getProcessor(Compiler)
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,31,@Override
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,32,protected CompilerPass getProcessor(Compiler compiler) {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,33,return new UnfoldCompoundAssignments(compiler);
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,36,public void testIncrement() {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,37,"test(""x++;"", ""x = +x + 1;"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,38,"test(""var x = 0; ++x;"", ""var x = 0; x = +x + 1;"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,41,public void testDecrement() {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,42,"test(""x--;"", ""x = x - 1;"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,43,"test(""var x = 0; --x;"", ""var x = 0; x = x - 1;"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,46,public void testCompoundAssignment() {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,47,"test(""x <<= y;"", ""x = x << y;"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,50,public void testPostfixInForLoop0() {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,51,"test(""for (x++;;) {}"", ""for (x = +x + 1;;) {}"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,54,public void testPostfixInForLoop1() {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,55,try {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,56,"testSame(""for (;x++;) {}"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,57,"fail(""Should raise an exception"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,58,} catch (RuntimeException e) {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,62,public void testPostfixInForLoop2() {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,63,"test(""for (;;x++) {}"", ""for (;;x = +x + 1) {}"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,66,public void testPrefixWithinLargerExpression() {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,67,"test(""--x + 7;"", ""(x = x - 1) + 7;"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,70,public void testPostfixInComma() {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,71,"test(""z++, z==8;"", ""z = +z + 1, z==8;"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,74,public void testPostfixUsedValue0() {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,75,try {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,76,"testSame(""z==8, z++;"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,77,"fail(""Should raise an exception"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,78,} catch (RuntimeException e) {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,82,public void testPostfixUsedValue1() {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,83,try {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,84,"testSame(""x-- + 7;"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,85,"fail(""Should raise an Exception"");"
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,86,} catch (RuntimeException e) {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,90,public void testMultiple() {
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,91,"test(""x++, 5; for (a.x++;0;x++) {}; x++;"","
+True,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,test/com/google/javascript/jscomp/UnfoldCompoundAssignmentsTest.java,92,"""x = +x + 1, 5; for (a.x = +a.x + 1; 0; x = +x + 1) {}; x = +x + 1;"");"

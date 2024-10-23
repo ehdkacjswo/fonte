@@ -1,0 +1,322 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,279,/** Group multiple variable declarations into one */
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,280,public boolean groupVariableDeclarations;
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,625,groupVariableDeclarations = false;
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,526,if (options.groupVariableDeclarations) {
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,527,passes.add(groupVariableDeclarations);
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1406,* Simple global collapses of variable declarations.
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1408,private final PassFactory groupVariableDeclarations =
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1409,"new PassFactory(""groupVariableDeclarations"", true) {"
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1410,@Override
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1411,protected CompilerPass createInternal(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1412,compiler.setNormalized();
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1413,return new GroupVariableDeclarations(compiler);
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,2,* Copyright 2010 Google Inc.
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,19,import com.google.common.collect.Sets;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,20,import com.google.javascript.jscomp.NodeTraversal.ScopedCallback;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,21,import com.google.javascript.jscomp.Scope.Var;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,22,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,23,import com.google.javascript.rhino.Token;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,25,import java.util.Iterator;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,26,import java.util.Set;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,29,* Groups multiple variable declarations (that may or may not be contiguous)
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,30,* in the same scope into a single one. i.e.
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,32,* <pre>
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,33,"* var a, b = 10;"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,34,* f1();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,35,"* var c, d;"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,36,* ... some other code ...
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,37,"* var x, y, z = 100;"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,38,* ... some other code ...
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,39,"* var p = 200, q = 300;"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,40,* </pre>
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,42,* becomes:
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,44,* <pre>
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,45,"* var a, b = 10, c, d, x, y, z;"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,46,* f1();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,47,* ... some other code ...
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,48,* z = 100;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,49,* ... some other code ...
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,50,"* var p = 200, q = 300;"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,51,* </pre>
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,53,* This reduces the generated uncompressed code size.
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,55,"* For any scope, we use the first VAR statement as the statement to collapse"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,56,"* the other declarations into. For other VAR statements in the scope, we only"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,57,* consider ones that either (a) have no variable that is initialized in the
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,58,"* the statement, or (b) have exactly one variable that is initialized (e.g."
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,59,"* the ""var x, y, z = 100;"" statement in the example above. VAR statements"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,60,* with more than one variable initialization are not collapsed. This is
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,61,* because doing so would increase uncompressed code size.
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,65,"class GroupVariableDeclarations implements CompilerPass, ScopedCallback {"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,66,private final AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,68,GroupVariableDeclarations(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,69,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,72,"public void process(Node externs, Node root) {"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,73,"NodeTraversal.traverse(compiler, root, this);"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,76,public void enterScope(NodeTraversal t) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,77,Set<Node> varNodes = Sets.newLinkedHashSet();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,78,Iterator<Var> scopeVarIter = t.getScope().getVars();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,79,while (scopeVarIter.hasNext()) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,80,Node parentNode = scopeVarIter.next().getParentNode();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,81,if (parentNode.getType() == Token.VAR) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,82,varNodes.add(parentNode);
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,85,if (varNodes.size() <= 1) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,86,return;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,88,Iterator<Node> varNodeIter = varNodes.iterator();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,89,Node firstVarNode = varNodeIter.next();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,90,while (varNodeIter.hasNext()) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,91,Node varNode = varNodeIter.next();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,92,"applyGroupingToVar(firstVarNode, varNode);"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,96,public void exitScope(NodeTraversal t) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,99,"public boolean shouldTraverse(NodeTraversal nodeTraversal, Node n,"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,100,Node parent) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,101,return true;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,104,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,108,* Attempts to collapse groupVar. This can only happen if groupVar has at most
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,109,* one variable initialization (it may have multiple variable declarations).
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,110,"* If successful, then detaches groupVar's children and appends them to"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,111,* firstVar
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,113,* @param firstVar The first VAR {@code Node} in that scope. This is the node
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,114,*                 that we want to collapse groupVar into
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,115,* @param groupVar The VAR {@code Node} that we want to try collapsing
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,116,*                 into the first VAR node of that scope
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,118,"private void applyGroupingToVar(Node firstVar, Node groupVar) {"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,119,Node child = groupVar.getFirstChild();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,120,"// if some variable is initialized, then the corresponding NAME node will be"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,121,// stored here
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,122,Node initializedName = null;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,123,while (child != null) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,124,if (child.hasChildren()) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,125,// check that no more than one var is initialized
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,126,if (initializedName != null) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,127,return;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,129,initializedName = child;
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,131,child = child.getNext();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,134,// we will be modifying the groupVar subtree so get its parent
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,135,Node groupVarParent = groupVar.getParent();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,137,if (initializedName != null) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,138,// we have an initialized var in the VAR node. We will replace the
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,139,// VAR node with an assignment.
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,141,// first create a detached childless clone of initializedName.
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,142,Node clone = initializedName.cloneNode();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,143,// replace
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,144,"groupVar.replaceChild(initializedName, clone);"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,145,// add the assignment now.
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,146,Node initializedVal = initializedName.getFirstChild();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,147,initializedName.removeChild(initializedVal);
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,148,"Node assignmentNode = new Node(Token.ASSIGN, initializedName);"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,149,"assignmentNode.addChildAfter(initializedVal, initializedName);"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,150,if (groupVarParent.getType() == Token.FOR) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,151,"// Handle For and For-In Loops specially. For these, we do not need"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,152,// to construct an EXPR_RESULT node.
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,153,"groupVarParent.replaceChild(groupVar, assignmentNode);"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,154,} else {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,155,Node exprNode = NodeUtil.newExpr(assignmentNode);
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,156,"groupVarParent.replaceChild(groupVar, exprNode);"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,158,} else {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,159,// There is no initialized var. But we need to handle FOR and
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,160,// FOR-IN loops specially
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,161,if (groupVarParent.getType() == Token.FOR) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,162,if (NodeUtil.isForIn(groupVarParent)) {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,163,"// In For-In loop, we replace the VAR node with a NAME node"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,164,Node nameNodeClone = groupVar.getFirstChild().cloneNode();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,165,"groupVarParent.replaceChild(groupVar, nameNodeClone);"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,166,} else {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,167,"// In For loop, we replace the VAR node with an EMPTY node"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,168,Node emptyNode = new Node(Token.EMPTY);
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,169,"groupVarParent.replaceChild(groupVar, emptyNode);"
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,171,} else {
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,172,// we can safely remove the VAR node
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,173,groupVarParent.removeChild(groupVar);
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,177,Node children = groupVar.removeChildren();
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,178,firstVar.addChildrenToBack(children);
+True,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,src/com/google/javascript/jscomp/GroupVariableDeclarations.java,180,compiler.reportCodeChange();
+False,src/com/google/javascript/jscomp/JSModule.java,src/com/google/javascript/jscomp/JSModule.java,32,mport java.util.Collections;
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,52,** Maximum number of iterations we'll allow (for safety) */
+False,src/com/google/javascript/jscomp/RemoveUnusedVars.java,src/com/google/javascript/jscomp/RemoveUnusedVars.java,53,rivate static final int MAX_ITERATIONS = 20;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,606,/ Hmmm... IRFactory doesn't remove before calling this.
+False,test/com/google/javascript/jscomp/CommandLineRunnerTest.java,test/com/google/javascript/jscomp/CommandLineRunnerTest.java,283,rivate Compiler compile(String original) {
+False,test/com/google/javascript/jscomp/CommandLineRunnerTest.java,test/com/google/javascript/jscomp/CommandLineRunnerTest.java,284,eturn compile( new String[] { original });
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,2,* Copyright 2010 Google Inc.
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,17,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,19,public class GroupVariableDeclarationsTest extends CompilerTestCase {
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,21,public void testGroupingUninitializedVarsInScope() {
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,22,// basic with just one fn call in between
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,23,"test(""var a = 1; f1(); var b;"", ""var a = 1, b; f1();"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,24,// > 1 line of code in between
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,25,"test(""var a = \""mangoes\""; f1(); alert(a); var b;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,26,"""var a = \""mangoes\"", b; f1(); alert(a);"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,27,// nested block in between that also contains a declaration + initialization
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,28,// of the variable that needs to be collapsed
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,29,"test(""var a = 1; {var c; alert(c);} var b;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,30,"""var a = 1, c, b; {alert(c);}"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,31,// multiple variables
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,32,"test(""var a = 1; var b = 1; f1(); f2(); var c; var d;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,33,"""var a = 1, b, c, d; b = 1; f1(); f2();"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,34,"test(""var a = 1; var b = 2; var c; f1(); f2(); var d, e;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,35,"""var a = 1, b, c, d, e; b = 2; f1(); f2();"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,36,"test(""var a = 1, b = 2, c; f1(); f2(); var d; var e; "" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,37,"""f3(); f4(); var f = 10; var g; var h = a + b;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,38,"""var a = 1, b = 2, c, d, e, f, g, h; f1(); f2(); f3(); f4(); "" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,39,"""f = 10; h = a + b;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,42,public void testGroupingInitializedVarsInScope() {
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,43,// basic with just one fn call in between
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,44,"test(""var a = 1; f1(); var b = 2;"", ""var a = 1, b; f1(); b = 2;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,45,// > 1 line of code in between
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,46,"test(""var a = \""mangoes\""; f1(); alert(a); var b = 2;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,47,"""var a = \""mangoes\"", b; f1(); alert(a); b = 2;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,48,// nested block in between that also contains a declaration + initialization
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,49,// of the variable that needs to be collapsed
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,50,"test(""var a = 1; {var c = 34; alert(c);} var b = 2;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,51,"""var a = 1, c, b; {c = 34; alert(c);} b = 2;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,52,// multiple variables
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,53,"test(""var a = 1; var b = 1; f1(); f2(); var c = 3; var d = 4;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,54,"""var a = 1, b, c, d; b = 1; f1(); f2(); c = 3; d = 4;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,55,"test(""var a = 1; var b = 2; var c; f1(); f2(); var d = 4, e;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,56,"""var a = 1, b, c, d, e; b = 2; f1(); f2(); d = 4;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,57,"test(""var a = 1, b = 2, c; f1(); f2(); var d; var e = 6; "" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,58,"""f3(); f4(); var f; var g; var h = a + b;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,59,"""var a = 1, b = 2, c, d, e, f, g, h; f1(); f2(); e = 6; "" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,60,"""f3(); f4(); h = a + b;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,63,public void testGroupingVarsInForAndForInLoops() {
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,64,// test for loop
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,65,"test(""var a = 1; for (var x = 0; x < 10; ++x) {a++;} var y;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,66,"""var a = 1, x, y; for (x = 0; x < 10; ++x) {a++;}"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,67,"test(""var a = 1, x; for (x = 0; x < 10; ++x) {a++;} var y;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,68,"""var a = 1, x, y; for (x = 0; x < 10; ++x) {a++;}"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,69,"test(""var a = 1, x; for (x; x < 10; ++x) {a++;} var y;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,70,"""var a = 1, x, y; for (x; x < 10; ++x) {a++;}"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,71,"test(""var a = 1; for (; a < 10; ++a) {alert(a);} var y;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,72,"""var a = 1, y; for (; a < 10; ++a) {alert(a);}"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,73,"test(""var a = 1; for (var x; x < 10; ++x) {a += 2;} var y = 5;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,74,"""var a = 1, x, y; for (; x < 10; ++x) {a += 2;} y = 5;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,75,// multiple loop-control variables in for loop
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,76,"test(""var a = 1; "" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,77,"""for (var a1 = 0, a2 = 10; a1 < 10 && a2 > 0; ++a1, --a2) {}"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,78,"""var x = 5;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,79,"""var a = 1, x;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,80,"""for (var a1 = 0, a2 = 10; a1 < 10 && a2 > 0; ++a1, --a2) {} "" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,81,"""x = 5;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,82,"test(""var a = 1; "" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,83,"""for (var a1 = 0, a2; a1 < 10 && a2 > 0; ++a1, --a2) {}"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,84,"""var x = 5;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,85,"""var a = 1, a1, a2, x;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,86,"""for (a1 = 0; a1 < 10 && a2 > 0; ++a1, --a2) {}"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,87,"""x = 5;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,88,"test(""var a = 1; "" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,89,"""for (var a1, a2; a1 < 10 && a2 > 0; ++a1, --a2) {}"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,90,"""var x = 5;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,91,"""var a = 1, a1, a2, x;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,92,"""for (; a1 < 10 && a2 > 0; ++a1, --a2) {}"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,93,"""x = 5;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,95,// test for-in loop
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,96,"test(""var a = [1, 2, 3, 4]; for (var z in a) {alert(z);} var y;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,97,"""var a = [1, 2, 3, 4], z, y; for (z in a) {alert(z);}"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,98,"test(""var a = [1, 2, 3, 4]; for (var z in a) {alert(z);} var y = 5;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,99,"""var a = [1, 2, 3, 4], z, y; for (z in a) {alert(z);} y = 5;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,100,"test(""var a; for (var z in a = [1, 2, 3, 4]) {alert(z);} var y, x = 5;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,101,"""var a, z, y, x; for (z in a = [1, 2, 3, 4]) {alert(z);} x = 5;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,102,"test(""var a; for (var z = 1 in a = [1, 2, 3, 4]) {alert(z);} var y, x = 5;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,103,"""var a, z, y, x; for (z = 1 in a = [1, 2, 3, 4]) {alert(z);} x = 5;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,104,"test(""var a, z; for (z in a = [1, 2, 3, 4]) {alert(z);} var y, x = 5;"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,105,"""var a, z, y, x; for (z in a = [1, 2, 3, 4]) {alert(z);} x = 5;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,108,public void testGroupingVarsNestedFunction() {
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,109,"test(""function f(b) {var x; function g() {var x; a = x; var y;} var a;}"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,110,"""function f(b) {var x, a; function g() {var x, y; a = x;}}"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,113,public void testGroupingVarsInnerFunction() {
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,114,"test(""function f(b) {var x; h = x * x; var myfn = function() "" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,115,"""{var x; a = x; var y;}; var a;}"","
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,116,"""function f(b) {var x, myfn, a; h = x * x; myfn = function() "" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,117,"""{var x, y; a = x;};}"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,120,public void testGroupingVarsFirstStatementNotVar() {
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,121,"test(""f(); var a; g(); var b;"", ""f(); var a, b; g();"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,124,public void testGroupingVarsInScopeRegtest() {
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,125,// regtest with lots of different scopes
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,126,"test(""var x = 0, y = 1, z;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,127,"""function f1(aa, bb) {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,128,"""  if (y) {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,129,"""    if (x === 0) {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,130,"""      var h, r = 999;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,132,"""  } else {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,133,"""    r = 1000;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,135,"""  var mylist = [1, 2, 3, 4];"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,136,"""  var k1 = 200, k2 = 400;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,137,"""  for (var i1 = 0; i1 < 10; ++i1) {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,138,"""    for (var i2 in mylist) {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,139,"""      alert(i1);"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,142,"""  var jam, q = 100;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,143,"""  var myfn = function() {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,144,"""    var x = 1;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,145,"""    f5();"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,146,"""    var z = 5;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,148,"""  function f5() {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,149,"""    var aa = 5;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,150,"""    if (y === 1) {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,151,"""      var x = 100;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,155,"""var h = x + y;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,156,"""function g() {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,157,"""  y = 0;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,158,"""  { var x = 200;}"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,159,"""  var h = y + x;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,161,"""var ggg = 0;"",  // End of input"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,162,"""var x = 0, y = 1, z, h, ggg;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,163,"""function f1(aa, bb) {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,164,"""  if (y) {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,165,"""    if (x === 0) {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,166,"""      var h, r = 999, mylist, i1, i2, jam, q, myfn;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,168,"""  } else {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,169,"""    r = 1000;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,171,"""  mylist = [1, 2, 3, 4];"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,172,"""  var k1 = 200, k2 = 400;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,173,"""  for (i1 = 0; i1 < 10; ++i1) {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,174,"""    for (i2 in mylist) {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,175,"""      alert(i1);"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,178,"""  q = 100; "" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,179,"""  myfn = function() {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,180,"""    var x = 1, z;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,181,"""    f5();"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,182,"""    z = 5;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,184,"""  function f5() {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,185,"""    var aa = 5, x;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,186,"""    if (y === 1) {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,187,"""      x = 100;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,191,"""h = x + y;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,192,"""function g() {"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,193,"""  y = 0;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,194,"""  { var x = 200, h;}"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,195,"""  h = y + x;"" +"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,197,"""ggg = 0;"");"
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,200,@Override
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,201,protected CompilerPass getProcessor(Compiler compiler) {
+True,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,test/com/google/javascript/jscomp/GroupVariableDeclarationsTest.java,202,return new GroupVariableDeclarations(compiler);
+False,test/com/google/javascript/jscomp/InferJSDocInfoTest.java,test/com/google/javascript/jscomp/InferJSDocInfoTest.java,45,rivate Scope lastLocalScope;
+False,test/com/google/javascript/jscomp/InferJSDocInfoTest.java,test/com/google/javascript/jscomp/InferJSDocInfoTest.java,64, else {
+False,test/com/google/javascript/jscomp/InferJSDocInfoTest.java,test/com/google/javascript/jscomp/InferJSDocInfoTest.java,65,astLocalScope = s;
+False,test/com/google/javascript/jscomp/InlineFunctionsTest.java,test/com/google/javascript/jscomp/InlineFunctionsTest.java,19,mport com.google.javascript.jscomp.ExpressionDecomposer.DecompositionType;
+False,test/com/google/javascript/jscomp/VariableMapTest.java,test/com/google/javascript/jscomp/VariableMapTest.java,21,mport com.google.common.collect.Maps;
+False,test/com/google/javascript/jscomp/VariableMapTest.java,test/com/google/javascript/jscomp/VariableMapTest.java,23,mport junit.framework.*;
+True,test/com/google/javascript/jscomp/VariableMapTest.java,test/com/google/javascript/jscomp/VariableMapTest.java,22,import junit.framework.TestCase;
+False,test/com/google/javascript/jscomp/VariableMapTest.java,test/com/google/javascript/jscomp/VariableMapTest.java,25,mport java.text.*;
+False,test/com/google/javascript/jscomp/VariableMapTest.java,test/com/google/javascript/jscomp/VariableMapTest.java,26,mport java.util.*;
+True,test/com/google/javascript/jscomp/VariableMapTest.java,test/com/google/javascript/jscomp/VariableMapTest.java,24,import java.text.ParseException;
+True,test/com/google/javascript/jscomp/VariableMapTest.java,test/com/google/javascript/jscomp/VariableMapTest.java,25,import java.util.Arrays;
+True,test/com/google/javascript/jscomp/VariableMapTest.java,test/com/google/javascript/jscomp/VariableMapTest.java,26,import java.util.List;

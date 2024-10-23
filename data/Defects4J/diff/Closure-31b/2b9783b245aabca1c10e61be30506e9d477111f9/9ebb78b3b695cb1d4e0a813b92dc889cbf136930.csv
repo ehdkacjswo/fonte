@@ -1,0 +1,204 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,864,"JvmMetrics.maybeWriteJvmMetrics(this.err, ""verbose:pretty:all"");"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,2,* Copyright 2012 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,19,import java.io.PrintStream;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,20,import java.lang.management.CompilationMXBean;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,21,import java.lang.management.GarbageCollectorMXBean;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,22,import java.lang.management.ManagementFactory;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,23,import java.lang.management.MemoryMXBean;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,24,import java.lang.management.MemoryPoolMXBean;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,25,import java.lang.management.MemoryUsage;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,26,import java.util.List;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,27,import java.util.StringTokenizer;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,30,* A class to report jvm/jmx statistics.
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,31,* Borrowed from:
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,32,* http://code.google.com/p/dart/source/browse/trunk/dart/compiler/java/com/google/dart/compiler/metrics/JvmMetrics.java
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,34,class JvmMetrics {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,36,private static int TABULAR_COLON_POS = 40;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,37,private static long ONE_KILO_BYTE = 1L << 10L;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,38,private static long ONE_MEGA_BYTE = 1L << 20L;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,39,private static long ONE_GIGA_BYTE = 1L << 30L;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,41,"public static void maybeWriteJvmMetrics(PrintStream out, String options) {"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,42,if (options == null) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,43,return;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,46,boolean verboseMode = false;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,47,boolean prettyMode = false;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,48,"StringTokenizer st = new StringTokenizer(options, "":"");"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,49,// options are grouped in order 'detail:format:types'
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,50,if (st.hasMoreTokens()) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,51,String mode = st.nextToken();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,52,"if (mode.equalsIgnoreCase(""verbose"")) {"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,53,verboseMode = true;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,57,if (st.hasMoreTokens()) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,58,String mode = st.nextToken();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,59,"if (mode.equalsIgnoreCase(""pretty"")) {"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,60,prettyMode = true;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,64,if (st.hasMoreTokens()) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,65,while (st.hasMoreTokens()) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,66,String types = st.nextToken();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,67,"StringTokenizer typeSt = new StringTokenizer(types, "","");"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,68,while (typeSt.hasMoreElements()) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,69,String type = typeSt.nextToken();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,70,"writeMetrics(out, type, verboseMode, prettyMode);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,73,} else {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,74,// the default
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,75,"writeMetrics(out, ""all"", verboseMode, prettyMode);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,79,private static void writeMetrics(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,80,"PrintStream out, String type, boolean verbose, boolean pretty) {"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,82,"if (type.equals(""gc"") || type.equalsIgnoreCase(""all"")) {"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,83,"writeGarbageCollectionStats(out, verbose, pretty);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,85,"if (type.equals(""mem"") || type.equalsIgnoreCase(""all"")) {"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,86,"writeMemoryMetrics(out, verbose, pretty);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,88,"if (type.equals(""jit"") || type.equalsIgnoreCase(""all"")) {"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,89,"writeJitMetrics(out, verbose, pretty);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,93,private static void writeJitMetrics(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,94,"PrintStream out, boolean verbose, boolean pretty) {"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,96,CompilationMXBean cBean = ManagementFactory.getCompilationMXBean();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,98,String name;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,99,if (verbose) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,100,name = cBean.getName();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,101,} else {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,102,"name = ""total"";"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,105,if (pretty) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,106,"out.println(""\nJIT Stats"");"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,107,out.println(String.format(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,108,"""\t%s jit time: %d ms"", name, cBean.getTotalCompilationTime()));"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,109,} else {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,110,"out.println(normalizeTabularColonPos(String.format(""%s-jit-time-ms : %d"","
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,111,"normalizeName(name), cBean.getTotalCompilationTime())));"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,115,private static void writeOverallMemoryUsage(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,116,"PrintStream out, MemoryUsage usage, String prefix, boolean pretty) {"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,117,if (pretty) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,118,"out.format(""\t%s\n"", prefix);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,119,"out.format(""\t\tavailable         : %s\n"", formatBytes(usage.getMax()));"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,120,"out.format(""\t\tcurrent           : %s\n"", formatBytes(usage.getUsed()));"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,121,} else {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,122,prefix = normalizeName(prefix);
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,123,out.println(normalizeTabularColonPos(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,124,"String.format(prefix + ""-available-bytes : %d"", usage.getMax())));"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,125,out.println(normalizeTabularColonPos(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,126,"String.format(prefix + ""-current-bytes : %d"", usage.getUsed())));"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,130,"private static void writePoolMemoryUsage(PrintStream out, MemoryUsage usage,"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,131,"MemoryUsage peakUsage, String prefix, boolean pretty) {"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,132,if (pretty) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,133,"out.format(""\t\tavailable         : %s\n"","
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,134,formatBytes(usage.getMax()));
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,135,"out.format(""\t\tpeak              : %s\n"","
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,136,formatBytes(peakUsage.getUsed()));
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,137,"out.format(""\t\tcurrent           : %s\n"","
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,138,formatBytes(usage.getUsed()));
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,139,} else {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,140,out.println(normalizeTabularColonPos(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,141,"String.format(prefix + ""-available-bytes : %d"", usage.getMax())));"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,142,out.println(normalizeTabularColonPos(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,143,"String.format(prefix + ""-peak-bytes : %d"", peakUsage.getUsed())));"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,144,out.println(normalizeTabularColonPos(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,145,"String.format(prefix + ""-current-bytes : %d"",     usage.getUsed())));"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,149,private static void writeMemoryMetrics(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,150,"PrintStream out, boolean verbose, boolean pretty) {"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,151,if (pretty) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,152,"out.println(""\nMemory usage"");"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,155,// only show overall stats in verbose mode
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,156,if (verbose) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,157,MemoryMXBean overallMemBean = ManagementFactory.getMemoryMXBean();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,158,MemoryUsage usage = overallMemBean.getHeapMemoryUsage();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,159,"writeOverallMemoryUsage(out, usage, ""Heap"", pretty);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,161,usage = overallMemBean.getNonHeapMemoryUsage();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,162,"writeOverallMemoryUsage(out, usage, ""Non-heap"", pretty);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,165,if (verbose) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,166,List<MemoryPoolMXBean> mpBeans = ManagementFactory.getMemoryPoolMXBeans();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,167,for (MemoryPoolMXBean mpBean : mpBeans) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,168,MemoryUsage currentUsage = mpBean.getUsage();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,169,MemoryUsage peakUsage = mpBean.getPeakUsage();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,170,if (pretty) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,171,"out.println(""\tPool "" + mpBean.getName());"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,172,"writePoolMemoryUsage(out, currentUsage, peakUsage, null, true);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,173,} else {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,174,"writePoolMemoryUsage(out, currentUsage, peakUsage,"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,175,"""mem-pool-"" + normalizeName(mpBean.getName()), false);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,178,} else {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,179,long available = 0;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,180,long current = 0;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,181,long peak = 0;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,182,List<MemoryPoolMXBean> mpBeans = ManagementFactory.getMemoryPoolMXBeans();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,183,for (MemoryPoolMXBean mpBean : mpBeans) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,184,MemoryUsage currentUsage = mpBean.getUsage();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,185,available += currentUsage.getMax();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,186,current += currentUsage.getUsed();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,187,MemoryUsage peakUsage = mpBean.getPeakUsage();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,188,peak += peakUsage.getUsed();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,190,MemoryUsage summaryUsage = new MemoryUsage(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,191,"0, current, current, available);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,192,"MemoryUsage summaryPeakUsage = new MemoryUsage(0, peak, peak, peak);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,193,if (pretty) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,194,"out.format(""\tAggregate of %d memory pools\n"", mpBeans.size());"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,195,"writePoolMemoryUsage(out, summaryUsage, summaryPeakUsage, null, true);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,196,} else {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,197,"writePoolMemoryUsage(out, summaryUsage, summaryPeakUsage, ""mem"", false);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,202,private static void writeGarbageCollectionStats(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,203,"PrintStream out, boolean verbose, boolean pretty) {"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,204,List<GarbageCollectorMXBean> gcBeans =
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,205,ManagementFactory.getGarbageCollectorMXBeans();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,207,if (verbose) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,208,if (pretty) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,209,"out.println(""\nGarbage collection stats"");"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,210,for (GarbageCollectorMXBean gcBean : gcBeans) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,211,"out.println(""\tCollector "" + gcBean.getName());"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,212,out.format(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,213,"""\t\tcollection count   : %d\n"", gcBean.getCollectionCount());"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,214,out.format(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,215,"""\t\tcollection time    : %d ms\n"", gcBean.getCollectionTime());"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,217,} else {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,218,for (GarbageCollectorMXBean gcBean : gcBeans) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,219,String name = normalizeName(gcBean.getName());
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,220,"out.println(normalizeTabularColonPos(String.format(""gc-"" + name"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,221,"+ ""-collection-count : %d"", gcBean.getCollectionCount())));"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,222,"out.println(normalizeTabularColonPos(String.format(""gc-"" + name"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,223,"+ ""-collection-time-ms : %d"", gcBean.getCollectionTime())));"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,226,} else {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,227,long collectionCount = 0;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,228,long collectionTime = 0;
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,229,int collectorCount = gcBeans.size();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,230,for (GarbageCollectorMXBean gcBean : gcBeans) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,231,collectionCount += gcBean.getCollectionCount();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,232,collectionTime += gcBean.getCollectionTime();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,234,if (pretty) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,235,"out.println(""\nGarbage collection stats"");"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,236,"out.format(""\tAggregate of %d collectors\n"", collectorCount);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,237,"out.format(""\t\tcollection count   : %d\n"", collectionCount);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,238,"out.format(""\t\tcollection time    : %d ms\n"", collectionTime);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,239,} else {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,240,"String name = normalizeName(""aggregate"");"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,241,out.println(normalizeTabularColonPos(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,242,"String.format(""gc-"" + name + ""-collection-count : %d"","
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,243,collectionCount)));
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,244,out.println(normalizeTabularColonPos(
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,245,"String.format(""gc-"" + name + ""-collection-time-ms : %d"","
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,246,collectionTime)));
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,251,private static String normalizeName(String name) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,252,"return name.replace("" "", ""_"").toLowerCase();"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,255,private static String normalizeTabularColonPos(String string) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,256,StringBuilder sb = new StringBuilder(string);
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,257,"int index = sb.indexOf("":"");"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,258,for (; index < TABULAR_COLON_POS; ++index) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,259,"sb.insert(index, ' ');"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,261,return sb.toString();
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,264,private static String formatBytes(long numBytes) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,265,if (numBytes < ONE_KILO_BYTE) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,266,"return String.format(""%d B"", numBytes);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,267,} else if (numBytes < ONE_MEGA_BYTE) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,268,"return String.format(""%d KB"", numBytes / ONE_KILO_BYTE);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,269,} else if (numBytes < ONE_GIGA_BYTE) {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,270,"return String.format(""%d MB"", numBytes / ONE_MEGA_BYTE);"
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,271,} else {
+True,src/com/google/javascript/jscomp/JvmMetrics.java,src/com/google/javascript/jscomp/JvmMetrics.java,272,"return String.format(""%d GB"", numBytes / ONE_GIGA_BYTE);"

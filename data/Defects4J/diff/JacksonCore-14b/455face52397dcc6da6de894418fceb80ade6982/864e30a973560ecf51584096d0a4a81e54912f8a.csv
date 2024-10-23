@@ -1,0 +1,144 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,1,package com.fasterxml.jackson.core.util;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,3,import java.io.IOException;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,5,import com.fasterxml.jackson.core.JsonGenerationException;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,6,import com.fasterxml.jackson.core.JsonGenerator;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,9,* Default linefeed-based indenter uses system-specific linefeeds and
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,10,* 2 spaces for indentation per level.
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,12,public class DefaultIndenter
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,13,extends DefaultPrettyPrinter.NopIndenter
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,15,public final static String SYS_LF;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,16,static {
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,17,String lf;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,18,try {
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,19,"lf = System.getProperty(""line.separator"");"
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,20,} catch (Throwable t) {
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,21,"lf = ""\n""; // fallback when security manager denies access"
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,23,SYS_LF = lf;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,26,"public static final DefaultIndenter SYSTEM_LINEFEED_INSTANCE = new DefaultIndenter(""  "", SYS_LF);"
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,28,private final static int INDENT_LEVELS = 64;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,29,private final char[] indents;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,30,private final int charsPerLevel;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,31,private final String eol;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,33,/** Create an indenter which uses the <code>indent</code> string to indent one level
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,34,*  and the <code>eol</code> string to separate lines. */
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,35,"public DefaultIndenter(String indent, String eol)"
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,37,charsPerLevel = indent.length();
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,39,this.indents = new char[indent.length() * INDENT_LEVELS];
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,40,int offset = 0;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,41,for (int i=0; i<INDENT_LEVELS; i++) {
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,42,"indent.getChars(0, indent.length(), this.indents, offset);"
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,43,offset += indent.length();
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,46,this.eol = eol;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,49,@Override
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,50,public boolean isInline() { return false; }
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,52,@Override
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,53,"public void writeIndentation(JsonGenerator jg, int level)"
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,54,"throws IOException, JsonGenerationException"
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,56,jg.writeRaw(eol);
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,57,if (level > 0) { // should we err on negative values (as there's some flaw?)
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,58,level *= charsPerLevel;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,59,while (level > indents.length) { // should never happen but...
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,60,"jg.writeRaw(indents, 0, indents.length);"
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,61,level -= indents.length;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultIndenter.java,63,"jg.writeRaw(indents, 0, level);"
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,62,rotected Indenter _objectIndenter = Lf2SpacesIndenter.instance;
+True,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,62,protected Indenter _objectIndenter = DefaultIndenter.SYSTEM_LINEFEED_INSTANCE;
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,414, Default linefeed-based indenter uses system-specific linefeeds and
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,415, 2 spaces for indentation per level.
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,417,ublic static class Lf2SpacesIndenter extends NopIndenter
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,419,rivate final static String SYS_LF;
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,420,tatic {
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,421,tring lf = null;
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,422,ry {
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,423,"f = System.getProperty(""line.separator"");"
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,424, catch (Throwable t) { } // access exception?
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,425,"YS_LF = (lf == null) ? ""\n"" : lf;"
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,428,inal static int SPACE_COUNT = 64;
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,429,inal static char[] SPACES = new char[SPACE_COUNT];
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,430,tatic {
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,431,"rrays.fill(SPACES, ' ');"
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,434,"SuppressWarnings(""hiding"")"
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,435,ublic static final Lf2SpacesIndenter instance = new Lf2SpacesIndenter();
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,438, Linefeed used; default value is the platform-specific linefeed.
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,440,rotected final String _lf;
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,442,ublic Lf2SpacesIndenter() { this(SYS_LF); }
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,445, @since 2.3
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,447,ublic Lf2SpacesIndenter(String lf) {
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,448,lf = lf;
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,452," ""Mutant factory"" method that will return an instance that uses"
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,453, specified String as linefeed.
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,455, @since 2.3
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,457,ublic Lf2SpacesIndenter withLinefeed(String lf)
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,459,f (lf.equals(_lf)) {
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,460,eturn this;
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,462,eturn new Lf2SpacesIndenter(lf);
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,465,Override
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,466,ublic boolean isInline() { return false; }
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,468,Override
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,469,"ublic void writeIndentation(JsonGenerator jg, int level)"
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,470,"hrows IOException, JsonGenerationException"
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,472,g.writeRaw(_lf);
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,473,f (level > 0) { // should we err on negative values (as there's some flaw?)
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,474,evel += level; // 2 spaces per level
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,475,hile (level > SPACE_COUNT) { // should never happen but...
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,476,"g.writeRaw(SPACES, 0, SPACE_COUNT);"
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,477,evel -= SPACES.length;
+False,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,src/main/java/com/fasterxml/jackson/core/util/DefaultPrettyPrinter.java,479,"g.writeRaw(SPACES, 0, level);"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,1,package com.fasterxml.jackson.core.util;
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,3,import static org.junit.Assert.*;
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,5,import java.io.IOException;
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,6,import java.io.StringWriter;
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,8,import org.junit.Test;
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,10,import com.fasterxml.jackson.core.JsonFactory;
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,11,import com.fasterxml.jackson.core.JsonGenerator;
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,12,import com.fasterxml.jackson.core.PrettyPrinter;
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,14,public class TestDefaultPrettyPrinter
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,16,@Test
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,17,public void testSystemLinefeed() throws IOException
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,19,PrettyPrinter pp = new DefaultPrettyPrinter();
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,20,"String LF = System.getProperty(""line.separator"");"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,21,assertEquals(
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,22,"""{"" + LF +"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,23,"""  \""name\"" : \""John Doe\"","" + LF +"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,24,"""  \""age\"" : 3.14"" + LF +"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,25,"""}"", _printTestData(pp));"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,28,@Test
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,29,public void testUnixLinefeed() throws IOException
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,31,PrettyPrinter pp = new DefaultPrettyPrinter()
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,32,".withObjectIndenter(new DefaultIndenter(""  "", ""\n""));"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,33,assertEquals(
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,34,"""{\n"" +"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,35,"""  \""name\"" : \""John Doe\"",\n"" +"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,36,"""  \""age\"" : 3.14\n"" +"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,37,"""}"", _printTestData(pp));"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,40,@Test
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,41,public void testWindowsLinefeed() throws IOException
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,43,PrettyPrinter pp = new DefaultPrettyPrinter()
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,44,".withObjectIndenter(new DefaultIndenter(""  "", ""\r\n""));"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,45,assertEquals(
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,46,"""{\r\n"" +"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,47,"""  \""name\"" : \""John Doe\"",\r\n"" +"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,48,"""  \""age\"" : 3.14\r\n"" +"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,49,"""}"", _printTestData(pp));"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,52,@Test
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,53,public void testTabIndent() throws IOException
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,55,PrettyPrinter pp = new DefaultPrettyPrinter()
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,56,".withObjectIndenter(new DefaultIndenter(""\t"", ""\n""));"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,57,assertEquals(
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,58,"""{\n"" +"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,59,"""\t\""name\"" : \""John Doe\"",\n"" +"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,60,"""\t\""age\"" : 3.14\n"" +"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,61,"""}"", _printTestData(pp));"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,64,private String _printTestData(PrettyPrinter pp) throws IOException
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,66,StringWriter sw = new StringWriter();
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,67,JsonGenerator gen = new JsonFactory().createGenerator(sw);
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,68,gen.setPrettyPrinter(pp);
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,69,gen.writeStartObject();
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,70,"gen.writeFieldName(""name"");"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,71,"gen.writeString(""John Doe"");"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,72,"gen.writeFieldName(""age"");"
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,73,gen.writeNumber(3.14);
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,74,gen.writeEndObject();
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,75,gen.close();
+True,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java,76,return sw.toString();

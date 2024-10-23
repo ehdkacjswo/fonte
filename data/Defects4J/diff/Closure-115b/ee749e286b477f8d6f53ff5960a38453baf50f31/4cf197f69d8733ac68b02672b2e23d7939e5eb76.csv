@@ -1,0 +1,13 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,695,esult = lvalInt >>> rvalInt;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,695,// JavaScript handles zero shifts on signed numbers differently than
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,696,// Java as an Java int can not represent the unsigned 32-bit number
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,697,// where JavaScript can so use a long here.
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,698,long lvalLong = lvalInt & 0xffffffffL;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,699,result = lvalLong >>> rvalInt;
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,242,"fold(""x = -1 << 0"", ""x = -1"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,248,"fold(""x = -1 >> 0"", ""x = -1"");"
+False,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,260,"old(""x = -1 >>> 1"", ""x = "" + 0x7fffffff);"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,262,"fold(""x = -1 >>> 1"", ""x = 2147483647""); // 0x7fffffff"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,263,"fold(""x = -1 >>> 0"", ""x = 4294967295""); // 0xffffffff"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,264,"fold(""x = -2 >>> 0"", ""x = 4294967294""); // 0xfffffffe"

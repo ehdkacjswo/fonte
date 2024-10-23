@@ -1,0 +1,405 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,2,* Licensed to the Apache Software Foundation (ASF) under one or more
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,3,* contributor license agreements.  See the NOTICE file distributed with
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,4,* this work for additional information regarding copyright ownership.
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,5,"* The ASF licenses this file to You under the Apache License, Version 2.0"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,6,"* (the ""License""); you may not use this file except in compliance with"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,7,* the License.  You may obtain a copy of the License at
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,9,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,11,"* Unless required by applicable law or agreed to in writing, software"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,12,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,13,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,14,* See the License for the specific language governing permissions and
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,15,* limitations under the License.
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,18,package org.apache.commons.math3.linear;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,20,import org.apache.commons.math3.exception.TooManyEvaluationsException;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,21,import org.apache.commons.math3.util.FastMath;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,22,import org.apache.commons.math3.util.Precision;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,25,* Class transforming a general real matrix to Schur form.
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,26,* <p>A m &times; m matrix A can be written as the product of three matrices: A = P
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,27,* &times; T &times; P<sup>T</sup> with P an orthogonal matrix and T an quasi-triangular
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,28,* matrix. Both P and T are m &times; m matrices.</p>
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,29,"* <p>Transformation to Schur form is often not a goal by itself, but it is an"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,30,* intermediate step in more general decomposition algorithms like
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,31,* {@link EigenDecomposition eigen decomposition}. This class is therefore
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,32,* intended for internal use by the library and is not public. As a consequence
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,33,"* of this explicitly limited scope, many methods directly returns references to"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,34,"* internal arrays, not copies.</p>"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,35,* <p>This class is based on the method hqr2 in class EigenvalueDecomposition
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,36,"* from the <a href=""http://math.nist.gov/javanumerics/jama/"">JAMA</a> library.</p>"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,38,"* @see <a href=""http://mathworld.wolfram.com/SchurDecomposition.html"">Schur Decomposition - MathWorld</a>"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,39,"* @see <a href=""http://en.wikipedia.org/wiki/Schur_decomposition"">Schur Decomposition - Wikipedia</a>"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,40,"* @see <a href=""http://en.wikipedia.org/wiki/Householder_transformation"">Householder Transformations</a>"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,41,* @version $Id$
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,42,* @since 3.1
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,44,class SchurTransformer {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,45,/** P matrix. */
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,46,private final double matrixP[][];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,47,/** T matrix. */
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,48,private final double matrixT[][];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,49,/** Cached value of P. */
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,50,private RealMatrix cachedP;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,51,/** Cached value of T. */
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,52,private RealMatrix cachedT;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,53,/** Cached value of PT. */
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,54,private RealMatrix cachedPt;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,56,/** Maximum allowed iterations for convergence of the transformation. */
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,57,private final int maxIterations = 40;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,59,/** Epsilon criteria taken from JAMA code (2^-52). */
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,60,private final double epsilon = 2.220446049250313E-16;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,63,* Build the transformation to Schur form of a general real matrix.
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,65,* @param matrix matrix to transform
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,66,* @throws NonSquareMatrixException if the matrix is not square
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,68,public SchurTransformer(final RealMatrix matrix) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,69,if (!matrix.isSquare()) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,70,"throw new NonSquareMatrixException(matrix.getRowDimension(),"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,71,matrix.getColumnDimension());
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,74,HessenbergTransformer transformer = new HessenbergTransformer(matrix);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,75,matrixT = transformer.getH().getData();
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,76,matrixP = transformer.getP().getData();
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,77,cachedT = null;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,78,cachedP = null;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,79,cachedPt = null;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,81,// transform matrix
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,82,transform();
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,86,* Returns the matrix P of the transform.
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,87,"* <p>P is an orthogonal matrix, i.e. its inverse is also its transpose.</p>"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,89,* @return the P matrix
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,91,public RealMatrix getP() {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,92,if (cachedP == null) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,93,cachedP = MatrixUtils.createRealMatrix(matrixP);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,95,return cachedP;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,99,* Returns the transpose of the matrix P of the transform.
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,100,"* <p>P is an orthogonal matrix, i.e. its inverse is also its transpose.</p>"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,102,* @return the transpose of the P matrix
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,104,public RealMatrix getPT() {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,105,if (cachedPt == null) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,106,cachedPt = getP().transpose();
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,109,// return the cached matrix
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,110,return cachedPt;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,114,* Returns the quasi-triangular Schur matrix T of the transform.
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,116,* @return the T matrix
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,118,public RealMatrix getT() {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,119,if (cachedT == null) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,120,cachedT = MatrixUtils.createRealMatrix(matrixT);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,123,// return the cached matrix
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,124,return cachedT;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,128,* Transform original matrix to Schur form.
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,129,* @throws TooManyEvaluationsException if the transformation does not converge
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,131,private void transform() {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,132,final int n = matrixT.length;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,134,// compute matrix norm
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,135,final double norm = getNorm();
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,137,// shift information
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,138,final ShiftInfo shift = new ShiftInfo();
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,140,// Outer loop over eigenvalue index
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,141,int iteration = 0;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,142,int idx = n - 1;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,143,while (idx >= 0) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,145,// Look for single small sub-diagonal element
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,146,"final int l = findSmallSubDiagonalElement(idx, norm);"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,148,// Check for convergence
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,149,if (l == idx) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,150,// One root found
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,151,matrixT[idx][idx] = matrixT[idx][idx] + shift.exShift;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,152,idx--;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,153,iteration = 0;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,154,} else if (l == idx - 1) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,155,// Two roots found
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,156,shift.w = matrixT[idx][idx-1] * matrixT[idx-1][idx];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,157,double p = (matrixT[idx-1][idx-1] - matrixT[idx][idx]) / 2.0;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,158,double q = p * p + shift.w;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,159,double z = FastMath.sqrt(FastMath.abs(q));
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,160,matrixT[idx][idx] = matrixT[idx][idx] + shift.exShift;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,161,matrixT[idx-1][idx-1] = matrixT[idx-1][idx-1] + shift.exShift;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,162,shift.x = matrixT[idx][idx];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,164,if (q >= 0) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,165,if (p >= 0) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,166,z = p + z;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,167,} else {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,168,z = p - z;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,170,shift.x = matrixT[idx][idx-1];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,171,double s = FastMath.abs(shift.x) + FastMath.abs(z);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,172,p = shift.x / s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,173,q = z / s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,174,double r = FastMath.sqrt(p * p + q * q);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,175,p = p / r;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,176,q = q / r;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,178,// Row modification
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,179,for (int j = idx-1; j < n; j++) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,180,z = matrixT[idx-1][j];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,181,matrixT[idx-1][j] = q * z + p * matrixT[idx][j];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,182,matrixT[idx][j] = q * matrixT[idx][j] - p * z;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,185,// Column modification
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,186,for (int i = 0; i <= idx; i++) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,187,z = matrixT[i][idx-1];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,188,matrixT[i][idx-1] = q * z + p * matrixT[i][idx];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,189,matrixT[i][idx] = q * matrixT[i][idx] - p * z;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,192,// Accumulate transformations
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,193,for (int i = 0; i <= n - 1; i++) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,194,z = matrixP[i][idx-1];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,195,matrixP[i][idx-1] = q * z + p * matrixP[i][idx];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,196,matrixP[i][idx] = q * matrixP[i][idx] - p * z;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,199,idx -= 2;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,200,iteration = 0;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,201,} else {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,202,// No convergence yet
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,204,"computeShift(l, idx, iteration, shift);"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,206,// stop transformation after too many iterations
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,207,if (++iteration > maxIterations) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,208,throw new TooManyEvaluationsException(maxIterations);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,211,// Look for two consecutive small sub-diagonal elements
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,212,int m = idx - 2;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,214,// the initial houseHolder vector for the QR step
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,215,final double[] hVec = new double[3];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,217,while (m >= l) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,218,double z = matrixT[m][m];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,219,hVec[2] = shift.x - z;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,220,double s = shift.y - z;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,221,hVec[0] = (hVec[2] * s - shift.w) / matrixT[m + 1][m] + matrixT[m][m + 1];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,222,hVec[1] = matrixT[m + 1][m + 1] - z - hVec[2] - s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,223,hVec[2] = matrixT[m + 2][m + 1];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,224,s = FastMath.abs(hVec[0]) + FastMath.abs(hVec[1]) + FastMath.abs(hVec[2]);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,226,if (m == l) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,227,break;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,230,for (int i = 0; i < hVec.length; i++) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,231,hVec[i] /= s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,234,final double lhs = FastMath.abs(matrixT[m][m - 1]) *
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,235,(FastMath.abs(hVec[1]) + FastMath.abs(hVec[2]));
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,237,final double rhs = FastMath.abs(hVec[0]) *
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,238,(FastMath.abs(matrixT[m - 1][m - 1]) + FastMath.abs(z) +
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,239,FastMath.abs(matrixT[m + 1][m + 1]));
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,241,if (lhs < epsilon * rhs) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,242,break;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,244,m--;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,247,"performDoubleQRStep(l, m, idx, shift, hVec);"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,253,* Computes the L1 norm of the (quasi-)triangular matrix T.
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,255,* @return the L1 norm of matrix T
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,257,private double getNorm() {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,258,double norm = 0.0;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,259,for (int i = 0; i < matrixT.length; i++) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,260,"// as matrix T is (quasi-)triangular, also take the sub-diagonal element into account"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,261,"for (int j = FastMath.max(i - 1, 0); j < matrixT.length; j++) {"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,262,norm += FastMath.abs(matrixT[i][j]);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,265,return norm;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,269,* Find the first small sub-diagonal element and returns its index.
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,271,* @param startIdx the starting index for the search
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,272,* @param norm the L1 norm of the matrix
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,273,* @return the index of the first small sub-diagonal element
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,275,"private int findSmallSubDiagonalElement(final int startIdx, final double norm) {"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,276,int l = startIdx;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,277,while (l > 0) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,278,double s = FastMath.abs(matrixT[l - 1][l - 1]) + FastMath.abs(matrixT[l][l]);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,279,"if (Precision.equals(s, 0.0, epsilon)) {"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,280,s = norm;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,282,if (FastMath.abs(matrixT[l][l - 1]) < epsilon * s) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,283,break;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,285,l--;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,287,return l;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,291,* Compute the shift for the current iteration.
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,293,* @param l the index of the small sub-diagonal element
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,294,* @param idx the current eigenvalue index
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,295,* @param iteration the current iteration
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,296,* @param shift holder for shift information
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,298,"private void computeShift(final int l, final int idx, final int iteration, final ShiftInfo shift) {"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,299,// Form shift
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,300,shift.x = matrixT[idx][idx];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,301,shift.y = shift.w = 0.0;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,302,if (l < idx) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,303,shift.y = matrixT[idx - 1][idx - 1];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,304,shift.w = matrixT[idx][idx - 1] * matrixT[idx - 1][idx];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,307,// Wilkinson's original ad hoc shift
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,308,if (iteration == 10) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,309,shift.exShift += shift.x;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,310,for (int i = 0; i <= idx; i++) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,311,matrixT[i][i] -= shift.x;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,313,double s = FastMath.abs(matrixT[idx][idx - 1]) + FastMath.abs(matrixT[idx - 1][idx - 2]);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,314,shift.x = shift.y = 0.75 * s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,315,shift.w = -0.4375 * s * s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,318,// MATLAB's new ad hoc shift
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,319,if (iteration == 30) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,320,double s = (shift.y - shift.x) / 2.0;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,321,s = s * s + shift.w;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,322,"if (Precision.compareTo(s, 0.0d, epsilon) > 0) {"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,323,s = FastMath.sqrt(s);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,324,if (shift.y < shift.x) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,325,s = -s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,327,s = shift.x - shift.w / ((shift.y - shift.x) / 2.0 + s);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,328,for (int i = 0; i <= idx; i++) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,329,matrixT[i][i] -= s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,331,shift.exShift += s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,332,shift.x = shift.y = shift.w = 0.964;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,338,* Perform a double QR step involving rows l:idx and columns m:n
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,340,* @param l the index of the small sub-diagonal element
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,341,* @param m the start index for the QR step
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,342,* @param idx the current eigenvalue index
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,343,* @param shift shift information holder
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,344,* @param hVec the initial houseHolder vector
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,346,"private void performDoubleQRStep(final int l, final int m, final int idx,"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,347,"final ShiftInfo shift, final double[] hVec) {"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,349,final int n = matrixT.length;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,350,double p = hVec[0];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,351,double q = hVec[1];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,352,double r = hVec[2];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,354,for (int k = m; k <= idx - 1; k++) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,355,boolean notlast = k != idx - 1;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,356,if (k != m) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,357,p = matrixT[k][k - 1];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,358,q = matrixT[k + 1][k - 1];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,359,r = notlast ? matrixT[k + 2][k - 1] : 0.0;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,360,shift.x = FastMath.abs(p) + FastMath.abs(q) + FastMath.abs(r);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,361,"if (!Precision.equals(shift.x, 0.0, epsilon)) {"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,362,p = p / shift.x;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,363,q = q / shift.x;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,364,r = r / shift.x;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,367,"if (Precision.equals(shift.x, 0.0, epsilon)) {"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,368,break;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,370,double s = FastMath.sqrt(p * p + q * q + r * r);
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,371,"if (Precision.compareTo(p, 0.0, epsilon) < 0) {"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,372,s = -s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,374,"if (!Precision.equals(s, 0.0, epsilon)) {"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,375,if (k != m) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,376,matrixT[k][k - 1] = -s * shift.x;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,377,} else if (l != m) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,378,matrixT[k][k - 1] = -matrixT[k][k - 1];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,380,p = p + s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,381,shift.x = p / s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,382,shift.y = q / s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,383,double z = r / s;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,384,q = q / p;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,385,r = r / p;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,387,// Row modification
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,388,for (int j = k; j < n; j++) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,389,p = matrixT[k][j] + q * matrixT[k + 1][j];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,390,if (notlast) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,391,p = p + r * matrixT[k + 2][j];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,392,matrixT[k + 2][j] = matrixT[k + 2][j] - p * z;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,394,matrixT[k][j] = matrixT[k][j] - p * shift.x;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,395,matrixT[k + 1][j] = matrixT[k + 1][j] - p * shift.y;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,398,// Column modification
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,399,"for (int i = 0; i <= FastMath.min(idx, k + 3); i++) {"
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,400,p = shift.x * matrixT[i][k] + shift.y * matrixT[i][k + 1];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,401,if (notlast) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,402,p = p + z * matrixT[i][k + 2];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,403,matrixT[i][k + 2] = matrixT[i][k + 2] - p * r;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,405,matrixT[i][k] = matrixT[i][k] - p;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,406,matrixT[i][k + 1] = matrixT[i][k + 1] - p * q;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,409,// Accumulate transformations
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,410,final int high = matrixT.length - 1;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,411,for (int i = 0; i <= high; i++) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,412,p = shift.x * matrixP[i][k] + shift.y * matrixP[i][k + 1];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,413,if (notlast) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,414,p = p + z * matrixP[i][k + 2];
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,415,matrixP[i][k + 2] = matrixP[i][k + 2] - p * r;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,417,matrixP[i][k] = matrixP[i][k] - p;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,418,matrixP[i][k + 1] = matrixP[i][k + 1] - p * q;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,420,}  // (s != 0)
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,421,}  // k loop
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,423,// clean up pollution due to round-off errors
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,424,for (int i = m+2; i <= idx; i++) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,425,matrixT[i][i-2] = 0.0;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,426,if (i > m+2) {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,427,matrixT[i][i-3] = 0.0;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,433,* Internal data structure holding the current shift information.
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,434,* Contains variable names as present in the original JAMA code.
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,436,private static class ShiftInfo {
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,437,/** TODO: document */
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,438,double x;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,439,/** TODO: document */
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,440,double y;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,441,/** TODO: document */
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,442,double w;
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,443,/** Indicates an exceptional shift. */
+True,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,src/main/java/org/apache/commons/math3/linear/SchurTransformer.java,444,double exShift;
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,2,* Licensed to the Apache Software Foundation (ASF) under one or more
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,3,* contributor license agreements.  See the NOTICE file distributed with
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,4,* this work for additional information regarding copyright ownership.
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,5,"* The ASF licenses this file to You under the Apache License, Version 2.0"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,6,"* (the ""License""); you may not use this file except in compliance with"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,7,* the License.  You may obtain a copy of the License at
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,9,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,11,"* Unless required by applicable law or agreed to in writing, software"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,12,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,13,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,14,* See the License for the specific language governing permissions and
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,15,* limitations under the License.
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,18,package org.apache.commons.math3.linear;
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,20,import org.junit.Test;
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,21,import org.junit.Assert;
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,23,public class SchurTransformerTest {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,25,private double[][] testSquare5 = {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,26,"{ 5, 4, 3, 2, 1 },"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,27,"{ 1, 4, 0, 3, 3 },"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,28,"{ 2, 0, 3, 0, 0 },"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,29,"{ 3, 2, 1, 2, 5 },"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,30,"{ 4, 2, 1, 4, 1 }"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,33,private double[][] testSquare3 = {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,34,"{  2, -1, 1 },"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,35,"{ -1,  2, 1 },"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,36,"{  1, -1, 2 }"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,39,// from http://eigen.tuxfamily.org/dox/classEigen_1_1RealSchur.html
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,40,private double[][] testRandom = {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,41,"{  0.680, -0.3300, -0.2700, -0.717, -0.687,  0.0259 },"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,42,"{ -0.211,  0.5360,  0.0268,  0.214, -0.198,  0.6780 },"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,43,"{  0.566, -0.4440,  0.9040, -0.967, -0.740,  0.2250 },"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,44,"{  0.597,  0.1080,  0.8320, -0.514, -0.782, -0.4080 },"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,45,"{  0.823, -0.0452,  0.2710, -0.726,  0.998,  0.2750 },"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,46,"{ -0.605,  0.2580,  0.4350,  0.608, -0.563,  0.0486 }"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,49,@Test
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,50,public void testNonSquare() {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,51,try {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,52,new SchurTransformer(MatrixUtils.createRealMatrix(new double[3][2]));
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,53,"Assert.fail(""an exception should have been thrown"");"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,54,} catch (NonSquareMatrixException ime) {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,55,// expected behavior
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,59,@Test
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,60,public void testAEqualPTPt() {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,61,checkAEqualPTPt(MatrixUtils.createRealMatrix(testSquare5));
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,62,checkAEqualPTPt(MatrixUtils.createRealMatrix(testSquare3));
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,63,checkAEqualPTPt(MatrixUtils.createRealMatrix(testRandom));
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,66,private void checkAEqualPTPt(RealMatrix matrix) {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,67,SchurTransformer transformer = new SchurTransformer(matrix);
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,68,RealMatrix p  = transformer.getP();
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,69,RealMatrix t  = transformer.getT();
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,70,RealMatrix pT = transformer.getPT();
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,72,RealMatrix result = p.multiply(t).multiply(pT);
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,74,double norm = result.subtract(matrix).getNorm();
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,75,"Assert.assertEquals(0, norm, 4.0e-14);"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,78,@Test
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,79,public void testPOrthogonal() {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,80,checkOrthogonal(new SchurTransformer(MatrixUtils.createRealMatrix(testSquare5)).getP());
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,81,checkOrthogonal(new SchurTransformer(MatrixUtils.createRealMatrix(testSquare3)).getP());
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,82,checkOrthogonal(new SchurTransformer(MatrixUtils.createRealMatrix(testRandom)).getP());
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,85,@Test
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,86,public void testPTOrthogonal() {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,87,checkOrthogonal(new SchurTransformer(MatrixUtils.createRealMatrix(testSquare5)).getPT());
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,88,checkOrthogonal(new SchurTransformer(MatrixUtils.createRealMatrix(testSquare3)).getPT());
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,89,checkOrthogonal(new SchurTransformer(MatrixUtils.createRealMatrix(testRandom)).getPT());
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,92,private void checkOrthogonal(RealMatrix m) {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,93,RealMatrix mTm = m.transpose().multiply(m);
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,94,RealMatrix id  = MatrixUtils.createRealIdentityMatrix(mTm.getRowDimension());
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,95,"Assert.assertEquals(0, mTm.subtract(id).getNorm(), 1.0e-14);"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,98,@Test
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,99,public void testSchurForm() {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,100,checkSchurForm(new SchurTransformer(MatrixUtils.createRealMatrix(testSquare5)).getT());
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,101,checkSchurForm(new SchurTransformer(MatrixUtils.createRealMatrix(testSquare3)).getT());
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,102,checkSchurForm(new SchurTransformer(MatrixUtils.createRealMatrix(testRandom)).getT());
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,105,private void checkSchurForm(final RealMatrix m) {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,106,final int rows = m.getRowDimension();
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,107,final int cols = m.getColumnDimension();
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,108,for (int i = 0; i < rows; ++i) {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,109,for (int j = 0; j < cols; ++j) {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,110,if (i > j + 1) {
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,111,"Assert.assertEquals(0, m.getEntry(i, j), 1.0e-16);"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,117,"@SuppressWarnings(""unused"")"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,118,"private void checkMatricesValues(double[][] matrix, double[][] pRef, double[][] hRef) {"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,120,SchurTransformer transformer =
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,121,new SchurTransformer(MatrixUtils.createRealMatrix(matrix));
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,123,// check values against known references
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,124,RealMatrix p = transformer.getP();
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,125,"Assert.assertEquals(0, p.subtract(MatrixUtils.createRealMatrix(pRef)).getNorm(), 1.0e-14);"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,127,RealMatrix t = transformer.getT();
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,128,"Assert.assertEquals(0, t.subtract(MatrixUtils.createRealMatrix(hRef)).getNorm(), 1.0e-14);"
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,130,// check the same cached instance is returned the second time
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,131,Assert.assertTrue(p == transformer.getP());
+True,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,src/test/java/org/apache/commons/math3/linear/SchurTransformerTest.java,132,Assert.assertTrue(t == transformer.getT());

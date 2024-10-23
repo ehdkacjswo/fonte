@@ -1,0 +1,748 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/Connection.java,src/main/java/org/jsoup/Connection.java,4,import org.jsoup.parser.HtmlTreeBuilder;
+False,src/main/java/org/jsoup/Connection.java,src/main/java/org/jsoup/Connection.java,31,"ET(false), POST(true), PUT(true), DELETE(false), PATCH(true);"
+True,src/main/java/org/jsoup/Connection.java,src/main/java/org/jsoup/Connection.java,32,"GET(false), POST(true), PUT(true), DELETE(false), PATCH(true), HEAD(false), OPTIONS(false), TRACE(false);"
+False,src/main/java/org/jsoup/Connection.java,src/main/java/org/jsoup/Connection.java,221, Provide an alternate parser to use when parsing the response to a Document.
+True,src/main/java/org/jsoup/Connection.java,src/main/java/org/jsoup/Connection.java,222,"* Provide an alternate parser to use when parsing the response to a Document. If not set, defaults to the HTML"
+True,src/main/java/org/jsoup/Connection.java,src/main/java/org/jsoup/Connection.java,223,"* parser, unless the response content-type is XML, in which case the XML parser is used."
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,367,private boolean parserDefined = false; // called parser(...) vs initialized in ctor
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,457,parserDefined = true;
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,489, For example {@code application/atom+xml;charset=utf-8}.
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,490," Stepping through it: start with {@code ""application/""}, follow with word"
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,491," characters up to a {@code ""+xml""}, and then maybe more ({@code .*})."
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,491,"* Matches XML content types (like text/xml, application/xhtml+xml;charset=UTF8, etc)"
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,493,"rivate static final Pattern xmlContentTypeRxp = Pattern.compile(""application/\\w+\\+xml.*"");"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,493,"private static final Pattern xmlContentTypeRxp = Pattern.compile(""(application|text)/\\w*\\+?xml.*"");"
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,545,"eq.url(new URL(req.url(), encodeUrl(location)));"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,545,"req.url(StringUtil.resolve(req.url(), encodeUrl(location)));"
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,560,"& !contentType.startsWith(""application/xml"")"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,565,// switch to the XML parser if content type is xml and not parser not explicitly set
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,566,if (contentType != null && xmlContentTypeRxp.matcher(contentType).matches()) {
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,567,// only flip it if a HttpConnection.Request (i.e. don't presume other impls want it):
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,568,if (req instanceof HttpConnection.Request && !((Request) req).parserDefined) {
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,569,req.parser(Parser.xmlParser());
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,569,nputStream dataStream = null;
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,571,ataStream = conn.getErrorStream() != null ? conn.getErrorStream() : conn.getInputStream();
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,572,"odyStream = res.hasHeaderWithValue(CONTENT_ENCODING, ""gzip"") ?"
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,573,ew BufferedInputStream(new GZIPInputStream(dataStream)) :
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,574,ew BufferedInputStream(dataStream);
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,577,bodyStream = conn.getErrorStream() != null ? conn.getErrorStream() : conn.getInputStream();
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,578,"if (res.hasHeaderWithValue(CONTENT_ENCODING, ""gzip""))"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,579,bodyStream = new GZIPInputStream(bodyStream);
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,579,f (dataStream != null) dataStream.close();
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,728,"ap<String, List<String>> resHeaders = conn.getHeaderFields();"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,732,"Map<String, List<String>> resHeaders = createHeaderMap(conn);"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,744,"private static LinkedHashMap<String, List<String>> createHeaderMap(HttpURLConnection conn) {"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,745,// the default sun impl of conn.getHeaderFields() returns header values out of order
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,746,"final LinkedHashMap<String, List<String>> headers = new LinkedHashMap<String, List<String>>();"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,747,int i = 0;
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,748,while (true) {
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,749,final String key = conn.getHeaderFieldKey(i);
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,750,final String val = conn.getHeaderField(i);
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,751,if (key == null && val == null)
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,752,break;
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,753,i++;
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,754,if (key == null || val == null)
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,755,continue; // skip http1.1 line
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,757,if (headers.containsKey(key))
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,758,headers.get(key).add(val);
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,759,else {
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,760,final ArrayList<String> vals = new ArrayList<String>();
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,761,vals.add(val);
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,762,"headers.put(key, vals);"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,765,return headers;
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,759, else { // only take the first instance of each header
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,760,f (!values.isEmpty())
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,787,} else { // combine same header names with comma: http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,788,if (values.size() == 1)
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,790,else if (values.size() > 1) {
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,791,StringBuilder accum = new StringBuilder();
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,792,for (int i = 0; i < values.size(); i++) {
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,793,final String val = values.get(i);
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,794,if (i != 0)
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,795,"accum.append("", "");"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,796,accum.append(val);
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,798,"header(name, accum.toString());"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,3,import java.net.MalformedURLException;
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,4,import java.net.URL;
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,5,import java.util.Arrays;
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,157,"public static boolean inSorted(String needle, String[] haystack) {"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,158,"return Arrays.binarySearch(haystack, needle) >= 0;"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,162,"* Create a new absolute URL, from a provided existing absolute URL and a relative URL component."
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,163,* @param base the existing absolulte base URL
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,164,"* @param relUrl the relative URL to resolve. (If it's already absolute, it will be returned)"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,165,* @return the resolved absolute URL
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,166,* @throws MalformedURLException if an error occurred generating the URL
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,168,"public static URL resolve(URL base, String relUrl) throws MalformedURLException {"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,169,"// workaround: java resolves '//path/file + ?foo' to '//path/?foo', not '//path/file?foo' as desired"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,170,"if (relUrl.startsWith(""?""))"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,171,relUrl = base.getPath() + relUrl;
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,172,"// workaround: //example.com + ./foo = //example.com/./foo, not //example.com/foo"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,173,if (relUrl.indexOf('.') == 0 && base.getFile().indexOf('/') != 0) {
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,174,"base = new URL(base.getProtocol(), base.getHost(), base.getPort(), ""/"" + base.getFile());"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,176,"return new URL(base, relUrl);"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,180,"* Create a new absolute URL, from a provided existing absolute URL and a relative URL component."
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,181,* @param baseUrl the existing absolute base URL
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,182,"* @param relUrl the relative URL to resolve. (If it's already absolute, it will be returned)"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,183,"* @return an absolute URL if one was able to be generated, or the empty string if not"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,185,"public static String resolve(final String baseUrl, final String relUrl) {"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,186,URL base;
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,187,try {
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,188,try {
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,189,base = new URL(baseUrl);
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,190,} catch (MalformedURLException e) {
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,191,"// the base is unsuitable, but the attribute/rel may be abs on its own, so try that"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,192,URL abs = new URL(relUrl);
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,193,return abs.toExternalForm();
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,195,"return resolve(base, relUrl).toExternalForm();"
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,196,} catch (MalformedURLException e) {
+True,src/main/java/org/jsoup/helper/StringUtil.java,src/main/java/org/jsoup/helper/StringUtil.java,197,"return """";"
+False,src/main/java/org/jsoup/nodes/Attribute.java,src/main/java/org/jsoup/nodes/Attribute.java,124,"& Arrays.binarySearch(booleanAttributes, key) >= 0;"
+True,src/main/java/org/jsoup/nodes/Attribute.java,src/main/java/org/jsoup/nodes/Attribute.java,124,&& isBooleanAttribute();
+True,src/main/java/org/jsoup/nodes/Attribute.java,src/main/java/org/jsoup/nodes/Attribute.java,127,protected boolean isBooleanAttribute() {
+True,src/main/java/org/jsoup/nodes/Attribute.java,src/main/java/org/jsoup/nodes/Attribute.java,128,"return Arrays.binarySearch(booleanAttributes, key) >= 0;"
+True,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,53,"Set a new boolean attribute, remove attribute if value is false."
+True,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,54,@param key attribute key
+True,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,55,@param value attribute value
+True,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,57,"public void put(String key, boolean value) {"
+True,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,58,if (value)
+True,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,59,put(new BooleanAttribute(key));
+True,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,60,else
+True,src/main/java/org/jsoup/nodes/Attributes.java,src/main/java/org/jsoup/nodes/Attributes.java,61,remove(key);
+True,src/main/java/org/jsoup/nodes/BooleanAttribute.java,src/main/java/org/jsoup/nodes/BooleanAttribute.java,1,package org.jsoup.nodes;
+True,src/main/java/org/jsoup/nodes/BooleanAttribute.java,src/main/java/org/jsoup/nodes/BooleanAttribute.java,4,* A boolean attribute that is written out without any value.
+True,src/main/java/org/jsoup/nodes/BooleanAttribute.java,src/main/java/org/jsoup/nodes/BooleanAttribute.java,6,public class BooleanAttribute extends Attribute {
+True,src/main/java/org/jsoup/nodes/BooleanAttribute.java,src/main/java/org/jsoup/nodes/BooleanAttribute.java,8,* Create a new boolean attribute from unencoded (raw) key.
+True,src/main/java/org/jsoup/nodes/BooleanAttribute.java,src/main/java/org/jsoup/nodes/BooleanAttribute.java,9,* @param key attribute key
+True,src/main/java/org/jsoup/nodes/BooleanAttribute.java,src/main/java/org/jsoup/nodes/BooleanAttribute.java,11,public BooleanAttribute(String key) {
+True,src/main/java/org/jsoup/nodes/BooleanAttribute.java,src/main/java/org/jsoup/nodes/BooleanAttribute.java,12,"super(key, """");"
+True,src/main/java/org/jsoup/nodes/BooleanAttribute.java,src/main/java/org/jsoup/nodes/BooleanAttribute.java,15,@Override
+True,src/main/java/org/jsoup/nodes/BooleanAttribute.java,src/main/java/org/jsoup/nodes/BooleanAttribute.java,16,protected boolean isBooleanAttribute() {
+True,src/main/java/org/jsoup/nodes/BooleanAttribute.java,src/main/java/org/jsoup/nodes/BooleanAttribute.java,17,return true;
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,121,"* Set a boolean attribute value on this element. Setting to <code>true</code> sets the attribute value to """" and"
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,122,* marks the attribute as boolean so no value is written out. Setting to <code>false</code> removes the attribute
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,123,* with the same key if it exists.
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,125,* @param attributeKey the attribute key
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,126,* @param attributeValue the attribute value
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,128,* @return this element
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,130,"public Element attr(String attributeKey, boolean attributeValue) {"
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,131,"attributes.put(attributeKey, attributeValue);"
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,132,return this;
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,287,ensureChildNodes();
+False,src/main/java/org/jsoup/nodes/Entities.java,src/main/java/org/jsoup/nodes/Entities.java,118,ccum.append(c);
+True,src/main/java/org/jsoup/nodes/Entities.java,src/main/java/org/jsoup/nodes/Entities.java,118,"accum.append(""&#xa0;"");"
+False,src/main/java/org/jsoup/nodes/Entities.java,src/main/java/org/jsoup/nodes/Entities.java,121,f (!inAttribute)
+True,src/main/java/org/jsoup/nodes/Entities.java,src/main/java/org/jsoup/nodes/Entities.java,121,// escape when in character data or when in a xml attribue val; not needed in html attr val
+True,src/main/java/org/jsoup/nodes/Entities.java,src/main/java/org/jsoup/nodes/Entities.java,122,if (!inAttribute || escapeMode == EscapeMode.xhtml)
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,21,private static final List<Node> EMPTY_NODES = Collections.emptyList();
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,36,hildNodes = new ArrayList<Node>(4);
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,37,childNodes = EMPTY_NODES;
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,49,hildNodes = Collections.emptyList();
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,50,childNodes = EMPTY_NODES;
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,181,tring relUrl = attr(attributeKey);
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,185,RL base;
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,186,ry {
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,187,ry {
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,188,ase = new URL(baseUri);
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,189, catch (MalformedURLException e) {
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,190,"/ the base is unsuitable, but the attribute may be abs on its own, so try that"
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,191,RL abs = new URL(relUrl);
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,192,eturn abs.toExternalForm();
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,194,"/ workaround: java resolves '//path/file + ?foo' to '//path/?foo', not '//path/file?foo' as desired"
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,195,"f (relUrl.startsWith(""?""))"
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,196,elUrl = base.getPath() + relUrl;
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,197,"RL abs = new URL(base, relUrl);"
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,198,eturn abs.toExternalForm();
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,199, catch (MalformedURLException e) {
+False,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,200,"eturn """";"
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,185,"return StringUtil.resolve(baseUri, attr(attributeKey));"
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,432,ensureChildNodes();
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,443,ensureChildNodes();
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,449,protected void ensureChildNodes() {
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,450,if (childNodes == EMPTY_NODES) {
+True,src/main/java/org/jsoup/nodes/Node.java,src/main/java/org/jsoup/nodes/Node.java,451,childNodes = new ArrayList<Node>(4);
+True,src/main/java/org/jsoup/parser/CharacterReader.java,src/main/java/org/jsoup/parser/CharacterReader.java,128,final char[] val = input;
+False,src/main/java/org/jsoup/parser/CharacterReader.java,src/main/java/org/jsoup/parser/CharacterReader.java,131,f (input[pos] == c)
+True,src/main/java/org/jsoup/parser/CharacterReader.java,src/main/java/org/jsoup/parser/CharacterReader.java,132,if (val[pos] == c)
+False,src/main/java/org/jsoup/parser/CharacterReader.java,src/main/java/org/jsoup/parser/CharacterReader.java,369,"f (rangeEquals(start, count, cached)) {"
+False,src/main/java/org/jsoup/parser/CharacterReader.java,src/main/java/org/jsoup/parser/CharacterReader.java,370,/ hit
+True,src/main/java/org/jsoup/parser/CharacterReader.java,src/main/java/org/jsoup/parser/CharacterReader.java,370,"if (rangeEquals(start, count, cached)) { // hit"
+True,src/main/java/org/jsoup/parser/CharacterReader.java,src/main/java/org/jsoup/parser/CharacterReader.java,374,"cache[index] = cached; // update the cache, as recently used strings are more likely to show up again"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,14,lass HtmlTreeBuilder extends TreeBuilder {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,14,public class HtmlTreeBuilder extends TreeBuilder {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,394," else if ((""td"".equals(name) || ""td"".equals(name) && !last)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,394,"} else if ((""td"".equals(name) || ""th"".equals(name) && !last)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,274,"f (name.equals(""html"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,274,"if (name.equals(""a"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,275,"if (tb.getActiveFormattingElement(""a"") != null) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,276,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,277,"tb.processEndTag(""a"");"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,279,// still on stack?
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,280,"Element remainingA = tb.getFromStack(""a"");"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,281,if (remainingA != null) {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,282,tb.removeFromActiveFormattingElements(remainingA);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,283,tb.removeFromStack(remainingA);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,286,tb.reconstructFormattingElements();
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,287,Element a = tb.insert(startTag);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,288,tb.pushActiveFormattingElements(a);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,289,"} else if (StringUtil.inSorted(name, Constants.InBodyStartEmptyFormatters)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,290,tb.reconstructFormattingElements();
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,291,tb.insertEmpty(startTag);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,292,tb.framesetOk(false);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,293,"} else if (StringUtil.inSorted(name, Constants.InBodyStartPClosers)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,294,"if (tb.inButtonScope(""p"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,295,"tb.processEndTag(""p"");"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,297,tb.insert(startTag);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,298,"} else if (name.equals(""span"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,299,"// same as final else, but short circuits lots of checks"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,300,tb.reconstructFormattingElements();
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,301,tb.insert(startTag);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,302,"} else if (name.equals(""li"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,303,tb.framesetOk(false);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,304,ArrayList<Element> stack = tb.getStack();
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,305,for (int i = stack.size() - 1; i > 0; i--) {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,306,Element el = stack.get(i);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,307,"if (el.nodeName().equals(""li"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,308,"tb.processEndTag(""li"");"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,309,break;
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,311,"if (tb.isSpecial(el) && !StringUtil.inSorted(el.nodeName(), Constants.InBodyStartLiBreakers))"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,312,break;
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,314,"if (tb.inButtonScope(""p"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,315,"tb.processEndTag(""p"");"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,317,tb.insert(startTag);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,318,"} else if (name.equals(""html"")) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,282," else if (StringUtil.in(name, Constants.InBodyStartToHead)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,326,"} else if (StringUtil.inSorted(name, Constants.InBodyStartToHead)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,316," else if (StringUtil.in(name, Constants.InBodyStartPClosers)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,317,"f (tb.inButtonScope(""p"")) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,318,"b.processEndTag(""p"");"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,320,b.insert(startTag);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,321," else if (StringUtil.in(name, Constants.Headings)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,360,"} else if (StringUtil.inSorted(name, Constants.Headings)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,325,"f (StringUtil.in(tb.currentElement().nodeName(), Constants.Headings)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,364,"if (StringUtil.inSorted(tb.currentElement().nodeName(), Constants.Headings)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,330," else if (StringUtil.in(name, Constants.InBodyStartPreListing)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,369,"} else if (StringUtil.inSorted(name, Constants.InBodyStartPreListing)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,346," else if (name.equals(""li"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,385,"} else if (StringUtil.inSorted(name, Constants.DdDt)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,351,"f (el.nodeName().equals(""li"")) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,352,"b.processEndTag(""li"");"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,353,reak;
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,355,"f (tb.isSpecial(el) && !StringUtil.in(el.nodeName(), Constants.InBodyStartLiBreakers))"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,356,reak;
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,358,"f (tb.inButtonScope(""p"")) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,359,"b.processEndTag(""p"");"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,361,b.insert(startTag);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,362," else if (StringUtil.in(name, Constants.DdDt)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,363,b.framesetOk(false);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,364,rrayList<Element> stack = tb.getStack();
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,365,or (int i = stack.size() - 1; i > 0; i--) {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,366,lement el = stack.get(i);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,367,"f (StringUtil.in(el.nodeName(), Constants.DdDt)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,390,"if (StringUtil.inSorted(el.nodeName(), Constants.DdDt)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,371,"f (tb.isSpecial(el) && !StringUtil.in(el.nodeName(), Constants.InBodyStartLiBreakers))"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,394,"if (tb.isSpecial(el) && !StringUtil.inSorted(el.nodeName(), Constants.InBodyStartLiBreakers))"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,395," else if (name.equals(""a"")) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,396,"f (tb.getActiveFormattingElement(""a"") != null) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,397,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,398,"b.processEndTag(""a"");"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,400,/ still on stack?
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,401,"lement remainingA = tb.getFromStack(""a"");"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,402,f (remainingA != null) {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,403,b.removeFromActiveFormattingElements(remainingA);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,404,b.removeFromStack(remainingA);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,407,b.reconstructFormattingElements();
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,408,lement a = tb.insert(startTag);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,409,b.pushActiveFormattingElements(a);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,410," else if (StringUtil.in(name, Constants.Formatters)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,418,"} else if (StringUtil.inSorted(name, Constants.Formatters)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,423," else if (StringUtil.in(name, Constants.InBodyStartApplets)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,431,"} else if (StringUtil.inSorted(name, Constants.InBodyStartApplets)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,435," else if (StringUtil.in(name, Constants.InBodyStartEmptyFormatters)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,436,b.reconstructFormattingElements();
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,437,b.insertEmpty(startTag);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,438,b.framesetOk(false);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,444," else if (StringUtil.in(name, Constants.InBodyStartMedia)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,448,"} else if (StringUtil.inSorted(name, Constants.InBodyStartMedia)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,481,"f (!StringUtil.in(attr.getKey(), Constants.InBodyStartInputAttribs))"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,485,"if (!StringUtil.inSorted(attr.getKey(), Constants.InBodyStartInputAttribs))"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,519," else if (StringUtil.in(name, Constants.InBodyStartOptions)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,523,"} else if (StringUtil.inSorted(name, Constants.InBodyStartOptions)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,524," else if (StringUtil.in(name, Constants.InBodyStartRuby)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,528,"} else if (StringUtil.inSorted(name, Constants.InBodyStartRuby)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,543," else if (StringUtil.in(name, Constants.InBodyStartDrop)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,547,"} else if (StringUtil.inSorted(name, Constants.InBodyStartDrop)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,555,"f (name.equals(""body"")) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,556,"f (!tb.inScope(""body"")) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,557,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,558,eturn false;
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,559, else {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,560,"/ todo: error if stack contains something not dd, dt, li, optgroup, option, p, rp, rt, tbody, td, tfoot, th, thead, tr, body, html"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,561,b.transition(AfterBody);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,563," else if (name.equals(""html"")) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,564,"oolean notIgnored = tb.processEndTag(""body"");"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,565,f (notIgnored)
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,566,eturn tb.process(endTag);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,567," else if (StringUtil.in(name, Constants.InBodyEndClosers)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,568,f (!tb.inScope(name)) {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,569,/ nothing to close
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,570,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,571,eturn false;
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,572, else {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,573,b.generateImpliedEndTags();
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,574,f (!tb.currentElement().nodeName().equals(name))
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,575,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,576,b.popStackToClose(name);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,578," else if (name.equals(""form"")) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,579,lement currentForm = tb.getFormElement();
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,580,b.setFormElement(null);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,581,f (currentForm == null || !tb.inScope(name)) {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,582,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,583,eturn false;
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,584, else {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,585,b.generateImpliedEndTags();
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,586,f (!tb.currentElement().nodeName().equals(name))
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,587,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,588,/ remove currentForm from stack. will shift anything under up.
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,589,b.removeFromStack(currentForm);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,591," else if (name.equals(""p"")) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,592,f (!tb.inButtonScope(name)) {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,593,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,594,"b.processStartTag(name); // if no p to close, creates an empty <p></p>"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,595,eturn tb.process(endTag);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,596, else {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,597,b.generateImpliedEndTags(name);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,598,f (!tb.currentElement().nodeName().equals(name))
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,599,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,600,b.popStackToClose(name);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,602," else if (name.equals(""li"")) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,603,f (!tb.inListItemScope(name)) {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,604,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,605,eturn false;
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,606, else {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,607,b.generateImpliedEndTags(name);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,608,f (!tb.currentElement().nodeName().equals(name))
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,609,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,610,b.popStackToClose(name);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,612," else if (StringUtil.in(name, Constants.DdDt)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,613,f (!tb.inScope(name)) {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,614,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,615,eturn false;
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,616, else {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,617,b.generateImpliedEndTags(name);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,618,f (!tb.currentElement().nodeName().equals(name))
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,619,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,620,b.popStackToClose(name);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,622," else if (StringUtil.in(name, Constants.Headings)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,623,f (!tb.inScope(Constants.Headings)) {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,624,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,625,eturn false;
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,626, else {
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,627,b.generateImpliedEndTags(name);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,628,f (!tb.currentElement().nodeName().equals(name))
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,629,b.error(this);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,630,b.popStackToClose(Constants.Headings);
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,632," else if (name.equals(""sarcasm"")) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,633,/ *sigh*
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,634,"eturn anyOtherEndTag(t, tb);"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,635," else if (StringUtil.in(name, Constants.InBodyEndAdoptionFormatters)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,559,"if (StringUtil.inSorted(name, Constants.InBodyEndAdoptionFormatters)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,703,"f (StringUtil.in(commonAncestor.nodeName(), Constants.InBodyEndTableFosters)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,627,"if (StringUtil.inSorted(commonAncestor.nodeName(), Constants.InBodyEndTableFosters)) {"
+False,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,725," else if (StringUtil.in(name, Constants.InBodyStartApplets)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,649,"} else if (StringUtil.inSorted(name, Constants.InBodyEndClosers)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,650,if (!tb.inScope(name)) {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,651,// nothing to close
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,652,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,653,return false;
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,654,} else {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,655,tb.generateImpliedEndTags();
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,656,if (!tb.currentElement().nodeName().equals(name))
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,657,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,658,tb.popStackToClose(name);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,660,"} else if (name.equals(""span"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,661,"// same as final fall through, but saves short circuit"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,662,"return anyOtherEndTag(t, tb);"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,663,"} else if (name.equals(""li"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,664,if (!tb.inListItemScope(name)) {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,665,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,666,return false;
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,667,} else {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,668,tb.generateImpliedEndTags(name);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,669,if (!tb.currentElement().nodeName().equals(name))
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,670,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,671,tb.popStackToClose(name);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,673,"} else if (name.equals(""body"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,674,"if (!tb.inScope(""body"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,675,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,676,return false;
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,677,} else {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,678,"// todo: error if stack contains something not dd, dt, li, optgroup, option, p, rp, rt, tbody, td, tfoot, th, thead, tr, body, html"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,679,tb.transition(AfterBody);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,681,"} else if (name.equals(""html"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,682,"boolean notIgnored = tb.processEndTag(""body"");"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,683,if (notIgnored)
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,684,return tb.process(endTag);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,685,"} else if (name.equals(""form"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,686,Element currentForm = tb.getFormElement();
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,687,tb.setFormElement(null);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,688,if (currentForm == null || !tb.inScope(name)) {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,689,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,690,return false;
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,691,} else {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,692,tb.generateImpliedEndTags();
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,693,if (!tb.currentElement().nodeName().equals(name))
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,694,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,695,// remove currentForm from stack. will shift anything under up.
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,696,tb.removeFromStack(currentForm);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,698,"} else if (name.equals(""p"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,699,if (!tb.inButtonScope(name)) {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,700,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,701,"tb.processStartTag(name); // if no p to close, creates an empty <p></p>"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,702,return tb.process(endTag);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,703,} else {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,704,tb.generateImpliedEndTags(name);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,705,if (!tb.currentElement().nodeName().equals(name))
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,706,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,707,tb.popStackToClose(name);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,709,"} else if (StringUtil.inSorted(name, Constants.DdDt)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,710,if (!tb.inScope(name)) {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,711,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,712,return false;
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,713,} else {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,714,tb.generateImpliedEndTags(name);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,715,if (!tb.currentElement().nodeName().equals(name))
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,716,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,717,tb.popStackToClose(name);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,719,"} else if (StringUtil.inSorted(name, Constants.Headings)) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,720,if (!tb.inScope(Constants.Headings)) {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,721,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,722,return false;
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,723,} else {
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,724,tb.generateImpliedEndTags(name);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,725,if (!tb.currentElement().nodeName().equals(name))
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,726,tb.error(this);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,727,tb.popStackToClose(Constants.Headings);
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,729,"} else if (name.equals(""sarcasm"")) {"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,730,// *sigh*
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,731,"return anyOtherEndTag(t, tb);"
+True,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,732,"} else if (StringUtil.inSorted(name, Constants.InBodyStartApplets)) {"
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,6,import org.jsoup.nodes.BooleanAttribute;
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,73,"private String pendingAttributeValueS; // try to get attr vals in one shot, vs Builder"
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,74,private boolean hasEmptyAttributeValue = false; // distinguish boolean attribute from empty string value
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,84,pendingAttributeValueS = null;
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,85,hasEmptyAttributeValue = false;
+False,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,93,f (!hasPendingAttributeValue)
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,98,if (hasPendingAttributeValue)
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,99,"attribute = new Attribute(pendingAttributeName,"
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,100,pendingAttributeValue.length() > 0 ? pendingAttributeValue.toString() : pendingAttributeValueS);
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,101,else if (hasEmptyAttributeValue)
+False,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,96,"ttribute = new Attribute(pendingAttributeName, pendingAttributeValue.toString());"
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,104,attribute = new BooleanAttribute(pendingAttributeName);
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,108,hasEmptyAttributeValue = false;
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,109,hasPendingAttributeValue = false;
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,111,pendingAttributeValueS = null;
+False,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,149,endingAttributeValue.append(append);
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,160,if (pendingAttributeValue.length() == 0) {
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,161,pendingAttributeValueS = append;
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,162,} else {
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,163,pendingAttributeValue.append(append);
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,177,final void setEmptyAttributeValue() {
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,178,hasEmptyAttributeValue = true;
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,183,"// if on second hit, we'll need to move to the builder"
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,184,if (pendingAttributeValueS != null) {
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,185,pendingAttributeValue.append(pendingAttributeValueS);
+True,src/main/java/org/jsoup/parser/Token.java,src/main/java/org/jsoup/parser/Token.java,186,pendingAttributeValueS = null;
+True,src/main/java/org/jsoup/parser/TokeniserState.java,src/main/java/org/jsoup/parser/TokeniserState.java,760,t.emitTagPending();
+False,src/main/java/org/jsoup/parser/TokeniserState.java,src/main/java/org/jsoup/parser/TokeniserState.java,782,tring value = r.consumeToAnySorted(attributeDoubleValueCharsSorted);
+True,src/main/java/org/jsoup/parser/TokeniserState.java,src/main/java/org/jsoup/parser/TokeniserState.java,783,String value = r.consumeToAny(attributeDoubleValueCharsSorted);
+True,src/main/java/org/jsoup/parser/TokeniserState.java,src/main/java/org/jsoup/parser/TokeniserState.java,786,else
+True,src/main/java/org/jsoup/parser/TokeniserState.java,src/main/java/org/jsoup/parser/TokeniserState.java,787,t.tagPending.setEmptyAttributeValue();
+False,src/main/java/org/jsoup/parser/TokeniserState.java,src/main/java/org/jsoup/parser/TokeniserState.java,812,tring value = r.consumeToAnySorted(attributeSingleValueCharsSorted);
+True,src/main/java/org/jsoup/parser/TokeniserState.java,src/main/java/org/jsoup/parser/TokeniserState.java,815,String value = r.consumeToAny(attributeSingleValueCharsSorted);
+True,src/main/java/org/jsoup/parser/TokeniserState.java,src/main/java/org/jsoup/parser/TokeniserState.java,818,else
+True,src/main/java/org/jsoup/parser/TokeniserState.java,src/main/java/org/jsoup/parser/TokeniserState.java,819,t.tagPending.setEmptyAttributeValue();
+False,src/main/java/org/jsoup/parser/TokeniserState.java,src/main/java/org/jsoup/parser/TokeniserState.java,842,"tring value = r.consumeToAny('\t', '\n', '\r', '\f', ' ', '&', '>', nullChar, '""', '\'', '<', '=', '`');"
+True,src/main/java/org/jsoup/parser/TokeniserState.java,src/main/java/org/jsoup/parser/TokeniserState.java,847,String value = r.consumeToAnySorted(attributeValueUnquoted);
+True,src/main/java/org/jsoup/parser/TokeniserState.java,src/main/java/org/jsoup/parser/TokeniserState.java,1660,"private static final char[] attributeValueUnquoted = new char[]{'\t', '\n', '\r', '\f', ' ', '&', '>', nullChar, '""', '\'', '<', '=', '`'};"
+True,src/main/java/org/jsoup/parser/TokeniserState.java,src/main/java/org/jsoup/parser/TokeniserState.java,1670,Arrays.sort(attributeValueUnquoted);
+True,src/main/java/org/jsoup/parser/TreeBuilder.java,src/main/java/org/jsoup/parser/TreeBuilder.java,61,if (currentToken == start) { // don't recycle an in-use token
+True,src/main/java/org/jsoup/parser/TreeBuilder.java,src/main/java/org/jsoup/parser/TreeBuilder.java,62,return process(new Token.StartTag().name(name));
+True,src/main/java/org/jsoup/parser/TreeBuilder.java,src/main/java/org/jsoup/parser/TreeBuilder.java,68,if (currentToken == start) { // don't recycle an in-use token
+True,src/main/java/org/jsoup/parser/TreeBuilder.java,src/main/java/org/jsoup/parser/TreeBuilder.java,69,"return process(new Token.StartTag().nameAttr(name, attrs));"
+True,src/main/java/org/jsoup/parser/TreeBuilder.java,src/main/java/org/jsoup/parser/TreeBuilder.java,77,if (currentToken == end) { // don't recycle an in-use token
+True,src/main/java/org/jsoup/parser/TreeBuilder.java,src/main/java/org/jsoup/parser/TreeBuilder.java,78,return process(new Token.EndTag().name(name));
+True,src/main/java/org/jsoup/select/Selector.java,src/main/java/org/jsoup/select/Selector.java,6,import java.util.ArrayList;
+False,src/main/java/org/jsoup/select/Selector.java,src/main/java/org/jsoup/select/Selector.java,7,mport java.util.LinkedHashSet;
+True,src/main/java/org/jsoup/select/Selector.java,src/main/java/org/jsoup/select/Selector.java,8,import java.util.IdentityHashMap;
+False,src/main/java/org/jsoup/select/Selector.java,src/main/java/org/jsoup/select/Selector.java,130,inkedHashSet<Element> elements = new LinkedHashSet<Element>();
+True,src/main/java/org/jsoup/select/Selector.java,src/main/java/org/jsoup/select/Selector.java,131,ArrayList<Element> elements = new ArrayList<Element>();
+True,src/main/java/org/jsoup/select/Selector.java,src/main/java/org/jsoup/select/Selector.java,132,"IdentityHashMap<Element, Boolean> seenElements = new IdentityHashMap<Element, Boolean>();"
+True,src/main/java/org/jsoup/select/Selector.java,src/main/java/org/jsoup/select/Selector.java,133,"// dedupe elements by identity, not equality"
+False,src/main/java/org/jsoup/select/Selector.java,src/main/java/org/jsoup/select/Selector.java,133,"lements.addAll(select(evaluator, root));"
+True,src/main/java/org/jsoup/select/Selector.java,src/main/java/org/jsoup/select/Selector.java,136,"final Elements found = select(evaluator, root);"
+True,src/main/java/org/jsoup/select/Selector.java,src/main/java/org/jsoup/select/Selector.java,137,for (Element el : found) {
+True,src/main/java/org/jsoup/select/Selector.java,src/main/java/org/jsoup/select/Selector.java,138,if (!seenElements.containsKey(el)) {
+True,src/main/java/org/jsoup/select/Selector.java,src/main/java/org/jsoup/select/Selector.java,139,elements.add(el);
+True,src/main/java/org/jsoup/select/Selector.java,src/main/java/org/jsoup/select/Selector.java,140,"seenElements.put(el, Boolean.TRUE);"
+False,src/main/java/org/jsoup/select/StructuralEvaluator.java,src/main/java/org/jsoup/select/StructuralEvaluator.java,61,hile (parent != root) {
+True,src/main/java/org/jsoup/select/StructuralEvaluator.java,src/main/java/org/jsoup/select/StructuralEvaluator.java,61,while (true) {
+True,src/main/java/org/jsoup/select/StructuralEvaluator.java,src/main/java/org/jsoup/select/StructuralEvaluator.java,64,if (parent == root)
+True,src/main/java/org/jsoup/select/StructuralEvaluator.java,src/main/java/org/jsoup/select/StructuralEvaluator.java,65,break;
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,55,@Test public void sameHeadersCombineWithComma() {
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,56,"Map<String, List<String>> headers = new HashMap<String, List<String>>();"
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,57,List<String> values = new ArrayList<String>();
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,58,"values.add(""no-cache"");"
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,59,"values.add(""no-store"");"
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,60,"headers.put(""Cache-Control"", values);"
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,61,HttpConnection.Response res = new HttpConnection.Response();
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,62,res.processResponseHeaders(headers);
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,63,"assertEquals(""no-cache, no-store"", res.header(""Cache-Control""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,8,import static org.jsoup.helper.StringUtil.*;
+False,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,61,"ssertEquals("" "", StringUtil.normaliseWhitespace(""    \r \n \r\n""));"
+False,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,62,"ssertEquals("" hello there "", StringUtil.normaliseWhitespace(""   hello   \r \n  there    \n""));"
+False,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,63,"ssertEquals(""hello"", StringUtil.normaliseWhitespace(""hello""));"
+False,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,64,"ssertEquals(""hello there"", StringUtil.normaliseWhitespace(""hello\nthere""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,62,"assertEquals("" "", normaliseWhitespace(""    \r \n \r\n""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,63,"assertEquals("" hello there "", normaliseWhitespace(""   hello   \r \n  there    \n""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,64,"assertEquals(""hello"", normaliseWhitespace(""hello""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,65,"assertEquals(""hello there"", normaliseWhitespace(""hello\nthere""));"
+False,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,71,"ssertEquals(test71540charsExpectedSingleWhitespace, StringUtil.normaliseWhitespace(test71540chars));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,72,"assertEquals(test71540charsExpectedSingleWhitespace, normaliseWhitespace(test71540chars));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,77,@Test public void resolvesRelativeUrls() {
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,78,"assertEquals(""http://example.com/one/two?three"", resolve(""http://example.com"", ""./one/two?three""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,79,"assertEquals(""http://example.com/one/two?three"", resolve(""http://example.com?one"", ""./one/two?three""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,80,"assertEquals(""http://example.com/one/two?three#four"", resolve(""http://example.com"", ""./one/two?three#four""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,81,"assertEquals(""https://example.com/one"", resolve(""http://example.com/"", ""https://example.com/one""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,82,"assertEquals(""http://example.com/one/two.html"", resolve(""http://example.com/two/"", ""../one/two.html""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,83,"assertEquals(""https://example2.com/one"", resolve(""https://example.com/"", ""//example2.com/one""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,84,"assertEquals(""https://example.com:8080/one"", resolve(""https://example.com:8080"", ""./one""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,85,"assertEquals(""https://example2.com/one"", resolve(""http://example.com/"", ""https://example2.com/one""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,86,"assertEquals(""https://example.com/one"", resolve(""wrong"", ""https://example.com/one""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,87,"assertEquals(""https://example.com/one"", resolve(""https://example.com/one"", """"));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,88,"assertEquals("""", resolve(""wrong"", ""also wrong""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,89,"assertEquals(""ftp://example.com/one"", resolve(""ftp://example.com/two/"", ""../one""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,90,"assertEquals(""ftp://example.com/one/two.c"", resolve(""ftp://example.com/one/"", ""./two.c""));"
+True,src/test/java/org/jsoup/helper/StringUtilTest.java,src/test/java/org/jsoup/helper/StringUtilTest.java,91,"assertEquals(""ftp://example.com/one/two.c"", resolve(""ftp://example.com/one/"", ""two.c""));"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,7,import org.jsoup.helper.StringUtil;
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,11,import org.jsoup.parser.HtmlTreeBuilder;
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,12,import org.jsoup.parser.Parser;
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,13,import org.jsoup.parser.XmlTreeBuilder;
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,176,"onnection con = Jsoup.connect(""http://direct.infohound.net/tools/302-rel.pl""); // to ./ - /tools/"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,180,"Connection con = Jsoup.connect(""http://direct.infohound.net/tools/302-rel.pl""); // to /tidy/"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,185,@Test
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,186,public void followsRelativeDotRedirect() throws IOException {
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,187,"// redirects to ""./ok.html"", should resolve to http://direct.infohound.net/tools/ok.html"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,188,"Connection con = Jsoup.connect(""http://direct.infohound.net/tools/302-rel-dot.pl""); // to ./ok.html"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,189,Document doc = con.post();
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,190,"assertTrue(doc.title().contains(""OK""));"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,191,"assertEquals(doc.location(), ""http://direct.infohound.net/tools/ok.html"");"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,194,@Test
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,195,public void followsRelativeDotRedirect2() throws IOException {
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,196,"//redirects to ""esportspenedes.cat/./ep/index.php"", should resolve to ""esportspenedes.cat/ep/index.php"""
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,197,"Connection con = Jsoup.connect(""http://esportspenedes.cat"")  // note lack of trailing / - server should redir to / first, then to ./ep/...; but doesn't'"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,198,.timeout(10000);
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,199,Document doc = con.post();
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,200,"assertEquals(doc.location(), ""http://esportspenedes.cat/ep/index.php"");"
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,263,"ssertEquals(""uid=jhy; token=asdfg123"", ihVal(""HTTP_COOKIE"", doc)); // confirms that redirected hit saw cookie"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,285,"assertEquals(""token=asdfg123; uid=jhy"", ihVal(""HTTP_COOKIE"", doc)); // confirms that redirected hit saw cookie"
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,290,"ssertEquals(""uid=jhy; token=asdfg123"", ihVal(""HTTP_COOKIE"", doc));"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,312,"assertEquals(""token=asdfg123; uid=jhy"", ihVal(""HTTP_COOKIE"", doc));"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,519,@Test
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,520,public void fetchHandlesXml() throws IOException {
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,521,"// should auto-detect xml and use XML parser, unless explicitly requested the html parser"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,522,"String xmlUrl = ""http://direct.infohound.net/tools/parse-xml.xml"";"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,523,Connection con = Jsoup.connect(xmlUrl);
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,524,Document doc = con.get();
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,525,Connection.Request req = con.request();
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,526,assertTrue(req.parser().getTreeBuilder() instanceof XmlTreeBuilder);
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,527,"assertEquals(""<xml> <link> one </link> <table> Two </table> </xml>"", StringUtil.normaliseWhitespace(doc.outerHtml()));"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,530,@Test
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,531,public void fetchHandlesXmlAsHtmlWhenParserSet() throws IOException {
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,532,"// should auto-detect xml and use XML parser, unless explicitly requested the html parser"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,533,"String xmlUrl = ""http://direct.infohound.net/tools/parse-xml.xml"";"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,534,Connection con = Jsoup.connect(xmlUrl).parser(Parser.htmlParser());
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,535,Document doc = con.get();
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,536,Connection.Request req = con.request();
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,537,assertTrue(req.parser().getTreeBuilder() instanceof HtmlTreeBuilder);
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,538,"assertEquals(""<html> <head></head> <body> <xml> <link>one <table> Two </table> </xml> </body> </html>"", StringUtil.normaliseWhitespace(doc.outerHtml()));"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,541,@Test
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,542,public void combinesSameHeadersWithComma() throws IOException {
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,543,// http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,544,"String url = ""http://direct.infohound.net/tools/q.pl"";"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,545,Connection con = Jsoup.connect(url);
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,546,con.get();
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,548,"assertEquals(""text/html"", con.response().header(""Content-Type""));"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,549,"assertEquals(""no-cache, no-store"", con.response().header(""Cache-Control""));"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,552,@Test
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,553,public void sendHeadRequest() throws IOException {
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,554,"String url = ""http://direct.infohound.net/tools/parse-xml.xml"";"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,555,Connection con = Jsoup.connect(url).method(Connection.Method.HEAD);
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,556,final Connection.Response response = con.execute();
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,557,"assertEquals(""text/xml"", response.header(""Content-Type""));"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,558,"assertEquals("""", response.body()); // head ought to have no body"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,559,Document doc = response.parse();
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,560,"assertEquals("""", doc.text());"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,3,import java.io.ByteArrayInputStream;
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,6,import java.io.InputStream;
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,388,@Test
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,389,public void testShiftJisRoundtrip() throws Exception {
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,390,String input =
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,391,"""<html>"""
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,392,"+   ""<head>"""
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,393,"+     ""<meta http-equiv=\""content-type\"" content=\""text/html; charset=Shift_JIS\"" />"""
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,394,"+   ""</head>"""
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,395,"+   ""<body>"""
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,396,"+     ""before&nbsp;after"""
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,397,"+   ""</body>"""
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,398,"+ ""</html>"";"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,399,"InputStream is = new ByteArrayInputStream(input.getBytes(Charset.forName(""ASCII"")));"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,401,"Document doc = Jsoup.parse(is, null, ""http://example.com"");"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,402,doc.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,404,"String output = new String(doc.html().getBytes(doc.outputSettings().charset()), doc.outputSettings().charset());"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,406,"assertFalse(""Should not have contained a '?'."", output.contains(""?""));"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,407,"assertTrue(""Should have contained a '&#xa0;' or a '&nbsp;'."","
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,408,"output.contains(""&#xa0;"") || output.contains(""&nbsp;""));"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,318,@Test public void testAddBooleanAttribute() {
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,319,"Element div = new Element(Tag.valueOf(""div""), """");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,321,"div.attr(""true"", true);"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,323,"div.attr(""false"", ""value"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,324,"div.attr(""false"", false);"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,326,"assertTrue(div.hasAttr(""true""));"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,327,"assertEquals("""", div.attr(""true""));"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,329,List<Attribute> attributes = div.attributes().asList();
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,330,"assertEquals(""There should be one attribute"", 1, attributes.size());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,331,"assertTrue(""Attribute should be boolean"", attributes.get(0) instanceof BooleanAttribute);"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,333,"assertFalse(div.hasAttr(""false""));"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,335,"assertEquals(""<div true></div>"", div.outerHtml());"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,842,@Test public void testRelativeUrls() {
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,843,"String html = ""<body><a href='./one.html'>One</a> <a href='two.html'>two</a> <a href='../three.html'>Three</a> <a href='//example2.com/four/'>Four</a> <a href='https://example2.com/five/'>Five</a>"";"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,844,"Document doc = Jsoup.parse(html, ""http://example.com/bar/"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,845,"Elements els = doc.select(""a"");"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,847,"assertEquals(""http://example.com/bar/one.html"", els.get(0).absUrl(""href""));"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,848,"assertEquals(""http://example.com/bar/two.html"", els.get(1).absUrl(""href""));"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,849,"assertEquals(""http://example.com/three.html"", els.get(2).absUrl(""href""));"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,850,"assertEquals(""http://example2.com/four/"", els.get(3).absUrl(""href""));"
+True,src/test/java/org/jsoup/nodes/ElementTest.java,src/test/java/org/jsoup/nodes/ElementTest.java,851,"assertEquals(""https://example2.com/five/"", els.get(4).absUrl(""href""));"
+False,src/test/java/org/jsoup/nodes/EntitiesTest.java,src/test/java/org/jsoup/nodes/EntitiesTest.java,17,"tring escapedUtfFull = Entities.escape(text, new OutputSettings().charset(""UTF-8"").escapeMode(base));"
+True,src/test/java/org/jsoup/nodes/EntitiesTest.java,src/test/java/org/jsoup/nodes/EntitiesTest.java,17,"String escapedUtfFull = Entities.escape(text, new OutputSettings().charset(""UTF-8"").escapeMode(extended));"
+True,src/test/java/org/jsoup/nodes/EntitiesTest.java,src/test/java/org/jsoup/nodes/EntitiesTest.java,90,@Test public void escapesGtInXmlAttributesButNotInHtml() {
+True,src/test/java/org/jsoup/nodes/EntitiesTest.java,src/test/java/org/jsoup/nodes/EntitiesTest.java,91,"// https://github.com/jhy/jsoup/issues/528 - < is OK in HTML attribute values, but not in XML"
+True,src/test/java/org/jsoup/nodes/EntitiesTest.java,src/test/java/org/jsoup/nodes/EntitiesTest.java,94,"String docHtml = ""<a title='<p>One</p>'>One</a>"";"
+True,src/test/java/org/jsoup/nodes/EntitiesTest.java,src/test/java/org/jsoup/nodes/EntitiesTest.java,95,Document doc = Jsoup.parse(docHtml);
+True,src/test/java/org/jsoup/nodes/EntitiesTest.java,src/test/java/org/jsoup/nodes/EntitiesTest.java,96,"Element element = doc.select(""a"").first();"
+True,src/test/java/org/jsoup/nodes/EntitiesTest.java,src/test/java/org/jsoup/nodes/EntitiesTest.java,98,doc.outputSettings().escapeMode(base);
+True,src/test/java/org/jsoup/nodes/EntitiesTest.java,src/test/java/org/jsoup/nodes/EntitiesTest.java,99,"assertEquals(""<a title=\""<p>One</p>\"">One</a>"", element.outerHtml());"
+True,src/test/java/org/jsoup/nodes/EntitiesTest.java,src/test/java/org/jsoup/nodes/EntitiesTest.java,101,doc.outputSettings().escapeMode(xhtml);
+True,src/test/java/org/jsoup/nodes/EntitiesTest.java,src/test/java/org/jsoup/nodes/EntitiesTest.java,102,"assertEquals(""<a title=\""&lt;p>One&lt;/p>\"">One</a>"", element.outerHtml());"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,126,@Test public void adoptedFormsRetainInputs() {
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,127,// test for https://github.com/jhy/jsoup/issues/249
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,128,"String html = ""<html>\n"" +"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,129,"""<body>  \n"" +"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,130,"""  <table>\n"" +"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,131,"""      <form action=\""/hello.php\"" method=\""post\"">\n"" +"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,132,"""      <tr><td>User:</td><td> <input type=\""text\"" name=\""user\"" /></td></tr>\n"" +"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,133,"""      <tr><td>Password:</td><td> <input type=\""password\"" name=\""pass\"" /></td></tr>\n"" +"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,134,"""      <tr><td><input type=\""submit\"" name=\""login\"" value=\""login\"" /></td></tr>\n"" +"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,135,"""   </form>\n"" +"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,136,"""  </table>\n"" +"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,137,"""</body>\n"" +"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,138,"""</html>"";"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,139,Document doc = Jsoup.parse(html);
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,140,"FormElement form = (FormElement) doc.select(""form"").first();"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,141,List<Connection.KeyVal> data = form.formData();
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,142,"assertEquals(3, data.size());"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,143,"assertEquals(""user"", data.get(0).key());"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,144,"assertEquals(""pass"", data.get(1).key());"
+True,src/test/java/org/jsoup/nodes/FormElementTest.java,src/test/java/org/jsoup/nodes/FormElementTest.java,145,"assertEquals(""login"", data.get(2).key());"
+True,src/test/java/org/jsoup/nodes/NodeTest.java,src/test/java/org/jsoup/nodes/NodeTest.java,128,@Test public void absHandlesDotFromIndex() {
+True,src/test/java/org/jsoup/nodes/NodeTest.java,src/test/java/org/jsoup/nodes/NodeTest.java,129,"Document doc = Jsoup.parse(""<a href='./one/two.html'>One</a>"", ""http://example.com"");"
+True,src/test/java/org/jsoup/nodes/NodeTest.java,src/test/java/org/jsoup/nodes/NodeTest.java,130,"Element a1 = doc.select(""a"").first();"
+True,src/test/java/org/jsoup/nodes/NodeTest.java,src/test/java/org/jsoup/nodes/NodeTest.java,131,"assertEquals(""http://example.com/one/two.html"", a1.absUrl(""href""));"
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,3,import java.util.List;
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,6,import org.jsoup.nodes.Attribute;
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,8,import org.jsoup.nodes.BooleanAttribute;
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,74,@Test public void parsesBooleanAttributes() {
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,75,"String html = ""<a normal=\""123\"" boolean empty=\""\""></a>"";"
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,76,"Element el = Jsoup.parse(html).select(""a"").first();"
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,78,"assertEquals(""123"", el.attr(""normal""));"
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,79,"assertEquals("""", el.attr(""boolean""));"
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,80,"assertEquals("""", el.attr(""empty""));"
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,82,List<Attribute> attributes = el.attributes().asList();
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,83,"assertEquals(""There should be 3 attribute present"", 3, attributes.size());"
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,85,// Assuming the list order always follows the parsed html
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,86,"assertFalse(""'normal' attribute should not be boolean"", attributes.get(0) instanceof BooleanAttribute);"
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,87,"assertTrue(""'boolean' attribute should be boolean"", attributes.get(1) instanceof BooleanAttribute);"
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,88,"assertFalse(""'empty' attribute should not be boolean"", attributes.get(2) instanceof BooleanAttribute);"
+True,src/test/java/org/jsoup/parser/AttributeParseTest.java,src/test/java/org/jsoup/parser/AttributeParseTest.java,90,"assertEquals(html, el.outerHtml());"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,6,import org.jsoup.integration.ParseTest;
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,11,import java.io.File;
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,12,import java.io.IOException;
+False,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,46,"ssertEquals(""<p =a=\""\"">One<a <p=\""\"">Something</a></p>\n"" +"
+False,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,47,"<a <p=\""\"">Else</a>"", doc.body().html());"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,49,"assertEquals(""<p =a>One<a <p>Something</a></p>\n"" +"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,50,"""<a <p>Else</a>"", doc.body().html());"
+False,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,50,"ssertEquals(""<p .....=\""\""></p>"", doc.body().html());"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,53,"assertEquals(""<p .....></p>"", doc.body().html());"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,854,@Test
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,855,public void testInvalidTableContents() throws IOException {
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,856,"File in = ParseTest.getFile(""/htmltests/table-invalid-elements.html"");"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,857,"Document doc = Jsoup.parse(in, ""UTF-8"");"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,858,doc.outputSettings().prettyPrint(true);
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,859,String rendered = doc.toString();
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,860,"int endOfEmail = rendered.indexOf(""Comment"");"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,861,"int guarantee = rendered.indexOf(""Why am I here?"");"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,862,"assertTrue(""Comment not found"", endOfEmail > -1);"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,863,"assertTrue(""Search text not found"", guarantee > -1);"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,864,"assertTrue(""Search text did not come after comment"", guarantee > endOfEmail);"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,867,@Test public void testNormalisesIsIndex() {
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,868,"Document doc = Jsoup.parse(""<body><isindex action='/submit'></body>"");"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,869,String html = doc.outerHtml();
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,870,"assertEquals(""<form action=\""/submit\""> <hr> <label>This is a searchable index. Enter search keywords: <input name=\""isindex\""></label> <hr> </form>"","
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,871,StringUtil.normaliseWhitespace(doc.body().html()));
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,874,@Test public void testReinsertionModeForThCelss() {
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,875,"String body = ""<body> <table> <tr> <th> <table><tr><td></td></tr></table> <div> <table><tr><td></td></tr></table> </div> <div></div> <div></div> <div></div> </th> </tr> </table> </body>"";"
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,876,Document doc = Jsoup.parse(body);
+True,src/test/java/org/jsoup/parser/HtmlParserTest.java,src/test/java/org/jsoup/parser/HtmlParserTest.java,877,"assertEquals(1, doc.body().children().size());"
+False,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,20,mport static org.junit.Assert.assertEquals;
+False,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,21,mport static org.junit.Assert.assertNotSame;
+True,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,20,import static org.junit.Assert.*;
+False,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,73,ocument htmlDoc = Jsoup.connect(xmlUrl).get();
+True,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,72,Document htmlDoc = Jsoup.connect(xmlUrl).parser(Parser.htmlParser()).get();
+True,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,73,"Document autoXmlDoc = Jsoup.connect(xmlUrl).get(); // check connection auto detects xml, uses xml parser"
+False,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,77,"ssertNotSame(htmlDoc, xmlDoc);"
+True,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,77,assertFalse(htmlDoc.equals(xmlDoc));
+True,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,78,"assertEquals(xmlDoc, autoXmlDoc);"
+True,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,81,"assertEquals(0, autoXmlDoc.select(""head"").size()); // xml parser does not"
+True,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,127,@Test
+True,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,128,public void testDoesHandleEOFInTag() {
+True,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,129,"String html = ""<img src=asdf onerror=\""alert(1)\"" x="";"
+True,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,130,"Document xmlDoc = Jsoup.parse(html, """", Parser.xmlParser());"
+True,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java,131,"assertEquals(""<img src=\""asdf\"" onerror=\""alert(1)\"" x=\""\"" />"", xmlDoc.html());"
+True,src/test/java/org/jsoup/select/ElementsTest.java,src/test/java/org/jsoup/select/ElementsTest.java,185,@Test public void unwrapKeepsSpace() {
+True,src/test/java/org/jsoup/select/ElementsTest.java,src/test/java/org/jsoup/select/ElementsTest.java,186,"String h = ""<p>One <span>two</span> <span>three</span> four</p>"";"
+True,src/test/java/org/jsoup/select/ElementsTest.java,src/test/java/org/jsoup/select/ElementsTest.java,187,Document doc = Jsoup.parse(h);
+True,src/test/java/org/jsoup/select/ElementsTest.java,src/test/java/org/jsoup/select/ElementsTest.java,188,"doc.select(""span"").unwrap();"
+True,src/test/java/org/jsoup/select/ElementsTest.java,src/test/java/org/jsoup/select/ElementsTest.java,189,"assertEquals(""<p>One two three four</p>"", doc.body().html());"
+False,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,203,"lements els = doc.select("".head p"");"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,203,"Element root = doc.getElementsByClass(""head"").first();"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,205,"Elements els = root.select("".head p"");"
+False,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,208,"lements p = doc.select(""p.first"");"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,210,"Elements p = root.select(""p.first"");"
+False,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,212,"lements empty = doc.select(""p .first""); // self, not descend, should not match"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,214,"Elements empty = root.select(""p .first""); // self, not descend, should not match"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,217,"Elements aboveRoot = root.select(""body div.head"");"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,218,"assertEquals(0, aboveRoot.size());"
+False,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,239,"lements els = Jsoup.parse(h).select(""div p .first"");"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,244,Document doc = Jsoup.parse(h);
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,245,"Element root = doc.getElementsByClass(""head"").first();"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,247,"Elements els = root.select(""div p .first"");"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,252,"Elements aboveRoot = root.select(""body p .first"");"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,253,"assertEquals(0, aboveRoot.size());"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,654,@Test public void selectSameElements() {
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,655,"final String html = ""<div>one</div><div>one</div>"";"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,657,Document doc = Jsoup.parse(html);
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,658,"Elements els = doc.select(""div"");"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,659,"assertEquals(2, els.size());"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,661,"Elements subSelect = els.select("":contains(one)"");"
+True,src/test/java/org/jsoup/select/SelectorTest.java,src/test/java/org/jsoup/select/SelectorTest.java,662,"assertEquals(2, subSelect.size());"

@@ -1,0 +1,1117 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,2,* Copyright 2010 Google Inc.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,16,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,18,import com.google.common.annotations.VisibleForTesting;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,19,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,20,import com.google.common.base.Predicate;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,21,import com.google.common.collect.Collections2;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,22,import com.google.common.collect.LinkedHashMultimap;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,23,import com.google.common.collect.Maps;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,24,import com.google.common.collect.Multimap;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,25,import com.google.common.collect.Sets;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,26,import com.google.javascript.jscomp.DefinitionsRemover.Definition;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,27,import com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,28,import com.google.javascript.jscomp.NodeTraversal.AbstractShallowCallback;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,29,import com.google.javascript.jscomp.graph.DiGraph;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,30,import com.google.javascript.jscomp.graph.LinkedDirectedGraph;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,31,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,32,import com.google.javascript.rhino.Token;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,34,import java.util.Collection;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,35,import java.util.Map;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,36,import java.util.Set;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,39,* A pass the uses a {@link DefinitionProvider} to compute a call graph for an
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,40,* AST.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,42,* <p>A {@link CallGraph} connects {@link Function}s to {@link Callsite}s and
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,43,* vice versa: each function in the graph links to the callsites it contains and
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,44,"* each callsite links to the functions it could call. Similarly, each callsite"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,45,* links to the function that contains it and each function links to the
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,46,* callsites that could call it.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,48,"* <p>The callgraph is not precise. That is, a callsite may indicate it can"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,49,* call a function when in fact it does not do so in the running program.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,51,* <p>The callgraph is also not complete: in some cases it may be unable to
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,52,"* determine some targets of a callsite. In this case,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,53,* Callsite.hasUnknownTarget() will return true.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,55,* <p>The CallGraph doesn't (currently) have functions for externally defined
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,56,"* functions; however, callsites that target externs will have hasExternTarget()"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,57,* return true.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,59,* <p>TODO(dcc): Have CallGraph (optionally?) include functions for externs.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,61,* @author dcc@google.com (Devin Coughlin)
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,63,public class CallGraph implements CompilerPass {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,64,private AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,66,/** Maps a function to the callsites contained in that function. */
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,67,"private Multimap<Function, Callsite> callsitesByContainingFunction ="
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,68,LinkedHashMultimap.create();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,71,* Maps an AST node (with type Token.CALL or Token.NEW) to a Callsite object.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,73,"private Map<Node, Callsite> callsitesByNode;"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,75,/** Maps an AST node (with type Token.FUNCTION) to a Function object. */
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,76,"private Map<Node, Function> functionsByNode;"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,79,* Will the call graph support looking up the callsites that could call a
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,80,* given function?
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,82,private boolean computeBackwardGraph;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,85,* Maps a function to the callsites targeting that function.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,87,* This data structure is only filled in if computeBackwardGraph is true.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,89,"private Multimap<Function, Callsite> callsitesByTargetingFunction;"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,92,* Will the call graph support looking up the functions that a given callsite
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,93,* can call?
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,95,private boolean computeForwardGraph;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,98,* Maps a callsite to the functions known to be targeted by that callsite.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,100,* This data structure is only filled in if computeBackwardGraph if false.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,102,"private Multimap<Callsite, Function> targetFunctionsByCallsite;"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,105,"* If true, then the callgraph will use NameReferenceGraph as a"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,106,"* definition provider; otherwise, use the faster SimpleDefinitionProvider."
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,108,private boolean useNameReferenceGraph = false;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,110,/** Has the CallGraph already been constructed? */
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,111,private boolean alreadyRun = false;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,113,/** The name we give the main function. */
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,114,@VisibleForTesting
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,115,"public static final String MAIN_FUNCTION_NAME = ""{main}"";"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,118,*  Represents the global function. Calling getBody() on this
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,119,*  function will yield the global script/block.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,121,*  TODO(dcc): having a single main function is somewhat misleading. Perhaps
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,122,*  it might be better to make CallGraph module aware and have one per
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,123,*  module?
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,125,private Function mainFunction;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,128,* Creates a call graph object supporting the specified lookups.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,130,* At leats one (and possibly both) of computeForwardGraph and
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,131,* computeBackwardGraph must be true.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,133,* @param compiler The compiler
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,134,* @param computeForwardGraph Should the call graph allow lookup of the target
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,135,*        functions a given callsite could call?
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,136,* @param computeBackwardGraph Should the call graph allow lookup of the
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,137,*        callsites that could call a given function?
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,139,"public CallGraph(AbstractCompiler compiler, boolean computeForwardGraph,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,140,boolean computeBackwardGraph) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,141,Preconditions.checkArgument(computeForwardGraph || computeBackwardGraph);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,143,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,145,this.computeForwardGraph = computeForwardGraph;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,146,this.computeBackwardGraph = computeBackwardGraph;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,148,callsitesByNode = Maps.newLinkedHashMap();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,149,functionsByNode = Maps.newLinkedHashMap();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,151,if (computeForwardGraph) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,152,targetFunctionsByCallsite = LinkedHashMultimap.create();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,155,if (computeBackwardGraph) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,156,callsitesByTargetingFunction = LinkedHashMultimap.create();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,161,* Creates a call graph object support both forward and backward lookups.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,163,public CallGraph(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,164,"this(compiler, true, true);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,168,* Builds a call graph for the given externsRoot and jsRoot.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,169,* This method must not be called more than once per CallGraph instance.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,171,@Override
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,172,"public void process(Node externsRoot, Node jsRoot) {"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,173,Preconditions.checkState(alreadyRun == false);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,175,createFunctions(jsRoot);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,177,// Depends on createFunctions already being called.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,178,createCallsites();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,180,DefinitionProvider definitionProvider =
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,181,"constructDefinitionProvider(externsRoot, jsRoot);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,183,// Depends on createCallsites already being called
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,184,connectCallsitesToTargets(definitionProvider);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,186,alreadyRun = true;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,190,* Returns the call graph Function object corresponding to the provided
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,191,"* AST Token.FUNCTION node, or null if no such object exists."
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,193,public Function getFunctionForAstNode(Node functionNode) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,194,Preconditions.checkArgument(NodeUtil.isFunction(functionNode));
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,196,return functionsByNode.get(functionNode);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,200,"* Returns a Function object representing the ""main"" global function."
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,202,public Function getMainFunction() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,203,return mainFunction;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,207,* Returns a collection of all functions (including the main function)
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,208,* in the call graph.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,210,public Collection<Function> getAllFunctions() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,211,return functionsByNode.values();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,215,* Finds a function with the given name. Throws an exception if
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,216,* there are no functions or multiple functions with the name. This is
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,217,* for testing purposes only.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,219,@VisibleForTesting
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,220,public Function getUniqueFunctionWithName(final String desiredName) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,221,Collection<Function> functions =
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,222,"Collections2.<Function>filter(getAllFunctions(),"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,223,new Predicate<Function>() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,224,public boolean apply(Function function) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,226,String functionName = function.getName();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,227,"// Anonymous functions will have null names,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,228,// so it is important to  handle that correctly here
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,229,if (functionName != null && desiredName != null) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,230,return desiredName.equals(functionName);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,231,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,232,return desiredName == functionName;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,237,if (functions.size() == 1) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,238,return functions.iterator().next();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,239,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,240,"throw new IllegalStateException(""Found "" + functions.size()"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,241,"+ "" functions with name "" + desiredName);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,246,* Returns the call graph Callsite object corresponding to the provided
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,247,"* AST Token.CALL or Token.NEW node, or null if no such object exists."
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,249,public Callsite getCallsiteForAstNode(Node callsiteNode) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,250,Preconditions.checkArgument(callsiteNode.getType() == Token.CALL ||
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,251,callsiteNode.getType() == Token.NEW);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,253,return callsitesByNode.get(callsiteNode);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,257,* Returns a collection of all callsites in the call graph.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,259,public Collection<Callsite> getAllCallsites() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,260,return callsitesByContainingFunction.values();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,264,* Create a Function object for given an Token.FUNCTION AST node.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,266,* This is the bottleneck for Function creation: all Functions should
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,267,* be created with this method.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,269,private Function createFunction(Node functionNode) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,270,Function function = new Function(functionNode);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,271,"functionsByNode.put(functionNode, function);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,273,return function;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,276,private void createFunctions(Node jsRoot) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,277,// Create fake function representing global execution
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,278,mainFunction = createFunction(jsRoot);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,280,for (Node n : collectAllFunctionNodesInSubtree(jsRoot)) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,281,createFunction(n);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,285,private Callsite createCallsite(Node callsiteNode) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,286,Callsite callsite = new Callsite(callsiteNode);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,287,"callsitesByNode.put(callsiteNode, callsite);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,289,return callsite;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,292,private void createCallsites() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,293,for (Function function : getAllFunctions()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,294,Collection<Node> callsitesInFunction =
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,295,collectCallsiteNodesInShallowSubtree(function.getBodyNode());
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,297,for (Node callsiteNode : callsitesInFunction) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,298,Callsite callsite = createCallsite(callsiteNode);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,300,"callsitesByContainingFunction.put(function, callsite);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,301,callsite.containingFunction = function;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,307,* Maps each Callsite to the Function(s) it could call
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,308,* and each Function to the Callsite(s) that could call it.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,310,"* If the definitionProvider cannot determine the target of a Callsite,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,311,* the Callsite's hasUnknownTarget field is set to true.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,313,* If the definitionProvider determins that the target of a Callsite
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,314,"* could be an extern-defined function, then the Callsite's hasExternTarget"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,315,* field is set to true.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,317,* @param definitionProvider The DefinitionProvider used to determine
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,318,*    targets of callsites.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,320,private void connectCallsitesToTargets(DefinitionProvider definitionProvider)
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,322,for (Function function : getAllFunctions()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,323,for (Callsite callsite : callsitesByContainingFunction.get(function)) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,324,Collection<Definition> definitions =
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,325,"lookupDefinitionsForTargetsOfCall(callsite.getAstNode(),"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,326,definitionProvider);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,328,if (definitions == null) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,329,callsite.hasUnknownTarget = true;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,330,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,331,for (Definition definition : definitions) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,332,if (definition.isExtern()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,333,callsite.hasExternTarget = true;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,334,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,335,Node target = definition.getRValue();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,337,if (target != null && NodeUtil.isFunction(target)) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,338,Function targetFunction = functionsByNode.get(target);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,340,if (computeForwardGraph) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,341,"targetFunctionsByCallsite.put(callsite, targetFunction);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,344,if (computeBackwardGraph) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,345,"callsitesByTargetingFunction.put(targetFunction, callsite);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,347,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,348,callsite.hasUnknownTarget = true;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,358,* Constructs and returns a directed graph where the nodes are functions and
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,359,* the edges are callsites connecting callers to callees.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,361,* It is safe to call this method on both forward and backwardly constructed
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,362,* CallGraphs.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,364,"public DiGraph<Function, Callsite> getForwardDirectedGraph() {"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,365,return constructDirectedGraph(true);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,369,* Constructs and returns a directed graph where the nodes are functions and
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,370,* the edges are callsites connecting callees to callers.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,372,* It is safe to call this method on both forward and backwardly constructed
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,373,* CallGraphs.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,375,"public DiGraph<Function, Callsite> getBackwardDirectedGraph() {"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,376,return constructDirectedGraph(false);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,379,"private static void digraphConnect(DiGraph<Function, Callsite> digraph,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,380,"Function caller,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,381,"Callsite callsite,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,382,"Function callee,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,383,boolean forward) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,385,Function source;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,386,Function destination;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,388,if (forward) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,389,source = caller;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,390,destination = callee;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,391,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,392,source = callee;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,393,destination = caller;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,396,"digraph.connect(source, callsite, destination);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,400,"* Constructs a digraph of the call graph. If {@code forward} is true, then"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,401,"* the edges in the digraph will go from callers to callees, if false then"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,402,* the edges will go from callees to callers.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,404,* It is safe to run this method on both a forwardly constructed callgraph
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,405,"* and a backwardly constructed callgraph, regardless of the value of"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,406,* {@code forward}.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,408,* @param forward If true then the digraph will be a forward digraph.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,410,"private DiGraph<Function, Callsite> constructDirectedGraph(boolean forward) {"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,411,"DiGraph<Function, Callsite>digraph ="
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,412,"new LinkedDirectedGraph<Function, Callsite>();"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,414,// Create nodes in call graph
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,415,for (Function function : getAllFunctions()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,416,digraph.createNode(function);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,419,if (computeForwardGraph) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,420,"// The CallGraph is a forward graph, so go from callers to callees"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,421,for (Function caller : getAllFunctions()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,422,for (Callsite callsite : caller.getCallsitesInFunction()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,423,for (Function callee : callsite.getPossibleTargets()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,424,"digraphConnect(digraph, caller, callsite, callee,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,425,forward);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,429,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,430,"// The CallGraph is a backward graph, so go from callees to callers"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,431,for (Function callee : getAllFunctions()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,432,for (Callsite callsite :
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,433,callee.getCallsitesPossiblyTargetingFunction()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,435,Function caller = callsite.getContainingFunction();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,436,"digraphConnect(digraph, caller, callsite, callee,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,437,forward);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,442,return digraph;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,446,* Constructs a DefinitionProvider that can be used to determine the
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,447,* targets of callsites.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,449,"* This construction is the main cost of building the callgraph, so we offer"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,450,"* the client a choice of NameReferenceGraph, which is slow and hopefully more"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,451,"* precise, and SimpleDefinitionFinder, which is fast and perhaps not as"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,452,* precise.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,454,* We use SimpleNameFinder as the default because in practice it does
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,455,* not appear to be less precise than NameReferenceGraph and is at least an
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,456,* order of magnitude faster on large compiles.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,458,"private DefinitionProvider constructDefinitionProvider(Node externsRoot,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,459,Node jsRoot) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,460,if (useNameReferenceGraph) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,461,"// Name reference graph is very, very slow"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,462,NameReferenceGraphConstruction graphConstruction
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,463,= new NameReferenceGraphConstruction(compiler);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,465,"graphConstruction.process(externsRoot, jsRoot);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,467,return graphConstruction.getNameReferenceGraph();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,468,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,469,SimpleDefinitionFinder defFinder = new SimpleDefinitionFinder(compiler);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,470,"defFinder.process(externsRoot, jsRoot);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,471,return defFinder;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,476,* Queries the definition provider for the definitions that could be the
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,477,* targets of the given callsite node.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,479,* This is complicated by the fact that NameReferenceGraph and
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,480,* SimpleDefinitionProvider (the two definition providers we currently
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,481,* use) differ on the types of target nodes they will analyze.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,483,private Collection<Definition> lookupDefinitionsForTargetsOfCall(
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,484,"Node callsite, DefinitionProvider definitionProvider) {"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,485,Preconditions.checkArgument(callsite.getType() == Token.CALL
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,486,|| callsite.getType() == Token.NEW);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,488,Node targetExpression = callsite.getFirstChild();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,490,// NameReferenceGraph throws an exception unless the node is
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,491,// a GETPROP or a NAME
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,492,if (!useNameReferenceGraph
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,493,|| (NodeUtil.isGetProp(targetExpression)
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,494,||  NodeUtil.isName(targetExpression))) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,496,Collection<Definition> definitions =
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,497,definitionProvider.getDefinitionsReferencedAt(targetExpression);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,499,if (definitions != null && !definitions.isEmpty()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,500,return definitions;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,504,return null;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,507,private Set<Node> collectAllFunctionNodesInSubtree(Node subtree) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,508,final Set<Node> functionNodes = Sets.newLinkedHashSet();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,510,"NodeTraversal.traverse(compiler, subtree, new AbstractPostOrderCallback() {"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,511,@Override
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,512,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,513,if (NodeUtil.isFunction(n)) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,514,functionNodes.add(n);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,519,return functionNodes;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,522,private Collection<Node> collectCallsiteNodesInShallowSubtree(Node subtree) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,523,final Collection<Node> callsites = Sets.newLinkedHashSet();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,525,"NodeTraversal.traverse(compiler, subtree, new AbstractShallowCallback() {"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,526,@Override
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,527,"public void visit(NodeTraversal t, Node potentialCallsite, Node parent) {"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,528,int nodeType = potentialCallsite.getType();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,529,if (nodeType == Token.CALL || nodeType == Token.NEW) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,530,callsites.add(potentialCallsite);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,535,return callsites;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,539,* An inner class that represents functions in the call graph.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,540,* A Function knows how to get its AST node and what Callsites
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,541,* it contains.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,543,public class Function {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,545,private Node astNode;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,547,private Function(Node functionAstNode) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,548,astNode = functionAstNode;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,552,"* Does this function represent the global ""main"" function?"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,554,public boolean isMain() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,555,return (this == CallGraph.this.mainFunction);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,559,* Returns the underlying AST node for the function. This usually
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,560,"* has type Token.FUNCTION but in the case of the ""main"" function"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,561,* will have type Token.BLOCK.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,563,public Node getAstNode() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,564,return astNode;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,568,* Returns the AST node for the body of the function. If this function
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,569,"* is the main function, it will return the global block."
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,571,public Node getBodyNode() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,572,if (isMain()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,573,return astNode;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,574,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,575,return NodeUtil.getFunctionBody(astNode);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,580,* Gets the name of this function. Returns null if the function is
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,581,* anonymous.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,583,public String getName() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,584,if (isMain()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,585,return MAIN_FUNCTION_NAME;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,586,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,587,return NodeUtil.getFunctionName(astNode);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,592,* Returns the callsites in this functon.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,594,public Collection<Callsite> getCallsitesInFunction() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,595,return CallGraph.this.callsitesByContainingFunction.get(this);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,599,* Returns a collection of callsites that might call this function.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,601,* getCallsitesPossiblyTargetingFunction() is a best effort only: the
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,602,* collection may include callsites that do not actually call this function
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,603,* and if this function is exported or aliased may be missing actual
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,604,* targets.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,606,* This method should not be called on a Function from a CallGraph
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,607,* that was constructed with {@code computeBackwardGraph} {@code false}.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,609,public Collection<Callsite> getCallsitesPossiblyTargetingFunction() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,610,if (computeBackwardGraph) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,611,return CallGraph.this.callsitesByTargetingFunction.get(this);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,612,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,613,"throw new UnsupportedOperationException(""Cannot call "" +"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,614,"""getCallsitesPossiblyTargetingFunction() on a Function """
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,615,"+ ""from a backward-forward CallGraph"");"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,619,// TODO(dcc): Add supported for querying whether a function is aliased
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,620,"// or exported. (If a function is not aliased or exported, then"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,621,// getCallsitesPossiblyTargetingFunction() truly contains all possible
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,622,// targets that could call the function).
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,626,* An inner class that represents call sites in the call graph.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,627,"* A Callsite knows how to get its AST node, what its containing"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,628,"* Function is, and what its target Functions are."
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,630,public class Callsite {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,631,private Node astNode;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,633,private boolean hasUnknownTarget = false;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,634,private boolean hasExternTarget = false;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,636,private Function containingFunction = null;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,638,private Callsite(Node callsiteAstNode) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,639,astNode = callsiteAstNode;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,642,public Node getAstNode() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,643,return astNode;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,646,public Function getContainingFunction() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,647,return containingFunction;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,651,* Returns the possible target functions that this callsite could call.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,653,* These targets do not include functions defined in externs. If this
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,654,"* callsite could call an extern function, then hasExternTarget() will"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,655,* return true.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,657,* getKnownTargets() is a best effort only: the collection may include
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,658,* other functions that are not actual targets and (if hasUnknownTargets()
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,659,* is true) may be missing actual targets.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,661,* This method should not be called on a Callsite from a CallGraph
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,662,* that was constructed with {@code computeForwardGraph} {@code false}.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,664,public Collection<Function> getPossibleTargets() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,665,if (computeForwardGraph) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,666,return CallGraph.this.targetFunctionsByCallsite.get(this);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,667,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,668,"throw new UnsupportedOperationException(""Cannot call "" +"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,669,"""getPossibleTargets() on a Callsite from a non-forward "" +"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,670,"""CallGraph"");"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,675,"* If true, then DefinitionProvider used in callgraph construction"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,676,* was unable find all target functions of this callsite.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,678,"* If false, then getKnownTargets() contains all the possible targets of"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,679,"* this callsite (and, perhaps, additional targets as well)."
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,681,public boolean hasUnknownTarget() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,682,return hasUnknownTarget;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,686,"* If true, then this callsite could target a function defined in the"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,687,"* externs. If false, then not."
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,689,public boolean hasExternTarget() {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,690,return hasExternTarget;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,2,* Copyright 2010 Google Inc.
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,16,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,18,import com.google.common.collect.Lists;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,19,import com.google.common.collect.Sets;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,20,import com.google.javascript.jscomp.CallGraph.Callsite;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,21,import com.google.javascript.jscomp.CallGraph.Function;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,22,import com.google.javascript.jscomp.graph.FixedPointGraphTraversal;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,23,import com.google.javascript.jscomp.graph.FixedPointGraphTraversal.EdgeCallback;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,24,import com.google.javascript.rhino.Node;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,25,import com.google.javascript.rhino.Token;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,27,import java.util.Collection;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,28,import java.util.List;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,29,import java.util.Set;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,32,* Tests for CallGraph.
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,34,* @author dcc@google.com (Devin Coughlin)
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,36,public class CallGraphTest extends CompilerTestCase {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,38,private CallGraph currentProcessor;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,40,private boolean createForwardCallGraph;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,41,private boolean createBackwardCallGraph;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,43,@Override
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,44,protected CompilerPass getProcessor(Compiler compiler) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,45,// We store the new callgraph so it can be tested later
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,46,"currentProcessor = new CallGraph(compiler, createForwardCallGraph,"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,47,createBackwardCallGraph);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,49,return currentProcessor;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,52,static final String SHARED_EXTERNS =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,53,"""var ExternalFunction = function(a) {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,54,"""var externalnamespace = {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,55,"""externalnamespace.prop = function(){};\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,57,public void testGetFunctionForAstNode() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,58,"String source = ""function A() {};\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,60,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,62,"CallGraph.Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,64,Node functionANode = functionA.getAstNode();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,66,"assertEquals(functionA, callgraph.getFunctionForAstNode(functionANode));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,69,public void testGetAllFunctions() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,70,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,71,"""function A() {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,72,"""var B = function() {\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,73,"""(function C(){A()})()\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,74,"""};\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,76,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,78,Collection<CallGraph.Function> functions = callgraph.getAllFunctions();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,80,"// 3 Functions, plus one for the main function"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,81,"assertEquals(4, functions.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,83,CallGraph.Function functionA =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,84,"callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,85,CallGraph.Function functionB =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,86,"callgraph.getUniqueFunctionWithName(""B"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,87,CallGraph.Function functionC =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,88,"callgraph.getUniqueFunctionWithName(""C"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,90,"assertEquals(""A"", NodeUtil.getFunctionName(functionA.getAstNode()));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,91,"assertEquals(""B"", NodeUtil.getFunctionName(functionB.getAstNode()));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,92,"assertEquals(""C"", NodeUtil.getFunctionName(functionC.getAstNode()));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,95,public void testGetAllFunctionsContainsNormalFunction() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,96,"String source = ""function A(){}\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,98,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,100,Collection<CallGraph.Function> allFunctions = callgraph.getAllFunctions();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,102,// 2 functions: one for A() and one for the main function
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,103,"assertEquals(2, allFunctions.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,105,"assertTrue(allFunctions.contains(callgraph.getUniqueFunctionWithName(""A"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,106,assertTrue(allFunctions.contains(callgraph.getMainFunction()));
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,109,public void testGetAllFunctionsContainsVarAssignedLiteralFunction() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,110,"String source = ""var A = function(){}\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,112,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,114,Collection<CallGraph.Function> allFunctions = callgraph.getAllFunctions();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,116,// 2 functions: one for A() and one for the global function
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,117,"assertEquals(2, allFunctions.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,119,"Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,120,assertTrue(allFunctions.contains(functionA));
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,121,assertTrue(allFunctions.contains(callgraph.getMainFunction()));
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,124,public void testGetAllFunctionsContainsNamespaceAssignedLiteralFunction() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,125,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,126,"""var namespace = {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,127,"""namespace.A = function(){};\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,129,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,131,Collection<CallGraph.Function> allFunctions = callgraph.getAllFunctions();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,133,// 2 functions: one for namespace.A() and one for the global function
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,134,"assertEquals(2, allFunctions.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,136,assertTrue(allFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,137,"callgraph.getUniqueFunctionWithName(""namespace.A"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,138,assertTrue(allFunctions.contains(callgraph.getMainFunction()));
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,141,public void testGetAllFunctionsContainsLocalFunction() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,142,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,143,"""var A = function(){var B = function(){}};\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,145,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,147,Collection<CallGraph.Function> allFunctions = callgraph.getAllFunctions();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,149,"// 3 functions: one for A, B, and global function"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,150,"assertEquals(3, allFunctions.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,152,"assertTrue(allFunctions.contains(callgraph.getUniqueFunctionWithName(""A"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,153,"assertTrue(allFunctions.contains(callgraph.getUniqueFunctionWithName(""B"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,154,assertTrue(allFunctions.contains(callgraph.getMainFunction()));
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,157,public void testGetAllFunctionsContainsAnonymousFunction() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,158,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,159,"""var A = function(){(function(){})();};\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,161,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,163,Collection<CallGraph.Function> allFunctions = callgraph.getAllFunctions();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,165,"// 3 functions: A, anonymous, and global function"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,166,"assertEquals(3, allFunctions.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,168,"assertTrue(allFunctions.contains(callgraph.getUniqueFunctionWithName(""A"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,169,assertTrue(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,170,allFunctions.contains(callgraph.getUniqueFunctionWithName(null)));
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,171,assertTrue(allFunctions.contains(callgraph.getMainFunction()));
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,174,public void testGetCallsiteForAstNode() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,175,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,176,"""function A() {B()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,177,"""function B(){};\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,179,CallGraph callgraph = compileAndRunBackward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,181,"CallGraph.Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,182,CallGraph.Callsite callToB =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,183,functionA.getCallsitesInFunction().iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,185,Node callsiteNode = callToB.getAstNode();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,187,"assertEquals(callToB, callgraph.getCallsiteForAstNode(callsiteNode));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,190,public void testFunctionGetCallsites() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,191,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,192,"""function A() {var x; x()}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,193,"""var B = function() {\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,194,"""(function C(){A()})()\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,195,"""};\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,197,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,199,"CallGraph.Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,200,Collection<CallGraph.Callsite> callsitesInA =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,201,functionA.getCallsitesInFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,203,"assertEquals(1, callsitesInA.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,205,CallGraph.Callsite firstCallsiteInA =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,206,callsitesInA.iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,208,Node aTargetExpression = firstCallsiteInA.getAstNode().getFirstChild();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,209,"assertEquals(Token.NAME, aTargetExpression.getType());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,210,"assertEquals(""x"", aTargetExpression.getString());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,212,CallGraph.Function functionB =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,213,"callgraph.getUniqueFunctionWithName(""B"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,215,Collection<CallGraph.Callsite> callsitesInB =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,216,functionB.getCallsitesInFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,218,"assertEquals(1, callsitesInB.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,220,CallGraph.Callsite firstCallsiteInB =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,221,callsitesInB.iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,223,Node bTargetExpression = firstCallsiteInB.getAstNode().getFirstChild();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,224,"assertEquals(Token.FUNCTION, bTargetExpression.getType());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,225,"assertEquals(""C"", NodeUtil.getFunctionName(bTargetExpression));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,227,CallGraph.Function functionC =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,228,"callgraph.getUniqueFunctionWithName(""C"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,230,Collection<CallGraph.Callsite> callsitesInC =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,231,functionC.getCallsitesInFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,232,"assertEquals(1, callsitesInC.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,234,CallGraph.Callsite firstCallsiteInC =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,235,callsitesInC.iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,237,Node cTargetExpression = firstCallsiteInC.getAstNode().getFirstChild();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,238,"assertEquals(Token.NAME, aTargetExpression.getType());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,239,"assertEquals(""A"", cTargetExpression.getString());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,242,public void testFindNewInFunction() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,243,"String source = ""function A() {var x; new x(1,2)}\n;"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,245,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,247,CallGraph.Function functionA =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,248,"callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,249,Collection<CallGraph.Callsite> callsitesInA =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,250,functionA.getCallsitesInFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,251,"assertEquals(1, callsitesInA.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,253,Node callsiteInA = callsitesInA.iterator().next().getAstNode();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,254,"assertEquals(Token.NEW, callsiteInA.getType());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,256,Node aTargetExpression = callsiteInA.getFirstChild();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,257,"assertEquals(Token.NAME, aTargetExpression.getType());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,258,"assertEquals(""x"", aTargetExpression.getString());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,261,public void testFindCallsiteTargetGlobalName() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,262,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,263,"""function A() {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,264,"""function B() {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,265,"""function C() {A()}\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,267,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,269,CallGraph.Function functionC =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,270,"callgraph.getUniqueFunctionWithName(""C"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,271,assertNotNull(functionC);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,273,CallGraph.Callsite callsiteInC =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,274,functionC.getCallsitesInFunction().iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,275,assertNotNull(callsiteInC);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,277,Collection<CallGraph.Function> targetsOfCallsiteInC =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,278,callsiteInC.getPossibleTargets();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,280,assertNotNull(targetsOfCallsiteInC);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,281,"assertEquals(1, targetsOfCallsiteInC.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,284,public void testFindCallsiteTargetAliasedGlobalProperty() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,285,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,286,"""var namespace = {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,287,"""namespace.A = function() {};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,288,"""function C() {namespace.A()}\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,290,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,292,CallGraph.Function functionC =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,293,"callgraph.getUniqueFunctionWithName(""C"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,294,assertNotNull(functionC);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,296,CallGraph.Callsite callsiteInC =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,297,functionC.getCallsitesInFunction().iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,299,assertNotNull(callsiteInC);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,301,Collection<CallGraph.Function> targetsOfCallsiteInC =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,302,callsiteInC.getPossibleTargets();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,304,assertNotNull(targetsOfCallsiteInC);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,305,"assertEquals(1, targetsOfCallsiteInC.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,308,public void testGetAllCallsitesContainsMultiple() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,309,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,310,"""function A() {}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,311,"""var B = function() {\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,312,"""(function (){A()})()\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,313,"""};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,314,"""A();\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,315,"""B();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,317,CallGraph callgraph = compileAndRunBackward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,319,Collection<CallGraph.Callsite> allCallsites = callgraph.getAllCallsites();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,321,"assertEquals(4, allCallsites.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,324,public void testGetAllCallsitesContainsGlobalSite() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,325,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,326,"""function A(){}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,327,"""A();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,329,CallGraph callgraph = compileAndRunBackward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,331,Collection<CallGraph.Callsite> allCallsites = callgraph.getAllCallsites();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,332,"assertEquals(1, allCallsites.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,334,Node callsiteNode = allCallsites.iterator().next().getAstNode();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,335,"assertEquals(Token.CALL, callsiteNode.getType());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,336,"assertEquals(""A"", callsiteNode.getFirstChild().getString());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,339,public void testGetAllCallsitesContainsLocalSite() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,340,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,341,"""function A(){}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,342,"""function B(){A();}\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,344,CallGraph callgraph = compileAndRunBackward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,346,Collection<CallGraph.Callsite> allCallsites = callgraph.getAllCallsites();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,347,"assertEquals(1, allCallsites.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,349,Node callsiteNode = allCallsites.iterator().next().getAstNode();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,350,"assertEquals(Token.CALL, callsiteNode.getType());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,351,"assertEquals(""A"", callsiteNode.getFirstChild().getString());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,354,public void testGetAllCallsitesContainsLiteralSite() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,355,"String source = ""function A(){(function(a){})();}\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,357,CallGraph callgraph = compileAndRunBackward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,359,Collection<CallGraph.Callsite> allCallsites = callgraph.getAllCallsites();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,360,"assertEquals(1, allCallsites.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,362,Node callsiteNode = allCallsites.iterator().next().getAstNode();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,363,"assertEquals(Token.CALL, callsiteNode.getType());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,364,"assertEquals(Token.FUNCTION, callsiteNode.getFirstChild().getType());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,367,public void testGetAllCallsitesContainsConstructorSite() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,368,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,369,"""function A(){}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,370,"""function B(){new A();}\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,372,CallGraph callgraph = compileAndRunBackward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,374,Collection<CallGraph.Callsite> allCallsites = callgraph.getAllCallsites();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,375,"assertEquals(1, allCallsites.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,377,Node callsiteNode = allCallsites.iterator().next().getAstNode();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,378,"assertEquals(Token.NEW, callsiteNode.getType());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,379,"assertEquals(""A"", callsiteNode.getFirstChild().getString());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,383,* Test getting a backward directed graph on a backward call graph
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,384,* and propagating over it.
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,386,public void testGetDirectedGraph_backwardOnBackward() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,387,"// For this test we create a simple callback that when, applied until a"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,388,"// fixedpoint, computes whether a function is ""poisoned"" by an extern."
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,389,// A function is poisoned if it calls an extern or if it calls another
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,390,// poisoned function.
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,392,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,393,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,394,"""function B(){ExternalFunction(6); C(); D();}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,395,"""function C(){B(); A();};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,396,"""function D(){A();};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,397,"""function E(){C()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,398,"""A();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,400,CallGraph callgraph = compileAndRunBackward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,402,final Set<Function> poisonedFunctions = Sets.newHashSet();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,404,// Set up initial poisoned functions
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,405,for (Callsite callsite : callgraph.getAllCallsites()) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,406,if (callsite.hasExternTarget()) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,407,poisonedFunctions.add(callsite.getContainingFunction());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,411,// Propagate poison from callees to callers
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,412,"EdgeCallback<CallGraph.Function, CallGraph.Callsite> edgeCallback ="
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,413,"new EdgeCallback<CallGraph.Function, CallGraph.Callsite>() {"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,414,@Override
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,415,"public boolean traverseEdge(Function callee, Callsite callsite,"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,416,Function caller) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,417,boolean changed;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,419,if (poisonedFunctions.contains(callee)) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,420,changed = poisonedFunctions.add(caller); // Returns true if added
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,421,} else {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,422,changed = false;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,425,return changed;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,429,FixedPointGraphTraversal.newTraversal(edgeCallback)
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,430,.computeFixedPoint(callgraph.getBackwardDirectedGraph());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,432,"// We expect B, C, and E to poisoned."
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,433,"assertEquals(3, poisonedFunctions.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,435,assertTrue(poisonedFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,436,"callgraph.getUniqueFunctionWithName(""B"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,437,assertTrue(poisonedFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,438,"callgraph.getUniqueFunctionWithName(""C"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,439,assertTrue(poisonedFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,440,"callgraph.getUniqueFunctionWithName(""E"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,444,* Test getting a backward directed graph on a forward call graph
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,445,* and propagating over it.
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,447,public void testGetDirectedGraph_backwardOnForward() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,448,"// For this test we create a simple callback that when, applied until a"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,449,"// fixedpoint, computes whether a function is ""poisoned"" by an extern."
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,450,// A function is poisoned if it calls an extern or if it calls another
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,451,// poisoned function.
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,453,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,454,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,455,"""function B(){ExternalFunction(6); C(); D();}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,456,"""function C(){B(); A();};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,457,"""function D(){A();};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,458,"""function E(){C()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,459,"""A();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,461,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,463,final Set<Function> poisonedFunctions = Sets.newHashSet();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,465,// Set up initial poisoned functions
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,466,for (Callsite callsite : callgraph.getAllCallsites()) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,467,if (callsite.hasExternTarget()) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,468,poisonedFunctions.add(callsite.getContainingFunction());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,472,// Propagate poison from callees to callers
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,473,"EdgeCallback<CallGraph.Function, CallGraph.Callsite> edgeCallback ="
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,474,"new EdgeCallback<CallGraph.Function, CallGraph.Callsite>() {"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,475,@Override
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,476,"public boolean traverseEdge(Function callee, Callsite callsite,"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,477,Function caller) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,478,boolean changed;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,480,if (poisonedFunctions.contains(callee)) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,481,changed = poisonedFunctions.add(caller); // Returns true if added
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,482,} else {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,483,changed = false;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,486,return changed;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,490,FixedPointGraphTraversal.newTraversal(edgeCallback)
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,491,.computeFixedPoint(callgraph.getBackwardDirectedGraph());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,493,"// We expect B, C, and E to poisoned."
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,494,"assertEquals(3, poisonedFunctions.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,496,assertTrue(poisonedFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,497,"callgraph.getUniqueFunctionWithName(""B"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,498,assertTrue(poisonedFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,499,"callgraph.getUniqueFunctionWithName(""C"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,500,assertTrue(poisonedFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,501,"callgraph.getUniqueFunctionWithName(""E"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,505,* Test getting a forward directed graph on a forward call graph
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,506,* and propagating over it.
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,508,public void testGetDirectedGraph_forwardOnForward() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,509,"// For this test we create a simple callback that when, applied until a"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,510,"// fixedpoint, computes whether a function is reachable from an initial"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,511,"// set of ""root"" nodes."
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,513,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,514,"""function A(){B()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,515,"""function B(){C();D()}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,516,"""function C(){B()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,517,"""function D(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,518,"""function E(){C()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,519,"""function X(){Y()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,520,"""function Y(){Z()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,521,"""function Z(){};"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,522,"""B();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,524,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,526,final Set<Function> reachableFunctions = Sets.newHashSet();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,528,// We assume the main function and X are our roots
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,529,reachableFunctions.add(callgraph.getMainFunction());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,530,"reachableFunctions.add(callgraph.getUniqueFunctionWithName(""X""));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,532,// Propagate reachability from callers to callees
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,534,"EdgeCallback<CallGraph.Function, CallGraph.Callsite> edgeCallback ="
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,535,"new EdgeCallback<CallGraph.Function, CallGraph.Callsite>() {"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,536,@Override
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,537,"public boolean traverseEdge(Function caller, Callsite callsite,"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,538,Function callee) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,539,boolean changed;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,541,if (reachableFunctions.contains(caller)) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,542,changed = reachableFunctions.add(callee); // Returns true if added
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,543,} else {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,544,changed = false;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,547,return changed;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,551,FixedPointGraphTraversal.newTraversal(edgeCallback)
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,552,.computeFixedPoint(callgraph.getForwardDirectedGraph());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,554,"// We expect B, C, D, X, Y, Z and the main function should be reachable."
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,555,// A and E should not be reachable.
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,557,"assertEquals(7, reachableFunctions.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,559,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,560,"callgraph.getUniqueFunctionWithName(""B"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,561,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,562,"callgraph.getUniqueFunctionWithName(""C"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,563,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,564,"callgraph.getUniqueFunctionWithName(""D"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,565,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,566,"callgraph.getUniqueFunctionWithName(""X"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,567,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,568,"callgraph.getUniqueFunctionWithName(""Y"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,569,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,570,"callgraph.getUniqueFunctionWithName(""Z"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,571,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,572,callgraph.getMainFunction()));
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,574,assertFalse(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,575,"callgraph.getUniqueFunctionWithName(""A"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,576,assertFalse(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,577,"callgraph.getUniqueFunctionWithName(""E"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,581,* Test getting a backward directed graph on a forward call graph
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,582,* and propagating over it.
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,584,public void testGetDirectedGraph_forwardOnBackward() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,585,"// For this test we create a simple callback that when, applied until a"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,586,"// fixedpoint, computes whether a function is reachable from an initial"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,587,"// set of ""root"" nodes."
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,589,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,590,"""function A(){B()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,591,"""function B(){C();D()}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,592,"""function C(){B()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,593,"""function D(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,594,"""function E(){C()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,595,"""function X(){Y()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,596,"""function Y(){Z()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,597,"""function Z(){};"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,598,"""B();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,600,CallGraph callgraph = compileAndRunBackward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,602,final Set<Function> reachableFunctions = Sets.newHashSet();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,604,// We assume the main function and X are our roots
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,605,reachableFunctions.add(callgraph.getMainFunction());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,606,"reachableFunctions.add(callgraph.getUniqueFunctionWithName(""X""));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,608,// Propagate reachability from callers to callees
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,610,"EdgeCallback<CallGraph.Function, CallGraph.Callsite> edgeCallback ="
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,611,"new EdgeCallback<CallGraph.Function, CallGraph.Callsite>() {"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,612,@Override
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,613,"public boolean traverseEdge(Function caller, Callsite callsite,"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,614,Function callee) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,615,boolean changed;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,617,if (reachableFunctions.contains(caller)) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,618,changed = reachableFunctions.add(callee); // Returns true if added
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,619,} else {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,620,changed = false;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,623,return changed;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,627,FixedPointGraphTraversal.newTraversal(edgeCallback)
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,628,.computeFixedPoint(callgraph.getForwardDirectedGraph());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,630,"// We expect B, C, D, X, Y, Z and the main function should be reachable."
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,631,// A and E should not be reachable.
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,633,"assertEquals(7, reachableFunctions.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,635,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,636,"callgraph.getUniqueFunctionWithName(""B"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,637,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,638,"callgraph.getUniqueFunctionWithName(""C"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,639,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,640,"callgraph.getUniqueFunctionWithName(""D"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,641,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,642,"callgraph.getUniqueFunctionWithName(""X"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,643,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,644,"callgraph.getUniqueFunctionWithName(""Y"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,645,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,646,"callgraph.getUniqueFunctionWithName(""Z"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,647,assertTrue(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,648,callgraph.getMainFunction()));
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,650,assertFalse(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,651,"callgraph.getUniqueFunctionWithName(""A"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,652,assertFalse(reachableFunctions.contains(
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,653,"callgraph.getUniqueFunctionWithName(""E"")));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,656,public void testFunctionIsMain() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,657,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,658,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,659,"""A();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,661,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,663,CallGraph.Function mainFunction = callgraph.getMainFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,665,assertTrue(mainFunction.isMain());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,666,assertNotNull(mainFunction.getBodyNode());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,667,assertTrue(mainFunction.getBodyNode().getType() == Token.BLOCK);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,669,"CallGraph.Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,671,assertFalse(functionA.isMain());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,674,public void testFunctionGetAstNode() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,675,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,676,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,677,"""A();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,679,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,681,CallGraph.Function mainFunction = callgraph.getMainFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,683,// Main function's AST node should be the global block
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,684,assertTrue(mainFunction.getAstNode().getType() == Token.BLOCK);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,686,"CallGraph.Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,688,// Regular function's AST node should be the function for A
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,689,assertTrue(functionA.getAstNode().getType() == Token.FUNCTION);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,690,"assertEquals(""A"", NodeUtil.getFunctionName(functionA.getAstNode()));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,693,public void testFunctionGetBodyNode() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,694,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,695,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,696,"""A();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,698,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,700,CallGraph.Function mainFunction = callgraph.getMainFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,702,// Main function's body node should its AST node
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,703,"assertEquals(mainFunction.getAstNode(), mainFunction.getBodyNode());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,705,"CallGraph.Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,707,// Regular function's body node should be the block for A
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,708,assertTrue(functionA.getBodyNode().getType() == Token.BLOCK);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,709,"assertEquals(NodeUtil.getFunctionBody(functionA.getAstNode()),"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,710,functionA.getBodyNode());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,713,public void testFunctionGetName() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,714,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,715,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,716,"""A();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,718,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,720,CallGraph.Function mainFunction = callgraph.getMainFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,722,// Main function's name should be CallGraph.MAIN_FUNCTION_NAME
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,723,"assertEquals(CallGraph.MAIN_FUNCTION_NAME, mainFunction.getName());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,725,"CallGraph.Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,727,// Regular function's name should be its name
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,728,"assertEquals(NodeUtil.getFunctionName(functionA.getAstNode()),"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,729,functionA.getName());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,732,public void testFunctionGetCallsitesInFunction() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,733,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,734,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,735,"""function B(){A()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,736,"""A();\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,737,"""B();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,739,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,741,// Main function calls A and B
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,742,CallGraph.Function mainFunction = callgraph.getMainFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,743,List<String> callsiteNamesInMain =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,744,getCallsiteTargetNames(mainFunction.getCallsitesInFunction());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,746,"assertEquals(2, callsiteNamesInMain.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,747,"assertTrue(callsiteNamesInMain.contains(""A""));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,748,"assertTrue(callsiteNamesInMain.contains(""B""));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,750,// A calls no functions
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,751,"CallGraph.Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,752,"assertEquals(0, functionA.getCallsitesInFunction().size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,754,// B calls A
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,755,"CallGraph.Function functionB = callgraph.getUniqueFunctionWithName(""B"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,756,List<String> callsiteNamesInB =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,757,getCallsiteTargetNames(functionB.getCallsitesInFunction());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,759,"assertEquals(1, callsiteNamesInB.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,760,"assertTrue(callsiteNamesInMain.contains(""A""));"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,763,public void testFunctionGetCallsitesInFunction_ignoreInnerFunction() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,764,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,765,"""function A(){var B = function(){C();}};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,766,"""function C(){};\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,768,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,770,// A calls no functions (and especially not C)
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,771,"CallGraph.Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,772,"assertEquals(0, functionA.getCallsitesInFunction().size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,775,public void testFunctionGetCallsitesPossiblyTargetingFunction() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,776,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,777,"""function A(){B()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,778,"""function B(){C();C();};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,779,"""function C(){C()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,780,"""A();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,782,CallGraph callgraph = compileAndRunBackward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,784,Function main = callgraph.getMainFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,785,"Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,786,"Function functionB = callgraph.getUniqueFunctionWithName(""B"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,787,"Function functionC = callgraph.getUniqueFunctionWithName(""C"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,789,"assertEquals(0, main.getCallsitesPossiblyTargetingFunction().size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,791,Collection<Callsite> callsitesTargetingA =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,792,functionA.getCallsitesPossiblyTargetingFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,794,// A is called only from the main function
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,795,"assertEquals(1, callsitesTargetingA.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,796,"assertEquals(main,"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,797,callsitesTargetingA.iterator().next().getContainingFunction());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,799,Collection<Callsite> callsitesTargetingB =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,800,functionB.getCallsitesPossiblyTargetingFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,802,// B is called only from A
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,803,"assertEquals(1, callsitesTargetingB.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,804,"assertEquals(functionA,"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,805,callsitesTargetingB.iterator().next().getContainingFunction());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,807,Collection<Callsite> callsitesTargetingC =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,808,functionC.getCallsitesPossiblyTargetingFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,810,// C is called 3 times: twice from B and once from C
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,811,"assertEquals(3, callsitesTargetingC.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,813,Collection<Callsite> expectedFunctionsCallingC =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,814,Sets.newHashSet(functionB.getCallsitesInFunction());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,815,expectedFunctionsCallingC.addAll(functionC.getCallsitesInFunction());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,817,assertTrue(callsitesTargetingC.containsAll(expectedFunctionsCallingC));
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,820,public void testFunctionGetCallsitesInFunction_newIsCallsite() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,821,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,822,"""function A(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,823,"""function C(){new A()};\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,825,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,827,// The call to new A() in C() should count as a callsite
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,828,"CallGraph.Function functionC = callgraph.getUniqueFunctionWithName(""C"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,829,"assertEquals(1, functionC.getCallsitesInFunction().size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,832,public void testCallsiteGetAstNode() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,833,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,834,"""function A(){B()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,835,"""function B(){};\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,837,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,839,"Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,840,Callsite callToB = functionA.getCallsitesInFunction().iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,842,assertTrue(callToB.getAstNode().getType() == Token.CALL);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,845,public void testCallsiteGetContainingFunction() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,846,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,847,"""function A(){B()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,848,"""function B(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,849,"""A();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,851,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,853,Function mainFunction = callgraph.getMainFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,854,Callsite callToA = mainFunction.getCallsitesInFunction().iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,855,"assertEquals(mainFunction, callToA.getContainingFunction());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,857,"Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,858,Callsite callToB = functionA.getCallsitesInFunction().iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,859,"assertEquals(functionA, callToB.getContainingFunction());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,862,public void testCallsiteGetKnownTargets() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,863,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,864,"""function A(){B()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,865,"""function B(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,866,"""A();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,868,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,870,Function mainFunction = callgraph.getMainFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,871,"Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,872,"Function functionB = callgraph.getUniqueFunctionWithName(""B"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,874,Callsite callInMain = mainFunction.getCallsitesInFunction().iterator()
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,875,.next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,877,Collection<Function> targetsOfCallInMain = callInMain.getPossibleTargets();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,879,"assertEquals(1, targetsOfCallInMain.size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,880,assertTrue(targetsOfCallInMain.contains(functionA));
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,882,Callsite callInA = functionA.getCallsitesInFunction().iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,883,Collection<Function> targetsOfCallInA = callInA.getPossibleTargets();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,885,assertTrue(targetsOfCallInA.contains(functionB));
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,888,public void testCallsiteHasUnknownTarget() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,889,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,890,"""var A = externalnamespace.prop;\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,891,"""function B(){A();};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,892,"""B();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,894,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,896,Function mainFunction = callgraph.getMainFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,897,"Function functionB = callgraph.getUniqueFunctionWithName(""B"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,899,Callsite callInMain =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,900,mainFunction.getCallsitesInFunction().iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,902,"// B()'s target function is known, and it is functionB"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,903,assertFalse(callInMain.hasUnknownTarget());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,904,"assertEquals(""B"", callInMain.getAstNode().getFirstChild().getString());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,906,Callsite callInB = functionB.getCallsitesInFunction().iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,908,// A() has an unknown target and no known targets
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,909,assertTrue(callInB.hasUnknownTarget());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,910,"assertEquals(0, callInB.getPossibleTargets().size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,913,public void testCallsiteHasExternTarget() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,914,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,915,"""var A = function(){}\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,916,"""function B(){ExternalFunction(6);};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,917,"""A();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,919,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,921,Function mainFunction = callgraph.getMainFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,922,"Function functionB = callgraph.getUniqueFunctionWithName(""B"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,924,Callsite callInMain =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,925,mainFunction.getCallsitesInFunction().iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,927,// A()'s target function is not an extern
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,928,assertFalse(callInMain.hasExternTarget());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,930,Callsite callInB = functionB.getCallsitesInFunction().iterator().next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,932,"assertEquals(""ExternalFunction"","
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,933,callInB.getAstNode().getFirstChild().getString());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,935,// ExternalFunction(6) is a call to an extern function
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,936,assertTrue(callInB.hasExternTarget());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,937,"assertEquals(0, callInB.getPossibleTargets().size());"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,940,public void testThrowForBackwardOpOnForwardGraph() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,941,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,942,"""function A(){B()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,943,"""function B(){C();C();};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,944,"""function C(){C()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,945,"""A();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,947,CallGraph callgraph = compileAndRunForward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,949,"Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,951,UnsupportedOperationException caughtException = null;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,953,try {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,954,functionA.getCallsitesPossiblyTargetingFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,955,} catch (UnsupportedOperationException e) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,956,caughtException = e;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,959,assertNotNull(caughtException);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,962,public void testThrowForForwardOpOnBackwardGraph() {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,963,String source =
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,964,"""function A(){B()};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,965,"""function B(){};\n"" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,966,"""A();\n"";"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,968,CallGraph callgraph = compileAndRunBackward(source);
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,970,Function mainFunction = callgraph.getMainFunction();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,971,"Function functionA = callgraph.getUniqueFunctionWithName(""A"");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,973,Callsite callInMain = mainFunction.getCallsitesInFunction().iterator()
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,974,.next();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,976,UnsupportedOperationException caughtException = null;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,978,try {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,979,callInMain.getPossibleTargets();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,980,} catch (UnsupportedOperationException e) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,981,return;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,983,fail();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,987,"* Helper function that, given a collection of callsites, returns a"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,988,"* collection of the names of the target expression nodes, e.g."
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,989,"* if the callsites are [A(), B.b()], the collection returned is"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,990,"* [""A"", ""B""]."
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,992,* This makes it easier to test methods that return collections of callsites.
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,994,* An exception is thrown if the callsite target is not a simple name
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,995,"* (e.g. ""a.bar()"")."
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,997,private List<String> getCallsiteTargetNames(Collection<Callsite>
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,998,callsites) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,999,List<String> result = Lists.newArrayList();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1001,for (Callsite callsite : callsites) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1002,Node targetExpressionNode = callsite.getAstNode().getFirstChild();
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1003,if (targetExpressionNode.getType() == Token.NAME) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1004,result.add(targetExpressionNode.getString());
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1005,} else {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1006,"throw new IllegalStateException(""Called getCallsiteTargetNames() on "" +"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1007,"""a complex callsite."");"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1011,return result;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1014,private CallGraph compileAndRunBackward(String js) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1015,"return compileAndRun(SHARED_EXTERNS, js, false, true);"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1018,private CallGraph compileAndRunForward(String js) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1019,"return compileAndRun(SHARED_EXTERNS, js, true, false);"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1022,"private CallGraph compileAndRun(String externs,"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1023,"String js,"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1024,"boolean forward,"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1025,boolean backward) {
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1027,createBackwardCallGraph = backward;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1028,createForwardCallGraph = forward;
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1030,"testSame(externs, js, null);"
+True,test/com/google/javascript/jscomp/CallGraphTest.java,test/com/google/javascript/jscomp/CallGraphTest.java,1032,return currentProcessor;

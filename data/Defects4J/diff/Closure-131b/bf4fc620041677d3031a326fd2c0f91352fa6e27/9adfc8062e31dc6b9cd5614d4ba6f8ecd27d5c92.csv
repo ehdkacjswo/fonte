@@ -1,0 +1,212 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,569,// Fixes open source issue: 390
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,570,boolean operaCompoundAssignFix;
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,807,operaCompoundAssignFix = true;
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,620,if (options.operaCompoundAssignFix) {
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,621,passes.add(operaCompoundAssignFix);
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1717,private final PassFactory operaCompoundAssignFix =
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1718,"new PassFactory(""operaCompoundAssignFix"", true) {"
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1719,@Override
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1720,protected CompilerPass createInternal(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1721,return new OperaCompoundAssignFix(compiler);
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,2,* Copyright 2011 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,19,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,20,import com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,21,import com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,22,import com.google.javascript.jscomp.NodeTraversal.ScopedCallback;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,23,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,24,import com.google.javascript.rhino.Token;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,26,import java.util.Deque;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,27,import java.util.List;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,30,* Temp fix to decompose nested assignment bug in Opera.
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,32,* See open source issue: 390
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,35,* The conditions for which this Opera-specific bug will hit is
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,37,* v = rhs
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,39,* where 'rhs' contains a compound assignment of the form  a[i] or obj.p _and_
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,40,"* 'v' is also used in 'rhs'. i.e., for the above example,"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,42,* z = bar[z] = bar[z] || [];
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,44,* or
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,46,* x = foo.bar += x.baz;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,48,"* Opera 11.10 final will have the fix included, but if emitting constructs like"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,49,"* the above is common and can be readily avoided, that'd be very helpful. More"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,50,* than happy to supply extra information & work through the details to make
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,51,"* this happen, if needed."
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,52,* --sof / sof@opera.com
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,55,class OperaCompoundAssignFix extends AbstractPostOrderCallback
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,56,"implements CompilerPass, ScopedCallback {"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,57,private AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,58,private final Deque<VariableNameGenerator> names;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,60,@Override
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,61,public void enterScope(NodeTraversal t) {
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,62,names.push(new VariableNameGenerator(t.getScope()));
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,65,@Override
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,66,public void exitScope(NodeTraversal t) {
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,67,names.pop();
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,70,OperaCompoundAssignFix(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,71,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,72,names = Lists.newLinkedList();
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,75,@Override
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,76,"public void process(Node externs, Node root) {"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,77,"List<Node> code = Lists.newArrayList(externs, root);"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,78,"NodeTraversal.traverseRoots(compiler, code, this);"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,81,@Override
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,82,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,83,if (!NodeUtil.isName(n)) {
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,84,return;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,87,if (!NodeUtil.isGet(parent)) {
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,88,return;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,91,boolean nested = false;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,92,boolean reassign = false;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,93,Node lastAssign = null;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,94,Node prevParent = n;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,96,while (!(NodeUtil.isExpressionNode(parent) ||
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,97,NodeUtil.isStatementBlock(parent))) {
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,98,if (NodeUtil.isAssign(parent) &&
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,99,NodeUtil.isName(parent.getFirstChild()) &&
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,100,parent.getFirstChild().getString().equals(n.getString()) &&
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,101,nested) {
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,102,reassign = true;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,103,break;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,104,} else if (NodeUtil.isAssignmentOp(parent) &&
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,105,parent.getLastChild() == prevParent) {
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,106,if (lastAssign == null) {
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,107,nested = true;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,109,lastAssign = parent;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,111,prevParent = parent;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,112,parent = parent.getParent();
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,115,if (!(reassign && nested)) {
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,116,return;
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,119,"applyWorkAround(parent, t);"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,122,"private void applyWorkAround(Node assign, NodeTraversal t) {"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,123,"//System.out.println(""applyWorkAround: "" + assign.toStringTree());"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,124,Preconditions.checkArgument(NodeUtil.isAssign(assign));
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,125,Node parent = assign.getParent();
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,126,Node comma = new Node(Token.COMMA);
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,127,comma.copyInformationFrom(assign);
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,128,"parent.replaceChild(assign, comma);"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,130,String newName = names.peek().getNextNewName();
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,131,"Node newAssign = new Node(Token.ASSIGN,"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,132,"Node.newString(Token.NAME, newName));"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,133,newAssign.copyInformationFromForTree(assign);
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,134,newAssign.addChildToBack(assign.getLastChild().detachFromParent());
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,135,comma.addChildrenToBack(newAssign);
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,136,assign.addChildrenToBack(
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,137,"Node.newString(Token.NAME, newName).copyInformationFrom(assign));"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,138,comma.addChildrenToBack(assign);
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,140,Node root = t.getScopeRoot();
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,141,"Node var = new Node(Token.VAR, Node.newString(Token.NAME, newName));"
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,142,var.copyInformationFromForTree(assign);
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,144,if (NodeUtil.isStatementBlock(root)) {
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,145,root = compiler.getNodeForCodeInsertion(t.getModule());
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,146,root.addChildrenToFront(var);
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,147,} else {
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,148,root.getLastChild().addChildrenToFront(var);
+True,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,src/com/google/javascript/jscomp/OperaCompoundAssignFix.java,150,compiler.reportCodeChange();
+False,src/com/google/javascript/jscomp/VariableNameGenerator.java,src/com/google/javascript/jscomp/VariableNameGenerator.java,20,mport com.google.javascript.jscomp.Scope.Var;
+False,src/com/google/javascript/jscomp/VariableNameGenerator.java,src/com/google/javascript/jscomp/VariableNameGenerator.java,22,mport java.util.Iterator;
+True,src/com/google/javascript/jscomp/VariableNameGenerator.java,src/com/google/javascript/jscomp/VariableNameGenerator.java,31,private final Scope scope;
+True,src/com/google/javascript/jscomp/VariableNameGenerator.java,src/com/google/javascript/jscomp/VariableNameGenerator.java,33,this.scope = scope;
+False,src/com/google/javascript/jscomp/VariableNameGenerator.java,src/com/google/javascript/jscomp/VariableNameGenerator.java,35,or (Iterator<Var> i = scope.getVars(); i.hasNext();) {
+False,src/com/google/javascript/jscomp/VariableNameGenerator.java,src/com/google/javascript/jscomp/VariableNameGenerator.java,36,sedNames.add(i.next().getName());
+False,src/com/google/javascript/jscomp/VariableNameGenerator.java,src/com/google/javascript/jscomp/VariableNameGenerator.java,41,tring getNameNewName() {
+False,src/com/google/javascript/jscomp/VariableNameGenerator.java,src/com/google/javascript/jscomp/VariableNameGenerator.java,42,eturn names.generateNextName();
+True,src/com/google/javascript/jscomp/VariableNameGenerator.java,src/com/google/javascript/jscomp/VariableNameGenerator.java,38,String getNextNewName() {
+True,src/com/google/javascript/jscomp/VariableNameGenerator.java,src/com/google/javascript/jscomp/VariableNameGenerator.java,39,String name = null;
+True,src/com/google/javascript/jscomp/VariableNameGenerator.java,src/com/google/javascript/jscomp/VariableNameGenerator.java,40,"while (scope.isDeclared(name = names.generateNextName(), true)) {}"
+True,src/com/google/javascript/jscomp/VariableNameGenerator.java,src/com/google/javascript/jscomp/VariableNameGenerator.java,41,return name;
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,2,* Copyright 2011 The Closure Compiler Authors.
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,17,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,20,* Unit tests for {@link OperaCompoundAssignFix}
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,23,public class OperaCompoundAssignFixTest extends CompilerTestCase {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,25,@Override
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,26,protected CompilerPass getProcessor(Compiler compiler) {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,27,return new OperaCompoundAssignFix(compiler);
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,30,public void testNoFix() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,31,"testSame(""x = x"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,32,"testSame(""x = x = x"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,33,"testSame(""x = x = x(x)"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,36,public void testFix() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,37,"test(""       var a,b,x; x = a[x] = b[x]"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,38,"""var c; var a,b,x; c = a[x] = b[x], x = c"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,39,"test(""       var a,b,x; x = a[1] = x.b"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,40,"""var c; var a,b,x; c = a[1] = x.b, x = c"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,43,public void testCombinedFix() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,44,"test(""       var a,b,c, x; x = a[x] = b[x] = c[x]"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,45,"""var d; var a,b,c, x; d = a[x] = b[x] = c[x], x = d"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,46,"test(""       var a,b,c, x; x = a[1] = b[1] = x[1]"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,47,"""var d; var a,b,c, x; d = a[1] = b[1] = x[1], x = d"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,50,public void testNestedFix1() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,51,"test(""            var a,b,c,x,y;y= x = a[x] = b[y] = c[x];"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,52,"""var e;var d;var a,b,c,x,y;d=(e = a[x] = b[y] = c[x], x=e), y=d;"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,55,public void testNestedFix2() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,56,"test(""            var a,b,c,x,y;y=a[x]= x=a[x]=b[y]=c[x];"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,57,"""var e;var d;var a,b,c,x,y;d=a[x]=(e=a[x]=b[y]=c[x], x=e), y=d;"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,60,public void testJqueryTest() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,61,"test(""       z = bar[z] = bar[z] || [];"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,62,"""var a; a = bar[z] = bar[z] || [], z=a"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,65,public void testNoCrossingScope() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,66,"testSame(""x = function(x) { return a[x] + b[x] }"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,69,public void testForLoops() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,70,"test(""       var a,b,x;for(x = a[x] = b[x];;)        {}"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,71,"""var c; var a,b,x;for(c = a[x] = b[x], x = c;;) {}"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,74,public void testForInLoops() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,75,"test(""       var a,b,x;for(var j in  x = a[x] = b[x])         {}"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,76,"""var c; var a,b,x;for(var j in (c = a[x] = b[x], x = c)) {}"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,79,public void testUsedInCondition() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,80,"test(""       var a,b,x;if(x = a[x] = b[x]) {}"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,81,"""var c; var a,b,x;if((c = a[x] = b[x], x = c)) {}"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,84,public void testUsedInExpression() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,85,"test(""       var a,b,x; FOO( x = a[x] = b[x]);"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,86,"""var c; var a,b,x; FOO((c = a[x] = b[x], x = c));"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,89,public void testLocalScope() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,90,"test(""function FOO() {       var a,b,x; x = a[x] = b[x]}"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,91,"""function FOO() {var c; var a,b,x; c = a[x] = b[x], x = c}"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,92,"test(""function FOO() {       var a,b,x; x = a[1] = x.b}"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,93,"""function FOO() {var c; var a,b,x; c = a[1] = x.b, x = c}"");"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,96,public void testProperNames1() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,97,"test(""var a,b,c,d,x;"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,98,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,99,"""  function g() { return a }"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,100,"""  x = a[x] = b[x];"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,101,"""  return g();"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,104,"""var a,b,c,d,x;"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,105,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,106,"""  var e;"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,107,"""  function g() { return a }"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,108,"""  e = a[x] = b[x], x = e;"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,109,"""  return g();"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,113,public void testProperNames2() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,114,"test(""var a;"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,115,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,116,""" var b,x; x = a[x] = b[x];"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,117,""" return g();"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,120,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,121,""" var c;"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,122,""" var b,x; c = a[x] = b[x], x = c;"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,123,""" return g();"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,124,"""}"", null, null);"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,127,public void testSaveShadowing() {
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,128,// We could reuse any new temps in an inner scope.
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,129,"test(""       var a,b,x; x = a[x] = b[x];"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,130,"""function FOO() {       var a,b,x; x = a[x] = b[x]}"","
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,132,"""var c; var a,b,x; c = a[x] = b[x], x = c;"" +"
+True,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,test/com/google/javascript/jscomp/OperaCompoundAssignFixTest.java,133,"""function FOO() {var c; var a,b,x; c = a[x] = b[x], x = c}"");"

@@ -1,0 +1,462 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,38,mport static org.apache.commons.compress.archivers.zip.ZipConstants.DEFLATE_MIN_VERSION;
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,38,import static org.apache.commons.compress.archivers.zip.ZipConstants.DATA_DESCRIPTOR_MIN_VERSION;
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,40,import static org.apache.commons.compress.archivers.zip.ZipConstants.INITIAL_VERSION;
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,258,* Whether current entry was the first one using ZIP64 features.
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,260,* @since Apache Commons Compress 1.3
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,262,private boolean entryCausedUseOfZip64 = false;
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,452,boolean actuallyNeedsZip64 = entry.getSize() >= ZIP64_MAGIC
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,453,|| entry.getCompressedSize() >= ZIP64_MAGIC;
+False,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,447,f (!hasZip64Extra(entry)
+False,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,448,| (entry.getSize() < ZIP64_MAGIC
+False,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,449,& entry.getCompressedSize() < ZIP64_MAGIC)) {
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,457,if (!hasZip64Extra(entry) || !actuallyNeedsZip64) {
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,474,if (!actuallyNeedsZip64) {
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,475,// do some cleanup:
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,476,// * rewrite version needed to extract
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,477,raf.seek(localDataStart  - 5 * SHORT);
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,478,writeOut(ZipShort.getBytes(INITIAL_VERSION));
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,480,// * remove ZIP64 extra so it doesn't get written
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,481,//   to the central directory
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,482,entry.removeExtraField(Zip64ExtendedInformationExtraField
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,483,.HEADER_ID);
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,484,entry.setExtra();
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,486,// * reset hasUsedZip64 if it has been set because
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,487,//   of this entry
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,488,hasUsedZip64 &= !entryCausedUseOfZip64;
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,497,entryCausedUseOfZip64 = false;
+False,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,859,!hasUsedZip64 ? DEFLATE_MIN_VERSION
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,885,(!hasUsedZip64 ? DATA_DESCRIPTOR_MIN_VERSION
+False,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,1079,nt versionNeededToExtract = 10;
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,1105,int versionNeededToExtract = INITIAL_VERSION;
+False,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,1085,ersionNeededToExtract = DEFLATE_MIN_VERSION;
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,1111,versionNeededToExtract = DATA_DESCRIPTOR_MIN_VERSION;
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,1182,entryCausedUseOfZip64 = !hasUsedZip64;
+False,src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java,40,** ZIP specification version that introduced DEFLATE method */
+False,src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java,41,tatic final int DEFLATE_MIN_VERSION = 20;
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java,40,/** Initial ZIP specification version */
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java,41,static final int INITIAL_VERSION = 10;
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java,43,/** ZIP specification version that introduced data descriptor method */
+True,src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java,src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java,44,static final int DATA_DESCRIPTOR_MIN_VERSION = 20;
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,42,private static final int ONE_MILLION = 1000000;
+False,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,191,yte[] buf = new byte[1000 * 1000];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,192,byte[] buf = new byte[ONE_MILLION];
+False,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,315,yte[] buf = new byte[1000 * 1000];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,316,byte[] buf = new byte[ONE_MILLION];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,465,@Ignore
+False,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,487,yte[] buf = new byte[1000 * 1000];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,489,byte[] buf = new byte[ONE_MILLION];
+False,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,658,yte[] buf = new byte[1000 * 1000];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,660,byte[] buf = new byte[ONE_MILLION];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,804,@Ignore
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,813,"* One entry of length 1 million bytes, written without compression."
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,815,* No Compression => sizes are stored directly inside the LFH.  No
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,816,* Data Descriptor at all.  Shouldn't contain any ZIP64 extra
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,817,* field if size was known.
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,819,* Creates a temporary archive of approx 1MB in size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,821,private static ZipOutputTest writeSmallStoredEntry(final boolean knownSize) {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,822,return new ZipOutputTest() {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,823,"public void test(File f, ZipArchiveOutputStream zos)"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,824,throws IOException {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,825,byte[] buf = new byte[ONE_MILLION];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,826,"ZipArchiveEntry zae = new ZipArchiveEntry(""0"");"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,827,if (knownSize) {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,828,zae.setSize(ONE_MILLION);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,829,zae.setCrc(0x1279CB9EL);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,831,zae.setMethod(ZipArchiveEntry.STORED);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,832,zos.putArchiveEntry(zae);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,833,zos.write(buf);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,834,zos.closeArchiveEntry();
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,835,zos.close();
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,837,"RandomAccessFile a = new RandomAccessFile(f, ""r"");"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,838,try {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,839,final long end = getLengthAndPositionAtCentralDirectory(a);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,841,"// grab first CF entry, verify sizes are 1e6 and it"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,842,// has no ZIP64 extended information extra field
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,843,// at all
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,844,byte[] header = new byte[12];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,845,a.readFully(header);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,846,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,847,// sig
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,848,"(byte) 0x50, (byte) 0x4b, 1, 2,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,849,// version made by
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,850,"20, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,851,// version needed to extract
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,852,"10, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,853,// GPB (EFS bit)
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,854,"0, 8,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,855,// method
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,856,"0, 0"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,857,"}, header);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,858,// ignore timestamp
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,859,a.skipBytes(4);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,860,byte[] rest = new byte[31];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,861,a.readFully(rest);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,862,// 1e6 == 0xF4240
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,863,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,864,// CRC
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,865,"(byte) 0x9E, (byte) 0xCB, (byte) 0x79, (byte) 0x12,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,866,// Compressed Size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,867,"(byte) 0x40, (byte) 0x42, (byte) 0x0F, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,868,// Original Size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,869,"(byte) 0x40, (byte) 0x42, (byte) 0x0F, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,870,// file name length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,871,"1, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,872,// extra field length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,873,"0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,874,// comment length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,875,"0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,876,// disk number
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,877,"0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,878,// attributes
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,879,"0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,880,"0, 0, 0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,881,// offset
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,882,"0, 0, 0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,883,// file name
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,884,(byte) '0'
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,885,"}, rest);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,887,// and now validate local file header: this one
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,888,// has a ZIP64 extra field if and only if size was
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,889,// unknown
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,890,a.seek(0);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,891,header = new byte[10];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,892,a.readFully(header);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,893,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,894,// sig
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,895,"(byte) 0x50, (byte) 0x4b, 3, 4,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,896,// version needed to extract
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,897,"10, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,898,// GPB (EFS bit)
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,899,"0, 8,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,900,// method
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,901,"0, 0"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,902,"}, header);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,903,// ignore timestamp
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,904,a.skipBytes(4);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,905,rest = new byte[17];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,906,a.readFully(rest);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,907,// 1e6 == 0xF4240
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,908,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,909,// CRC
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,910,"(byte) 0x9E, (byte) 0xCB, (byte) 0x79, (byte) 0x12,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,911,// Compressed Size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,912,"(byte) 0x40, (byte) 0x42, (byte) 0x0F, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,913,// Original Size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,914,"(byte) 0x40, (byte) 0x42, (byte) 0x0F, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,915,// file name length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,916,"1, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,917,// extra field length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,918,"(byte) (knownSize ? 0 : 20), 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,919,// file name
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,920,(byte) '0'
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,921,"}, rest);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,922,if (!knownSize) {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,923,byte[] extra = new byte[20];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,924,a.readFully(extra);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,925,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,926,// Header-ID
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,927,"1, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,928,// size of extra
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,929,"16, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,930,// original size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,931,"(byte) 0x40, (byte) 0x42, (byte) 0x0F, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,932,"0, 0, 0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,933,// compressed size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,934,"(byte) 0x40, (byte) 0x42, (byte) 0x0F, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,935,"0, 0, 0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,936,"}, extra);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,938,} finally {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,939,a.close();
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,945,@Test public void writeSmallStoredEntryToStream() throws Throwable {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,946,"withTemporaryArchive(""writeSmallStoredEntryToStream"","
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,947,"writeSmallStoredEntry(true),"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,948,false);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,951,@Test public void writeSmallStoredEntryKnownSizeToFile() throws Throwable {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,952,"withTemporaryArchive(""writeSmallStoredEntryKnownSizeToFile"","
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,953,"writeSmallStoredEntry(true),"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,954,true);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,957,@Test public void writeSmallStoredEntryUnnownSizeToFile() throws Throwable {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,958,"withTemporaryArchive(""writeSmallStoredEntryUnknownSizeToFile"","
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,959,"writeSmallStoredEntry(false),"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,960,true);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,964,"* One entry of length 1 million bytes, written with compression"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,965,* to a stream.
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,967,"* Compression + Stream => sizes are set to 0 in LFH, real values"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,968,* are inside the data descriptor.  No ZIP64 extra field at all.
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,970,@Test public void writeSmallDeflatedEntryKnownSizeToStream()
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,971,throws Throwable {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,972,"withTemporaryArchive(""writeSmallDeflatedEntryKnownSizeToStream"","
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,973,new ZipOutputTest() {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,974,"public void test(File f,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,975,ZipArchiveOutputStream zos)
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,976,throws IOException {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,977,byte[] buf = new byte[ONE_MILLION];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,978,ZipArchiveEntry zae =
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,979,"new ZipArchiveEntry(""0"");"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,980,zae.setSize(ONE_MILLION);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,981,zae.setMethod(ZipArchiveEntry.DEFLATED);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,982,zos.putArchiveEntry(zae);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,983,zos.write(buf);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,984,zos.closeArchiveEntry();
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,985,zos.close();
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,987,RandomAccessFile a =
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,988,"new RandomAccessFile(f, ""r"");"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,989,try {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,990,final long end =
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,991,getLengthAndPositionAtCentralDirectory(a);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,993,long cfhPos = a.getFilePointer();
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,994,"// grab first entry, verify"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,995,// sizes are not 0xFFFFFFF
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,996,// and it has no ZIP64
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,997,// extended information extra
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,998,// field
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,999,byte[] header = new byte[12];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1000,a.readFully(header);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1001,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1002,// sig
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1003,"(byte) 0x50, (byte) 0x4b, 1, 2,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1004,// version made by
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1005,"20, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1006,// version needed to extract
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1007,"20, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1008,// GPB (EFS + Data Descriptor)
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1009,"8, 8,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1010,// method
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1011,"8, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1012,"}, header);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1013,// ignore timestamp
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1014,a.skipBytes(4);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1015,byte[] crc = new byte[4];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1016,a.readFully(crc);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1017,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1018,"(byte) 0x9E, (byte) 0xCB,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1019,"(byte) 0x79, (byte) 0x12,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1020,"}, crc);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1021,// skip compressed size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1022,a.skipBytes(4);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1023,byte[] rest = new byte[23];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1024,a.readFully(rest);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1025,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1026,// Original Size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1027,"(byte) 0x40, (byte) 0x42,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1028,"(byte) 0x0F, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1029,// file name length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1030,"1, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1031,// extra field length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1032,"0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1033,// comment length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1034,"0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1035,// disk number
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1036,"0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1037,// attributes
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1038,"0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1039,"0, 0, 0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1040,// offset
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1041,"0, 0, 0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1042,// file name
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1043,(byte) '0'
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1044,"}, rest);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1046,// validate data descriptor
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1047,a.seek(cfhPos - 16);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1048,byte[] dd = new byte[8];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1049,a.readFully(dd);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1050,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1051,// sig
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1052,"(byte) 0x50, (byte) 0x4b, 7, 8,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1053,// CRC
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1054,"(byte) 0x9E, (byte) 0xCB,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1055,"(byte) 0x79, (byte) 0x12,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1056,"}, dd);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1057,// skip uncompressed size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1058,a.skipBytes(4);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1059,dd = new byte[4];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1060,a.readFully(dd);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1061,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1062,// original size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1063,"(byte) 0x40, (byte) 0x42,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1064,"(byte) 0x0F, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1065,"}, dd);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1067,// and now validate local file header
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1068,a.seek(0);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1069,header = new byte[10];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1070,a.readFully(header);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1071,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1072,// sig
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1073,"(byte) 0x50, (byte) 0x4b, 3, 4,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1074,// version needed to extract
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1075,"20, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1076,// GPB (EFS + Data Descriptor)
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1077,"8, 8,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1078,// method
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1079,"8, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1080,"}, header);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1081,// ignore timestamp
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1082,a.skipBytes(4);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1083,rest = new byte[17];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1084,a.readFully(rest);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1085,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1086,// CRC
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1087,"0, 0, 0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1088,// Compressed Size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1089,"0, 0, 0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1090,// Original Size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1091,"0, 0, 0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1092,// file name length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1093,"1, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1094,// extra field length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1095,"0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1096,// file name
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1097,(byte) '0'
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1098,"}, rest);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1099,} finally {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1100,a.close();
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1104,false);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1108,"* One entry of length 1 million bytes, written with compression"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1109,* to a file.
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1111,* Writing to a file => sizes are stored directly inside the LFH.
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1112,* No Data Descriptor at all.  Shouldn't contain any ZIP64 extra
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1113,* field if size was known.
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1115,private static ZipOutputTest writeSmallDeflatedEntryToFile(final boolean knownSize) {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1116,return new ZipOutputTest() {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1117,"public void test(File f, ZipArchiveOutputStream zos)"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1118,throws IOException {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1119,byte[] buf = new byte[ONE_MILLION];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1120,"ZipArchiveEntry zae = new ZipArchiveEntry(""0"");"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1121,if (knownSize) {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1122,zae.setSize(ONE_MILLION);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1124,zae.setMethod(ZipArchiveEntry.DEFLATED);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1125,zos.putArchiveEntry(zae);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1126,zos.write(buf);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1127,zos.closeArchiveEntry();
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1128,zos.close();
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1130,"RandomAccessFile a = new RandomAccessFile(f, ""r"");"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1131,try {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1132,final long end = getLengthAndPositionAtCentralDirectory(a);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1134,long cfhPos = a.getFilePointer();
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1135,"// grab first CD entry, verify sizes are not"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1136,// 0xFFFFFFFF and it has a no ZIP64 extended
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1137,// information extra field
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1138,byte[] header = new byte[12];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1139,a.readFully(header);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1140,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1141,// sig
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1142,"(byte) 0x50, (byte) 0x4b, 1, 2,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1143,// version made by
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1144,"20, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1145,// version needed to extract
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1146,"10, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1147,// GPB (EFS + *no* Data Descriptor)
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1148,"0, 8,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1149,// method
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1150,"8, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1151,"}, header);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1152,// ignore timestamp
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1153,a.skipBytes(4);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1154,byte[] crc = new byte[4];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1155,a.readFully(crc);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1156,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1157,"(byte) 0x9E, (byte) 0xCB,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1158,"(byte) 0x79, (byte) 0x12,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1159,"}, crc);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1160,// skip compressed size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1161,a.skipBytes(4);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1162,byte[] rest = new byte[23];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1163,a.readFully(rest);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1164,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1165,// Original Size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1166,"(byte) 0x40, (byte) 0x42, (byte) 0x0F, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1167,// file name length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1168,"1, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1169,// extra field length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1170,"0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1171,// comment length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1172,"0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1173,// disk number
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1174,"0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1175,// attributes
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1176,"0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1177,"0, 0, 0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1178,// offset
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1179,"0, 0, 0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1180,// file name
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1181,(byte) '0'
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1182,"}, rest);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1184,// and now validate local file header
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1185,a.seek(0);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1186,header = new byte[10];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1187,a.readFully(header);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1188,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1189,// sig
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1190,"(byte) 0x50, (byte) 0x4b, 3, 4,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1191,// version needed to extract
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1192,"10, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1193,"// GPB (EFS bit, no DD)"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1194,"0, 8,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1195,// method
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1196,"8, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1197,"}, header);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1198,// ignore timestamp
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1199,a.skipBytes(4);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1200,crc = new byte[4];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1201,a.readFully(crc);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1202,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1203,"(byte) 0x9E, (byte) 0xCB,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1204,"(byte) 0x79, (byte) 0x12,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1205,"}, crc);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1206,// skip compressed size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1207,a.skipBytes(4);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1208,rest = new byte[9];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1209,a.readFully(rest);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1210,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1211,// Original Size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1212,"(byte) 0x40, (byte) 0x42, (byte) 0x0F, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1213,// file name length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1214,"1, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1215,// extra field length
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1216,"(byte) (knownSize ? 0 : 20), 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1217,// file name
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1218,(byte) '0'
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1219,"}, rest);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1220,if (!knownSize) {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1221,byte[] extra = new byte[12];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1222,a.readFully(extra);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1223,assertArrayEquals(new byte[] {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1224,// Header-ID
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1225,"1, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1226,// size of extra
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1227,"16, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1228,// original size
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1229,"(byte) 0x40, (byte) 0x42, (byte) 0x0F, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1230,"0, 0, 0, 0,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1231,// don't know the
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1232,"// compressed size,"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1233,// don't want to
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1234,// hard-code it
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1235,"}, extra);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1237,} finally {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1238,a.close();
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1244,@Test public void writeSmallDeflatedEntryKnownSizeToFile()
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1245,throws Throwable {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1246,"withTemporaryArchive(""writeSmallDeflatedEntryKnownSizeToFile"","
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1247,"writeSmallDeflatedEntryToFile(true),"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1248,true);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1251,@Test public void writeSmallDeflatedEntryUnknownSizeToFile()
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1252,throws Throwable {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1253,"withTemporaryArchive(""writeSmallDeflatedEntryUnknownSizeToFile"","
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1254,"writeSmallDeflatedEntryToFile(false),"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1255,true);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1349,a.seek(end - 22 - 20);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1350,byte[] sig = new byte[4];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1351,a.readFully(sig);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1352,if (sig[0] != (byte) 0x50 || sig[1] != (byte) 0x4b
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1353,|| sig[2] != 6 || sig[3] != 7) {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1354,// not a ZIP64 archive
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1355,"return getLengthAndPositionAtCentralDirectory32(a, end);"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1367,"private static long getLengthAndPositionAtCentralDirectory32(RandomAccessFile a, final long end)"
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1368,throws IOException {
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1369,a.seek(end - 22 + 16);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1370,byte[] cdOffset = new byte[4];
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1371,a.readFully(cdOffset);
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1372,a.seek(ZipLong.getValue(cdOffset));
+True,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportTest.java,1373,return end;

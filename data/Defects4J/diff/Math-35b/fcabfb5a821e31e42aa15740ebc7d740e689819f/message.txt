@@ -1,0 +1,31 @@
+Resolved multiple problems leading to inaccuracy and/or failure to compute Normal, ChiSquare and 
+Poisson probabilities, Erf and Gamma functions.
+
+JIRA: MATH-282
+JIRA: MATH-301
+
+Summary of changes:
+
+* BrentSolver has been changed to expose its configured absolute accuracy. This solver is used by
+  the default inverse cum implementation in AbstractContinuousDistribution and the hard-coded setting
+  (1E-6) was limiting accuracy in inverse cumulative probability estimates. AbstractContinuousDistribution
+  was changed to allow distributions to set this value and NormalDistributionImpl was changed to set it to
+  1E-9 by default and allow users to configure it via a constructor argument.
+
+* AbstractContinuousDistribution and AbstractIntegerDistribution inverseCumulativeProbability methods
+  have been modified to check for NaN values returned by cumulativeProbability and throw MathExceptions
+  when this happens.
+
+* The criteria for choosing between the Lanczos series and continued fraction expansion when computing
+  regularized gamma functions has been changed to (x >= a + 1). When using the series approximation
+  (regularizedGammaP), divergence to infinity is checked and when this happens, 1 is returned.
+
+* When scaling continued fractions to (try to) avoid divergence to infinity, the larger of a and b is
+  used as a scale factor and the attempt to scale is repeated up to 5 times, using successive powers
+  of the scale factor.
+
+* The maximum number of iterations used in estimating cumulative probabilities for PoissonDistributionImpl
+  has been decreased from Integer.MAX_VALUE to 10000000 and made configurable.
+
+
+git-svn-id: https://svn.apache.org/repos/asf/commons/proper/math/trunk@920558 13f79535-47bb-0310-9956-ffa450edef68

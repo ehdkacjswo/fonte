@@ -1,0 +1,12 @@
+Fixed a bad interaction between step handlers and event handlers in ODE
+integrators.
+
+The problem was due to an internal array from the step interpolator that
+was changed by the step handlers. These array was expected to contain
+the state at event time, but was overridden later on. the solution is
+simply to clone the array. Note that the fact the array is reused *is*
+documented in the javadoc and is a feature of the interpolators ...
+
+JIRA: MATH-706
+
+git-svn-id: https://svn.apache.org/repos/asf/commons/proper/math/trunk@1201105 13f79535-47bb-0310-9956-ffa450edef68

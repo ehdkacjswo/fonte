@@ -1,0 +1,471 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,2,* Copyright 2012 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,16,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,18,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,19,import com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,20,import com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,21,import com.google.javascript.rhino.IR;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,22,import com.google.javascript.rhino.JSDocInfo;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,23,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,25,import java.util.Collections;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,26,import java.util.List;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,29,"* Rewrites ""goog.defineClass"" into a form that is suitable for"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,30,* type checking and dead code elimination.
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,32,* @author johnlenz@google.com (John Lenz)
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,34,class ClosureRewriteClass extends AbstractPostOrderCallback
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,35,implements HotSwapCompilerPass {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,37,// Errors
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,38,static final DiagnosticType GOOG_CLASS_TARGET_INVALID = DiagnosticType.error(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,39,"""JSC_GOOG_CLASS_TARGET_INVALID"","
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,40,"""Unsupported goog.defineClass expression."");"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,42,static final DiagnosticType GOOG_CLASS_SUPER_CLASS_NOT_VALID = DiagnosticType.error(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,43,"""JSC_GOOG_CLASS_SUPER_CLASS_NOT_VALID"","
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,44,"""The super class must be null or a valid name reference"");"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,46,static final DiagnosticType GOOG_CLASS_DESCRIPTOR_NOT_VALID = DiagnosticType.error(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,47,"""JSC_GOOG_CLASS_DESCRIPTOR_NOT_VALID"","
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,48,"""The class descriptor must be an object literal"");"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,50,static final DiagnosticType GOOG_CLASS_CONSTRUCTOR_MISING = DiagnosticType.error(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,51,"""JSC_GOOG_CLASS_CONSTRUCTOR_MISING"","
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,52,"""The constructor expression is missing for the class descriptor"");"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,54,static final DiagnosticType GOOG_CLASS_MODIFIERS_NOT_VALID = DiagnosticType.error(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,55,"""JSC_CLASS_MODIFIERS_NOT_VALID"","
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,56,"""The class modifier list must be an array literal"");"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,58,static final DiagnosticType GOOG_CLASS_STATICS_NOT_VALID = DiagnosticType.error(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,59,"""JSC_GOOG_CLASS_STATICS_NOT_VALID"","
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,60,"""The class statics descriptor must be an object literal"");"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,62,private final AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,64,public ClosureRewriteClass(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,65,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,68,@Override
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,69,"public void process(Node externs, Node root) {"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,70,"NodeTraversal.traverse(compiler, root, this);"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,73,@Override
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,74,"public void hotSwapScript(Node scriptRoot, Node originalRoot) {"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,75,this.compiler.process(this);
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,79,@Override
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,80,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,81,if (n.isVar()) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,82,Node target = n.getFirstChild();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,83,Node value = target.getFirstChild();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,84,"maybeRewriteClassDefinition(t, n, target, value);"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,85,} else if (NodeUtil.isExprAssign(n)) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,86,Node assign = n.getFirstChild();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,87,Node target = assign.getFirstChild();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,88,Node value = assign.getLastChild();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,89,"maybeRewriteClassDefinition(t, n, target, value);"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,93,private void maybeRewriteClassDefinition(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,94,"NodeTraversal t, Node n, Node target, Node value) {"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,95,if (isGoogDefineClass(value)) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,96,if (!target.isQualifiedName()) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,97,"compiler.report(t.makeError(n, GOOG_CLASS_TARGET_INVALID));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,99,"ClassDefinition def = extractClassDefinition(t, target, value);"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,100,if (def != null) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,101,value.detachFromParent();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,102,target.detachFromParent();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,103,"rewriteGoogDefineClass(n, def);"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,108,private static class MemberDefinition {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,109,final JSDocInfo info;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,110,final Node name;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,111,final Node value;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,113,"MemberDefinition(JSDocInfo info, Node name, Node value) {"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,114,this.info = info;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,115,this.name = name;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,116,this.value = value;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,120,private final class ClassDefinition {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,121,final Node name;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,122,final Node superClass;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,123,final MemberDefinition constructor;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,124,final List<MemberDefinition> staticProps;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,125,final List<MemberDefinition> props;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,126,final List<Node>  modifiers;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,128,ClassDefinition(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,129,"Node name,"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,130,"Node superClass,"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,131,"MemberDefinition constructor,"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,132,"List<MemberDefinition> staticProps,"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,133,"List<MemberDefinition> props,"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,134,List<Node> modifiers) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,135,this.name = name;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,136,this.superClass = superClass;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,137,this.constructor = constructor;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,138,this.staticProps = staticProps;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,139,this.props = props;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,140,this.modifiers = modifiers;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,145,"* Validates the class definition and if valid, destructively extracts"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,146,* the class definition from the AST.
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,148,private ClassDefinition extractClassDefinition(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,149,"NodeTraversal t, Node targetName, Node callNode) {"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,150,"// name = goog.defineClass(superClass, {...}, [modifier, ...])"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,151,"Node superClass = NodeUtil.getArgumentForCallOrNew(callNode, 0);"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,152,if (superClass == null ||
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,153,(!superClass.isNull() && !superClass.isQualifiedName())) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,154,"compiler.report(t.makeError(callNode, GOOG_CLASS_SUPER_CLASS_NOT_VALID));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,155,return null;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,157,if (NodeUtil.isNullOrUndefined(superClass)) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,158,superClass = null;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,161,"Node description = NodeUtil.getArgumentForCallOrNew(callNode, 1);"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,162,if (description == null
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,163,|| !description.isObjectLit()
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,164,|| !validateObjLit(description)) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,165,// report bad class definition
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,166,"compiler.report(t.makeError(callNode, GOOG_CLASS_DESCRIPTOR_NOT_VALID));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,167,return null;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,170,"Node constructor = extractProperty(description, ""constructor"");"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,171,if (constructor == null) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,172,// report missing constructor
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,173,"compiler.report(t.makeError(description, GOOG_CLASS_CONSTRUCTOR_MISING));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,174,return null;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,176,JSDocInfo info = NodeUtil.getBestJSDocInfo(constructor);
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,178,"Node statics = extractProperty(description, ""statics"");"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,179,if (statics != null
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,180,&& !(statics.isObjectLit() && validateObjLit(statics))) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,181,"compiler.report(t.makeError(statics, GOOG_CLASS_STATICS_NOT_VALID));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,182,return null;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,184,if (statics == null) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,185,statics = IR.objectlit();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,188,"Node modifiers = NodeUtil.getArgumentForCallOrNew(callNode, 2);"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,189,if (modifiers != null && !modifiers.isArrayLit()) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,190,"compiler.report(t.makeError(modifiers, GOOG_CLASS_MODIFIERS_NOT_VALID));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,191,return null;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,193,if (modifiers == null) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,194,modifiers = IR.arraylit();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,197,"// Ok, now rip apart the definition into its component pieces."
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,198,maybeDetach(constructor.getParent());  // remove the property node.
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,199,maybeDetach(statics.getParent());
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,200,ClassDefinition def = new ClassDefinition(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,201,"targetName,"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,202,"maybeDetach(superClass),"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,203,"new MemberDefinition(info, null, maybeDetach(constructor)),"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,204,"objectLitToList(maybeDetach(statics)),"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,205,"objectLitToList(description),"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,206,arrayNodeToList(modifiers));
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,207,return def;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,210,private Node maybeDetach(Node node) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,211,if (node != null && node.getParent() != null) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,212,node.detachFromParent();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,214,return node;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,217,// Only unquoted plain properties are currently supported.
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,218,private boolean validateObjLit(Node objlit) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,219,for (Node key : objlit.children()) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,220,if (!key.isStringKey() || key.isQuotedString()) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,221,return false;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,224,return true;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,228,* @return The first property in the objlit that matches the key.
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,230,"private Node extractProperty(Node objlit, String keyName) {"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,231,for (Node keyNode : objlit.children()) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,232,if (keyNode.getString().equals(keyName)) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,233,return keyNode.isStringKey() ? keyNode.getFirstChild() : null;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,236,return null;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,239,private List<MemberDefinition> objectLitToList(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,240,Node objlit) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,241,List<MemberDefinition> result = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,242,for (Node keyNode : objlit.children()) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,243,result.add(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,244,new MemberDefinition(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,245,"NodeUtil.getBestJSDocInfo(keyNode),"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,246,"keyNode,"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,247,keyNode.removeFirstChild()));
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,249,objlit.detachChildren();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,250,return result;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,253,private List<Node> arrayNodeToList(Node arr) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,254,Preconditions.checkState(arr == null || arr.isArrayLit());
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,256,if (arr == null) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,257,return Collections.<Node>emptyList();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,258,} else {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,259,List<Node> result = Lists.newArrayList(arr.children());
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,260,arr.detachChildren();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,261,return result;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,265,"private void rewriteGoogDefineClass(Node exprRoot, ClassDefinition cls) {"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,267,"// For simplicity add everything into a block, before adding it to the AST."
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,268,Node block = IR.block();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,270,if (exprRoot.isVar()) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,271,// example: var ctr = function(){}
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,272,block.addChildToBack(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,273,IR.var(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,274,"cls.name.cloneTree(), cls.constructor.value)"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,275,.srcref(exprRoot).setJSDocInfo(cls.constructor.info));
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,276,} else {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,277,// example: ns.ctr = function(){}
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,278,block.addChildToBack(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,279,fixupSrcref(IR.exprResult(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,280,IR.assign(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,281,"cls.name.cloneTree(), cls.constructor.value)"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,282,.srcref(exprRoot).setJSDocInfo(cls.constructor.info)
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,283,.srcref(exprRoot))).setJSDocInfo(cls.constructor.info));
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,286,if (cls.superClass != null) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,287,"// example: goog.inherits(ctr, superClass)"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,288,block.addChildToBack(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,289,fixupSrcref(IR.exprResult(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,290,IR.call(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,291,NodeUtil.newQualifiedNameNode(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,292,"compiler.getCodingConvention(), ""goog.inherits"")"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,293,".srcrefTree(cls.superClass),"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,294,"cls.name.cloneTree(),"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,295,cls.superClass.cloneTree()).srcref(cls.superClass))));
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,298,for (MemberDefinition def : cls.staticProps) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,299,// example: ctr.prop = value
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,300,block.addChildToBack(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,301,fixupSrcref(IR.exprResult(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,302,fixupSrcref(IR.assign(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,303,"IR.getprop(cls.name.cloneTree(),"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,304,IR.string(def.name.getString()).srcref(def.name))
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,305,".srcref(def.name),"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,306,def.value)).setJSDocInfo(def.info))));
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,309,for (MemberDefinition def : cls.props) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,310,// example: ctr.prototype.prop = value
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,311,block.addChildToBack(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,312,fixupSrcref(IR.exprResult(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,313,fixupSrcref(IR.assign(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,314,IR.getprop(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,315,"fixupSrcref(IR.getprop(cls.name.cloneTree(),"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,316,"IR.string(""prototype"").srcref(def.name))),"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,317,IR.string(def.name.getString()).srcref(def.name))
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,318,".srcref(def.name),"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,319,def.value)).setJSDocInfo(def.info))));
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,322,for (Node modifier : cls.modifiers) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,323,// example: modifier(ctr)
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,324,block.addChildToBack(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,325,IR.exprResult(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,326,fixupFreeCall(IR.call(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,327,"modifier,"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,328,cls.name.cloneTree())
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,329,.srcref(modifier)))
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,330,.srcref(modifier));
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,334,"exprRoot.getParent().replaceChild(exprRoot, block);"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,335,compiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,338,private Node fixupSrcref(Node node) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,339,node.srcref(node.getFirstChild());
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,340,return node;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,343,private Node fixupFreeCall(Node call) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,344,if (call.getFirstChild().isName()) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,345,"call.putBooleanProp(Node.FREE_CALL, true);"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,347,return call;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,351,* @return Whether the call represents a class definition.
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,353,private boolean isGoogDefineClass(Node value) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,354,return value != null && value.isCall()
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,355,"&& ""goog.defineClass"".equals(value.getFirstChild().getQualifiedName());"
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,198,checks.add(closureRewriteGoogClass);
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1004,/** Rewrites goog.class */
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1005,final HotSwapPassFactory closureRewriteGoogClass =
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1006,"new HotSwapPassFactory(""closureRewriteGoogClass"", true) {"
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1007,@Override
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1008,protected HotSwapCompilerPass createInternal(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1009,return new ClosureRewriteClass(compiler);
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1857,ublic void setJSDocInfo(JSDocInfo info) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1857,public Node setJSDocInfo(JSDocInfo info) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1859,return this;
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,2,* Copyright 2012 The Closure Compiler Authors.
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,16,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,18,import static com.google.javascript.jscomp.ClosureRewriteClass.GOOG_CLASS_CONSTRUCTOR_MISING;
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,19,import static com.google.javascript.jscomp.ClosureRewriteClass.GOOG_CLASS_DESCRIPTOR_NOT_VALID;
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,20,import static com.google.javascript.jscomp.ClosureRewriteClass.GOOG_CLASS_MODIFIERS_NOT_VALID;
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,21,import static com.google.javascript.jscomp.ClosureRewriteClass.GOOG_CLASS_STATICS_NOT_VALID;
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,22,import static com.google.javascript.jscomp.ClosureRewriteClass.GOOG_CLASS_SUPER_CLASS_NOT_VALID;
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,25,* Unit tests for ClosureRewriteGoogClass
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,26,* @author johnlenz@google.com (John Lenz)
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,28,public class ClosureRewriteClassTest extends CompilerTestCase {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,30,@Override
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,31,protected CompilerPass getProcessor(Compiler compiler) {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,32,return new ClosureRewriteClass(compiler);
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,35,@Override
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,36,protected void setUp() throws Exception {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,37,super.setUp();
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,38,this.enableEcmaScript5(false);
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,41,public void testBasic1() {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,42,test(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,43,"""var x = goog.defineClass(null, {\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,44,"""  constructor: function(){}\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,47,"""{var x = function() {};}"");"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,50,public void testBasic2() {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,51,test(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,52,"""var x = {};\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,53,"""x.y = goog.defineClass(null, {\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,54,"""  constructor: function(){}\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,57,"""var x = {};"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,58,"""{x.y = function() {};}"");"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,61,public void testComplete1() {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,62,test(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,63,"""var x = goog.defineClass(some.Super, {\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,64,"""  constructor: function(){\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,65,"""    this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,66,"""  },\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,67,"""  statics: {\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,68,"""    prop1: 1,\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,69,"""    /** @const */\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,70,"""    PROP2: 2\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,71,"""  },\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,72,"""  anotherProp: 1,\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,73,"""  aMethod: function() {}\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,74,"""}, [goog.addSingletonGetter, seal]);"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,77,"""var x=function(){this.foo=1};"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,78,"""goog.inherits(x,some.Super);"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,79,"""x.prop1=1;"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,80,"""x.PROP2=2;"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,81,"""x.prototype.anotherProp=1;"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,82,"""x.prototype.aMethod=function(){};"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,83,"""goog.addSingletonGetter(x);"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,84,"""seal(x);"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,88,public void testComplete2() {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,89,test(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,90,"""x.y = goog.defineClass(some.Super, {\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,91,"""  constructor: function(){\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,92,"""    this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,93,"""  },\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,94,"""  statics: {\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,95,"""    prop1: 1,\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,96,"""    /** @const */\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,97,"""    PROP2: 2\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,98,"""  },\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,99,"""  anotherProp: 1,\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,100,"""  aMethod: function() {}\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,101,"""}, [goog.addSingletonGetter, seal]);"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,103,"""{\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,104,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,105,"""x.y=function(){this.foo=1};\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,106,"""goog.inherits(x.y,some.Super);"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,107,"""x.y.prop1=1;\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,108,"""/** @const */\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,109,"""x.y.PROP2=2;\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,110,"""x.y.prototype.anotherProp=1;"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,111,"""x.y.prototype.aMethod=function(){};"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,112,"""goog.addSingletonGetter(x.y);"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,113,"""seal(x.y);"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,118,public void testInvalid1() {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,119,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,120,"""var x = goog.defineClass();"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,121,"GOOG_CLASS_SUPER_CLASS_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,122,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,123,"""var x = goog.defineClass('foo');"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,124,"GOOG_CLASS_SUPER_CLASS_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,125,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,126,"""var x = goog.defineClass(foo());"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,127,"GOOG_CLASS_SUPER_CLASS_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,128,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,129,"""var x = goog.defineClass({'foo':1});"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,130,"GOOG_CLASS_SUPER_CLASS_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,131,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,132,"""var x = goog.defineClass({1:1});"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,133,"GOOG_CLASS_SUPER_CLASS_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,135,this.enableEcmaScript5(true);
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,137,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,138,"""var x = goog.defineClass({get foo() {return 1}});"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,139,"GOOG_CLASS_SUPER_CLASS_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,140,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,141,"""var x = goog.defineClass({set foo(a) {}});"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,142,"GOOG_CLASS_SUPER_CLASS_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,145,public void testInvalid2() {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,146,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,147,"""var x = goog.defineClass(null);"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,148,"GOOG_CLASS_DESCRIPTOR_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,149,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,150,"""var x = goog.defineClass(null, null);"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,151,"GOOG_CLASS_DESCRIPTOR_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,152,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,153,"""var x = goog.defineClass(null, foo());"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,154,"GOOG_CLASS_DESCRIPTOR_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,157,public void testInvalid3() {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,158,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,159,"""var x = goog.defineClass(null, {});"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,160,"GOOG_CLASS_CONSTRUCTOR_MISING, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,163,public void testInvalid4() {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,164,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,165,"""var x = goog.defineClass(null, {"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,166,"""  constructor: function(){},"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,167,"""  statics: null"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,169,"GOOG_CLASS_STATICS_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,170,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,171,"""var x = goog.defineClass(null, {"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,172,"""  constructor: function(){},"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,173,"""  statics: foo"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,175,"GOOG_CLASS_STATICS_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,176,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,177,"""var x = goog.defineClass(null, {"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,178,"""  constructor: function(){},"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,179,"""  statics: {'foo': 1}"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,181,"GOOG_CLASS_STATICS_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,182,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,183,"""var x = goog.defineClass(null, {"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,184,"""  constructor: function(){},"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,185,"""  statics: {1: 1}"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,187,"GOOG_CLASS_STATICS_NOT_VALID, true);  }"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,189,public void testInvalid5() {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,190,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,191,"""var x = goog.defineClass(null, {"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,192,"""  constructor: function(){}"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,193,"""}, null);"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,194,"GOOG_CLASS_MODIFIERS_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,195,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,196,"""var x = goog.defineClass(null, {"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,197,"""  constructor: function(){}"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,198,"""}, foo);"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,199,"GOOG_CLASS_MODIFIERS_NOT_VALID, true);"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2209,public void testGoogDefineClass1() {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2210,CompilerOptions options = createCompilerOptions();
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2211,CompilationLevel level = CompilationLevel.ADVANCED_OPTIMIZATIONS;
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2212,level.setOptionsForCompilationLevel(options);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2213,level.setTypeBasedOptimizationOptions(options);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2215,"String code = """" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2216,"""var ns = {};\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2217,"""ns.C = goog.defineClass(null, {\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2218,"""  /** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2219,"""  constructor: function () {this.someProperty = 1}\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2220,"""});\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2221,"""alert(new ns.C().someProperty + new ns.C().someProperty);\n"";"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2222,assertTrue(options.inlineProperties);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2223,assertTrue(options.collapseProperties);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2224,// CollapseProperties used to prevent inlining this property.
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2225,"test(options, code, ""alert(2);"");"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2228,public void testGoogDefineClass2() {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2229,CompilerOptions options = createCompilerOptions();
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2230,CompilationLevel level = CompilationLevel.ADVANCED_OPTIMIZATIONS;
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2231,level.setOptionsForCompilationLevel(options);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2232,level.setTypeBasedOptimizationOptions(options);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2234,"String code = """" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2235,"""var C = goog.defineClass(null, {\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2236,"""  /** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2237,"""  constructor: function () {this.someProperty = 1}\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2238,"""});\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2239,"""alert(new C().someProperty + new C().someProperty);\n"";"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2240,assertTrue(options.inlineProperties);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2241,assertTrue(options.collapseProperties);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2242,// CollapseProperties used to prevent inlining this property.
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2243,"test(options, code, ""alert(2);"");"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2246,public void testGoogDefineClass3() {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2247,CompilerOptions options = createCompilerOptions();
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2248,CompilationLevel level = CompilationLevel.ADVANCED_OPTIMIZATIONS;
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2249,level.setOptionsForCompilationLevel(options);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2250,level.setTypeBasedOptimizationOptions(options);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2251,WarningLevel warnings = WarningLevel.VERBOSE;
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2252,warnings.setOptionsForWarningLevel(options);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2254,"String code = """" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2255,"""var C = goog.defineClass(null, {\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2256,"""  /** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2257,"""  constructor: function () {\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2258,"""    /** @type {number} */\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2259,"""    this.someProperty = 1},\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2260,"""  /** @param {string} a */\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2261,"""  someMethod: function (a) {}\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2263,"""var x = new C();\n"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2264,"""x.someMethod(x.someProperty);\n"";"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2265,assertTrue(options.inlineProperties);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2266,assertTrue(options.collapseProperties);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2267,// CollapseProperties used to prevent inlining this property.
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2268,"test(options, code, TypeValidator.TYPE_MISMATCH_WARNING);"

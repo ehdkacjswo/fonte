@@ -1,0 +1,53 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/MemoizedScopeCreator.java,src/com/google/javascript/jscomp/MemoizedScopeCreator.java,61,public Scope getScopeIfMemoized(Node n) {
+True,src/com/google/javascript/jscomp/MemoizedScopeCreator.java,src/com/google/javascript/jscomp/MemoizedScopeCreator.java,62,return scopes.get(n);
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,20,import com.google.javascript.jscomp.Scope.Var;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,26,import java.util.Iterator;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,59,MemoizedScopeCreator oldScopeCreator = typedScopeCreator;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,64,if (oldScopeCreator != null) {
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,65,Scope oldTopScope = oldScopeCreator.getScopeIfMemoized(root);
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,66,if (oldTopScope != null) {
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,67,"// For each variable declared with the VAR keyword, we want to grab"
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,68,// its old inferred type.
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,70,// This is purely a heuristic. There are probably better ones we
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,71,// can use to increase the accuracy (like checking if a variable
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,72,// has been modified in the current script).
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,73,Iterator<Var> varIt =
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,74,topScope.getDeclarativelyUnboundVarsWithoutTypes();
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,75,while (varIt.hasNext()) {
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,76,Var newVar = varIt.next();
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,77,Var oldVar = oldTopScope.getVar(newVar.getName());
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,78,if (oldVar != null) {
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,79,newVar.setType(oldVar.getType());
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,22,import com.google.common.base.Predicate;
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,23,import com.google.common.collect.Iterators;
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,67,private static final Predicate<Var> DECLARATIVELY_UNBOUND_VARS_WITHOUT_TYPES =
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,68,new Predicate<Var>() {
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,69,@Override public boolean apply(Var var) {
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,70,return var.getParentNode() != null &&
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,71,var.getType() == null && // no declared type
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,72,var.getParentNode().getType() == Token.VAR &&
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,73,!var.isExtern();
+False,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,206, see {@code #isInferred()}.
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,218,* see {@code #isTypeInferred()}.
+False,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,282,"eturn ""Scope.Var "" + name;"
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,294,"return ""Scope.Var "" + name + ""{"" + type + ""}"";"
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,547,"* Gets all variables declared with ""var"" but without declared types attached."
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,549,public Iterator<Var> getDeclarativelyUnboundVarsWithoutTypes() {
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,550,return Iterators.filter(
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,551,"getVars(), DECLARATIVELY_UNBOUND_VARS_WITHOUT_TYPES);"
+False,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,139,terator<Var> varIt = functionScope.getVars();
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,139,"// For each local variable declared with the VAR keyword, the entry"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,140,// type is VOID.
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,141,Iterator<Var> varIt =
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,142,functionScope.getDeclarativelyUnboundVarsWithoutTypes();
+False,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,146,"/ For each local variable declared with the VAR keyword, the entry"
+False,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,147,/ type is VOID.
+False,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,148,f (var.getParentNode() != null &&
+False,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,149,ar.getType() == null && // no declared type
+False,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,150,ar.getParentNode().getType() == Token.VAR &&
+False,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,151,var.isExtern()) {
+False,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,152,his.functionScope.inferSlotType(
+False,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,153,"ar.getName(), getNativeType(VOID_TYPE));"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,149,this.functionScope.inferSlotType(
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,150,"var.getName(), getNativeType(VOID_TYPE));"

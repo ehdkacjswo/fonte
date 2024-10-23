@@ -1,0 +1,208 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,440,"/ If the left hand side of the call is a direct reference to eval,"
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,440,// We have two special cases here:
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,441,"// 1) If the left hand side of the call is a direct reference to eval,"
+False,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,444,f (first.getType() == Token.NAME &&
+False,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,445,"eval"".equals(first.getString()) &&"
+False,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,446,first.getBooleanProp(Node.DIRECT_EVAL)) {
+False,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,447,"dd(""(0,eval)"");"
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,445,"// 2) If the left hand side of the call is a property reference,"
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,446,"// then the call must not a FREE_CALL annotation. If it does, then"
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,447,// that means it was originally an call without an explicit this and
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,448,// that must be preserved.
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,449,if (isIndirectEval(first)
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,450,|| n.getBooleanProp(Node.FREE_CALL) && NodeUtil.isGet(first)) {
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,451,"add(""(0,"");"
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,452,"addExpr(first, NodeUtil.precedence(Token.COMMA));"
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,453,"add("")"");"
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,651,* @return Whether the name is an indirect eval.
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,653,private boolean isIndirectEval(Node n) {
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,654,"return n.getType() == Token.NAME && ""eval"".equals(n.getString()) &&"
+True,src/com/google/javascript/jscomp/CodeGenerator.java,src/com/google/javascript/jscomp/CodeGenerator.java,655,!n.getBooleanProp(Node.DIRECT_EVAL);
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,140,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,141,switch (n.getType()) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,142,case Token.CALL:
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,143,annotateCalls(n);
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,144,break;
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,146,case Token.FUNCTION:
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,147,"annotateFunctions(n, parent);"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,148,"annotateDispatchers(n, parent);"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,149,break;
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,151,case Token.NAME:
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,152,case Token.STRING:
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,153,"annotateConstants(n, parent);"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,154,break;
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,156,case Token.OBJECTLIT:
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,157,normalizeObjectLitJsDocs(n);
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,158,break;
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,163,* There are two types of calls we are interested in calls without explicit
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,164,"* ""this"" values (what we are call ""free"" calls) and direct call to eval."
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,166,private void annotateCalls(Node n) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,167,Preconditions.checkState(n.getType() == Token.CALL);
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,169,"// Keep track of of the ""this"" context of a call.  A call without an"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,170,"// explicit ""this"" is a free call."
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,171,Node first = n.getFirstChild();
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,172,if (!NodeUtil.isGet(first)) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,173,"n.putBooleanProp(Node.FREE_CALL, true);"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,176,// Keep track of the context in which eval is called. It is important
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,177,"// to distinguish between ""(0, eval)()"" and ""eval()""."
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,178,if (first.getType() == Token.NAME &&
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,179,"""eval"".equals(first.getString())) {"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,180,"first.putBooleanProp(Node.DIRECT_EVAL, true);"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,185,* Translate dispatcher info into the property expected node.
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,187,"private void annotateDispatchers(Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,188,Preconditions.checkState(n.getType() == Token.FUNCTION);
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,189,if (parent.getJSDocInfo() != null
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,190,&& parent.getJSDocInfo().isJavaDispatch()) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,191,if (parent.getType() == Token.ASSIGN) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,192,Preconditions.checkState(parent.getLastChild() == n);
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,193,"n.putBooleanProp(Node.IS_DISPATCHER, true);"
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,156,"SuppressWarnings(""fallthrough"")"
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,157,"ublic void visit(NodeTraversal t, Node n, Node parent) {"
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,158,nt nType = n.getType();
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,159,witch (nType) {
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,160,ase Token.STRING:
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,161,/ There are only two cases where a string token
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,162,/ may be a variable reference: The right side of a GETPROP
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,163,/ or an OBJECTLIT key.
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,164,f (parent.getType() != Token.OBJECTLIT &&
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,165,arent.getType() != Token.GETPROP) {
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,166,reak;
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,168,/ fall-through
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,170,ase Token.NAME:
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,171,tring nString = n.getString();
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,172,f (nType == Token.NAME &&
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,173,.getParent().getType() == Token.CALL &&
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,174,"eval"".equals(nString)) {"
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,175,".putBooleanProp(Node.DIRECT_EVAL, true);"
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,177,"f (NodeUtil.isConstantByConvention(convention, n, parent)) {"
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,178,".putBooleanProp(Node.IS_CONSTANT_NAME, true);"
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,180,reak;
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,213,private void normalizeObjectLitJsDocs(Node n) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,214,Preconditions.checkState(n.getType() == Token.OBJECTLIT);
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,215,for (Node key = n.getFirstChild();
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,216,key != null; key = key.getNext().getNext()) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,217,Node value = key.getNext();
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,218,if (key.getJSDocInfo() != null &&
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,219,key.getNext().getType() == Token.FUNCTION) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,220,value.setJSDocInfo(key.getJSDocInfo());
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,182,ase Token.FUNCTION:
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,183,SDocInfo fnInfo = n.getJSDocInfo();
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,184,f (fnInfo == null) {
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,185,/ Look for the info on other nodes.
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,186,f (parent.getType() == Token.ASSIGN) {
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,187,/ on ASSIGNs
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,188,nInfo = parent.getJSDocInfo();
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,189, else if (parent.getType() == Token.NAME) {
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,190,/ on var NAME = function() { ... };
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,191,nInfo = parent.getParent().getJSDocInfo();
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,226,* Mark names that are constants by convention.
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,228,"private void annotateConstants(Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,229,Preconditions.checkState(
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,230,n.getType() == Token.NAME || n.getType() == Token.STRING);
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,195,/ Compute which function parameters are optional and
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,196,/ which are var_args.
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,197,ode args = n.getFirstChild().getNext();
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,198,or (Node arg = args.getFirstChild();
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,199,rg != null;
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,200,rg = arg.getNext()) {
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,201,tring argName = arg.getString();
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,202,STypeExpression typeExpr = fnInfo == null ?
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,203,ull : fnInfo.getParameterType(argName);
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,205,f (convention.isOptionalParameter(arg) ||
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,206,ypeExpr != null && typeExpr.isOptionalArg()) {
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,207,"rg.putBooleanProp(Node.IS_OPTIONAL_PARAM, true);"
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,209,f (convention.isVarArgsParameter(arg) ||
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,210,ypeExpr != null && typeExpr.isVarArgs()) {
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,211,"rg.putBooleanProp(Node.IS_VAR_ARGS_PARAM, true);"
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,214,reak;
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,232,// There are only two cases where a string token
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,233,// may be a variable reference: The right side of a GETPROP
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,234,// or an OBJECTLIT key.
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,235,if (n.getType() != Token.STRING
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,236,|| parent.getType() == Token.OBJECTLIT
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,237,|| parent.getType() == Token.GETPROP) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,238,"if (NodeUtil.isConstantByConvention(convention, n, parent)) {"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,239,"n.putBooleanProp(Node.IS_CONSTANT_NAME, true);"
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,216,ase Token.OBJECTLIT:
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,217,f (n.getType() == Token.OBJECTLIT) {
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,218,or (Node key = n.getFirstChild();
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,219,ey != null; key = key.getNext().getNext()) {
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,220,ode value = key.getNext();
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,221,f (key.getJSDocInfo() != null &&
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,222,ey.getNext().getType() == Token.FUNCTION) {
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,223,alue.setJSDocInfo(key.getJSDocInfo());
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,227,reak;
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,245,* Annotate optional and var_arg function parameters.
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,247,"private void annotateFunctions(Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,248,Preconditions.checkState(n.getType() == Token.FUNCTION);
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,249,JSDocInfo fnInfo = n.getJSDocInfo();
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,250,if (fnInfo == null) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,251,// Look for the info on other nodes.
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,252,if (parent.getType() == Token.ASSIGN) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,253,// on ASSIGNs
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,254,fnInfo = parent.getJSDocInfo();
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,255,} else if (parent.getType() == Token.NAME) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,256,// on var NAME = function() { ... };
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,257,fnInfo = parent.getParent().getJSDocInfo();
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,230,/ TODO(johnlenz): Determine if it is possible to simply use the javadoc
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,231,/ everywhere rather than use IS_DISPATCHER.
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,233, Translate dispatcher info into the property expected node.
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,235,f (n.getJSDocInfo() != null && n.getJSDocInfo().isJavaDispatch()) {
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,236,f (n.getType() == Token.ASSIGN) {
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,237,ode fnNode = n.getLastChild();
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,238,reconditions.checkState(fnNode.getType() == Token.FUNCTION);
+False,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,239,"nNode.putBooleanProp(Node.IS_DISPATCHER, true);"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,261,// Compute which function parameters are optional and
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,262,// which are var_args.
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,263,Node args = n.getFirstChild().getNext();
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,264,for (Node arg = args.getFirstChild();
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,265,arg != null;
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,266,arg = arg.getNext()) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,267,String argName = arg.getString();
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,268,JSTypeExpression typeExpr = fnInfo == null ?
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,269,null : fnInfo.getParameterType(argName);
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,271,if (convention.isOptionalParameter(arg) ||
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,272,typeExpr != null && typeExpr.isOptionalArg()) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,273,"arg.putBooleanProp(Node.IS_OPTIONAL_PARAM, true);"
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,275,if (convention.isVarArgsParameter(arg) ||
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,276,typeExpr != null && typeExpr.isVarArgs()) {
+True,src/com/google/javascript/jscomp/PrepareAst.java,src/com/google/javascript/jscomp/PrepareAst.java,277,"arg.putBooleanProp(Node.IS_VAR_ARGS_PARAM, true);"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,156,AST_PROP          = 50;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,156,"FREE_CALL          = 51,    // A CALL without an explicit ""this"" value."
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,158,LAST_PROP          = 51;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,240,"case FREE_CALL:          return ""free_call"";"
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,999,public void testFreeCall1() {
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1000,"assertPrint(""foo(a);"", ""foo(a)"");"
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1001,"assertPrint(""x.foo(a);"", ""x.foo(a)"");"
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1004,public void testFreeCall2() {
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1005,"Node n = parse(""foo(a);"");"
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1006,"assertPrintNode(""foo(a)"", n);"
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1007,Node call =  n.getFirstChild().getFirstChild();
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1008,assertTrue(call.getType() == Token.CALL);
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1009,"call.putBooleanProp(Node.FREE_CALL, true);"
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1010,"assertPrintNode(""foo(a)"", n);"
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1013,public void testFreeCall3() {
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1014,"Node n = parse(""x.foo(a);"");"
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1015,"assertPrintNode(""x.foo(a)"", n);"
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1016,Node call =  n.getFirstChild().getFirstChild();
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1017,assertTrue(call.getType() == Token.CALL);
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1018,"call.putBooleanProp(Node.FREE_CALL, true);"
+True,test/com/google/javascript/jscomp/CodePrinterTest.java,test/com/google/javascript/jscomp/CodePrinterTest.java,1019,"assertPrintNode(""(0,x.foo)(a)"", n);"
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,19,import com.google.common.base.Preconditions;
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,58,public void testFreeCall1() throws Exception {
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,59,"Node root = parseExpectedJs(""foo();"");"
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,60,Node script = root.getFirstChild();
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,61,Preconditions.checkState(script.getType() == Token.SCRIPT);
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,62,Node firstExpr = script.getFirstChild();
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,63,Node call = firstExpr.getFirstChild();
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,64,Preconditions.checkState(call.getType() == Token.CALL);
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,66,assertTrue(call.getBooleanProp(Node.FREE_CALL));
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,69,public void testFreeCall2() throws Exception {
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,70,"Node root = parseExpectedJs(""x.foo();"");"
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,71,Node script = root.getFirstChild();
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,72,Preconditions.checkState(script.getType() == Token.SCRIPT);
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,73,Node firstExpr = script.getFirstChild();
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,74,Node call = firstExpr.getFirstChild();
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,75,Preconditions.checkState(call.getType() == Token.CALL);
+True,test/com/google/javascript/jscomp/PrepareAstTest.java,test/com/google/javascript/jscomp/PrepareAstTest.java,77,assertFalse(call.getBooleanProp(Node.FREE_CALL));

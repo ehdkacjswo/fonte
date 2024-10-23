@@ -1,0 +1,145 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,580,Override
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,581,ublic JSType getLeastSupertype(JSType that) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,582,"eturn supAndInfHelper(that, true);"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,585,Override
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,586,ublic JSType getGreatestSubtype(JSType that) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,587,"eturn supAndInfHelper(that, false);"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,591, Computes the supremum or infimum of functions with other types.
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,581,* Computes the supremum or infimum of two functions.
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,598,"rivate JSType supAndInfHelper(JSType that, boolean leastSuper) {"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,588,"FunctionType supAndInfHelper(FunctionType that, boolean leastSuper) {"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,612,f (isFunctionType() && that.isFunctionType()) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,613,f (isEquivalentTo(that)) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,614,eturn this;
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,617,unctionType other = that.toMaybeFunctionType();
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,619,"/ If these are ordinary functions, then merge them."
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,620,/ Don't do this if any of the params/return
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,621,"/ values are unknown, because then there will be cycles in"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,622,/ their local lattice and they will merge in weird ways.
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,623,f (other != null &&
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,624,sOrdinaryFunction() && that.isOrdinaryFunction() &&
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,625,this.call.hasUnknownParamsOrReturn() &&
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,626,other.call.hasUnknownParamsOrReturn()) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,628,"/ Check for the degenerate case, but double check"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,629,/ that there's not a cycle.
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,630,oolean isSubtypeOfThat = this.isSubtype(that);
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,631,oolean isSubtypeOfThis = that.isSubtype(this);
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,632,f (isSubtypeOfThat && !isSubtypeOfThis) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,633,eturn leastSuper ? that : this;
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,634, else if (isSubtypeOfThis && !isSubtypeOfThat) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,635,eturn leastSuper ? this : that;
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,603,// If there are unknown parameters or return types making things
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,604,"// ambiguous, then sup(A, B) is always the top function type, and"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,605,"// inf(A, B) is always the bottom function type."
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,606,Preconditions.checkNotNull(that);
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,638,/ Merge the two functions component-wise.
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,639,"unctionType merged = tryMergeFunctionPiecewise(other, leastSuper);"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,640,f (merged != null) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,641,eturn merged;
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,608,if (isEquivalentTo(that)) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,609,return this;
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,645,/ The function instance type is a special case
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,646,/ that lives above the rest of the lattice.
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,647,SType functionInstance = registry.getNativeType(
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,648,STypeNative.FUNCTION_INSTANCE_TYPE);
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,649,f (functionInstance.isEquivalentTo(that)) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,612,"// If these are ordinary functions, then merge them."
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,613,// Don't do this if any of the params/return
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,614,"// values are unknown, because then there will be cycles in"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,615,// their local lattice and they will merge in weird ways.
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,616,if (isOrdinaryFunction() && that.isOrdinaryFunction() &&
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,617,!this.call.hasUnknownParamsOrReturn() &&
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,618,!that.call.hasUnknownParamsOrReturn()) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,620,"// Check for the degenerate case, but double check"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,621,// that there's not a cycle.
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,622,boolean isSubtypeOfThat = this.isSubtype(that);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,623,boolean isSubtypeOfThis = that.isSubtype(this);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,624,if (isSubtypeOfThat && !isSubtypeOfThis) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,651, else if (functionInstance.isEquivalentTo(this)) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,626,} else if (isSubtypeOfThis && !isSubtypeOfThat) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,655,"/ In theory, we should be using the GREATEST_FUNCTION_TYPE as the"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,656,"/ greatest function. In practice, we don't because it's way too"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,657,"/ broad. The greatest function takes var_args None parameters, which"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,658,/ means that all parameters register a type warning.
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,660,"/ Instead, we use the U2U ctor type, which has unknown type args."
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,661,unctionType greatestFn =
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,662,egistry.getNativeFunctionType(JSTypeNative.U2U_CONSTRUCTOR_TYPE);
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,663,unctionType leastFn =
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,664,egistry.getNativeFunctionType(JSTypeNative.LEAST_FUNCTION_TYPE);
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,665,eturn leastSuper ? greatestFn : leastFn;
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,630,// Merge the two functions component-wise.
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,631,"FunctionType merged = tryMergeFunctionPiecewise(that, leastSuper);"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,632,if (merged != null) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,633,return merged;
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,637,// The function instance type is a special case
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,638,// that lives above the rest of the lattice.
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,639,JSType functionInstance = registry.getNativeType(
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,640,JSTypeNative.FUNCTION_INSTANCE_TYPE);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,641,if (functionInstance.isEquivalentTo(that)) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,642,return leastSuper ? that : this;
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,643,} else if (functionInstance.isEquivalentTo(this)) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,644,return leastSuper ? this : that;
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,668,eturn leastSuper ?
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,669,uper.getLeastSupertype(that) :
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,670,uper.getGreatestSubtype(that);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,647,"// In theory, we should be using the GREATEST_FUNCTION_TYPE as the"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,648,"// greatest function. In practice, we don't because it's way too"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,649,"// broad. The greatest function takes var_args None parameters, which"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,650,// means that all parameters register a type warning.
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,652,"// Instead, we use the U2U ctor type, which has unknown type args."
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,653,FunctionType greatestFn =
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,654,registry.getNativeFunctionType(JSTypeNative.U2U_CONSTRUCTOR_TYPE);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,655,FunctionType leastFn =
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,656,registry.getNativeFunctionType(JSTypeNative.LEAST_FUNCTION_TYPE);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,657,return leastSuper ? greatestFn : leastFn;
+False,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,709,f (thisType.isEquivalentTo(thatType)) {
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,709,if (thisType.isFunctionType() && thatType.isFunctionType()) {
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,710,"// The FunctionType sub-lattice is not well-defined. i.e., the"
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,711,// proposition
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,712,"// A < B => sup(A, B) == B"
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,713,// does not hold because of unknown parameters and return types.
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,714,// See the comment in supAndInfHelper for more info on this.
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,715,return thisType.toMaybeFunctionType().supAndInfHelper(
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,716,"thatType.toMaybeFunctionType(), false);"
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,717,} else if (thisType.isEquivalentTo(thatType)) {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,146,"// Function types are special, because they have their"
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,147,// own bizarro sub-lattice. See the commants on
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,148,// FunctionType#supAndInf helper and above at functionTypePosition.
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,149,if (alternate.isFunctionType() && functionTypePosition != -1) {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,150,// See the comments on functionTypePosition above.
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,151,FunctionType other =
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,152,alternates.get(functionTypePosition).toMaybeFunctionType();
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,153,FunctionType supremum =
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,154,"alternate.toMaybeFunctionType().supAndInfHelper(other, true);"
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,155,"alternates.set(functionTypePosition, supremum);"
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,156,result = null;
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,157,return this;
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,182,f (functionTypePosition == -1) {
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,183,unctionTypePosition = alternates.size();
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,184,lternates.add(alternate);
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,185, else {
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,186,SType supremum = alternate.toMaybeFunctionType().getLeastSupertype(
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,187,lternates.get(functionTypePosition).toMaybeFunctionType());
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,188,reconditions.checkState(supremum.isFunctionType());
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,189,"lternates.set(functionTypePosition, supremum);"
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,191, else {
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,192,lternates.add(alternate);
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,196,Preconditions.checkState(functionTypePosition == -1);
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,197,functionTypePosition = alternates.size();
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,200,alternates.add(alternate);
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3026,public void testProxiedFunctionTypeRelationships() {
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3027,FunctionType dateMethodEmpty = new FunctionBuilder(registry)
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3028,.withParamsNode(registry.createParameters())
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3029,.withTypeOfThis(DATE_TYPE).build().toMaybeFunctionType();
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3030,FunctionType dateMethodWithParam = new FunctionBuilder(registry)
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3031,.withParamsNode(registry.createParameters(NUMBER_TYPE))
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3032,.withTypeOfThis(DATE_TYPE).build().toMaybeFunctionType();
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3033,ProxyObjectType proxyDateMethodEmpty =
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3034,"new ProxyObjectType(registry, dateMethodEmpty);"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3035,ProxyObjectType proxyDateMethodWithParam =
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3036,"new ProxyObjectType(registry, dateMethodWithParam);"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3038,"assertTypeEquals(U2U_CONSTRUCTOR_TYPE,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3039,proxyDateMethodEmpty.getLeastSupertype(proxyDateMethodWithParam));
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3040,"assertTypeEquals(LEAST_FUNCTION_TYPE,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3041,proxyDateMethodEmpty.getGreatestSubtype(proxyDateMethodWithParam));

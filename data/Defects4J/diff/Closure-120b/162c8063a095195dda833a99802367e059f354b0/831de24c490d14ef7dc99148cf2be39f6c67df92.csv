@@ -1,0 +1,837 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,20,import com.google.common.base.Predicate;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,21,import com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,22,import com.google.common.collect.Maps;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,23,import com.google.common.collect.Sets;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,24,import com.google.javascript.jscomp.NodeTraversal.AbstractShallowCallback;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,25,import com.google.javascript.jscomp.ReferenceCollectingCallback.Reference;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,26,import com.google.javascript.jscomp.ReferenceCollectingCallback.ReferenceCollection;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,27,import com.google.javascript.jscomp.Scope.Var;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,28,import com.google.javascript.jscomp.VariableVisibilityAnalysis.VariableVisibility;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,30,import com.google.javascript.rhino.Token;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,32,import java.util.ArrayList;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,33,import java.util.Map;
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,41,ublic class SideEffectsAnalysis implements CompilerPass {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,53,class SideEffectsAnalysis implements CompilerPass {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,56,* The type of location abstraction to use for this analysis.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,58,enum LocationAbstractionMode {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,59,/** See {@link DegenerateLocationAbstraction} for details. */
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,60,"DEGENERATE,"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,61,/** See {@link VisibilityLocationAbstraction} for details. */
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,62,VISIBILITY_BASED
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,65,private static final Predicate<Node> NOT_FUNCTION_PREDICATE =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,66,new Predicate<Node>() {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,67,@Override
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,68,public boolean apply(Node input) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,69,return !NodeUtil.isFunction(input);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,73,private AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,78,/** The kind of location abstraction to use */
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,79,private final LocationAbstractionMode locationAbstractionIdentifier;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,82,* Constructs a new SideEffectsAnalysis with the given location abstraction.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,84,* @param compiler A compiler instance
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,85,* @param locationAbstractionMode The location abstration to use. {@code
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,86,*    DEGENERATE} will use {@link DegenerateLocationAbstraction} while
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,87,*    {@code VISIBILITY_BASED} will use {@link VisibilityLocationAbstraction}
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,90,"public SideEffectsAnalysis(AbstractCompiler compiler,"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,91,LocationAbstractionMode locationAbstractionMode) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,92,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,94,this.locationAbstractionIdentifier = locationAbstractionMode;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,97,public SideEffectsAnalysis(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,98,"this(compiler, LocationAbstractionMode.DEGENERATE);"
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,48,ocationAbstraction = new DegenerateLocationAbstraction();
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,103,switch(locationAbstractionIdentifier) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,104,case DEGENERATE:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,105,locationAbstraction = new DegenerateLocationAbstraction();
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,106,break;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,107,case VISIBILITY_BASED:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,108,"locationAbstraction = createVisibilityAbstraction(externs, root);"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,109,break;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,110,default:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,111,"throw new IllegalStateException(""Unrecognized location abstraction "" +"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,112,"""identifier: "" + locationAbstractionIdentifier);"
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,50,"/ Currently performs no analysis. In the future, this method"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,115,"// In the future, this method"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,121,"private LocationAbstraction createVisibilityAbstraction(Node externs,"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,122,Node root) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,123,VariableVisibilityAnalysis variableVisibility =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,124,new VariableVisibilityAnalysis(compiler);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,126,"variableVisibility.process(externs, root);"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,128,VariableUseDeclarationMap variableMap =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,129,new VariableUseDeclarationMap(compiler);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,131,variableMap.mapUses(root);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,133,"return new VisibilityLocationAbstraction(compiler,"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,134,"variableVisibility, variableMap);"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,165,// Don't currently support interprocedural analysis
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,166,if (nodeHasCall(source)) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,167,return false;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,186,for (Node environmentNode : environmentNodes) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,187,if (nodeHasCall(environmentNode)) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,188,return false;
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,127," Is the node pure? That is, is it side effect free and does it not depend"
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,128, on its environment?
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,219,"* Returns true if the node is pure, that is it side effect free and does it"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,220,* not depend on its environment?
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,137," Do the two nodes have the same control flow properties? That is,"
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,138, will node1 be executed every time node2 is executed and vice versa?
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,229,"* Returns true if the two nodes have the same control flow properties,"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,230,"* that is, is node1 be executed every time node2 is executed and vice versa?"
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,140,"rivate boolean nodesHaveSameControlFlow(Node node1, Node node2) {"
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,141,"/ For now, we conservatively assume not."
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,142,/ TODO(dcc): Implement nodesHaveSameControlFlow().
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,143,eturn false;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,232,"private static boolean nodesHaveSameControlFlow(Node node1, Node node2) {"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,234,* We conservatively approximate this with the following criteria:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,236,"* Define the ""deepest control dependent block"" for a node to be the"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,237,* closest ancestor whose *parent* is a control structure and where that
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,238,* ancestor may or may be executed depending on the parent.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,240,"* So, for example, in:"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,241,* if (a) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,242,*  b;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,243,* } else {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,244,*  c;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,247,* a has not deepest control dependent block.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,248,"* b's deepest control dependent block is the ""then"" block of the IF."
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,249,"* c's deepest control dependent block is the ""else"" block of the IF."
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,251,* We'll say two nodes have the same control flow if
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,253,* 1) they have the same deepest control dependent block
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,254,* 2) that block is either a CASE (which can't have early exits) or it
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,255,"* doesn't have any early exits (e.g. breaks, continues, returns.)"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,259,Node node1DeepestControlDependentBlock =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,260,closestControlDependentAncestor(node1);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,262,Node node2DeepestControlDependentBlock =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,263,closestControlDependentAncestor(node2);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,265,if (node1DeepestControlDependentBlock ==
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,266,node2DeepestControlDependentBlock) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,268,if (node2DeepestControlDependentBlock != null) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,269,// CASE is complicated because we have to deal with fall through and
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,270,// because some BREAKs are early exits and some are not.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,271,"// For now, we don't allow movement within a CASE."
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,273,// TODO(dcc): be less conservative about movement within CASE
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,274,if (node2DeepestControlDependentBlock.getType() == Token.CASE) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,275,return false;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,278,"// Don't allow breaks, continues, returns in control dependent"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,279,// block because we don't actually create a control-flow graph
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,280,// and so don't know if early exits site between the source
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,281,// and the destination.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,283,"// This is overly conservative as it doesn't allow, for example,"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,284,// moving in the following case:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,285,// while (a) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,286,//   source();
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,288,//   while(b) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,289,//     break;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,292,//   destination();
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,295,"// To fully support this kind of movement, we'll probably have to use"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,296,// a CFG-based analysis rather than just looking at the AST.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,298,// TODO(dcc): have nodesHaveSameControlFlow() use a CFG
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,299,Predicate<Node> isEarlyExitPredicate = new Predicate<Node>() {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,300,@Override
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,301,public boolean apply(Node input) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,302,int nodeType = input.getType();
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,304,return nodeType == Token.RETURN
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,305,|| nodeType == Token.BREAK
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,306,|| nodeType == Token.CONTINUE;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,310,"return !NodeUtil.has(node2DeepestControlDependentBlock,"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,311,"isEarlyExitPredicate, NOT_FUNCTION_PREDICATE);"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,312,} else {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,313,return true;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,315,} else {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,316,return false;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,321,* Returns true if the number of times the child executes depends on the
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,322,* parent.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,324,"* For example, the guard of an IF is not control dependent on the"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,325,"* IF, but its two THEN/ELSE blocks are."
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,327,"* Also, the guard of WHILE and DO are control dependent on the parent"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,328,* since the number of times it executes depends on the parent.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,330,private static boolean isControlDependentChild(Node child) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,331,Node parent = child.getParent();
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,333,if (parent == null) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,334,return false;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,337,ArrayList<Node> siblings = Lists.newArrayList(parent.children());
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,339,int indexOfChildInParent = siblings.indexOf(child);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,341,switch(parent.getType()) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,342,case Token.IF:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,343,case Token.HOOK:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,344,return (indexOfChildInParent == 1 || indexOfChildInParent == 2);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,345,case Token.WHILE:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,346,case Token.DO:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,347,return true;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,348,case Token.FOR:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,349,// Only initializer is not control dependent
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,350,return indexOfChildInParent != 0;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,351,case Token.SWITCH:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,352,return indexOfChildInParent > 0;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,353,case Token.AND:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,354,return true;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,355,case Token.OR:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,356,return true;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,357,case Token.FUNCTION:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,358,return true;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,360,default:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,361,return false;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,365,private static Node closestControlDependentAncestor(Node node) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,366,if (isControlDependentChild(node)) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,367,return node;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,370,// Note: node is not considered one of its ancestors
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,371,for (Node ancestor : node.getAncestors()) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,372,if (isControlDependentChild(ancestor)) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,373,return ancestor;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,377,return null;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,381,* Returns true if {@code possibleAncestor} is an ancestor of{@code node}.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,382,* A node is not considered to be an ancestor of itself.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,397,* Returns true if a node has a CALL or a NEW descendant.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,399,private boolean nodeHasCall(Node node) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,400,"return NodeUtil.has(node, new Predicate<Node>() {"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,401,@Override
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,402,public boolean apply(Node input) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,403,return NodeUtil.isCall(input) || NodeUtil.isNew(input);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,405,NOT_FUNCTION_PREDICATE);
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,379,ew DenegenerateEffectLocation();
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,629,new DegenerateEffectLocation();
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,382,ew DenegenerateEffectLocation();
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,632,new DegenerateEffectLocation();
+False,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,410,rivate static class DenegenerateEffectLocation implements EffectLocation {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,660,private static class DegenerateEffectLocation implements EffectLocation {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,680,* A location abstraction based on the visibility of concrete locations.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,682,"* A global variables are treated as one common location, as are all heap"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,683,* storage locations.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,685,"* Local variables are broken up into two classes, one for truly local"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,686,* variables and one for local variables captured by an inner scope. Each
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,687,* of these classes has their own separate location representing the
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,688,* variables in the class.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,690,* Parameter variables are considered to be heap locations since they
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,691,* can be accessed via the arguments object which itself can be aliased.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,693,* A more precise analysis could:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,694,"*    1) put parameters on the heap only when ""arguments"" is actually used"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,695,*        in a method
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,696,"*    2) recognize that GETPROPs cannot access or modify parameters, only"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,697,*        GETELEMs
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,699,* TODO(dcc): Don't merge parameters with the heap unless necessary.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,701,"* Internally, abstract locations are represented as integers"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,702,"* with bits set (masks) representing the storage classes in the location, so"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,703,* that joining is bit-wise ORing and intersection is bitwise AND.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,705,private static class VisibilityLocationAbstraction
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,706,extends LocationAbstraction {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,708,"/** The ""bottom"" location. Used to signify an empty location set */"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,709,private static final int VISIBILITY_LOCATION_NONE = 0;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,711,"/** The ""top"" location. Used to signify the set containing all locations */"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,712,private static final int UNKNOWN_LOCATION_MASK = 0xFFFFFFFF;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,714,private static final int LOCAL_VARIABLE_LOCATION_MASK = 1 << 1;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,716,private static final int CAPTURED_LOCAL_VARIABLE_LOCATION_MASK = 1 << 2;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,718,private static final int GLOBAL_VARIABLE_LOCATION_MASK = 1 << 3;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,720,private static final int HEAP_LOCATION_MASK = 1 << 4;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,722,AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,724,VariableVisibilityAnalysis variableVisibilityAnalysis;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,725,VariableUseDeclarationMap variableUseMap;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,727,"private VisibilityLocationAbstraction(AbstractCompiler compiler,"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,728,"VariableVisibilityAnalysis variableVisibilityAnalysis,"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,729,VariableUseDeclarationMap variableUseMap) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,730,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,731,this.variableVisibilityAnalysis = variableVisibilityAnalysis;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,732,this.variableUseMap = variableUseMap;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,736,* Calculates the MOD/REF summary for the given node.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,738,@Override
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,739,LocationSummary calculateLocationSummary(Node node) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,740,int visibilityRefLocations = VISIBILITY_LOCATION_NONE;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,741,int visibilityModLocations = VISIBILITY_LOCATION_NONE;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,743,for (Node reference : findStorageLocationReferences(node)) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,744,int effectMask;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,746,if (NodeUtil.isName(reference)) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,747,// Variable access
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,748,effectMask = effectMaskForVariableReference(reference);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,749,} else {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,750,// Heap access
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,751,effectMask = HEAP_LOCATION_MASK;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,754,if (storageNodeIsLValue(reference)) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,755,visibilityModLocations |= effectMask;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,758,if (storageNodeIsRValue(reference)) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,759,visibilityRefLocations |= effectMask;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,763,VisibilityBasedEffectLocation modSet =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,764,new VisibilityBasedEffectLocation(visibilityModLocations);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,766,VisibilityBasedEffectLocation refSet =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,767,new VisibilityBasedEffectLocation(visibilityRefLocations);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,769,"return new LocationSummary(modSet, refSet);"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,773,* Returns the set of references to storage locations (both variables
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,774,* and the heap) under {@code root}.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,776,private Set<Node> findStorageLocationReferences(Node root) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,777,final Set<Node> references = Sets.newHashSet();
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,779,"NodeTraversal.traverse(compiler, root, new AbstractShallowCallback() {"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,780,@Override
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,781,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,782,if (NodeUtil.isGet(n)
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,783,|| (NodeUtil.isName(n) && !NodeUtil.isFunction(parent))) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,784,references.add(n);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,789,return references;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,793,* Calculates the effect mask for a variable reference.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,795,private int effectMaskForVariableReference(Node variableReference) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,796,Preconditions.checkArgument(NodeUtil.isName(variableReference));
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,798,int effectMask = VISIBILITY_LOCATION_NONE;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,800,Node declaringNameNode =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,801,variableUseMap.findDeclaringNameNodeForUse(variableReference);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,803,if (declaringNameNode != null) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,804,VariableVisibility visibility =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,805,variableVisibilityAnalysis.getVariableVisibility(declaringNameNode);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,807,switch (visibility) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,808,case LOCAL:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,809,effectMask = LOCAL_VARIABLE_LOCATION_MASK;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,810,break;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,811,case CAPTURED_LOCAL:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,812,effectMask = CAPTURED_LOCAL_VARIABLE_LOCATION_MASK;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,813,break;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,814,case PARAMETER:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,815,// Parameters are considered to be on the heap since they
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,816,// can be accessed via the arguments object.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,817,effectMask = HEAP_LOCATION_MASK;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,818,break;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,819,case GLOBAL:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,820,effectMask = GLOBAL_VARIABLE_LOCATION_MASK;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,821,break;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,822,default:
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,823,"throw new IllegalStateException(""Unrecognized variable"" +"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,824,""" visibility: "" + visibility);"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,826,} else {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,827,// Couldn't find a variable for the reference
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,828,effectMask = UNKNOWN_LOCATION_MASK;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,831,return effectMask;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,834,@Override
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,835,EffectLocation getBottomLocation() {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,836,return new VisibilityBasedEffectLocation(VISIBILITY_LOCATION_NONE);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,840,* Returns true if the node is a storage node.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,842,"* Only NAMEs, GETPROPs, and GETELEMs are storage nodes."
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,844,private static boolean isStorageNode(Node node) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,845,return NodeUtil.isName(node) || NodeUtil.isGet(node);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,849,* Return true if the storage node is an r-value.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,851,private static boolean storageNodeIsRValue(Node node) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,852,Preconditions.checkArgument(isStorageNode(node));
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,854,// We consider all names to be r-values unless
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,855,// LHS of Token.ASSIGN
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,856,// LHS of of for in expression
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,857,// Child of VAR
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,859,Node parent = node.getParent();
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,861,if (storageNodeIsLValue(node)) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,862,// Assume l-value is NOT an r-value
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,863,// unless it is a non-simple assign
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,864,// or an increment/decrement
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,866,boolean nonSimpleAssign =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,867,NodeUtil.isAssignmentOp(parent) && parent.getType() != Token.ASSIGN;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,869,return (nonSimpleAssign
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,870,|| parent.getType() == Token.DEC
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,871,|| parent.getType() == Token.INC);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,874,return true;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,878,* Return true if the storage node is an l-value.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,880,private static boolean storageNodeIsLValue(Node node) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,881,Preconditions.checkArgument(isStorageNode(node));
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,883,Node parent = node.getParent();
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,885,return (NodeUtil.isAssignmentOp(parent) && parent.getFirstChild() == node)
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,886,|| (NodeUtil.isForIn(parent) && parent.getFirstChild() == node)
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,887,|| NodeUtil.isVar(parent)
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,888,|| parent.getType() == Token.DEC
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,889,|| parent.getType() == Token.INC;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,893,* An abstract effect location based the visibility of the
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,894,* concrete storage location.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,896,* See {@link VisibilityLocationAbstraction} for deeper description
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,897,* of this abstraction.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,899,"* The effect locations are stored as bits set on an integer, so"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,900,"* intersect, join, etc. are the standard bitwise operations."
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,902,private static class VisibilityBasedEffectLocation
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,903,implements EffectLocation {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,904,int visibilityMask = VISIBILITY_LOCATION_NONE;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,906,public VisibilityBasedEffectLocation(int visibilityMask) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,907,this.visibilityMask = visibilityMask;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,910,@Override
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,911,public boolean intersectsLocation(EffectLocation otherLocation) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,912,Preconditions.checkArgument(otherLocation instanceof
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,913,VisibilityBasedEffectLocation);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,915,int otherMask =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,916,((VisibilityBasedEffectLocation) otherLocation).visibilityMask;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,918,return (visibilityMask & otherMask) > 0;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,921,@Override
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,922,public boolean isEmpty() {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,923,return visibilityMask == VISIBILITY_LOCATION_NONE;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,926,@Override
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,927,public EffectLocation join(EffectLocation otherLocation) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,928,Preconditions.checkArgument(otherLocation instanceof
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,929,VisibilityBasedEffectLocation);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,931,int otherMask =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,932,((VisibilityBasedEffectLocation) otherLocation).visibilityMask;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,934,int joinedMask = visibilityMask | otherMask;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,936,return new VisibilityBasedEffectLocation(joinedMask);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,942,* Maps NAME nodes that refer to variables to the NAME
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,943,* nodes that declared them.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,945,private static class VariableUseDeclarationMap {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,947,private AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,949,// Maps a using name to its declaring name
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,950,"private Map<Node, Node> referencesByNameNode;"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,952,public VariableUseDeclarationMap(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,953,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,957,* Adds a map from each use NAME in {@code root} to its corresponding
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,958,"* declaring name, *provided the declaration is also under root*."
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,960,"* If the declaration is not under root, then the reference will"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,961,* not be added to the map.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,963,public void mapUses(Node root) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,964,referencesByNameNode = Maps.newHashMap();
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,966,ReferenceCollectingCallback callback =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,967,"new ReferenceCollectingCallback(compiler,"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,968,ReferenceCollectingCallback.DO_NOTHING_BEHAVIOR);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,970,"NodeTraversal.traverse(compiler, root, callback);"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,972,for (Var variable : callback.getReferencedVariables()) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,973,ReferenceCollection referenceCollection =
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,974,callback.getReferenceCollection(variable);
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,976,for (Reference reference : referenceCollection.references) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,977,Node referenceNameNode = reference.getNameNode();
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,979,// Note that this counts a declaration as a reference to itself
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,980,"referencesByNameNode.put(referenceNameNode, variable.getNameNode());"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,986,* Returns the NAME node for the declaration of the variable
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,987,"* that {@code usingNameNode} refers to, if it is in the map,"
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,988,* or {@code null} otherwise.
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,990,public Node findDeclaringNameNodeForUse(Node usingNameNode) {
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,991,Preconditions.checkArgument(NodeUtil.isName(usingNameNode));
+True,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,src/com/google/javascript/jscomp/SideEffectsAnalysis.java,993,return referencesByNameNode.get(usingNameNode);
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,20,import com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,21,import com.google.javascript.jscomp.SideEffectsAnalysis.LocationAbstractionMode;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,23,import com.google.javascript.rhino.Token;
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,23, Tests for SideEffectsAnalysis.
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,26,* Tests for {@link SideEffectsAnalysis}.
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,30,ideEffectsAnalysis currentProcessor = null;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,33,"private static final String SHARED_EXTERNS = ""var arguments = [];"";"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,35,LocationAbstractionMode currentLocationAbstractionIdentifier;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,37,SideEffectsAnalysis currentAnalysis = null;
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,37,rotected CompilerPass getProcessor(Compiler compiler) {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,44,protected CompilerPass getProcessor(final Compiler compiler) {
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,39,urrentProcessor = new SideEffectsAnalysis();
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,47,"currentAnalysis = new SideEffectsAnalysis(compiler,"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,48,currentLocationAbstractionIdentifier);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,41,eturn currentProcessor;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,50,return new CompilerPass() {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,52,@Override
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,53,"public void process(Node externs, Node root) {"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,55,if (currentLocationAbstractionIdentifier ==
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,56,LocationAbstractionMode.VISIBILITY_BASED) {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,58,// Run var when using the visibility abstraction
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,59,// because it is unsound if it fails.
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,61,final VarCheck varCheck = new VarCheck(compiler);
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,63,"varCheck.process(externs, root);"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,66,"currentAnalysis.process(externs, root);"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,47,urrentProcessor = null;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,76,currentAnalysis = null;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,77,currentCompiler = null;
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,50,ublic void testSafeToMoveConstantAcrossEmpty() {
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,51,"ideEffectsAnalysis analysis = compileAndRun(""1; 2;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,80,public void testDegenerateSafeMoves() {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,81,// Env is empty
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,82,"assertSafeMoveDegenerate(""src: 1; env: ; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,84,// Src and env pure
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,85,"assertSafeMoveDegenerate(""src: 1; env: 2; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,87,// Only refs
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,88,"assertSafeMoveDegenerate(""src: 1; env: x; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,89,"assertSafeMoveDegenerate(""src: x; env: 1; dest: 3;"");"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,53,ode expression1 = rootJsNodeAtIndex(0);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,54,ode expression2 = rootJsNodeAtIndex(1);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,56,"ssertTrue(analysis.safeToMoveBefore(expression1,"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,57,"nvironment(), expression2));"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,91,// Only mods
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,92,"assertSafeMoveDegenerate(""src: 1; env: x++; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,94,"assertSafeMoveDegenerate(""src: x++; env: 1; dest: 3;"");"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,60,ublic void testSafeToMoveConstantAcrossConstants() {
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,61,"ideEffectsAnalysis analysis = compileAndRun(""1; 2; 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,97,public void testVisibilitySafeMoves() {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,98,// Env is empty
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,99,"assertSafeMoveVisibility(""src: 1; env: ; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,101,// Src and env pure
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,102,"assertSafeMoveVisibility(""src: 1; env: 2; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,104,// Only refs
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,105,"assertSafeMoveVisibility(""var x; src: 1; env: x; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,106,"assertSafeMoveVisibility(""var x; src: x; env: 1; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,108,// Only mods
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,109,"assertSafeMoveVisibility(""var x; src: 1; env: x++; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,110,"assertSafeMoveVisibility(""var x; src: x++; env: 1; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,112,"// Source references global, env changes local"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,113,assertSafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,114,"""var x;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,115,"""function f(){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,116,"""var y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,117,"""src: x;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,118,"""env: y++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,119,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,122,"// Source changes global, env refs local"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,123,assertSafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,124,"""var x;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,125,"""function f(){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,126,"""var y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,127,"""src: x++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,128,"""env: y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,129,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,132,"// Source references global, env changes local with shadowing"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,133,assertSafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,134,"""var x;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,135,"""var y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,136,"""function f(){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,137,"""var y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,138,"""src: x;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,139,"""env: y++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,140,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,143,"// Source changes global, env refs local with shadowing"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,144,assertSafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,145,"""var x;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,146,"""var y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,147,"""function f(){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,148,"""var y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,149,"""src: x++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,150,"""env: y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,151,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,155,"// Source references captured local, env changes local"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,156,assertSafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,157,"""function f(){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,158,"""var x;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,159,"""var y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,160,"""src: x;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,161,"""env: y++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,162,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,163,"""function inner() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,164,"""x"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,168,"// Source changes captured local, env refs local"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,169,assertSafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,170,"""function f(){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,171,"""var x;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,172,"""var y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,173,"""src: x++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,174,"""env: y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,175,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,176,"""function inner() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,177,"""x"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,181,"// Source references heap, env changes local"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,182,assertSafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,183,"""var x = {};"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,184,"""function f(){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,185,"""var y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,186,"""src: x.a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,187,"""env: y++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,188,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,191,"// Source changes heap, env refs local"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,192,assertSafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,193,"""var x = {};"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,194,"""function f(){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,195,"""var y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,196,"""src: x.a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,197,"""env: y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,198,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,201,// MOD in function expressions shouldn't count
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,202,assertSafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,203,"""var x = {};"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,204,"""src: x.a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,205,"""env: (function() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,206,"""x.a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,208,"""dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,210,// REF in function expressions shouldn't count
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,211,assertSafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,212,"""var x = {};"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,213,"""src: x.a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,214,"""env: (function() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,215,"""x.a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,217,"""dest: 3;"");"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,63,ode expression1 = rootJsNodeAtIndex(0);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,64,ode expression2 = rootJsNodeAtIndex(1);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,65,ode expression3 = rootJsNodeAtIndex(2);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,67,"ssertTrue(analysis.safeToMoveBefore(expression1,"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,68,"nvironment(expression2), expression3));"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,71,ublic void testNotSafeToMoveIncrementAcrossRead() {
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,72,"ideEffectsAnalysis analysis = compileAndRun(""x++; foo(x); 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,221,public void testDegenerateUnsafeMoves() {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,223,// Unsafe to move increment across read
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,224,"assertUnsafeMoveDegenerate(""src: x++; env: foo(y); dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,226,// Unsafe to move read across increment
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,227,"assertUnsafeMoveDegenerate(""src: foo(y); env: x++; dest: 3;"");"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,74,ode expression1 = rootJsNodeAtIndex(0);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,75,ode expression2 = rootJsNodeAtIndex(1);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,76,ode expression3 = rootJsNodeAtIndex(2);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,78,"ssertFalse(analysis.safeToMoveBefore(expression1,"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,79,"nvironment(expression2), expression3));"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,229,// Unsafe to move write across write
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,230,"assertUnsafeMoveDegenerate(""src: x = 7; env: y = 3; dest:3;"");"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,82,ublic void testNotSafeToMoveReadAcrossIncrement() {
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,83,"ideEffectsAnalysis analysis = compileAndRun(""foo(x); x++; 3;"");"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,85,ode expression1 = rootJsNodeAtIndex(0);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,86,ode expression2 = rootJsNodeAtIndex(1);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,87,ode expression3 = rootJsNodeAtIndex(2);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,89,"ssertFalse(analysis.safeToMoveBefore(expression1,"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,90,"nvironment(expression2), expression3));"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,233,public void testVisibilityUnsafeMoves() {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,235,// Unsafe to move increment across read for global variables
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,236,"assertUnsafeMoveVisibility(""var x,y; src: x++; env: y; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,238,// Unsafe to move increment across read for local variables
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,239,"assertUnsafeMoveVisibility(""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,240,"""var x,y; src: x++; env: y; dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,243,// Unsafe to move increment across read for captured local variables
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,244,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,245,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,246,"""var x,y; src: x++; env: y; dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,247,"""function inner() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,248,"""x; y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,252,// Unsafe to move increment across read for heap locations
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,253,"assertUnsafeMoveVisibility(""var x,y; src: x.a++; env: y.b; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,255,// Unsafe to move read across increment of for global variables
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,256,"assertUnsafeMoveVisibility(""var x,y; src: y; env: x++; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,258,// Unsafe to move read across increment for local variables
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,259,"assertUnsafeMoveVisibility(""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,260,"""var x,y; src: x; env: y++; dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,263,// Unsafe to move read across increment for captured local variables
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,264,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,265,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,266,"""var x,y; src: x; env: y++; dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,267,"""function inner() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,268,"""x; y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,272,// Unsafe to move read across increment for heap locations
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,273,"assertUnsafeMoveVisibility(""var x,y; src: x.a; env: y.b++; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,275,// Unsafe to move write across write for globals
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,276,"assertUnsafeMoveVisibility(""var x,y; src: x = 7; env: y = 3; dest: 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,278,// Unsafe to move write across write for local variables
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,279,"assertUnsafeMoveVisibility(""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,280,"""var x,y; src: x = 7; env: y = 3; dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,283,// Unsafe to move write across write for captured local variables
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,284,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,285,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,286,"""var x,y; src: x = 7; env: y = 3; dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,287,"""function inner() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,288,"""x; y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,292,// Unsafe to move write across write for heap locations
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,293,"assertUnsafeMoveVisibility(""var x,y; src: x.a = 7; env: y.b = 3; dest: 3;"");"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,93,ublic void testNotSafeToMoveWriteAcrossWrite() {
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,94,"ideEffectsAnalysis analysis = compileAndRun(""x = 7; x = 3; 3;"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,296,public void testVisibilityMoveCalls() {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,297,"// Interprocedural side effect analysis isn't implemented yet, so any calls"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,298,"// should make movement unsafe, since we don't know what those calls are"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,299,// doing.
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,96,ode expression1 = rootJsNodeAtIndex(0);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,97,ode expression2 = rootJsNodeAtIndex(1);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,98,ode expression3 = rootJsNodeAtIndex(2);
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,100,"ssertFalse(analysis.safeToMoveBefore(expression1,"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,101,"nvironment(expression2), expression3));"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,301,// TODO(dcc): implement interprocedural side effect analysis.
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,303,"// Source makes call, env refs global"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,304,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,305,"""var x = {};"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,306,"""var g = function(){};"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,307,"""function f(){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,308,"""var y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,309,"""src: g();"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,310,"""env: x;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,311,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,314,"// Source makes refs global, env makes call"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,315,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,316,"""var x = {};"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,317,"""var g = function(){};"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,318,"""function f(){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,319,"""var y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,320,"""src: x;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,321,"""env: g();"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,322,"""dest: 3;"" +"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,104,ode rootJsNodeAtIndex(int index) {
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,105,/ We assume currentJsRoot is:
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,106,/ BLOCK
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,107,/   SCRIPT
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,108,/     child0
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,109,/     child1
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,110,ode scriptNode = currentJsRoot.getFirstChild();
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,326,public void testVisibilityMergesParametersWithHeap() {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,327,"// For now, we expect the visibility based location abstraction"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,328,// to merge parameter variable locations with heap locations because
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,329,// parameters can be references and modified via the arguments object.
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,331,"// Source changes heap, env refs parameter"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,332,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,333,"""var x = {};"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,334,"""function f(y){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,335,"""src: x[0]++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,336,"""env: y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,337,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,340,"// Source refs heap, env changes parameters"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,341,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,342,"""var x = {};"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,343,"""function f(y){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,344,"""src: x[0];"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,345,"""env: y++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,346,"""dest: 3;"" +"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,112,eturn scriptNode.getChildAtIndex(index);
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,349,"// Source changes arguments explicitly, env refs parameter"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,350,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,351,"""var x = {};"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,352,"""function f(y){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,353,"""src: arguments[0]++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,354,"""env: y;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,355,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,358,"// Source refs arguments explicitly, env changes parameter"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,359,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,360,"""var x = {};"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,361,"""function f(y){"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,362,"""src: arguments[0];"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,363,"""env: y++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,364,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,368,public void testMovedSideEffectsMustHaveSameControlFlow() {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,370,// Safe to move within IF block
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,371,assertSafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,372,"""var a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,373,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,374,"""var l;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,375,"""if (l) {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,376,"""src: a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,377,"""env: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,378,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,383,// Unsafe to move between two IF blocks
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,384,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,385,"""var a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,386,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,387,"""var l;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,388,"""if (l) {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,389,"""src: a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,390,"""env: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,392,"""if (l) {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,393,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,398,// Unsafe to move between then/else of same IF block
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,399,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,400,"""var a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,401,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,402,"""var l;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,403,"""if (l) {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,404,"""src: a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,405,"""env: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,406,"""} else {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,407,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,412,// Safe to move within WHILE block
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,413,assertSafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,414,"""var a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,415,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,416,"""var l;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,417,"""while (l) {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,418,"""src: a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,419,"""env: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,420,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,425,// Unsafe to move within WHILE block with BREAK
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,426,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,427,"""var a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,428,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,429,"""var l;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,430,"""while (l) {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,431,"""src: a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,432,"""env: l;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,433,"""break;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,434,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,439,// Unsafe to move within WHILE block with continue
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,440,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,441,"""var a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,442,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,443,"""var l;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,444,"""while (l) {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,445,"""src: a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,446,"""env: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,447,"""continue;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,448,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,453,// Unsafe to move within WHILE block with continue
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,454,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,455,"""var a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,456,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,457,"""var l;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,458,"""while (l) {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,459,"""src: a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,460,"""env: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,461,"""return;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,462,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,467,// Safe to move within DO
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,468,assertSafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,469,"""var a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,470,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,471,"""var l;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,472,"""do {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,473,"""src: a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,474,"""env: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,475,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,476,"""} while(l)"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,480,// Unsafe to move outside DO
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,481,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,482,"""var a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,483,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,484,"""var l;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,485,"""do {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,486,"""src: a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,487,"""env: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,488,"""} while(l)"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,489,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,493,// It should be safe to move within CASE
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,494,// but we disallow for now because analyzing
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,495,// CASE fall-through and BREAKs is complicated.
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,496,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,497,"""var a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,498,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,499,"""var l;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,500,"""switch(l) {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,501,"""case 17:"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,502,"""src: a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,503,"""env: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,504,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,505,"""break;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,510,// Unsafe to move between CASEs
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,511,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,512,"""var a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,513,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,514,"""var l;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,515,"""switch(l) {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,516,"""case 17:"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,517,"""src: a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,518,"""env: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,519,"""break;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,520,"""case 18:"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,521,"""dest: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,522,"""break;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,527,// Unsafe to move between FUNCTIONs
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,528,assertUnsafeMoveVisibility(
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,529,"""var a;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,530,"""function f() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,531,"""src: a++;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,532,"""env: 3;"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,534,"""function g() {"" +"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,535,"""dest: 3;"" +"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,122,rivate SideEffectsAnalysis compileAndRun(String js) {
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,123,"estSame("""", js, null);"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,547,"private void assertMove(LocationAbstractionMode abstraction,"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,548,"String src,"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,549,boolean expected) {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,550,"SideEffectsAnalysis analysis = compileAndRun(src, abstraction);"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,552,"Node sourceNode = findLabeledStatement(""src"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,553,"Node environmentNode = findLabeledStatement(""env"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,554,"Node destinationNode = findLabeledStatement(""dest"");"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,556,"boolean result = analysis.safeToMoveBefore(sourceNode,"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,557,"environment(environmentNode), destinationNode);"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,559,if (expected) {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,560,assertTrue(result);
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,561,} else {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,562,assertFalse(result);
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,566,private void assertSafeMoveDegenerate(String src) {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,567,"assertMove(LocationAbstractionMode.DEGENERATE, src, true);"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,570,private void assertUnsafeMoveDegenerate(String src) {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,571,"assertMove(LocationAbstractionMode.DEGENERATE, src, false);"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,574,private void assertSafeMoveVisibility(String src) {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,575,"assertMove(LocationAbstractionMode.VISIBILITY_BASED, src, true);"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,578,private void assertUnsafeMoveVisibility(String src) {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,579,"assertMove(LocationAbstractionMode.VISIBILITY_BASED, src, false);"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,582,"private SideEffectsAnalysis compileAndRun(String js,"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,583,LocationAbstractionMode locationAbstractionIdentifier) {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,585,currentLocationAbstractionIdentifier = locationAbstractionIdentifier;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,587,"testSame(SHARED_EXTERNS, js, null);"
+False,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,127,eturn currentProcessor;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,591,return currentAnalysis;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,594,// Shamelessly stolen from NameReferenceGraphConstructionTest
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,595,private Node findLabeledStatement(String label) {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,596,LabeledStatementSearcher s = new LabeledStatementSearcher(label);
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,598,"new NodeTraversal(currentCompiler, s).traverse(currentCompiler.jsRoot);"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,599,"assertNotNull(""Label "" + label + "" should be in the source code"", s.found);"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,601,return s.found;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,605,* Quick traversal to find a given labeled statement in the AST.
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,607,"* Given ""foo"", finds the statement a = x in"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,608,* foo: a = x;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,610,private class LabeledStatementSearcher extends AbstractPostOrderCallback {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,611,Node found = null;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,612,final String target;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,614,LabeledStatementSearcher(String target) {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,615,this.target = target;
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,617,@Override
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,618,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,619,if (n.getType() == Token.LABEL &&
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,620,target.equals(n.getFirstChild().getString())) {
+True,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,test/com/google/javascript/jscomp/SideEffectsAnalysisTest.java,622,found = n.getLastChild();

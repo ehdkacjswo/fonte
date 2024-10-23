@@ -1,0 +1,101 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,52,* The advantage of using goog.scope is that the compiler will *guarantee*
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,53,"* the anonymous function will be inlined, even if it can't prove"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,54,"* that it's semantically correct to do so. For example, consider this case:"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,56,* goog.scope(function() {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,57,*   goog.getBar = function () { return alias; };
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,59,*   var alias = foo.bar;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,62,"* In theory, the compiler can't inline 'alias' unless it can prove that"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,63,* goog.getBar is called only after 'alias' is defined.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,65,"* In practice, the compiler will inline 'alias' anyway, at the risk of"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,66,* 'fixing' bad code.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,105,static final DiagnosticType GOOG_SCOPE_ALIAS_CYCLE = DiagnosticType.error(
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,106,"""JSC_GOOG_SCOPE_ALIAS_CYCLE"","
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,107,"""The aliases {0} has a cycle."");"
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,114,or (AliasUsage aliasUsage : traversal.getAliasUsages()) {
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,115,liasUsage.applyAlias();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,134,List<AliasUsage> aliasWorkQueue =
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,135,Lists.newArrayList(traversal.getAliasUsages());
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,136,while (!aliasWorkQueue.isEmpty()) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,137,List<AliasUsage> newQueue = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,138,for (AliasUsage aliasUsage : aliasWorkQueue) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,139,if (aliasUsage.referencesOtherAlias()) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,140,newQueue.add(aliasUsage);
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,141,} else {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,142,aliasUsage.applyAlias();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,146,// Prevent an infinite loop.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,147,if (newQueue.size() == aliasWorkQueue.size()) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,148,Var cycleVar = newQueue.get(0).aliasVar;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,149,compiler.report(JSError.make(
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,150,"cycleVar.getNode(), GOOG_SCOPE_ALIAS_CYCLE, cycleVar.getName()));"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,151,break;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,152,} else {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,153,aliasWorkQueue = newQueue;
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,147,rivate interface AliasUsage {
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,148,ublic void applyAlias();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,186,private abstract class AliasUsage {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,187,final Var aliasVar;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,188,final Node aliasReference;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,190,"AliasUsage(Var aliasVar, Node aliasReference) {"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,191,this.aliasVar = aliasVar;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,192,this.aliasReference = aliasReference;
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,151,rivate class AliasedNode implements AliasUsage {
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,152,rivate final Node aliasReference;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,195,/** Checks to see if this references another alias. */
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,196,public boolean referencesOtherAlias() {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,197,Node aliasDefinition = aliasVar.getInitialValue();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,198,Node root = NodeUtil.getRootOfQualifiedName(aliasDefinition);
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,199,Var otherAliasVar = aliasVar.getScope().getOwnSlot(root.getString());
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,200,return otherAliasVar != null;
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,154,rivate final Node aliasDefinition;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,203,public abstract void applyAlias();
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,156,"liasedNode(Node aliasReference, Node aliasDefinition) {"
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,157,his.aliasReference = aliasReference;
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,158,his.aliasDefinition = aliasDefinition;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,206,private class AliasedNode extends AliasUsage {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,207,"AliasedNode(Var aliasVar, Node aliasReference) {"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,208,"super(aliasVar, aliasReference);"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,213,Node aliasDefinition = aliasVar.getInitialValue();
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,168,rivate class AliasedTypeNode implements AliasUsage {
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,169,rivate final Node typeReference;
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,170,rivate final Node aliasDefinition;
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,171,rivate final String aliasName;
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,173,"liasedTypeNode(Node typeReference, Node aliasDefinition,"
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,174,tring aliasName) {
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,175,his.typeReference = typeReference;
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,176,his.aliasDefinition = aliasDefinition;
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,177,his.aliasName = aliasName;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,219,private class AliasedTypeNode extends AliasUsage {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,220,"AliasedTypeNode(Var aliasVar, Node aliasReference) {"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,221,"super(aliasVar, aliasReference);"
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,182,tring typeName = typeReference.getString();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,226,Node aliasDefinition = aliasVar.getInitialValue();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,227,String aliasName = aliasVar.getName();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,228,String typeName = aliasReference.getString();
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,186,"ypeReference.setString(typeName.replaceFirst(aliasName, aliasExpanded));"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,232,"aliasReference.setString(typeName.replaceFirst(aliasName, aliasExpanded));"
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,447,ode aliasedNode = aliasVar.getInitialValue();
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,448,"liasUsages.add(new AliasedNode(n, aliasedNode));"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,493,"aliasUsages.add(new AliasedNode(aliasVar, n));"
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,472,ode aliasedNode = aliasVar.getInitialValue();
+False,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,473,"liasUsages.add(new AliasedTypeNode(typeNode, aliasedNode, baseName));"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,517,"aliasUsages.add(new AliasedTypeNode(aliasVar, typeNode));"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,443,public void testCtorAlias() {
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,444,"test(""var x = {y: {}};"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,445,"""goog.scope(function() {"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,446,"""  var y = x.y;"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,447,"""  y.ClassA = function() { this.b = new ClassB(); };"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,448,"""  y.ClassB = function() {};"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,449,"""  var ClassB = y.ClassB;"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,451,"""var x = {y: {}};"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,452,"""x.y.ClassA = function() { this.b = new x.y.ClassB(); };"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,453,"""x.y.ClassB = function() { };"");"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,456,public void testAliasCycle() {
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,457,"test(""var x = {y: {}};"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,458,"""goog.scope(function() {"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,459,"""  var y = z.x;"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,460,"""  var z = y.x;"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,461,"""  y.ClassA = function() {};"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,462,"""  z.ClassB = function() {};"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,463,"""});"", null,"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,464,ScopedAliases.GOOG_SCOPE_ALIAS_CYCLE);

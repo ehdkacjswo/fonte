@@ -1,0 +1,993 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,41, @version $Revision: 1.22 $ $Date: 2004/06/05 22:28:10 $
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,41,* @version $Revision: 1.23 $ $Date: 2004/06/05 22:31:16 $
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,48,** Entries of the matrix */
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,49,rivate double data[][] = null;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,51,** Entries of cached LU decomposition.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,52,  All updates to data (other than luDecompose()) *must* set this to null
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,54,rivate double lu[][] = null;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,56,** Permutation associated with LU decompostion */
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,57,rivate int[] permutation = null;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,59,** Parity of the permutation associated with the LU decomposition */
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,60,rivate int parity = 1;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,62,** Bound to determine effective singularity in LU decomposition */
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,63,rotected static double TOO_SMALL = 10E-12;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,66, Creates a matrix with no data
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,68,ublic RealMatrixImpl() {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,72, Create a new RealMatrix with the supplied row and column dimensions.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,74, @param rowDimension      the number of rows in the new matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,75, @param columnDimension   the number of columns in the new matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,77,"ublic RealMatrixImpl(int rowDimension, int columnDimension) {"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,78,ata = new double[rowDimension][columnDimension];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,79,u = null;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,83, Create a new RealMatrix using the <code>data</code> as the underlying
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,84, data array.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,85, <p>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,86," The input array is copied, not referenced."
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,88, @param d data for new matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,90,ublic RealMatrixImpl(double[][] d) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,91,his.copyIn(d);
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,92,u = null;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,96, Create a new (column) RealMatrix using <code>v</code> as the
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,97, data for the unique column of the <code>v.length x 1</code> matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,98, created.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,99, <p>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,100," The input array is copied, not referenced."
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,102, @param v column vector holding data for new matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,104,ublic RealMatrixImpl(double[] v) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,105,nt nRows = v.length;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,106,ata = new double[nRows][1];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,107,or (int row = 0; row < nRows; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,108,ata[row][0] = v[row];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,113, Create a new RealMatrix which is a copy of this.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,115, @return  the cloned matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,117,ublic RealMatrix copy() {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,118,eturn new RealMatrixImpl(this.copyOut());
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,122, Compute the sum of this and <code>m</code>.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,124, @param m    matrix to be added
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,125, @return     this + m
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,126, @throws  IllegalArgumentException if m is not the same size as this
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,128,ublic RealMatrix add(RealMatrix m) throws IllegalArgumentException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,129,f (this.getColumnDimension() != m.getColumnDimension() ||
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,130,his.getRowDimension() != m.getRowDimension()) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,131,"hrow new IllegalArgumentException(""matrix dimension mismatch"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,133,nt rowCount = this.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,134,nt columnCount = this.getColumnDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,135,ouble[][] outData = new double[rowCount][columnCount];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,136,ouble[][] mData = m.getData();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,137,or (int row = 0; row < rowCount; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,138,or (int col = 0; col < columnCount; col++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,139,utData[row][col] = data[row][col] + mData[row][col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,142,eturn new RealMatrixImpl(outData);
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,146, Compute  this minus <code>m</code>.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,148, @param m    matrix to be subtracted
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,149, @return     this + m
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,150, @throws  IllegalArgumentException if m is not the same size as *this
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,152,ublic RealMatrix subtract(RealMatrix m) throws IllegalArgumentException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,153,f (this.getColumnDimension() != m.getColumnDimension() ||
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,154,his.getRowDimension() != m.getRowDimension()) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,155,"hrow new IllegalArgumentException(""matrix dimension mismatch"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,157,nt rowCount = this.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,158,nt columnCount = this.getColumnDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,159,ouble[][] outData = new double[rowCount][columnCount];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,160,ouble[][] mData = m.getData();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,161,or (int row = 0; row < rowCount; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,162,or (int col = 0; col < columnCount; col++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,163,utData[row][col] = data[row][col] - mData[row][col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,166,eturn new RealMatrixImpl(outData);
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,170, Returns the result of adding d to each entry of this.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,172, @param d    value to be added to each entry
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,173, @return     d + this
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,175,ublic RealMatrix scalarAdd(double d) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,176,nt rowCount = this.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,177,nt columnCount = this.getColumnDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,178,ouble[][] outData = new double[rowCount][columnCount];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,179,or (int row = 0; row < rowCount; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,180,or (int col = 0; col < columnCount; col++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,181,utData[row][col] = data[row][col] + d;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,184,eturn new RealMatrixImpl(outData);
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,188, Returns the result multiplying each entry of this by <code>d</code>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,189, @param d  value to multiply all entries by
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,190, @return d * this
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,192,ublic RealMatrix scalarMultiply(double d) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,193,nt rowCount = this.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,194,nt columnCount = this.getColumnDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,195,ouble[][] outData = new double[rowCount][columnCount];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,196,or (int row = 0; row < rowCount; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,197,or (int col = 0; col < columnCount; col++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,198,utData[row][col] = data[row][col] * d;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,201,eturn new RealMatrixImpl(outData);
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,205, Returns the result postmultiplying this by <code>m</code>.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,206, @param m    matrix to postmultiply by
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,207, @return     this*m
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,208, @throws     IllegalArgumentException
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,209,             if columnDimension(this) != rowDimension(m)
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,211,ublic RealMatrix multiply(RealMatrix m) throws IllegalArgumentException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,212,f (this.getColumnDimension() != m.getRowDimension()) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,213,"hrow new IllegalArgumentException(""Matrices are not multiplication compatible."");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,215,nt nRows = this.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,216,nt nCols = m.getColumnDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,217,nt nSum = this.getColumnDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,218,ouble[][] mData = m.getData();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,219,ouble[][] outData = new double[nRows][nCols];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,220,ouble sum = 0;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,221,or (int row = 0; row < nRows; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,222,or (int col = 0; col < nCols; col++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,223,um = 0;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,224,or (int i = 0; i < nSum; i++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,225,um += data[row][i] * mData[i][col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,227,utData[row][col] = sum;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,230,eturn new RealMatrixImpl(outData);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,48,/** Entries of the matrix */
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,49,private double data[][] = null;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,51,/** Entries of cached LU decomposition.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,52,*  All updates to data (other than luDecompose()) *must* set this to null
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,54,private double lu[][] = null;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,56,/** Permutation associated with LU decompostion */
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,57,private int[] permutation = null;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,59,/** Parity of the permutation associated with the LU decomposition */
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,60,private int parity = 1;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,62,/** Bound to determine effective singularity in LU decomposition */
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,63,protected static double TOO_SMALL = 10E-12;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,66,* Creates a matrix with no data
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,68,public RealMatrixImpl() {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,72,* Create a new RealMatrix with the supplied row and column dimensions.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,74,* @param rowDimension      the number of rows in the new matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,75,* @param columnDimension   the number of columns in the new matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,77,"public RealMatrixImpl(int rowDimension, int columnDimension) {"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,78,data = new double[rowDimension][columnDimension];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,79,lu = null;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,83,* Create a new RealMatrix using the <code>data</code> as the underlying
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,84,* data array.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,85,* <p>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,86,"* The input array is copied, not referenced."
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,88,* @param d data for new matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,90,public RealMatrixImpl(double[][] d) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,91,this.copyIn(d);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,92,lu = null;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,96,* Create a new (column) RealMatrix using <code>v</code> as the
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,97,* data for the unique column of the <code>v.length x 1</code> matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,98,* created.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,99,* <p>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,100,"* The input array is copied, not referenced."
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,102,* @param v column vector holding data for new matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,104,public RealMatrixImpl(double[] v) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,105,int nRows = v.length;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,106,data = new double[nRows][1];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,107,for (int row = 0; row < nRows; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,108,data[row][0] = v[row];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,113,* Create a new RealMatrix which is a copy of this.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,115,* @return  the cloned matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,117,public RealMatrix copy() {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,118,return new RealMatrixImpl(this.copyOut());
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,122,* Compute the sum of this and <code>m</code>.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,124,* @param m    matrix to be added
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,125,* @return     this + m
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,126,* @throws  IllegalArgumentException if m is not the same size as this
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,128,public RealMatrix add(RealMatrix m) throws IllegalArgumentException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,129,if (this.getColumnDimension() != m.getColumnDimension() ||
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,130,this.getRowDimension() != m.getRowDimension()) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,131,"throw new IllegalArgumentException(""matrix dimension mismatch"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,133,int rowCount = this.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,134,int columnCount = this.getColumnDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,135,double[][] outData = new double[rowCount][columnCount];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,136,double[][] mData = m.getData();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,137,for (int row = 0; row < rowCount; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,138,for (int col = 0; col < columnCount; col++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,139,outData[row][col] = data[row][col] + mData[row][col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,142,return new RealMatrixImpl(outData);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,146,* Compute  this minus <code>m</code>.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,148,* @param m    matrix to be subtracted
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,149,* @return     this + m
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,150,* @throws  IllegalArgumentException if m is not the same size as *this
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,152,public RealMatrix subtract(RealMatrix m) throws IllegalArgumentException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,153,if (this.getColumnDimension() != m.getColumnDimension() ||
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,154,this.getRowDimension() != m.getRowDimension()) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,155,"throw new IllegalArgumentException(""matrix dimension mismatch"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,157,int rowCount = this.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,158,int columnCount = this.getColumnDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,159,double[][] outData = new double[rowCount][columnCount];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,160,double[][] mData = m.getData();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,161,for (int row = 0; row < rowCount; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,162,for (int col = 0; col < columnCount; col++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,163,outData[row][col] = data[row][col] - mData[row][col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,166,return new RealMatrixImpl(outData);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,170,* Returns the result of adding d to each entry of this.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,172,* @param d    value to be added to each entry
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,173,* @return     d + this
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,175,public RealMatrix scalarAdd(double d) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,176,int rowCount = this.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,177,int columnCount = this.getColumnDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,178,double[][] outData = new double[rowCount][columnCount];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,179,for (int row = 0; row < rowCount; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,180,for (int col = 0; col < columnCount; col++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,181,outData[row][col] = data[row][col] + d;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,184,return new RealMatrixImpl(outData);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,188,* Returns the result multiplying each entry of this by <code>d</code>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,189,* @param d  value to multiply all entries by
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,190,* @return d * this
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,192,public RealMatrix scalarMultiply(double d) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,193,int rowCount = this.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,194,int columnCount = this.getColumnDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,195,double[][] outData = new double[rowCount][columnCount];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,196,for (int row = 0; row < rowCount; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,197,for (int col = 0; col < columnCount; col++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,198,outData[row][col] = data[row][col] * d;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,201,return new RealMatrixImpl(outData);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,205,* Returns the result postmultiplying this by <code>m</code>.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,206,* @param m    matrix to postmultiply by
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,207,* @return     this*m
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,208,* @throws     IllegalArgumentException
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,209,*             if columnDimension(this) != rowDimension(m)
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,211,public RealMatrix multiply(RealMatrix m) throws IllegalArgumentException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,212,if (this.getColumnDimension() != m.getRowDimension()) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,213,"throw new IllegalArgumentException(""Matrices are not multiplication compatible."");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,215,int nRows = this.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,216,int nCols = m.getColumnDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,217,int nSum = this.getColumnDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,218,double[][] mData = m.getData();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,219,double[][] outData = new double[nRows][nCols];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,220,double sum = 0;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,221,for (int row = 0; row < nRows; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,222,for (int col = 0; col < nCols; col++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,223,sum = 0;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,224,for (int i = 0; i < nSum; i++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,225,sum += data[row][i] * mData[i][col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,227,outData[row][col] = sum;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,230,return new RealMatrixImpl(outData);
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,245, Returns matrix entries as a two-dimensional array.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,246, <p>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,247, Makes a fresh copy of the underlying data.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,249, @return    2-dimensional array of entries
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,251,ublic double[][] getData() {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,252,eturn copyOut();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,256, Overwrites the underlying data for the matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,257, with a fresh copy of <code>inData</code>.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,259, @param  inData 2-dimensional array of entries
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,261,ublic void setData(double[][] inData) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,262,opyIn(inData);
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,263,u = null;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,267, Returns a reference to the underlying data array.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,268, <p>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,269, Does not make a fresh copy of the underlying data.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,271, @return 2-dimensional array of entries
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,273,ublic double[][] getDataRef() {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,274,eturn data;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,278, Overwrites the underlying data for the matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,279, with a reference to <code>inData</code>.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,280, <p>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,281, Does not make a fresh copy of <code>data</code>.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,283, @param  inData 2-dimensional array of entries
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,285,ublic void setDataRef(double[][] inData) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,286,his.data = inData;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,287,u = null;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,292, @return norm
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,294,ublic double getNorm() {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,295,ouble maxColSum = 0;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,296,or (int col = 0; col < this.getColumnDimension(); col++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,297,ouble sum = 0;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,298,or (int row = 0; row < this.getRowDimension(); row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,299,um += Math.abs(data[row][col]);
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,301,"axColSum = Math.max(maxColSum, sum);"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,303,eturn maxColSum;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,307, Returns the entries in row number <code>row</code> as an array.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,309, @param row the row to be fetched
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,310, @return array of entries in the row
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,311, @throws MatrixIndexException if the specified row is greater
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,312,                              than the number of rows in this matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,314,ublic double[] getRow(int row) throws MatrixIndexException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,315,"f ( !isValidCoordinate( row, 1 ) ) {"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,316,"hrow new MatrixIndexException(""illegal row argument"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,318,nt ncols = this.getColumnDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,319,ouble[] out = new double[ncols];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,320,"ystem.arraycopy(data[row - 1], 0, out, 0, ncols);"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,321,eturn out;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,325, Returns the entries in column number <code>col</code> as an array.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,327, @param col  column to fetch
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,328, @return array of entries in the column
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,329, @throws MatrixIndexException if the specified column is greater
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,330,                              than the number of columns in this matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,332,ublic double[] getColumn(int col) throws MatrixIndexException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,333,"f ( !isValidCoordinate(1, col) ) {"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,334,"hrow new MatrixIndexException(""illegal column argument"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,336,nt nRows = this.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,337,ouble[] out = new double[nRows];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,338,or (int row = 0; row < nRows; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,339,ut[row] = data[row][col - 1];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,341,eturn out;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,345, Returns the entry in the specified row and column.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,347, @param row  row location of entry to be fetched
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,348, @param column  column location of entry to be fetched
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,349," @return matrix entry in row,column"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,350, @throws MatrixIndexException if the specified coordinate is outside
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,351,                              the dimensions of this matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,353,"ublic double getEntry(int row, int column)"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,354,hrows MatrixIndexException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,355,"f (!isValidCoordinate(row,column)) {"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,356,"hrow new MatrixIndexException(""matrix entry does not exist"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,358,eturn data[row - 1][column - 1];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,362, Sets the entry in the specified row and column to the specified value.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,364, @param row    row location of entry to be set
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,365, @param column    column location of entry to be set
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,366, @param value  value to set
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,367, @throws MatrixIndexException if the specified coordinate is outside
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,368,                              he dimensions of this matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,370,"ublic void setEntry(int row, int column, double value)"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,371,hrows MatrixIndexException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,372,"f (!isValidCoordinate(row,column)) {"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,373,"hrow new MatrixIndexException(""matrix entry does not exist"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,375,ata[row - 1][column - 1] = value;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,376,u = null;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,380, Returns the transpose matrix.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,245,* Returns matrix entries as a two-dimensional array.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,246,* <p>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,247,* Makes a fresh copy of the underlying data.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,249,* @return    2-dimensional array of entries
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,251,public double[][] getData() {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,252,return copyOut();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,256,* Overwrites the underlying data for the matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,257,* with a fresh copy of <code>inData</code>.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,259,* @param  inData 2-dimensional array of entries
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,261,public void setData(double[][] inData) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,262,copyIn(inData);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,263,lu = null;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,267,* Returns a reference to the underlying data array.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,268,* <p>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,269,* Does not make a fresh copy of the underlying data.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,271,* @return 2-dimensional array of entries
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,273,public double[][] getDataRef() {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,274,return data;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,278,* Overwrites the underlying data for the matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,279,* with a reference to <code>inData</code>.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,280,* <p>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,281,* Does not make a fresh copy of <code>data</code>.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,283,* @param  inData 2-dimensional array of entries
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,285,public void setDataRef(double[][] inData) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,286,this.data = inData;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,287,lu = null;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,382, @return transpose matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,384,ublic RealMatrix transpose() {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,385,nt nRows = this.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,386,nt nCols = this.getColumnDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,387,"ealMatrixImpl out = new RealMatrixImpl(nCols, nRows);"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,388,ouble[][] outData = out.getDataRef();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,389,or (int row = 0; row < nRows; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,390,or (int col = 0; col < nCols; col++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,391,utData[col][row] = data[row][col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,394,eturn out;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,292,* @return norm
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,294,public double getNorm() {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,295,double maxColSum = 0;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,296,for (int col = 0; col < this.getColumnDimension(); col++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,297,double sum = 0;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,298,for (int row = 0; row < this.getRowDimension(); row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,299,sum += Math.abs(data[row][col]);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,301,"maxColSum = Math.max(maxColSum, sum);"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,303,return maxColSum;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,307,* Returns the entries in row number <code>row</code> as an array.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,309,* @param row the row to be fetched
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,310,* @return array of entries in the row
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,311,* @throws MatrixIndexException if the specified row is greater
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,312,*                              than the number of rows in this matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,314,public double[] getRow(int row) throws MatrixIndexException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,315,"if ( !isValidCoordinate( row, 1 ) ) {"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,316,"throw new MatrixIndexException(""illegal row argument"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,318,int ncols = this.getColumnDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,319,double[] out = new double[ncols];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,320,"System.arraycopy(data[row - 1], 0, out, 0, ncols);"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,321,return out;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,325,* Returns the entries in column number <code>col</code> as an array.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,327,* @param col  column to fetch
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,328,* @return array of entries in the column
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,329,* @throws MatrixIndexException if the specified column is greater
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,330,*                              than the number of columns in this matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,332,public double[] getColumn(int col) throws MatrixIndexException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,333,"if ( !isValidCoordinate(1, col) ) {"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,334,"throw new MatrixIndexException(""illegal column argument"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,336,int nRows = this.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,337,double[] out = new double[nRows];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,338,for (int row = 0; row < nRows; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,339,out[row] = data[row][col - 1];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,341,return out;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,345,* Returns the entry in the specified row and column.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,347,* @param row  row location of entry to be fetched
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,348,* @param column  column location of entry to be fetched
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,349,"* @return matrix entry in row,column"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,350,* @throws MatrixIndexException if the specified coordinate is outside
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,351,*                              the dimensions of this matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,353,"public double getEntry(int row, int column)"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,354,throws MatrixIndexException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,355,"if (!isValidCoordinate(row,column)) {"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,356,"throw new MatrixIndexException(""matrix entry does not exist"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,358,return data[row - 1][column - 1];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,362,* Sets the entry in the specified row and column to the specified value.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,364,* @param row    row location of entry to be set
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,365,* @param column    column location of entry to be set
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,366,* @param value  value to set
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,367,* @throws MatrixIndexException if the specified coordinate is outside
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,368,*                              he dimensions of this matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,370,"public void setEntry(int row, int column, double value)"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,371,throws MatrixIndexException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,372,"if (!isValidCoordinate(row,column)) {"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,373,"throw new MatrixIndexException(""matrix entry does not exist"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,375,data[row - 1][column - 1] = value;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,376,lu = null;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,380,* Returns the transpose matrix.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,382,* @return transpose matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,384,public RealMatrix transpose() {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,385,int nRows = this.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,386,int nCols = this.getColumnDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,387,"RealMatrixImpl out = new RealMatrixImpl(nCols, nRows);"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,388,double[][] outData = out.getDataRef();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,389,for (int row = 0; row < nRows; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,390,for (int col = 0; col < nCols; col++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,391,outData[col][row] = data[row][col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,394,return out;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,400, @return inverse matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,401, @throws InvalidMatrixException if this is not invertible
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,403,ublic RealMatrix inverse() throws InvalidMatrixException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,404,eturn solve(getIdentity(this.getRowDimension()));
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,408, @return determinant
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,409, @throws InvalidMatrixException if matrix is not square
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,411,ublic double getDeterminant() throws InvalidMatrixException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,412,f (!isSquare()) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,413,"hrow new InvalidMatrixException(""matrix is not square"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,415,f (isSingular()) {   // note: this has side effect of attempting LU decomp if lu == null
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,416,eturn 0d;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,417, else {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,418,ouble det = (double) parity;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,419,or (int i = 0; i < this.getRowDimension(); i++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,420,et *= lu[i][i];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,422,eturn det;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,400,* @return inverse matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,401,* @throws InvalidMatrixException if this is not invertible
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,403,public RealMatrix inverse() throws InvalidMatrixException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,404,return solve(getIdentity(this.getRowDimension()));
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,408,* @return determinant
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,409,* @throws InvalidMatrixException if matrix is not square
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,411,public double getDeterminant() throws InvalidMatrixException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,412,if (!isSquare()) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,413,"throw new InvalidMatrixException(""matrix is not square"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,415,if (isSingular()) {   // note: this has side effect of attempting LU decomp if lu == null
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,416,return 0d;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,417,} else {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,418,double det = (double) parity;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,419,for (int i = 0; i < this.getRowDimension(); i++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,420,det *= lu[i][i];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,422,return det;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,427, @return true if the matrix is square (rowDimension = columnDimension)
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,429,ublic boolean isSquare() {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,430,eturn (this.getColumnDimension() == this.getRowDimension());
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,434, @return true if the matrix is singular
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,436,ublic boolean isSingular() {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,437,f (lu == null) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,438,ry {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,439,uDecompose();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,440,eturn false;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,441, catch (InvalidMatrixException ex) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,442,eturn true;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,444, else { // LU decomp must have been successfully performed
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,445,eturn false; // so the matrix is not singular
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,450, @return rowDimension
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,452,ublic int getRowDimension() {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,453,eturn data.length;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,457, @return columnDimension
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,459,ublic int getColumnDimension() {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,460,eturn data[0].length;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,464, @return trace
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,465, @throws IllegalArgumentException if the matrix is not square
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,467,ublic double getTrace() throws IllegalArgumentException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,468,f (!isSquare()) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,469,"hrow new IllegalArgumentException(""matrix is not square"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,471,ouble trace = data[0][0];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,472,or (int i = 1; i < this.getRowDimension(); i++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,473,race += data[i][i];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,475,eturn trace;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,479, @param v vector to operate on
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,480, @throws IllegalArgumentException if columnDimension != v.length
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,481, @return resulting vector
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,483,ublic double[] operate(double[] v) throws IllegalArgumentException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,484,f (v.length != this.getColumnDimension()) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,485,"hrow new IllegalArgumentException(""vector has wrong length"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,487,nt nRows = this.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,488,nt nCols = this.getColumnDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,489,ouble[] out = new double[v.length];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,490,or (int row = 0; row < nRows; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,491,ouble sum = 0;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,492,or (int i = 0; i < nCols; i++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,493,um += data[row][i] * v[i];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,495,ut[row] = sum;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,497,eturn out;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,501, @param v vector to premultiply by
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,502, @throws IllegalArgumentException if rowDimension != v.length
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,503, @return resulting matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,505,ublic double[] preMultiply(double[] v) throws IllegalArgumentException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,506,nt nRows = this.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,507,f (v.length != nRows) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,508,"hrow new IllegalArgumentException(""vector has wrong length"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,427,* @return true if the matrix is square (rowDimension = columnDimension)
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,429,public boolean isSquare() {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,430,return (this.getColumnDimension() == this.getRowDimension());
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,434,* @return true if the matrix is singular
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,436,public boolean isSingular() {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,437,if (lu == null) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,438,try {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,439,luDecompose();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,440,return false;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,441,} catch (InvalidMatrixException ex) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,442,return true;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,444,} else { // LU decomp must have been successfully performed
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,445,return false; // so the matrix is not singular
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,450,* @return rowDimension
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,452,public int getRowDimension() {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,453,return data.length;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,457,* @return columnDimension
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,459,public int getColumnDimension() {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,460,return data[0].length;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,464,* @return trace
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,465,* @throws IllegalArgumentException if the matrix is not square
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,467,public double getTrace() throws IllegalArgumentException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,468,if (!isSquare()) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,469,"throw new IllegalArgumentException(""matrix is not square"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,471,double trace = data[0][0];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,472,for (int i = 1; i < this.getRowDimension(); i++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,473,trace += data[i][i];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,475,return trace;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,479,* @param v vector to operate on
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,480,* @throws IllegalArgumentException if columnDimension != v.length
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,481,* @return resulting vector
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,483,public double[] operate(double[] v) throws IllegalArgumentException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,484,if (v.length != this.getColumnDimension()) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,485,"throw new IllegalArgumentException(""vector has wrong length"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,487,int nRows = this.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,488,int nCols = this.getColumnDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,489,double[] out = new double[v.length];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,490,for (int row = 0; row < nRows; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,491,double sum = 0;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,492,for (int i = 0; i < nCols; i++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,493,sum += data[row][i] * v[i];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,495,out[row] = sum;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,497,return out;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,501,* @param v vector to premultiply by
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,502,* @throws IllegalArgumentException if rowDimension != v.length
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,503,* @return resulting matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,505,public double[] preMultiply(double[] v) throws IllegalArgumentException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,506,int nRows = this.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,507,if (v.length != nRows) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,508,"throw new IllegalArgumentException(""vector has wrong length"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,523, Returns a matrix of (column) solution vectors for linear systems with
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,524, coefficient matrix = this and constant vectors = columns of
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,525, <code>b</code>.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,527, @param b  array of constant forming RHS of linear systems to
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,528, to solve
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,529, @return solution array
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,530, @throws IllegalArgumentException if this.rowDimension != row dimension
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,531, @throws InvalidMatrixException if this matrix is not square or is singular
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,533,"ublic double[] solve(double[] b) throws IllegalArgumentException, InvalidMatrixException {"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,534,nt nRows = this.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,535,f (b.length != nRows) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,536,"hrow new IllegalArgumentException(""constant vector has wrong length"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,538,ealMatrix bMatrix = new RealMatrixImpl(b);
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,539,ouble[][] solution = ((RealMatrixImpl) (solve(bMatrix))).getDataRef();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,540,ouble[] out = new double[nRows];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,541,or (int row = 0; row < nRows; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,542,ut[row] = solution[row][0];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,544,eturn out;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,548, Returns a matrix of (column) solution vectors for linear systems with
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,549, coefficient matrix = this and constant vectors = columns of
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,550, <code>b</code>.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,552, @param b  matrix of constant vectors forming RHS of linear systems to
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,553, to solve
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,554, @return matrix of solution vectors
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,555, @throws IllegalArgumentException if this.rowDimension != row dimension
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,556, @throws InvalidMatrixException if this matrix is not square or is singular
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,558,"ublic RealMatrix solve(RealMatrix b) throws IllegalArgumentException, InvalidMatrixException  {"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,559,f (b.getRowDimension() != this.getRowDimension()) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,560,"hrow new IllegalArgumentException(""Incorrect row dimension"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,562,f (!this.isSquare()) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,563,"hrow new InvalidMatrixException(""coefficient matrix is not square"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,565,f (this.isSingular()) { // side effect: compute LU decomp
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,566,"hrow new InvalidMatrixException(""Matrix is singular."");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,569,nt nCol = this.getColumnDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,570,nt nColB = b.getColumnDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,571,nt nRowB = b.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,573,/ Apply permutations to b
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,574,ouble[][] bv = b.getData();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,575,ouble[][] bp = new double[nRowB][nColB];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,576,or (int row = 0; row < nRowB; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,577,or (int col = 0; col < nColB; col++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,578,p[row][col] = bv[permutation[row]][col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,581,v = null;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,583,/ Solve LY = b
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,584,or (int col = 0; col < nCol; col++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,585,or (int i = col + 1; i < nCol; i++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,586,or (int j = 0; j < nColB; j++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,587,p[i][j] -= bp[col][j] * lu[i][col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,592,/ Solve UX = Y
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,593,or (int col = nCol - 1; col >= 0; col--) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,594,or (int j = 0; j < nColB; j++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,595,p[col][j] /= lu[col][col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,597,or (int i = 0; i < col; i++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,598,or (int j = 0; j < nColB; j++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,599,p[i][j] -= bp[col][j] * lu[i][col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,604,ealMatrixImpl outMat = new RealMatrixImpl(bp);
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,605,eturn outMat;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,609, Computes a new
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,610," <a href=""http://www.math.gatech.edu/~bourbaki/math2601/Web-notes/2num.pdf"">"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,611," LU decompostion</a> for this matrix, storing the result for use by other methods."
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,612, <p>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,613, <strong>Implementation Note</strong>:<br>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,614," Uses <a href=""http://www.damtp.cam.ac.uk/user/fdl/people/sd/lectures/nummeth98/linear.htm"">"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,615," Crout's algortithm</a>, with partial pivoting."
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,616, <p>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,617, <strong>Usage Note</strong>:<br>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,618, This method should rarely be invoked directly. Its only use is
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,619, to force recomputation of the LU decomposition when changes have been
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,620, made to the underlying data using direct array references. Changes
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,621, made using setXxx methods will trigger recomputation when needed
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,622, automatically.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,624, @throws InvalidMatrixException if the matrix is non-square or singular.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,626,ublic void luDecompose() throws InvalidMatrixException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,628,nt nRows = this.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,629,nt nCols = this.getColumnDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,630,f (nRows != nCols) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,631,"hrow new InvalidMatrixException(""LU decomposition requires that the matrix be square."");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,633,u = this.getData();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,635,/ Initialize permutation array and parity
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,636,ermutation = new int[nRows];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,637,or (int row = 0; row < nRows; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,638,ermutation[row] = row;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,640,arity = 1;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,642,/ Loop over columns
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,643,or (int col = 0; col < nCols; col++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,645,ouble sum = 0;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,647,/ upper
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,648,or (int row = 0; row < col; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,649,um = lu[row][col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,650,or (int i = 0; i < row; i++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,651,um -= lu[row][i] * lu[i][col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,653,u[row][col] = sum;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,656,/ lower
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,657,nt max = col; // permutation row
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,658,ouble largest = 0d;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,659,or (int row = col; row < nRows; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,660,um = lu[row][col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,661,or (int i = 0; i < col; i++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,662,um -= lu[row][i] * lu[i][col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,664,u[row][col] = sum;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,666,/ maintain best permutation choice
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,667,f (Math.abs(sum) > largest) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,668,argest = Math.abs(sum);
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,669,ax = row;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,673,/ Singularity check
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,674,f (Math.abs(lu[max][col]) < TOO_SMALL) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,675,u = null;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,676,"hrow new InvalidMatrixException(""matrix is singular"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,679,/ Pivot if necessary
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,680,f (max != col) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,681,ouble tmp = 0;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,682,or (int i = 0; i < nCols; i++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,683,mp = lu[max][i];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,684,u[max][i] = lu[col][i];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,685,u[col][i] = tmp;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,687,nt temp = permutation[max];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,688,ermutation[max] = permutation[col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,689,ermutation[col] = temp;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,690,arity = -parity;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,693,"/Divide the lower elements by the ""winning"" diagonal elt."
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,694,or (int row = col + 1; row < nRows; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,695,u[row][col] /= lu[col][col];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,702, @see java.lang.Object#toString()
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,704,ublic String toString() {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,705,tringBuffer res = new StringBuffer();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,706,"es.append(""RealMatrixImpl{"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,707,or (int i = 0; i < data.length; i++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,708,f (i > 0)
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,709,"es.append("","");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,710,"es.append(""{"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,711,or (int j = 0; j < data[0].length; j++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,712,f (j > 0)
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,713,"es.append("","");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,714,es.append(data[i][j]);
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,715, //for
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,716,"es.append(""}"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,717, //for
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,718,"es.append(""}"");"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,719,eturn res.toString();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,720, //toString
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,722,/------------------------ Protected methods
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,725, Returns <code>dimension x dimension</code> identity matrix.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,727, @param dimension dimension of identity matrix to generate
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,728, @return identity matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,730,rotected RealMatrix getIdentity(int dimension) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,731,"ealMatrixImpl out = new RealMatrixImpl(dimension, dimension);"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,732,ouble[][] d = out.getDataRef();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,733,or (int row = 0; row < dimension; row++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,734,or (int col = 0; col < dimension; col++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,735,[row][col] = row == col ? 1d : 0d;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,738,eturn out;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,742,  Returns the LU decomposition as a RealMatrix.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,743,  Returns a fresh copy of the cached LU matrix if this has been computed;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,744,  otherwise the composition is computed and cached for use by other methods.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,745,"  Since a copy is returned in either case, changes to the returned matrix do not"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,746,  affect the LU decomposition property.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,747, <p>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,748, The matrix returned is a compact representation of the LU decomposition.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,749," Elements below the main diagonal correspond to entries of the ""L"" matrix;"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,750," elements on and above the main diagonal correspond to entries of the ""U"""
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,751, matrix.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,752, <p>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,753, Example: <pre>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,755,     Returned matrix                L                  U
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,756,         2  3  1                   1  0  0            2  3  1
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,757,         5  4  6                   5  1  0            0  4  6
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,758,         1  7  8                   1  7  1            0  0  8
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,759, </pre>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,761," The L and U matrices satisfy the matrix equation LU = permuteRows(this), <br>"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,762,  where permuteRows reorders the rows of the matrix to follow the order determined
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,763,  by the <a href=#getPermutation()>permutation</a> property.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,765, @return LU decomposition matrix
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,766, @throws InvalidMatrixException if the matrix is non-square or singular.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,768,rotected RealMatrix getLUMatrix() throws InvalidMatrixException {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,769,f (lu == null) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,770,uDecompose();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,772,eturn new RealMatrixImpl(lu);
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,776, Returns the permutation associated with the lu decomposition.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,777," The entries of the array represent a permutation of the numbers 0, ... , nRows - 1."
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,778, <p>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,779, Example:
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,780," permutation = [1, 2, 0] means current 2nd row is first, current third row is second"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,781, and current first row is last.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,782, <p>
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,783, Returns a fresh copy of the array.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,785, @return the permutation
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,787,rotected int[] getPermutation() {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,788,nt[] out = new int[permutation.length];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,789,"ystem.arraycopy(permutation, 0, out, 0, permutation.length);"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,790,eturn out;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,793,/------------------------ Private methods
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,796, Returns a fresh copy of the underlying data array.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,798, @return a copy of the underlying data array.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,800,rivate double[][] copyOut() {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,801,nt nRows = this.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,802,ouble[][] out = new double[nRows][this.getColumnDimension()];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,803,"/ can't copy 2-d array in one shot, otherwise get row references"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,804,or (int i = 0; i < nRows; i++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,805,"ystem.arraycopy(data[i], 0, out[i], 0, data[i].length);"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,807,eturn out;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,811, Replaces data with a fresh copy of the input array.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,813, @param in data to copy in
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,815,rivate void copyIn(double[][] in) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,816,nt nRows = in.length;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,817,nt nCols = in[0].length;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,818,ata = new double[nRows][nCols];
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,819,"ystem.arraycopy(in, 0, data, 0, in.length);"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,820,or (int i = 0; i < nRows; i++) {
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,821,"ystem.arraycopy(in[i], 0, data[i], 0, nCols);"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,823,u = null;
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,827, Tests a given coordinate as being valid or invalid
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,829, @param row the row index.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,830, @param col the column index.
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,831, @return true if the coordinate is with the current dimensions
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,833,"rivate boolean isValidCoordinate(int row, int col) {"
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,834,nt nRows = this.getRowDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,835,nt nCols = this.getColumnDimension();
+False,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,837,eturn !(row < 1 || row > nRows || col < 1 || col > nCols);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,523,* Returns a matrix of (column) solution vectors for linear systems with
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,524,* coefficient matrix = this and constant vectors = columns of
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,525,* <code>b</code>.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,527,* @param b  array of constant forming RHS of linear systems to
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,528,* to solve
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,529,* @return solution array
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,530,* @throws IllegalArgumentException if this.rowDimension != row dimension
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,531,* @throws InvalidMatrixException if this matrix is not square or is singular
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,533,"public double[] solve(double[] b) throws IllegalArgumentException, InvalidMatrixException {"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,534,int nRows = this.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,535,if (b.length != nRows) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,536,"throw new IllegalArgumentException(""constant vector has wrong length"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,538,RealMatrix bMatrix = new RealMatrixImpl(b);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,539,double[][] solution = ((RealMatrixImpl) (solve(bMatrix))).getDataRef();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,540,double[] out = new double[nRows];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,541,for (int row = 0; row < nRows; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,542,out[row] = solution[row][0];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,544,return out;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,548,* Returns a matrix of (column) solution vectors for linear systems with
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,549,* coefficient matrix = this and constant vectors = columns of
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,550,* <code>b</code>.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,552,* @param b  matrix of constant vectors forming RHS of linear systems to
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,553,* to solve
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,554,* @return matrix of solution vectors
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,555,* @throws IllegalArgumentException if this.rowDimension != row dimension
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,556,* @throws InvalidMatrixException if this matrix is not square or is singular
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,558,"public RealMatrix solve(RealMatrix b) throws IllegalArgumentException, InvalidMatrixException  {"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,559,if (b.getRowDimension() != this.getRowDimension()) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,560,"throw new IllegalArgumentException(""Incorrect row dimension"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,562,if (!this.isSquare()) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,563,"throw new InvalidMatrixException(""coefficient matrix is not square"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,565,if (this.isSingular()) { // side effect: compute LU decomp
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,566,"throw new InvalidMatrixException(""Matrix is singular."");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,569,int nCol = this.getColumnDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,570,int nColB = b.getColumnDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,571,int nRowB = b.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,573,// Apply permutations to b
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,574,double[][] bv = b.getData();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,575,double[][] bp = new double[nRowB][nColB];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,576,for (int row = 0; row < nRowB; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,577,for (int col = 0; col < nColB; col++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,578,bp[row][col] = bv[permutation[row]][col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,581,bv = null;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,583,// Solve LY = b
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,584,for (int col = 0; col < nCol; col++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,585,for (int i = col + 1; i < nCol; i++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,586,for (int j = 0; j < nColB; j++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,587,bp[i][j] -= bp[col][j] * lu[i][col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,592,// Solve UX = Y
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,593,for (int col = nCol - 1; col >= 0; col--) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,594,for (int j = 0; j < nColB; j++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,595,bp[col][j] /= lu[col][col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,597,for (int i = 0; i < col; i++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,598,for (int j = 0; j < nColB; j++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,599,bp[i][j] -= bp[col][j] * lu[i][col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,604,RealMatrixImpl outMat = new RealMatrixImpl(bp);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,605,return outMat;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,609,* Computes a new
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,610,"* <a href=""http://www.math.gatech.edu/~bourbaki/math2601/Web-notes/2num.pdf"">"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,611,"* LU decompostion</a> for this matrix, storing the result for use by other methods."
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,612,* <p>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,613,* <strong>Implementation Note</strong>:<br>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,614,"* Uses <a href=""http://www.damtp.cam.ac.uk/user/fdl/people/sd/lectures/nummeth98/linear.htm"">"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,615,"* Crout's algortithm</a>, with partial pivoting."
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,616,* <p>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,617,* <strong>Usage Note</strong>:<br>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,618,* This method should rarely be invoked directly. Its only use is
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,619,* to force recomputation of the LU decomposition when changes have been
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,620,* made to the underlying data using direct array references. Changes
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,621,* made using setXxx methods will trigger recomputation when needed
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,622,* automatically.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,624,* @throws InvalidMatrixException if the matrix is non-square or singular.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,626,public void luDecompose() throws InvalidMatrixException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,628,int nRows = this.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,629,int nCols = this.getColumnDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,630,if (nRows != nCols) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,631,"throw new InvalidMatrixException(""LU decomposition requires that the matrix be square."");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,633,lu = this.getData();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,635,// Initialize permutation array and parity
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,636,permutation = new int[nRows];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,637,for (int row = 0; row < nRows; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,638,permutation[row] = row;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,640,parity = 1;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,642,// Loop over columns
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,643,for (int col = 0; col < nCols; col++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,645,double sum = 0;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,647,// upper
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,648,for (int row = 0; row < col; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,649,sum = lu[row][col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,650,for (int i = 0; i < row; i++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,651,sum -= lu[row][i] * lu[i][col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,653,lu[row][col] = sum;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,656,// lower
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,657,int max = col; // permutation row
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,658,double largest = 0d;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,659,for (int row = col; row < nRows; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,660,sum = lu[row][col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,661,for (int i = 0; i < col; i++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,662,sum -= lu[row][i] * lu[i][col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,664,lu[row][col] = sum;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,666,// maintain best permutation choice
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,667,if (Math.abs(sum) > largest) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,668,largest = Math.abs(sum);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,669,max = row;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,673,// Singularity check
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,674,if (Math.abs(lu[max][col]) < TOO_SMALL) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,675,lu = null;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,676,"throw new InvalidMatrixException(""matrix is singular"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,679,// Pivot if necessary
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,680,if (max != col) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,681,double tmp = 0;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,682,for (int i = 0; i < nCols; i++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,683,tmp = lu[max][i];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,684,lu[max][i] = lu[col][i];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,685,lu[col][i] = tmp;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,687,int temp = permutation[max];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,688,permutation[max] = permutation[col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,689,permutation[col] = temp;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,690,parity = -parity;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,693,"//Divide the lower elements by the ""winning"" diagonal elt."
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,694,for (int row = col + 1; row < nRows; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,695,lu[row][col] /= lu[col][col];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,702,* @see java.lang.Object#toString()
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,704,public String toString() {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,705,StringBuffer res = new StringBuffer();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,706,"res.append(""RealMatrixImpl{"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,707,for (int i = 0; i < data.length; i++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,708,if (i > 0)
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,709,"res.append("","");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,710,"res.append(""{"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,711,for (int j = 0; j < data[0].length; j++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,712,if (j > 0)
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,713,"res.append("","");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,714,res.append(data[i][j]);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,715,} //for
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,716,"res.append(""}"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,717,} //for
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,718,"res.append(""}"");"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,719,return res.toString();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,720,} //toString
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,722,//------------------------ Protected methods
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,725,* Returns <code>dimension x dimension</code> identity matrix.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,727,* @param dimension dimension of identity matrix to generate
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,728,* @return identity matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,730,protected RealMatrix getIdentity(int dimension) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,731,"RealMatrixImpl out = new RealMatrixImpl(dimension, dimension);"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,732,double[][] d = out.getDataRef();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,733,for (int row = 0; row < dimension; row++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,734,for (int col = 0; col < dimension; col++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,735,d[row][col] = row == col ? 1d : 0d;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,738,return out;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,742,*  Returns the LU decomposition as a RealMatrix.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,743,*  Returns a fresh copy of the cached LU matrix if this has been computed;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,744,*  otherwise the composition is computed and cached for use by other methods.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,745,"*  Since a copy is returned in either case, changes to the returned matrix do not"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,746,*  affect the LU decomposition property.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,747,* <p>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,748,* The matrix returned is a compact representation of the LU decomposition.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,749,"* Elements below the main diagonal correspond to entries of the ""L"" matrix;"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,750,"* elements on and above the main diagonal correspond to entries of the ""U"""
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,751,* matrix.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,752,* <p>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,753,* Example: <pre>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,755,*     Returned matrix                L                  U
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,756,*         2  3  1                   1  0  0            2  3  1
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,757,*         5  4  6                   5  1  0            0  4  6
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,758,*         1  7  8                   1  7  1            0  0  8
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,759,* </pre>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,761,"* The L and U matrices satisfy the matrix equation LU = permuteRows(this), <br>"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,762,*  where permuteRows reorders the rows of the matrix to follow the order determined
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,763,*  by the <a href=#getPermutation()>permutation</a> property.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,765,* @return LU decomposition matrix
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,766,* @throws InvalidMatrixException if the matrix is non-square or singular.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,768,protected RealMatrix getLUMatrix() throws InvalidMatrixException {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,769,if (lu == null) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,770,luDecompose();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,772,return new RealMatrixImpl(lu);
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,776,* Returns the permutation associated with the lu decomposition.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,777,"* The entries of the array represent a permutation of the numbers 0, ... , nRows - 1."
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,778,* <p>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,779,* Example:
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,780,"* permutation = [1, 2, 0] means current 2nd row is first, current third row is second"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,781,* and current first row is last.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,782,* <p>
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,783,* Returns a fresh copy of the array.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,785,* @return the permutation
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,787,protected int[] getPermutation() {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,788,int[] out = new int[permutation.length];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,789,"System.arraycopy(permutation, 0, out, 0, permutation.length);"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,790,return out;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,793,//------------------------ Private methods
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,796,* Returns a fresh copy of the underlying data array.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,798,* @return a copy of the underlying data array.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,800,private double[][] copyOut() {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,801,int nRows = this.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,802,double[][] out = new double[nRows][this.getColumnDimension()];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,803,"// can't copy 2-d array in one shot, otherwise get row references"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,804,for (int i = 0; i < nRows; i++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,805,"System.arraycopy(data[i], 0, out[i], 0, data[i].length);"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,807,return out;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,811,* Replaces data with a fresh copy of the input array.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,813,* @param in data to copy in
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,815,private void copyIn(double[][] in) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,816,int nRows = in.length;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,817,int nCols = in[0].length;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,818,data = new double[nRows][nCols];
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,819,"System.arraycopy(in, 0, data, 0, in.length);"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,820,for (int i = 0; i < nRows; i++) {
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,821,"System.arraycopy(in[i], 0, data[i], 0, nCols);"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,823,lu = null;
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,827,* Tests a given coordinate as being valid or invalid
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,829,* @param row the row index.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,830,* @param col the column index.
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,831,* @return true if the coordinate is with the current dimensions
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,833,"private boolean isValidCoordinate(int row, int col) {"
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,834,int nRows = this.getRowDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,835,int nCols = this.getColumnDimension();
+True,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,src/java/org/apache/commons/math/linear/RealMatrixImpl.java,837,return !(row < 1 || row > nRows || col < 1 || col > nCols);

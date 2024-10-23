@@ -1,0 +1,24 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,294,String pattern = parsePatterns[i];
+True,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,296,// LANG-530 - need to make sure 'ZZ' output doesn't get passed to SimpleDateFormat
+True,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,297,"if (parsePatterns[i].endsWith(""ZZ"")) {"
+True,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,298,"pattern = pattern.substring(0, pattern.length() - 1);"
+False,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,294,arser = new SimpleDateFormat(parsePatterns[0]);
+True,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,302,parser = new SimpleDateFormat(pattern);
+False,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,296,arser.applyPattern(parsePatterns[i]); // cannot be null if i != 0
+True,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,304,parser.applyPattern(pattern); // cannot be null if i != 0
+False,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,299,"ate date = parser.parse(str, pos);"
+False,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,300,f (date != null && pos.getIndex() == str.length()) {
+True,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,308,String str2 = str;
+True,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,309,// LANG-530 - need to make sure 'ZZ' output doesn't hit SimpleDateFormat as it will ParseException
+True,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,310,"if (parsePatterns[i].endsWith(""ZZ"")) {"
+True,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,311,"str2 = str.replaceAll(""([-+][0-9][0-9]):([0-9][0-9])$"", ""$1$2"");"
+True,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,314,"Date date = parser.parse(str2, pos);"
+True,src/java/org/apache/commons/lang3/time/DateUtils.java,src/java/org/apache/commons/lang3/time/DateUtils.java,315,if (date != null && pos.getIndex() == str2.length()) {
+True,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,1160,// http://issues.apache.org/jira/browse/LANG-520
+True,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,1161,public void testLang520() throws ParseException {
+True,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,1162,Date d = new Date();
+True,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,1163,String isoDateStr = DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(d);
+True,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,1164,"Date d2 = DateUtils.parseDate(isoDateStr, new String[] { DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.getPattern() });"
+True,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,1165,// the format loses milliseconds so have to reintroduce them
+True,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,src/test/org/apache/commons/lang3/time/DateUtilsTest.java,1166,"assertEquals(""Date not equal to itself ISO formatted and parsed"", d.getTime(), d2.getTime() + d.getTime() % 1000);"

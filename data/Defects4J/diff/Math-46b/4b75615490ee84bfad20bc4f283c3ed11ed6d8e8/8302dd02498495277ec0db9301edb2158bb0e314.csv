@@ -1,0 +1,46 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,21,import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,635,"* Normalize (standardize) the series, so in the end it is having a mean of 0 and a standard deviation of 1."
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,637,* @param sample sample to normalize
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,638,* @return normalized (standardized) sample
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,640,public static double[] normalize(final double[] sample) {
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,641,DescriptiveStatistics stats = new DescriptiveStatistics();
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,643,// Add the data from the series to stats
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,644,for (int i = 0; i < sample.length; i++) {
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,645,stats.addValue(sample[i]);
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,648,// Compute mean and standard deviation
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,649,double mean = stats.getMean();
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,650,double standardDeviation = stats.getStandardDeviation();
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,652,"// initialize the standardizedSample, which has the same length as the sample"
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,653,double[] standardizedSample = new double[sample.length];
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,655,for (int i = 0; i < sample.length; i++) {
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,656,// z = (x- mean)/standardDeviation
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,657,standardizedSample[i] = (sample[i] - mean) / standardDeviation;
+True,src/main/java/org/apache/commons/math/stat/StatUtils.java,src/main/java/org/apache/commons/math/stat/StatUtils.java,659,return standardizedSample;
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,22,import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,427,* Run the test with the values 50 and 100 and assume standardized values
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,430,public void testNormalize1() {
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,431,"double sample[] = { 50, 100 };"
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,432,"double expectedSample[] = { -25 / Math.sqrt(1250), 25 / Math.sqrt(1250) };"
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,433,double[] out = StatUtils.normalize(sample);
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,434,for (int i = 0; i < out.length; i++) {
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,435,"assertEquals(out[i], expectedSample[i]);"
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,441,"* Run with 77 random values, assuming that the outcome has a mean of 0 and a standard deviation of 1 with a"
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,442,* precision of 1E-10.
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,445,public void testNormalize2() {
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,446,// create an sample with 77 values
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,447,int length = 77;
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,448,double sample[] = new double[length];
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,449,for (int i = 0; i < length; i++) {
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,450,sample[i] = Math.random();
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,452,// normalize this sample
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,453,double standardizedSample[] = StatUtils.normalize(sample);
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,455,DescriptiveStatistics stats = new DescriptiveStatistics();
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,456,// Add the data from the array
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,457,for (int i = 0; i < length; i++) {
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,458,stats.addValue(standardizedSample[i]);
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,460,// the calculations do have a limited precision
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,461,double distance = 1E-10;
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,462,// check the mean an standard deviation
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,463,"assertEquals(0.0, stats.getMean(), distance);"
+True,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,src/test/java/org/apache/commons/math/stat/StatUtilsTest.java,464,"assertEquals(1.0, stats.getStandardDeviation(), distance);"

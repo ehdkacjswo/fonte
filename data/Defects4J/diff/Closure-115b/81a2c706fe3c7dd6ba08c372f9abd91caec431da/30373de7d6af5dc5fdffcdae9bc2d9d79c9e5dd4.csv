@@ -1,0 +1,429 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,257,** Inlines short functions */
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,257,/** Inlines global functions */
+False,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,260,** Enhanced function inlining */
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,260,/** Inlines functions defined in local scopes */
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,263,/** More aggressive function inlining */
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,266,/** Inlines properties */
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,267,boolean inlineProperties;
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,820,inlineProperties = false;
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,1171,* Set the function inlining policy for the compiler.
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,1173,public void setInlineProperties(boolean enable) {
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,1174,inlineProperties = enable;
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,688,if (options.inlineProperties) {
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,689,passes.add(inlineProperties);
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1732,/** Inlines constant properties. */
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1733,final PassFactory inlineProperties =
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1734,"new PassFactory(""inlineProperties"", false) {"
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1735,@Override
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1736,protected CompilerPass createInternal(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1737,return new InlineProperties(compiler);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,2,* Copyright 2012 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,16,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,18,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,19,import com.google.common.collect.Maps;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,20,import com.google.common.collect.Sets;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,21,import com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,22,import com.google.javascript.jscomp.TypeValidator.TypeMismatch;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,23,import com.google.javascript.rhino.IR;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,24,import com.google.javascript.rhino.JSDocInfo;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,25,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,26,import com.google.javascript.rhino.jstype.FunctionType;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,27,import com.google.javascript.rhino.jstype.JSType;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,28,import com.google.javascript.rhino.jstype.JSTypeNative;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,29,import com.google.javascript.rhino.jstype.JSTypeRegistry;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,30,import com.google.javascript.rhino.jstype.ObjectType;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,32,import java.util.Map;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,33,import java.util.Set;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,37,* InlineProperties attempts to find references to properties that are known to
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,38,* be constants and inline the known value.
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,40,* This pass relies on type information to find these property references and
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,41,* properties are assumed to be constant if either:
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,42,*   - the property is assigned unconditionally in the instance constructor
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,43,*   - the property is assigned unconditionally to the type's prototype
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,45,* The current implementation only inlines immutable values (as defined by
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,46,* NodeUtil.isImmutableValue).
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,48,* @author johnlenz@google.com (John Lenz)
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,50,public class InlineProperties implements CompilerPass {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,52,private final AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,54,static class PropertyInfo {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,55,"PropertyInfo(JSType type, Node value) {"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,56,this.type = type;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,57,this.value = value;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,59,final JSType type;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,60,final Node value;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,63,private static final PropertyInfo INVALIDATED = new PropertyInfo(
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,64,"null, null);"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,66,"private final Map<String, PropertyInfo> props = Maps.newHashMap();"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,68,private Set<JSType> invalidatingTypes;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,70,InlineProperties(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,71,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,72,buildInvalidatingTypeSet();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,75,// TODO(johnlenz): this is a direct copy of the invalidation code
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,76,"// from AmbiguateProperties, if in the end we don't need to modify it"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,77,// we should move it to a common location.
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,78,private void buildInvalidatingTypeSet() {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,79,JSTypeRegistry registry = compiler.getTypeRegistry();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,80,invalidatingTypes = Sets.newHashSet(
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,81,"registry.getNativeType(JSTypeNative.ALL_TYPE),"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,82,"registry.getNativeType(JSTypeNative.NO_OBJECT_TYPE),"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,83,"registry.getNativeType(JSTypeNative.NO_TYPE),"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,84,"registry.getNativeType(JSTypeNative.NULL_TYPE),"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,85,"registry.getNativeType(JSTypeNative.VOID_TYPE),"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,86,"registry.getNativeType(JSTypeNative.FUNCTION_FUNCTION_TYPE),"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,87,"registry.getNativeType(JSTypeNative.FUNCTION_INSTANCE_TYPE),"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,88,"registry.getNativeType(JSTypeNative.FUNCTION_PROTOTYPE),"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,89,"registry.getNativeType(JSTypeNative.GLOBAL_THIS),"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,90,"registry.getNativeType(JSTypeNative.OBJECT_TYPE),"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,91,"registry.getNativeType(JSTypeNative.OBJECT_PROTOTYPE),"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,92,"registry.getNativeType(JSTypeNative.OBJECT_FUNCTION_TYPE),"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,93,"registry.getNativeType(JSTypeNative.TOP_LEVEL_PROTOTYPE),"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,94,registry.getNativeType(JSTypeNative.UNKNOWN_TYPE));
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,96,for (TypeMismatch mis : compiler.getTypeValidator().getMismatches()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,97,addInvalidatingType(mis.typeA);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,98,addInvalidatingType(mis.typeB);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,103,"* Invalidates the given type, so that no properties on it will be renamed."
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,105,private void addInvalidatingType(JSType type) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,106,type = type.restrictByNotNullOrUndefined();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,107,if (type.isUnionType()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,108,for (JSType alt : type.toMaybeUnionType().getAlternates()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,109,addInvalidatingType(alt);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,113,invalidatingTypes.add(type);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,114,ObjectType objType = ObjectType.cast(type);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,115,if (objType != null && objType.isInstanceType()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,116,invalidatingTypes.add(objType.getImplicitPrototype());
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,120,/** Returns true if properties on this type should not be renamed. */
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,121,private boolean isInvalidatingType(JSType type) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,122,if (type.isUnionType()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,123,type = type.restrictByNotNullOrUndefined();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,124,if (type.isUnionType()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,125,for (JSType alt : type.toMaybeUnionType().getAlternates()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,126,if (isInvalidatingType(alt)) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,127,return true;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,130,return false;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,133,ObjectType objType = ObjectType.cast(type);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,134,return objType == null
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,135,|| invalidatingTypes.contains(objType)
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,136,|| !objType.hasReferenceName()
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,137,|| objType.isUnknownType()
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,138,|| objType.isEmptyType() /* unresolved types */
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,139,|| objType.isEnumType()
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,140,|| objType.autoboxesTo() != null;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,144,* This method gets the JSType from the Node argument and verifies that it is
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,145,* present.
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,147,private JSType getJSType(Node n) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,148,JSType jsType = n.getJSType();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,149,if (jsType == null) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,150,return compiler.getTypeRegistry().getNativeType(
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,151,JSTypeNative.UNKNOWN_TYPE);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,152,} else {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,153,return jsType;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,157,@Override
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,158,"public void process(Node externs, Node root) {"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,159,NodeTraversal.traverseRoots(
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,160,"compiler, new GatherCandidates(), externs, root);"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,161,NodeTraversal.traverseRoots(
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,162,"compiler, new ReplaceCandidates(), externs, root);"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,165,class GatherCandidates extends AbstractPostOrderCallback {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,167,@Override
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,168,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,169,boolean invalidatingPropRef = false;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,170,String propName = null;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,171,if (n.isGetProp()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,172,propName = n.getLastChild().getString();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,173,if (t.getInput().isExtern()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,174,// Any extern reference invalidates
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,175,invalidatingPropRef = true;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,176,} else if (parent.isAssign()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,177,"invalidatingPropRef = !maybeCandidateDefinition(t, n, parent);"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,178,} else if (NodeUtil.isLValue(n)) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,179,// Other LValue references invalidate
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,180,invalidatingPropRef = true;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,181,} else if (parent.isDelProp()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,182,// Deletes invalidate
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,183,invalidatingPropRef = true;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,184,} else {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,185,// A property read doesn't invalidate
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,186,invalidatingPropRef = false;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,188,} else if (n.isStringKey()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,189,propName = n.getString();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,190,if (t.getInput().isExtern()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,191,// Any extern reference invalidates
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,192,invalidatingPropRef = true;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,193,} else {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,194,"// For now, any object literal key invalidates"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,195,// TODO(johnlenz): support prototype properties like:
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,196,"//   foo.prototype = { a: 1, b: 2 };"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,197,invalidatingPropRef = true;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,201,if (invalidatingPropRef) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,202,Preconditions.checkNotNull(propName);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,203,invalidateProperty(propName);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,208,* @return Whether this is a valid definition for a candidate property.
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,210,private boolean maybeCandidateDefinition(
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,211,"NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,212,Preconditions.checkState(n.isGetProp() && parent.isAssign());
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,213,boolean isCandidate = false;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,214,Node src = n.getFirstChild();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,215,String propName = n.getLastChild().getString();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,217,Node value = parent.getLastChild();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,218,if (src.isThis()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,219,// This is a simple assignment like:
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,220,//    this.foo = 1;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,221,if (inContructor(t)) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,222,// This maybe a valid assignment.
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,223,isCandidate = maybeStoreCandidateValue(
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,224,"getJSType(src), propName, value);"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,226,} else if (t.inGlobalScope()
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,227,&& src.isGetProp()
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,228,"&& src.getLastChild().getString().equals(""prototype"")) {"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,229,// This is a prototype assignment like:
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,230,//    x.prototype.foo = 1;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,231,JSType instanceType = maybeGetInstanceTypeFromPrototypeRef(src);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,232,if (instanceType != null) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,233,isCandidate = maybeStoreCandidateValue(
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,234,"instanceType, propName, value);"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,237,return isCandidate;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,240,private JSType maybeGetInstanceTypeFromPrototypeRef(Node src) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,241,JSType ownerType = getJSType(src.getFirstChild());
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,242,if (ownerType.isFunctionType() && ownerType.isConstructor()) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,243,FunctionType functionType = ((FunctionType) ownerType);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,244,return functionType.getInstanceType();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,246,return null;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,249,private void invalidateProperty(String propName) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,250,"props.put(propName, INVALIDATED);"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,253,private boolean maybeStoreCandidateValue(
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,254,"JSType type, String propName, Node value) {"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,255,Preconditions.checkNotNull(value);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,256,if (!props.containsKey(propName)
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,257,&& !isInvalidatingType(type)
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,258,&& NodeUtil.isImmutableValue(value)
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,259,&& NodeUtil.isExpressionUnconditionallyExecuted(value)) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,260,"props.put(propName, new PropertyInfo(type, value));"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,261,return true;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,263,return false;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,266,private boolean inContructor(NodeTraversal t) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,267,Node root = t.getScopeRoot();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,268,JSDocInfo info = NodeUtil.getBestJSDocInfo(root);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,269,return info != null && info.isConstructor();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,273,class ReplaceCandidates extends AbstractPostOrderCallback {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,274,@Override
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,275,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,276,if (n.isGetProp() && !NodeUtil.isLValue(n)) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,277,Node target = n.getFirstChild();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,278,String propName = n.getLastChild().getString();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,279,PropertyInfo info = props.get(propName);
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,280,if (info != null
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,281,&& info != INVALIDATED
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,282,"&& isMatchingType(target, info.type)) {"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,283,Node replacement = info.value.cloneTree();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,284,"if (NodeUtil.mayHaveSideEffects(n.getFirstChild(), compiler)) {"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,285,"replacement = IR.comma(n.removeFirstChild(), replacement).srcref(n);"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,287,"parent.replaceChild(n, replacement);"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,288,compiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,293,"private boolean isMatchingType(Node n, JSType src) {"
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,294,src = src.restrictByNotNullOrUndefined();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,295,JSType dest = getJSType(n).restrictByNotNullOrUndefined();
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,296,if (!isInvalidatingType(dest)
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,297,&& dest.isSubtype(src)) {
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,298,return true;
+True,src/com/google/javascript/jscomp/InlineProperties.java,src/com/google/javascript/jscomp/InlineProperties.java,300,return false;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3116,* @param n The expression to check.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3117,* @return Whether the expression is unconditionally executed in the
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3118,*     containing execution scope.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3120,static boolean isExpressionUnconditionallyExecuted(Node n) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3121,inspect: do {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3122,Node parent = n.getParent();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3123,switch (parent.getType()) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3124,case Token.IF:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3125,case Token.HOOK:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3126,case Token.AND:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3127,case Token.OR:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3128,if (parent.getFirstChild() != n) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3129,return false;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3131,// other ancestors may be conditional
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3132,continue inspect;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3133,case Token.FOR:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3134,if (parent.getFirstChild() != n) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3135,return false;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3137,// other ancestors may be conditional
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3138,continue inspect;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3139,case Token.WHILE:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3140,case Token.DO:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3141,return false;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3142,case Token.TRY:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3143,// Consider all code under a try/catch to be conditionally executed.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3144,return false;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3145,case Token.CASE:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3146,case Token.DEFAULT_CASE:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3147,return false;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3148,case Token.SCRIPT:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3149,case Token.FUNCTION:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3150,"// Done, we've reached the scope root."
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3151,break inspect;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3153,} while ((n = n.getParent()) != null);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3154,return true;
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,2,* Copyright 2012 The Closure Compiler Authors.
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,17,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,21,* @author johnlenz@google.com (John Lenz)
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,23,public class InlinePropertiesTest  extends CompilerTestCase {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,25,private static final String EXTERNS =
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,26,"""Function.prototype.call=function(){};"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,27,"""Function.prototype.inherits=function(){};"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,28,"""prop.toString;"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,29,"""var google = { gears: { factory: {}, workerPool: {} } };"";"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,31,public InlinePropertiesTest() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,32,super(EXTERNS);
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,33,enableNormalize();
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,34,enableTypeCheck(CheckLevel.WARNING);
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,35,enableClosurePass();
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,38,@Override
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,39,protected CompilerPass getProcessor(Compiler compiler) {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,40,return new InlineProperties(compiler);
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,43,public void testConstInstanceProp1() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,44,// Replace a reference to known constant property.
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,45,test(
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,46,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,47,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,48,"""  this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,49,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,50,"""new C().foo;"","
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,51,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,52,"""  this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,53,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,54,"""new C(), 1;"");"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,57,public void testConstInstanceProp2() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,58,// Replace a constant reference
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,59,test(
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,60,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,61,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,62,"""  this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,63,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,64,"""var x = new C();\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,65,"""x.foo;"","
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,66,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,67,"""  this.foo = 1\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,68,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,69,"""var x = new C();\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,70,"""1;\n"");"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,74,public void testConstInstanceProp3() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,75,// Replace a constant reference
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,76,test(
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,77,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,78,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,79,"""  this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,80,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,81,"""/** @type {C} */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,82,"""var x = new C();\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,83,"""x.foo;"","
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,84,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,85,"""  this.foo = 1\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,86,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,87,"""var x = new C();\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,88,"""1;\n"");"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,91,public void testConstInstanceProp4() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,92,// This pass replies on DisambiguateProperties to distinguish like named
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,93,// properties so it doesn't handle this case.
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,94,testSame(
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,95,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,96,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,97,"""  this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,98,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,99,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,100,"""function B() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,101,"""  this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,102,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,103,"""new C().foo;\n"");"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,107,public void testConstClassProps1() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,108,"// For now, don't inline constant class properties,"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,109,// CollapseProperties should handle this in most cases.
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,110,testSame(
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,111,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,112,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,113,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,114,"""C.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,115,"""C.foo;"");"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,118,public void testConstClassProps2() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,119,"// Don't confuse, class properties with instance properties"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,120,testSame(
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,121,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,122,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,123,"""  this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,124,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,125,"""C.foo;"");"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,128,public void testConstClassProps3() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,129,"// Don't confuse, class properties with prototype properties"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,130,testSame(
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,131,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,132,"""function C() {}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,133,"""C.prototype.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,134,"""c.foo;\n"");"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,137,public void testNonConstClassProp1() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,138,testSame(
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,139,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,140,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,141,"""  this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,142,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,143,"""var x = new C();\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,144,"""alert(x.foo);\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,145,"""delete x.foo;"");"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,148,public void testNonConstClassProp2() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,149,testSame(
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,150,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,151,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,152,"""  this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,153,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,154,"""var x = new C();\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,155,"""alert(x.foo);\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,156,"""x.foo = 2;"");"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,159,public void testNonConstructorClassProp1() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,160,testSame(
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,161,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,162,"""  this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,163,"""  return this;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,164,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,165,"""C().foo;"");"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,168,public void testConditionalClassProp1() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,169,testSame(
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,170,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,171,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,172,"""  if (false) this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,173,"""}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,174,"""new C().foo;"");"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,177,public void testConstPrototypeProp1() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,178,test(
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,179,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,180,"""function C() {}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,181,"""C.prototype.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,182,"""new C().foo;\n"","
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,183,"""function C() {}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,184,"""C.prototype.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,185,"""new C(), 1;\n"");"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,188,public void testConstPrototypeProp2() {
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,189,test(
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,190,"""/** @constructor */\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,191,"""function C() {}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,192,"""C.prototype.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,193,"""var x = new C();\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,194,"""x.foo;\n"","
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,195,"""function C() {}\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,196,"""C.prototype.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,197,"""var x = new C();\n"" +"
+True,test/com/google/javascript/jscomp/InlinePropertiesTest.java,test/com/google/javascript/jscomp/InlinePropertiesTest.java,198,"""1;\n"");"

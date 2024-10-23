@@ -1,0 +1,28 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/main/java/org/jsoup/safety/Cleaner.java,src/main/java/org/jsoup/safety/Cleaner.java,108,"f (whitelist.isSafeAttribute(sourceTag, sourceAttr))"
+True,src/main/java/org/jsoup/safety/Cleaner.java,src/main/java/org/jsoup/safety/Cleaner.java,108,"if (whitelist.isSafeAttribute(sourceTag, sourceEl, sourceAttr))"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,11,import org.jsoup.nodes.Element;
+False,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,296,"oolean isSafeAttribute(String tagName, Attribute attr) {"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,297,"boolean isSafeAttribute(String tagName, Element el, Attribute attr) {"
+False,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,299,ttributeValue value = AttributeValue.valueOf(attr.getValue());
+False,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,306,"eturn !attrProts.containsKey(key) || testValidProtocol(value, attrProts.get(key));"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,306,"return !attrProts.containsKey(key) || testValidProtocol(el, attr, attrProts.get(key));"
+False,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,312,"eturn !tagName.equals("":all"") && isSafeAttribute("":all"", attr);"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,312,"return !tagName.equals("":all"") && isSafeAttribute("":all"", el, attr);"
+False,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,317,"rivate boolean testValidProtocol(AttributeValue value, Set<Protocol> protocols) {"
+False,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,318,/ todo: use the absUrl method and test this is a good URL
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,317,"private boolean testValidProtocol(Element el, Attribute attr, Set<Protocol> protocols) {"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,318,"// resolve relative urls to abs, and update the attribute so output html has abs."
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,319,// rels without a baseuri get removed
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,320,String value = el.absUrl(attr.getKey());
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,321,attr.setValue(value);
+False,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,32,"ssertEquals(""<p><a rel=\""nofollow\"">Dodgy</a> <a href=\""HTTP://nice.com\"" rel=\""nofollow\"">Nice</a></p><blockquote>Hello</blockquote>"","
+True,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,32,"assertEquals(""<p><a rel=\""nofollow\"">Dodgy</a> <a href=\""http://nice.com\"" rel=\""nofollow\"">Nice</a></p><blockquote>Hello</blockquote>"","
+True,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,99,@Test public void resolvesRelativeLinks() {
+True,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,100,"String html = ""<a href='/foo'>Link</a>"";"
+True,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,101,"String clean = Jsoup.clean(html, ""http://example.com/"", Whitelist.basic());"
+True,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,102,"assertEquals(""<a href=\""http://example.com/foo\"" rel=\""nofollow\"">Link</a>"", clean);"
+True,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,105,@Test public void dropsUnresolvableRelativeLinks() {
+True,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,106,"String html = ""<a href='/foo'>Link</a>"";"
+True,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,107,"String clean = Jsoup.clean(html, Whitelist.basic());"
+True,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/org/jsoup/safety/CleanerTest.java,108,"assertEquals(""<a rel=\""nofollow\"">Link</a>"", clean);"

@@ -1,0 +1,616 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,2,* Copyright 2011 The Apache Software Foundation.
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,5,* you may not use this file except in compliance with the License.
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,6,* You may obtain a copy of the License at
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,8,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,13,* See the License for the specific language governing permissions and
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,14,* limitations under the License.
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,16,package org.apache.commons.math.linear;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,18,import java.util.Arrays;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,19,import org.apache.commons.math.util.MathUtils;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,20,import org.apache.commons.math.ConvergenceException;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,21,import org.apache.commons.math.exception.DimensionMismatchException;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,22,import org.apache.commons.math.exception.util.LocalizedFormats;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,23,import org.apache.commons.math.util.FastMath;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,27,* @author gregsterijevski
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,29,public class PivotingQRDecomposition {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,31,private double[][] qr;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,32,/** The diagonal elements of R. */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,33,private double[] rDiag;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,34,/** Cached value of Q. */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,35,private RealMatrix cachedQ;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,36,/** Cached value of QT. */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,37,private RealMatrix cachedQT;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,38,/** Cached value of R. */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,39,private RealMatrix cachedR;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,40,/** Cached value of H. */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,41,private RealMatrix cachedH;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,42,/** permutation info */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,43,private int[] permutation;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,44,/** the rank **/
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,45,private int rank;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,46,/** vector of column multipliers */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,47,private double[] beta;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,49,public boolean isSingular() {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,50,return rank != qr[0].length;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,53,public int getRank() {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,54,return rank;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,57,public int[] getOrder() {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,58,return MathUtils.copyOf(permutation);
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,61,public PivotingQRDecomposition(RealMatrix matrix) throws ConvergenceException {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,62,"this(matrix, 1.0e-16, true);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,65,"public PivotingQRDecomposition(RealMatrix matrix, boolean allowPivot) throws ConvergenceException {"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,66,"this(matrix, 1.0e-16, allowPivot);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,69,"public PivotingQRDecomposition(RealMatrix matrix, double qrRankingThreshold,"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,70,boolean allowPivot) throws ConvergenceException {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,71,final int rows = matrix.getRowDimension();
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,72,final int cols = matrix.getColumnDimension();
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,73,qr = matrix.getData();
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,74,rDiag = new double[cols];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,75,//final double[] norms = new double[cols];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,76,this.beta = new double[cols];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,77,this.permutation = new int[cols];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,78,cachedQ = null;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,79,cachedQT = null;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,80,cachedR = null;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,81,cachedH = null;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,83,/*- initialize the permutation vector and calculate the norms */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,84,for (int k = 0; k < cols; ++k) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,85,permutation[k] = k;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,87,// transform the matrix column after column
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,88,for (int k = 0; k < cols; ++k) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,89,// select the column with the greatest norm on active components
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,90,int nextColumn = -1;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,91,double ak2 = Double.NEGATIVE_INFINITY;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,92,if (allowPivot) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,93,for (int i = k; i < cols; ++i) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,94,double norm2 = 0;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,95,for (int j = k; j < rows; ++j) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,96,final double aki = qr[j][permutation[i]];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,97,norm2 += aki * aki;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,99,if (Double.isInfinite(norm2) || Double.isNaN(norm2)) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,100,"throw new ConvergenceException(LocalizedFormats.UNABLE_TO_PERFORM_QR_DECOMPOSITION_ON_JACOBIAN,"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,101,"rows, cols);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,103,if (norm2 > ak2) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,104,nextColumn = i;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,105,ak2 = norm2;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,108,} else {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,109,nextColumn = k;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,110,ak2 = 0.0;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,111,for (int j = k; j < rows; ++j) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,112,final double aki = qr[j][k];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,113,ak2 += aki * aki;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,116,if (ak2 <= qrRankingThreshold) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,117,rank = k;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,118,for (int i = rank; i < rows; i++) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,119,for (int j = i + 1; j < cols; j++) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,120,qr[i][permutation[j]] = 0.0;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,123,return;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,125,final int pk = permutation[nextColumn];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,126,permutation[nextColumn] = permutation[k];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,127,permutation[k] = pk;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,129,// choose alpha such that Hk.u = alpha ek
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,130,final double akk = qr[k][pk];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,131,final double alpha = (akk > 0) ? -FastMath.sqrt(ak2) : FastMath.sqrt(ak2);
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,132,final double betak = 1.0 / (ak2 - akk * alpha);
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,133,beta[pk] = betak;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,135,// transform the current column
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,136,rDiag[pk] = alpha;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,137,qr[k][pk] -= alpha;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,139,// transform the remaining columns
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,140,for (int dk = cols - 1 - k; dk > 0; --dk) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,141,double gamma = 0;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,142,for (int j = k; j < rows; ++j) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,143,gamma += qr[j][pk] * qr[j][permutation[k + dk]];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,145,gamma *= betak;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,146,for (int j = k; j < rows; ++j) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,147,qr[j][permutation[k + dk]] -= gamma * qr[j][pk];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,151,rank = cols;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,152,return;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,156,* Returns the matrix Q of the decomposition.
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,157,* <p>Q is an orthogonal matrix</p>
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,158,* @return the Q matrix
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,160,public RealMatrix getQ() {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,161,if (cachedQ == null) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,162,cachedQ = getQT().transpose();
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,164,return cachedQ;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,168,* Returns the transpose of the matrix Q of the decomposition.
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,169,* <p>Q is an orthogonal matrix</p>
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,170,* @return the Q matrix
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,172,public RealMatrix getQT() {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,173,if (cachedQT == null) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,175,// QT is supposed to be m x m
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,176,final int n = qr[0].length;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,177,final int m = qr.length;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,178,"cachedQT = MatrixUtils.createRealMatrix(m, m);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,181,"* Q = Q1 Q2 ... Q_m, so Q is formed by first constructing Q_m and then"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,182,"* applying the Householder transformations Q_(m-1),Q_(m-2),...,Q1 in"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,183,* succession to the result
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,185,for (int minor = m - 1; minor >= rank; minor--) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,186,"cachedQT.setEntry(minor, minor, 1.0);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,189,for (int minor = rank - 1; minor >= 0; minor--) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,190,//final double[] qrtMinor = qrt[minor];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,191,final int p_minor = permutation[minor];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,192,"cachedQT.setEntry(minor, minor, 1.0);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,193,//if (qrtMinor[minor] != 0.0) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,194,for (int col = minor; col < m; col++) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,195,double alpha = 0.0;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,196,for (int row = minor; row < m; row++) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,197,"alpha -= cachedQT.getEntry(col, row) * qr[row][p_minor];"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,199,alpha /= rDiag[p_minor] * qr[minor][p_minor];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,200,for (int row = minor; row < m; row++) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,201,"cachedQT.addToEntry(col, row, -alpha * qr[row][p_minor]);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,207,// return the cached matrix
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,208,return cachedQT;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,212,* Returns the matrix R of the decomposition.
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,213,* <p>R is an upper-triangular matrix</p>
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,214,* @return the R matrix
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,216,public RealMatrix getR() {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,217,if (cachedR == null) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,218,// R is supposed to be m x n
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,219,final int n = qr[0].length;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,220,final int m = qr.length;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,221,"cachedR = MatrixUtils.createRealMatrix(m, n);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,222,// copy the diagonal from rDiag and the upper triangle of qr
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,223,for (int row = rank - 1; row >= 0; row--) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,224,"cachedR.setEntry(row, row, rDiag[permutation[row]]);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,225,for (int col = row + 1; col < n; col++) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,226,"cachedR.setEntry(row, col, qr[row][permutation[col]]);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,230,// return the cached matrix
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,231,return cachedR;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,234,public RealMatrix getH() {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,235,if (cachedH == null) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,236,final int n = qr[0].length;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,237,final int m = qr.length;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,238,"cachedH = MatrixUtils.createRealMatrix(m, n);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,239,for (int i = 0; i < m; ++i) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,240,"for (int j = 0; j < FastMath.min(i + 1, n); ++j) {"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,241,final int p_j = permutation[j];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,242,"cachedH.setEntry(i, j, qr[i][p_j] / -rDiag[p_j]);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,246,// return the cached matrix
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,247,return cachedH;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,250,public RealMatrix getPermutationMatrix() {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,251,"RealMatrix rm = MatrixUtils.createRealMatrix(qr[0].length, qr[0].length);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,252,for (int i = 0; i < this.qr[0].length; i++) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,253,"rm.setEntry(permutation[i], i, 1.0);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,255,return rm;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,258,public DecompositionSolver getSolver() {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,259,"return new Solver(qr, rDiag, permutation, rank);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,262,/** Specialized solver. */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,263,private static class Solver implements DecompositionSolver {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,266,* A packed TRANSPOSED representation of the QR decomposition.
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,267,* <p>The elements BELOW the diagonal are the elements of the UPPER triangular
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,268,"* matrix R, and the rows ABOVE the diagonal are the Householder reflector vectors"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,269,* from which an explicit form of Q can be recomputed if desired.</p>
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,271,private final double[][] qr;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,272,/** The diagonal elements of R. */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,273,private final double[] rDiag;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,274,/** The rank of the matrix      */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,275,private final int rank;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,276,/** The permutation matrix      */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,277,private final int[] perm;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,280,* Build a solver from decomposed matrix.
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,281,* @param qrt packed TRANSPOSED representation of the QR decomposition
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,282,* @param rDiag diagonal elements of R
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,284,"private Solver(final double[][] qr, final double[] rDiag, int[] perm, int rank) {"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,285,this.qr = qr;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,286,this.rDiag = rDiag;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,287,this.perm = perm;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,288,this.rank = rank;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,291,/** {@inheritDoc} */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,292,public boolean isNonSingular() {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,293,if (qr.length >= qr[0].length) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,294,return rank == qr[0].length;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,295,} else { //qr.length < qr[0].length
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,296,return rank == qr.length;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,300,/** {@inheritDoc} */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,301,public RealVector solve(RealVector b) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,302,final int n = qr[0].length;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,303,final int m = qr.length;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,304,if (b.getDimension() != m) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,305,"throw new DimensionMismatchException(b.getDimension(), m);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,307,if (!isNonSingular()) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,308,throw new SingularMatrixException();
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,311,final double[] x = new double[n];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,312,final double[] y = b.toArray();
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,314,// apply Householder transforms to solve Q.y = b
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,315,for (int minor = 0; minor < rank; minor++) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,316,final int m_idx = perm[minor];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,317,double dotProduct = 0;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,318,for (int row = minor; row < m; row++) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,319,dotProduct += y[row] * qr[row][m_idx];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,321,dotProduct /= rDiag[m_idx] * qr[minor][m_idx];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,322,for (int row = minor; row < m; row++) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,323,y[row] += dotProduct * qr[row][m_idx];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,326,// solve triangular system R.x = y
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,327,for (int row = rank - 1; row >= 0; --row) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,328,final int m_row = perm[row];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,329,y[row] /= rDiag[m_row];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,330,final double yRow = y[row];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,331,//final double[] qrtRow = qrt[row];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,332,x[perm[row]] = yRow;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,333,for (int i = 0; i < row; i++) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,334,y[i] -= yRow * qr[i][m_row];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,337,"return new ArrayRealVector(x, false);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,340,/** {@inheritDoc} */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,341,public RealMatrix solve(RealMatrix b) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,342,final int cols = qr[0].length;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,343,final int rows = qr.length;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,344,if (b.getRowDimension() != rows) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,345,"throw new DimensionMismatchException(b.getRowDimension(), rows);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,347,if (!isNonSingular()) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,348,throw new SingularMatrixException();
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,351,final int columns = b.getColumnDimension();
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,352,final int blockSize = BlockRealMatrix.BLOCK_SIZE;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,353,final int cBlocks = (columns + blockSize - 1) / blockSize;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,354,"final double[][] xBlocks = BlockRealMatrix.createBlocksLayout(cols, columns);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,355,final double[][] y = new double[b.getRowDimension()][blockSize];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,356,final double[] alpha = new double[blockSize];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,357,"//final BlockRealMatrix result = new BlockRealMatrix(cols, columns, xBlocks, false);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,358,for (int kBlock = 0; kBlock < cBlocks; ++kBlock) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,359,final int kStart = kBlock * blockSize;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,360,"final int kEnd = FastMath.min(kStart + blockSize, columns);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,361,final int kWidth = kEnd - kStart;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,362,// get the right hand side vector
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,363,"b.copySubMatrix(0, rows - 1, kStart, kEnd - 1, y);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,365,// apply Householder transforms to solve Q.y = b
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,366,for (int minor = 0; minor < rank; minor++) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,367,final int m_idx = perm[minor];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,368,final double factor = 1.0 / (rDiag[m_idx] * qr[minor][m_idx]);
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,370,"Arrays.fill(alpha, 0, kWidth, 0.0);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,371,for (int row = minor; row < rows; ++row) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,372,final double d = qr[row][m_idx];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,373,final double[] yRow = y[row];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,374,for (int k = 0; k < kWidth; ++k) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,375,alpha[k] += d * yRow[k];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,378,for (int k = 0; k < kWidth; ++k) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,379,alpha[k] *= factor;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,382,for (int row = minor; row < rows; ++row) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,383,final double d = qr[row][m_idx];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,384,final double[] yRow = y[row];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,385,for (int k = 0; k < kWidth; ++k) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,386,yRow[k] += alpha[k] * d;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,391,// solve triangular system R.x = y
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,392,for (int j = rank - 1; j >= 0; --j) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,393,final int jBlock = perm[j] / blockSize; //which block
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,394,final int jStart = jBlock * blockSize;  // idx of top corner of block in my coord
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,395,final double factor = 1.0 / rDiag[perm[j]];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,396,final double[] yJ = y[j];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,397,final double[] xBlock = xBlocks[jBlock * cBlocks + kBlock];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,398,int index = (perm[j] - jStart) * kWidth; //to local (block) coordinates
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,399,for (int k = 0; k < kWidth; ++k) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,400,yJ[k] *= factor;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,401,xBlock[index++] = yJ[k];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,403,for (int i = 0; i < j; ++i) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,404,final double rIJ = qr[i][perm[j]];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,405,final double[] yI = y[i];
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,406,for (int k = 0; k < kWidth; ++k) {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,407,yI[k] -= yJ[k] * rIJ;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,412,//return result;
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,413,"return new BlockRealMatrix(cols, columns, xBlocks, false);"
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,416,/** {@inheritDoc} */
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,417,public RealMatrix getInverse() {
+True,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,src/main/java/org/apache/commons/math/linear/PivotingQRDecomposition.java,418,return solve(MatrixUtils.createRealIdentityMatrix(rDiag.length));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,2,* Licensed to the Apache Software Foundation (ASF) under one or more
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,3,* contributor license agreements.  See the NOTICE file distributed with
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,4,* this work for additional information regarding copyright ownership.
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,5,"* The ASF licenses this file to You under the Apache License, Version 2.0"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,6,"* (the ""License""); you may not use this file except in compliance with"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,7,* the License.  You may obtain a copy of the License at
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,9,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,11,"* Unless required by applicable law or agreed to in writing, software"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,12,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,13,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,14,* See the License for the specific language governing permissions and
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,15,* limitations under the License.
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,18,package org.apache.commons.math.linear;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,20,import java.util.Random;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,23,import org.apache.commons.math.ConvergenceException;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,24,import org.junit.Assert;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,25,import org.junit.Test;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,28,public class PivotingQRDecompositionTest {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,29,double[][] testData3x3NonSingular = {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,30,"{ 12, -51, 4 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,31,"{ 6, 167, -68 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,32,"{ -4, 24, -41 }, };"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,34,double[][] testData3x3Singular = {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,35,"{ 1, 4, 7, },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,36,"{ 2, 5, 8, },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,37,"{ 3, 6, 9, }, };"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,39,double[][] testData3x4 = {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,40,"{ 12, -51, 4, 1 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,41,"{ 6, 167, -68, 2 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,42,"{ -4, 24, -41, 3 }, };"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,44,double[][] testData4x3 = {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,45,"{ 12, -51, 4, },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,46,"{ 6, 167, -68, },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,47,"{ -4, 24, -41, },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,48,"{ -5, 34, 7, }, };"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,50,private static final double entryTolerance = 10e-16;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,52,private static final double normTolerance = 10e-14;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,54,/** test dimensions */
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,55,@Test
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,56,public void testDimensions() throws ConvergenceException {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,57,checkDimension(MatrixUtils.createRealMatrix(testData3x3NonSingular));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,59,checkDimension(MatrixUtils.createRealMatrix(testData4x3));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,61,checkDimension(MatrixUtils.createRealMatrix(testData3x4));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,63,Random r = new Random(643895747384642l);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,64,int    p = (5 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,65,int    q = (7 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,66,"checkDimension(createTestMatrix(r, p, q));"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,67,"checkDimension(createTestMatrix(r, q, p));"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,71,private void checkDimension(RealMatrix m) throws ConvergenceException {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,72,int rows = m.getRowDimension();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,73,int columns = m.getColumnDimension();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,74,PivotingQRDecomposition qr = new PivotingQRDecomposition(m);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,75,"Assert.assertEquals(rows,    qr.getQ().getRowDimension());"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,76,"Assert.assertEquals(rows,    qr.getQ().getColumnDimension());"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,77,"Assert.assertEquals(rows,    qr.getR().getRowDimension());"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,78,"Assert.assertEquals(columns, qr.getR().getColumnDimension());"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,81,/** test A = QR */
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,82,@Test
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,83,public void testAEqualQR() throws ConvergenceException {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,84,checkAEqualQR(MatrixUtils.createRealMatrix(testData3x3NonSingular));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,86,checkAEqualQR(MatrixUtils.createRealMatrix(testData3x3Singular));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,88,checkAEqualQR(MatrixUtils.createRealMatrix(testData3x4));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,90,checkAEqualQR(MatrixUtils.createRealMatrix(testData4x3));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,92,Random r = new Random(643895747384642l);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,93,int    p = (5 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,94,int    q = (7 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,95,"checkAEqualQR(createTestMatrix(r, p, q));"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,97,"checkAEqualQR(createTestMatrix(r, q, p));"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,101,private void checkAEqualQR(RealMatrix m) throws ConvergenceException {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,102,PivotingQRDecomposition qr = new PivotingQRDecomposition(m);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,103,RealMatrix prod =  qr.getQ().multiply(qr.getR()).multiply(qr.getPermutationMatrix().transpose());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,104,double norm = prod.subtract(m).getNorm();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,105,"Assert.assertEquals(0, norm, normTolerance);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,108,/** test the orthogonality of Q */
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,109,@Test
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,110,public void testQOrthogonal() throws ConvergenceException{
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,111,checkQOrthogonal(MatrixUtils.createRealMatrix(testData3x3NonSingular));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,113,checkQOrthogonal(MatrixUtils.createRealMatrix(testData3x3Singular));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,115,checkQOrthogonal(MatrixUtils.createRealMatrix(testData3x4));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,117,checkQOrthogonal(MatrixUtils.createRealMatrix(testData4x3));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,119,Random r = new Random(643895747384642l);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,120,int    p = (5 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,121,int    q = (7 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,122,"checkQOrthogonal(createTestMatrix(r, p, q));"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,124,"checkQOrthogonal(createTestMatrix(r, q, p));"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,128,private void checkQOrthogonal(RealMatrix m) throws ConvergenceException{
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,129,PivotingQRDecomposition qr = new PivotingQRDecomposition(m);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,130,RealMatrix eye = MatrixUtils.createRealIdentityMatrix(m.getRowDimension());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,131,double norm = qr.getQT().multiply(qr.getQ()).subtract(eye).getNorm();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,132,"Assert.assertEquals(0, norm, normTolerance);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,135,/** test that R is upper triangular */
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,136,@Test
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,137,public void testRUpperTriangular() throws ConvergenceException{
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,138,RealMatrix matrix = MatrixUtils.createRealMatrix(testData3x3NonSingular);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,139,checkUpperTriangular(new PivotingQRDecomposition(matrix).getR());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,141,matrix = MatrixUtils.createRealMatrix(testData3x3Singular);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,142,checkUpperTriangular(new PivotingQRDecomposition(matrix).getR());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,144,matrix = MatrixUtils.createRealMatrix(testData3x4);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,145,checkUpperTriangular(new PivotingQRDecomposition(matrix).getR());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,147,matrix = MatrixUtils.createRealMatrix(testData4x3);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,148,checkUpperTriangular(new PivotingQRDecomposition(matrix).getR());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,150,Random r = new Random(643895747384642l);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,151,int    p = (5 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,152,int    q = (7 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,153,"matrix = createTestMatrix(r, p, q);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,154,checkUpperTriangular(new PivotingQRDecomposition(matrix).getR());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,156,"matrix = createTestMatrix(r, p, q);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,157,checkUpperTriangular(new PivotingQRDecomposition(matrix).getR());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,161,private void checkUpperTriangular(RealMatrix m) {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,162,m.walkInOptimizedOrder(new DefaultRealMatrixPreservingVisitor() {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,163,@Override
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,164,"public void visit(int row, int column, double value) {"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,165,if (column < row) {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,166,"Assert.assertEquals(0.0, value, entryTolerance);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,172,/** test that H is trapezoidal */
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,173,@Test
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,174,public void testHTrapezoidal() throws ConvergenceException{
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,175,RealMatrix matrix = MatrixUtils.createRealMatrix(testData3x3NonSingular);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,176,checkTrapezoidal(new PivotingQRDecomposition(matrix).getH());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,178,matrix = MatrixUtils.createRealMatrix(testData3x3Singular);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,179,checkTrapezoidal(new PivotingQRDecomposition(matrix).getH());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,181,matrix = MatrixUtils.createRealMatrix(testData3x4);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,182,checkTrapezoidal(new PivotingQRDecomposition(matrix).getH());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,184,matrix = MatrixUtils.createRealMatrix(testData4x3);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,185,checkTrapezoidal(new PivotingQRDecomposition(matrix).getH());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,187,Random r = new Random(643895747384642l);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,188,int    p = (5 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,189,int    q = (7 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,190,"matrix = createTestMatrix(r, p, q);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,191,checkTrapezoidal(new PivotingQRDecomposition(matrix).getH());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,193,"matrix = createTestMatrix(r, p, q);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,194,checkTrapezoidal(new PivotingQRDecomposition(matrix).getH());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,198,private void checkTrapezoidal(RealMatrix m) {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,199,m.walkInOptimizedOrder(new DefaultRealMatrixPreservingVisitor() {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,200,@Override
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,201,"public void visit(int row, int column, double value) {"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,202,if (column > row) {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,203,"Assert.assertEquals(0.0, value, entryTolerance);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,208,/** test matrices values */
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,209,@Test
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,210,public void testMatricesValues() throws ConvergenceException{
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,211,PivotingQRDecomposition qr =
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,212,"new PivotingQRDecomposition(MatrixUtils.createRealMatrix(testData3x3NonSingular),false);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,213,RealMatrix qRef = MatrixUtils.createRealMatrix(new double[][] {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,214,"{ -12.0 / 14.0,   69.0 / 175.0,  -58.0 / 175.0 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,215,"{  -6.0 / 14.0, -158.0 / 175.0,    6.0 / 175.0 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,216,"{   4.0 / 14.0,  -30.0 / 175.0, -165.0 / 175.0 }"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,218,RealMatrix rRef = MatrixUtils.createRealMatrix(new double[][] {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,219,"{ -14.0,  -21.0, 14.0 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,220,"{   0.0, -175.0, 70.0 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,221,"{   0.0,    0.0, 35.0 }"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,223,RealMatrix hRef = MatrixUtils.createRealMatrix(new double[][] {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,224,"{ 26.0 / 14.0, 0.0, 0.0 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,225,"{  6.0 / 14.0, 648.0 / 325.0, 0.0 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,226,"{ -4.0 / 14.0,  36.0 / 325.0, 2.0 }"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,229,// check values against known references
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,230,RealMatrix q = qr.getQ();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,231,"Assert.assertEquals(0, q.subtract(qRef).getNorm(), 1.0e-13);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,232,RealMatrix qT = qr.getQT();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,233,"Assert.assertEquals(0, qT.subtract(qRef.transpose()).getNorm(), 1.0e-13);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,234,RealMatrix r = qr.getR();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,235,"Assert.assertEquals(0, r.subtract(rRef).getNorm(), 1.0e-13);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,236,RealMatrix h = qr.getH();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,237,"Assert.assertEquals(0, h.subtract(hRef).getNorm(), 1.0e-13);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,239,// check the same cached instance is returned the second time
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,240,Assert.assertTrue(q == qr.getQ());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,241,Assert.assertTrue(r == qr.getR());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,242,Assert.assertTrue(h == qr.getH());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,246,"private RealMatrix createTestMatrix(final Random r, final int rows, final int columns) {"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,247,"RealMatrix m = MatrixUtils.createRealMatrix(rows, columns);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,248,m.walkInOptimizedOrder(new DefaultRealMatrixChangingVisitor(){
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,249,@Override
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,250,"public double visit(int row, int column, double value) {"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,251,return 2.0 * r.nextDouble() - 1.0;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRDecompositionTest.java,254,return m;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,2,* Licensed to the Apache Software Foundation (ASF) under one or more
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,3,* contributor license agreements.  See the NOTICE file distributed with
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,4,* this work for additional information regarding copyright ownership.
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,5,"* The ASF licenses this file to You under the Apache License, Version 2.0"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,6,"* (the ""License""); you may not use this file except in compliance with"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,7,* the License.  You may obtain a copy of the License at
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,9,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,11,"* Unless required by applicable law or agreed to in writing, software"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,12,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,13,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,14,* See the License for the specific language governing permissions and
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,15,* limitations under the License.
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,18,package org.apache.commons.math.linear;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,20,import java.util.Random;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,22,import org.apache.commons.math.ConvergenceException;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,23,import org.apache.commons.math.exception.MathIllegalArgumentException;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,25,import org.junit.Test;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,26,import org.junit.Assert;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,28,public class PivotingQRSolverTest {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,29,double[][] testData3x3NonSingular = {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,30,"{ 12, -51,   4 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,31,"{  6, 167, -68 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,32,"{ -4,  24, -41 }"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,35,double[][] testData3x3Singular = {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,36,"{ 1, 2,  2 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,37,"{ 2, 4,  6 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,38,"{ 4, 8, 12 }"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,41,double[][] testData3x4 = {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,42,"{ 12, -51,   4, 1 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,43,"{  6, 167, -68, 2 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,44,"{ -4,  24, -41, 3 }"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,47,double[][] testData4x3 = {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,48,"{ 12, -51,   4 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,49,"{  6, 167, -68 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,50,"{ -4,  24, -41 },"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,51,"{ -5,  34,   7 }"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,54,/** test rank */
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,55,@Test
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,56,public void testRank() throws ConvergenceException {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,57,DecompositionSolver solver =
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,58,new PivotingQRDecomposition(MatrixUtils.createRealMatrix(testData3x3NonSingular)).getSolver();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,59,Assert.assertTrue(solver.isNonSingular());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,61,solver = new PivotingQRDecomposition(MatrixUtils.createRealMatrix(testData3x3Singular)).getSolver();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,62,Assert.assertFalse(solver.isNonSingular());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,64,solver = new PivotingQRDecomposition(MatrixUtils.createRealMatrix(testData3x4)).getSolver();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,65,Assert.assertTrue(solver.isNonSingular());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,67,solver = new PivotingQRDecomposition(MatrixUtils.createRealMatrix(testData4x3)).getSolver();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,68,Assert.assertTrue(solver.isNonSingular());
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,72,/** test solve dimension errors */
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,73,@Test
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,74,public void testSolveDimensionErrors() throws ConvergenceException {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,75,DecompositionSolver solver =
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,76,new PivotingQRDecomposition(MatrixUtils.createRealMatrix(testData3x3NonSingular)).getSolver();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,77,RealMatrix b = MatrixUtils.createRealMatrix(new double[2][2]);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,78,try {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,79,solver.solve(b);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,80,"Assert.fail(""an exception should have been thrown"");"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,81,} catch (MathIllegalArgumentException iae) {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,82,// expected behavior
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,84,try {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,85,solver.solve(b.getColumnVector(0));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,86,"Assert.fail(""an exception should have been thrown"");"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,87,} catch (MathIllegalArgumentException iae) {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,88,// expected behavior
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,92,/** test solve rank errors */
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,93,@Test
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,94,public void testSolveRankErrors() throws ConvergenceException {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,95,DecompositionSolver solver =
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,96,new PivotingQRDecomposition(MatrixUtils.createRealMatrix(testData3x3Singular)).getSolver();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,97,RealMatrix b = MatrixUtils.createRealMatrix(new double[3][2]);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,98,try {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,99,solver.solve(b);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,100,"Assert.fail(""an exception should have been thrown"");"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,101,} catch (SingularMatrixException iae) {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,102,// expected behavior
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,104,try {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,105,solver.solve(b.getColumnVector(0));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,106,"Assert.fail(""an exception should have been thrown"");"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,107,} catch (SingularMatrixException iae) {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,108,// expected behavior
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,112,/** test solve */
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,113,@Test
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,114,public void testSolve() throws ConvergenceException {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,115,PivotingQRDecomposition decomposition =
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,116,new PivotingQRDecomposition(MatrixUtils.createRealMatrix(testData3x3NonSingular));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,117,DecompositionSolver solver = decomposition.getSolver();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,118,RealMatrix b = MatrixUtils.createRealMatrix(new double[][] {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,119,"{ -102, 12250 }, { 544, 24500 }, { 167, -36750 }"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,122,RealMatrix xRef = MatrixUtils.createRealMatrix(new double[][] {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,123,"{ 1, 2515 }, { 2, 422 }, { -3, 898 }"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,126,// using RealMatrix
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,127,"Assert.assertEquals(0, solver.solve(b).subtract(xRef).getNorm(), 2.0e-14 * xRef.getNorm());"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,129,// using ArrayRealVector
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,130,for (int i = 0; i < b.getColumnDimension(); ++i) {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,131,final RealVector x = solver.solve(b.getColumnVector(i));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,132,final double error = x.subtract(xRef.getColumnVector(i)).getNorm();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,133,"Assert.assertEquals(0, error, 3.0e-14 * xRef.getColumnVector(i).getNorm());"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,136,// using RealVector with an alternate implementation
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,137,for (int i = 0; i < b.getColumnDimension(); ++i) {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,138,ArrayRealVectorTest.RealVectorTestImpl v =
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,139,new ArrayRealVectorTest.RealVectorTestImpl(b.getColumn(i));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,140,final RealVector x = solver.solve(v);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,141,final double error = x.subtract(xRef.getColumnVector(i)).getNorm();
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,142,"Assert.assertEquals(0, error, 3.0e-14 * xRef.getColumnVector(i).getNorm());"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,147,@Test
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,148,public void testOverdetermined() throws ConvergenceException {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,149,final Random r    = new Random(5559252868205245l);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,150,int          p    = (7 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,151,int          q    = (5 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,152,"RealMatrix   a    = createTestMatrix(r, p, q);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,153,"RealMatrix   xRef = createTestMatrix(r, q, BlockRealMatrix.BLOCK_SIZE + 3);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,155,// build a perturbed system: A.X + noise = B
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,156,RealMatrix b = a.multiply(xRef);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,157,final double noise = 0.001;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,158,b.walkInOptimizedOrder(new DefaultRealMatrixChangingVisitor() {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,159,@Override
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,160,"public double visit(int row, int column, double value) {"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,161,return value * (1.0 + noise * (2 * r.nextDouble() - 1));
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,165,"// despite perturbation, the least square solution should be pretty good"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,166,RealMatrix x = new PivotingQRDecomposition(a).getSolver().solve(b);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,167,"Assert.assertEquals(0, x.subtract(xRef).getNorm(), 0.01 * noise * p * q);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,171,@Test
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,172,public void testUnderdetermined() throws ConvergenceException {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,173,final Random r    = new Random(42185006424567123l);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,174,int          p    = (5 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,175,int          q    = (7 * BlockRealMatrix.BLOCK_SIZE) / 4;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,176,"RealMatrix   a    = createTestMatrix(r, p, q);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,177,"RealMatrix   xRef = createTestMatrix(r, q, BlockRealMatrix.BLOCK_SIZE + 3);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,178,RealMatrix   b    = a.multiply(xRef);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,179,PivotingQRDecomposition pqr = new PivotingQRDecomposition(a);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,180,RealMatrix   x = pqr.getSolver().solve(b);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,181,Assert.assertTrue(x.subtract(xRef).getNorm() / (p * q) > 0.01);
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,182,int count=0;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,183,for( int i = 0 ; i < q; i++){
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,184,if(  x.getRowVector(i).getNorm() == 0.0 ){
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,185,++count;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,188,"Assert.assertEquals(""Zeroed rows"", q-p, count);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,191,"private RealMatrix createTestMatrix(final Random r, final int rows, final int columns) {"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,192,"RealMatrix m = MatrixUtils.createRealMatrix(rows, columns);"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,193,m.walkInOptimizedOrder(new DefaultRealMatrixChangingVisitor() {
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,194,@Override
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,195,"public double visit(int row, int column, double value) {"
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,196,return 2.0 * r.nextDouble() - 1.0;
+True,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,src/test/java/org/apache/commons/math/linear/PivotingQRSolverTest.java,199,return m;

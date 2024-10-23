@@ -1,0 +1,78 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,32,import org.apache.commons.math3.exception.NoDataException;
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1357,* Calculates the convolution between two sequences.
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1358,* <p>
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1359,"* The solution is obtained via straightforward computation of the convolution sum (and not via FFT; for longer sequences,"
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1360,* the performance of this method might be inferior to an FFT-based implementation).
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1362,* @param x the first sequence (double array of length {@code N}); the sequence is assumed to be zero elsewhere
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1363,"*   (i.e. {x[i]}=0 for i<0 and i>={@code N}). Typically, this sequence will represent an input signal to a system."
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1364,* @param h the second sequence (double array of length {@code M}); the sequence is assumed to be zero elsewhere
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1365,"*   (i.e. {h[i]}=0 for i<0 and i>={@code M}). Typically, this sequence will represent the impulse response of the system."
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1366,* @return the convolution of {@code x} and {@code h} (double array of length {@code N} + {@code M} -1)
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1367,* @throws NullArgumentException if either {@code x} or {@code h} is null
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1368,* @throws NoDataException if either {@code x} or {@code h} is empty
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1370,"* @see <a href=""http://en.wikipedia.org/wiki/Convolution"">Convolution (Wikipedia)</a>"
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1371,* @since 4.0
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1373,"public static double[] convolve(double[] x, double[] h) throws NullArgumentException, NoDataException {"
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1374,MathUtils.checkNotNull(x);
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1375,MathUtils.checkNotNull(h);
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1377,final int N = x.length;
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1378,final int M = h.length;
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1380,if (N == 0 || M == 0) {
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1381,throw new NoDataException();
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1384,// initialize the output array
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1385,final int totalLength = N + M - 1;
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1386,final double[] y = new double[totalLength];
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1388,// straightforward implementation of the convolution sum
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1389,for (int n = 0; n < totalLength; n++) {
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1390,double yn = 0;
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1391,for (int k = 0; k < M; k++) {
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1392,final int j = n - k;
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1393,if ((j > -1) && (j < N) ) {
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1394,yn = yn + x[j] * h[k];
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1397,y[n] = yn;
+True,src/main/java/org/apache/commons/math3/util/MathArrays.java,src/main/java/org/apache/commons/math3/util/MathArrays.java,1400,return y;
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,16,import static org.junit.Assert.fail;
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,24,import org.apache.commons.math3.exception.NoDataException;
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,840,@Test
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,841,public void testConvolve() {
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,842,/* Test Case (obtained via SciPy)
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,843,"* x=[1.2,-1.8,1.4]"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,844,"* h=[1,0.8,0.5,0.3]"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,845,"* convolve(x,h) -> array([ 1.2 , -0.84,  0.56,  0.58,  0.16,  0.42])"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,847,"double[] x1 = { 1.2, -1.8, 1.4 };"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,848,"double[] h1 = { 1, 0.8, 0.5, 0.3 };"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,849,"double[] y1 = { 1.2, -0.84, 0.56, 0.58, 0.16, 0.42 };"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,850,double tolerance = 1e-13;
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,852,"double[] yActual = MathArrays.convolve(x1, h1);"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,853,"Assert.assertArrayEquals(y1, yActual, tolerance);"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,855,"double[] x2 = { 1, 2, 3 };"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,856,"double[] h2 = { 0, 1, 0.5 };"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,857,"double[] y2 = { 0, 1, 2.5, 4, 1.5 };"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,859,"yActual = MathArrays.convolve(x2, h2);"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,860,"Assert.assertArrayEquals(y2, yActual, tolerance);"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,862,try {
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,863,"MathArrays.convolve(new double[]{1, 2}, null);"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,864,"fail(""an exception should have been thrown"");"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,865,} catch (NullArgumentException e) {
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,866,// expected behavior
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,869,try {
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,870,"MathArrays.convolve(null, new double[]{1, 2});"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,871,"fail(""an exception should have been thrown"");"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,872,} catch (NullArgumentException e) {
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,873,// expected behavior
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,876,try {
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,877,"MathArrays.convolve(new double[]{1, 2}, new double[]{});"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,878,"fail(""an exception should have been thrown"");"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,879,} catch (NoDataException e) {
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,880,// expected behavior
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,883,try {
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,884,"MathArrays.convolve(new double[]{}, new double[]{1, 2});"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,885,"fail(""an exception should have been thrown"");"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,886,} catch (NoDataException e) {
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,887,// expected behavior
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,890,try {
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,891,"MathArrays.convolve(new double[]{}, new double[]{});"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,892,"fail(""an exception should have been thrown"");"
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,893,} catch (NoDataException e) {
+True,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,src/test/java/org/apache/commons/math3/util/MathArraysTest.java,894,// expected behavior

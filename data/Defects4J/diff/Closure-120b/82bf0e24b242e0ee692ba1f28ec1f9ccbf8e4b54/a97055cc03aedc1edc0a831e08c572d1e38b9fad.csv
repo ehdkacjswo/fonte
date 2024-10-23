@@ -1,0 +1,505 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,19,import com.google.common.annotations.VisibleForTesting;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,42,"* A PerformanceTracker collects statistics about the runtime of each pass, and"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,43,"* how much a pass impacts the size of the compiled output, before and after"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,44,* gzip.
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,49,private static final int DEFAULT_WHEN_SIZE_UNTRACKED = -1;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,52,rivate int initCodeSize = -1;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,53,rivate int initGzCodeSize = -1;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,59,private int initCodeSize = DEFAULT_WHEN_SIZE_UNTRACKED;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,60,private int initGzCodeSize = DEFAULT_WHEN_SIZE_UNTRACKED;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,65,rivate int codeSize = -1;  // estimate
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,66,rivate int gzCodeSize = -1;  // estimate
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,67,rivate int diff = 0;  // estimate
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,68,rivate int gzDiff = 0;  // estimate
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,72,private int codeSize = DEFAULT_WHEN_SIZE_UNTRACKED;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,73,private int gzCodeSize = DEFAULT_WHEN_SIZE_UNTRACKED;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,74,private int diff = 0;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,75,private int gzDiff = 0;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,76,"rivate ImmutableMap<String, Stats> summaryCopy = null;"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,83,"private ImmutableMap<String, Stats> summaryCopy;"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,81,"** For each pass, keep track of the runtime, the size changes, etc */"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,82,ublic static class Stats {
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,83,"tats(String pass, boolean iot) {"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,84,his.pass = pass;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,85,his.isOneTime = iot;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,87,ublic final String pass;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,88,ublic final boolean isOneTime;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,89,ublic long runtime = 0;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,90,ublic int runs = 0;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,91,ublic int changes = 0;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,92,ublic int diff = 0;  // estimate
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,93,ublic int gzDiff = 0;  // estimate
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,94,ublic int size;  // estimate
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,95,ublic int gzSize;  // estimate
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,118,hrow new UnsupportedOperationException();
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,108,throw new IllegalArgumentException(
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,109,"""PerformanceTracker can't work without tracer data."");"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,118,Preconditions.checkState(summaryCopy == null);
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,132, Record that a pass has stopped.
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,124,"* Collects information about a pass P after P finishes running, eg, how much"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,125,* time P took and what was its impact on code size.
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,134, @param passName Short name of the pass.
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,135, @param result Execution time.
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,127,* @param passName short name of the pass
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,128,* @param runtime execution time in milliseconds
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,137,"oid recordPassStop(String passName, long result) {"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,130,"void recordPassStop(String passName, long runtime) {"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,131,Preconditions.checkState(summaryCopy == null);
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,139,f (!passName.equals(logStats.pass)) {
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,140,"hrow new RuntimeException(passName + "" is not running."");"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,133,Preconditions.checkState(passName.equals(logStats.pass));
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,162,ogStats.runtime = result;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,154,logStats.runtime = runtime;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,164,ummaryStats.runtime += result;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,156,summaryStats.runtime += runtime;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,206,"ublic ImmutableMap<String, Stats> getStats() {"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,198,@VisibleForTesting
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,199,int getChanges() {
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,208,eturn summaryCopy;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,201,return changes;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,211,"lass CmpEntries implements Comparator<Entry<String, Stats>> {"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,212,Override
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,213,"ublic int compare(Entry<String, Stats> e1, Entry<String, Stats> e2) {"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,214,eturn (int) (e1.getValue().runtime - e2.getValue().runtime);
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,204,@VisibleForTesting
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,205,int getLoopChanges() {
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,206,calcTotalStats();
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,207,return loopChanges;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,210,@VisibleForTesting
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,211,int getRuns() {
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,212,calcTotalStats();
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,213,return runs;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,216,@VisibleForTesting
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,217,int getLoopRuns() {
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,218,calcTotalStats();
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,219,return loopRuns;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,222,"public ImmutableMap<String, Stats> getStats() {"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,223,calcTotalStats();
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,224,return summaryCopy;
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,237,reconditions.checkState(!trackGzSize ||
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,238,nitGzCodeSize == gzDiff + gzCodeSize);
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,246,Preconditions.checkState(!trackGzSize
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,247,|| initGzCodeSize == gzDiff + gzCodeSize);
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,251,"* Prints a summary, which contains aggregate stats for all runs of each pass"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,252,"* and a log, which contains stats for each individual run."
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,247,"rrayList<Entry<String, Stats>> a = new ArrayList<Entry<String, Stats>>();"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,260,"ArrayList<Entry<String, Stats>> statEntries = Lists.newArrayList();"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,249,.add(entry);
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,262,statEntries.add(entry);
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,251,"ollections.sort(a, new CmpEntries());"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,264,"Collections.sort(statEntries,"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,265,"new Comparator<Entry<String, Stats>>() {"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,266,@Override
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,267,public int compare(
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,268,"Entry<String, Stats> e1, Entry<String, Stats> e2) {"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,269,return (int) (e1.getValue().runtime - e2.getValue().runtime);
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,255,"or (Entry<String, Stats> entry : a) {"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,275,"for (Entry<String, Stats> entry : statEntries) {"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,258,"utput.write(key + "","" +"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,259,"tring.valueOf(stats.runtime) + "","" +"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,260,"tring.valueOf(stats.runs) + "","" +"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,261,"tring.valueOf(stats.changes) + "","" +"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,262,"tring.valueOf(stats.diff) + "","" +"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,263,"tring.valueOf(stats.gzDiff) + ""\n"");"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,278,"output.write(String.format(""%s,%d,%d,%d,%d,%d\n"", key, stats.runtime,"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,279,"stats.runs, stats.changes, stats.diff, stats.gzDiff));"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,280,"utput.write(stats.pass + "","" +"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,281,"tring.valueOf(stats.runtime) + "","" +"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,282,"tring.valueOf(stats.runs) + "","" +"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,283,"tring.valueOf(stats.changes) + "","" +"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,284,"tring.valueOf(stats.diff) + "","" +"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,285,"tring.valueOf(stats.gzDiff) + "","" +"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,286,"tring.valueOf(stats.size) + "","" +"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,287,"tring.valueOf(stats.gzSize) + ""\n"");"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,296,"output.write(String.format(""%s,%d,%d,%d,%d,%d,%d,%d\n"","
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,297,"stats.pass, stats.runtime, stats.runs, stats.changes,"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,298,"stats.diff, stats.gzDiff, stats.size, stats.gzSize));"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,292,.printStackTrace();
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,303,"throw new RuntimeException(""Failed to write statistics to output."", e);"
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,297, Purely use to get a code size estimate and not generate any code at all.
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,308,"* A Stats object contains statistics about a pass run, such as running time,"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,309,"* size changes, etc"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,311,public static class Stats {
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,312,"Stats(String pass, boolean iot) {"
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,313,this.pass = pass;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,314,this.isOneTime = iot;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,316,public final String pass;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,317,public final boolean isOneTime;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,318,public long runtime = 0;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,319,public int runs = 0;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,320,public int changes = 0;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,321,public int diff = 0;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,322,public int gzDiff = 0;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,323,public int size;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,324,public int gzSize;
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,327,/** An object to get a gzsize estimate; it doesn't generate code. */
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,27,mport java.util.HashSet;
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,34, Optimizes the order of compiler passes.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,33,* An object that optimizes the order of compiler passes.
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,40,/ NOTE(user): There used to be some code that tried various orderings of
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,41,/ loopable passes and picked the fastest one. This code became stale
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,42,/ gradually and I decided to remove it. It was also never tried after the
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,43,/ new pass scheduler was written. If we need to revisit this order in the
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,44,"/ future, we should write new code to do it."
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,45,VisibleForTesting
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,46,tatic final List<String> OPTIMAL_ORDER = ImmutableList.of(
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,47,"deadAssignmentsElimination"","
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,48,"inlineFunctions"","
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,49,"removeUnusedPrototypeProperties"","
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,50,"removeUnreachableCode"","
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,51,"removeUnusedVars"","
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,52,"minimizeExitPoints"","
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,53,"inlineVariables"","
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,54,"collapseObjectLiterals"","
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,55,"peepholeOptimizations"");"
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,57,tatic final int MAX_LOOPS = 100;
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,58,tatic final String OPTIMIZE_LOOP_ERROR =
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,59,"Fixed point loop exceeded the maximum number of iterations."";"
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,61,"/ Only used by Loop/process, but enum types can't be local"
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,62,num State {
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,63,"UN_PASSES_NOT_RUN_IN_PREV_ITER,"
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,64,UN_PASSES_THAT_CHANGED_STH_IN_PREV_ITER
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,70,rivate final List<CompilerPass> passes = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,44,private final List<CompilerPass> passes;
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,75,rivate PassFactory sanityCheck = null;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,46,private PassFactory sanityCheck;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,79,"* When processing loopable passes in order, the PhaseOptimizer can be in one"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,80,* of these two states.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,81,* <p>
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,82,"* This enum is used by Loop/process only, but enum types can't be local."
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,84,enum State {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,85,"RUN_PASSES_NOT_RUN_IN_PREV_ITER,"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,86,RUN_PASSES_THAT_CHANGED_STH_IN_PREV_ITER
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,89,// NOTE(user): There used to be some code that tried various orderings of
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,90,// loopable passes and picked the fastest one. This code became stale
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,91,// gradually and I decided to remove it. It was also never tried after the
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,92,// new pass scheduler was written. If we need to revisit this order in the
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,93,"// future, we should write new code to do it."
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,94,@VisibleForTesting
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,95,static final List<String> OPTIMAL_ORDER = ImmutableList.of(
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,96,"""deadAssignmentsElimination"","
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,97,"""inlineFunctions"","
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,98,"""removeUnusedPrototypeProperties"","
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,99,"""removeUnreachableCode"","
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,100,"""removeUnusedVars"","
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,101,"""minimizeExitPoints"","
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,102,"""inlineVariables"","
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,103,"""collapseObjectLiterals"","
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,104,"""peepholeOptimizations"");"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,106,static final int MAX_LOOPS = 100;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,107,static final String OPTIMIZE_LOOP_ERROR =
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,108,"""Fixed point loop exceeded the maximum number of iterations."";"
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,111, if progress should not be reported.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,114,*        if progress should not be reported.
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,113,"haseOptimizer(AbstractCompiler compiler, PerformanceTracker tracker,"
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,114,rogressRange progressRange) {
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,115,his.compiler = compiler;
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,116,his.jsRoot = compiler.getJsRoot();
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,116,PhaseOptimizer(
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,117,"AbstractCompiler comp, PerformanceTracker tracker, ProgressRange range) {"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,118,this.compiler = comp;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,119,this.jsRoot = comp.getJsRoot();
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,118,his.progressRange = progressRange;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,121,this.passes = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,122,this.progressRange = range;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,130,* <p>
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,135,* <p>
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,280, catch (Exception e) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,284,} catch (IllegalStateException e) {
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,288,** {@code n} is either a function or the top-level node of the AST */
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,295,// Find the top-level node in the scope.
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,324,/ This method and the next one are used so that we don't falsely report the
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,325,/ current scope as changed when reportChangeToScope is called from Compiler.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,329,* Records that the currently-running pass may report cross-scope changes.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,330,"* When this happens, we don't want to falsely report the current scope as"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,331,* changed when reportChangeToScope is called from Compiler.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,337,/** The currently-running pass won't report cross-scope changes. */
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,343,* A change handler that marks scopes as changed when reportChange is called.
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,364, Runs a set of compiler passes until they reach a fixed point.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,375,* A compound pass that contains atomic passes and runs them until they reach
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,376,* a fixed point.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,377,* <p>
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,381,@VisibleForTesting
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,399,et<NamedPass> madeChanges = new HashSet<NamedPass>();
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,412,Set<NamedPass> madeChanges = Sets.newHashSet();
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,401,et<NamedPass> runInPrevIter = new HashSet<NamedPass>();
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,402,tate s = State.RUN_PASSES_NOT_RUN_IN_PREV_ITER;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,414,Set<NamedPass> runInPrevIter = Sets.newHashSet();
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,415,State state = State.RUN_PASSES_NOT_RUN_IN_PREV_ITER;
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,413,f ((s == State.RUN_PASSES_NOT_RUN_IN_PREV_ITER &&
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,414,runInPrevIter.contains(pass)) ||
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,415,s == State.RUN_PASSES_THAT_CHANGED_STH_IN_PREV_ITER &&
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,416,adeChanges.contains(pass))) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,426,if ((state == State.RUN_PASSES_NOT_RUN_IN_PREV_ITER
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,427,&& !runInPrevIter.contains(pass))
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,428,|| (state == State.RUN_PASSES_THAT_CHANGED_STH_IN_PREV_ITER
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,429,&& madeChanges.contains(pass))) {
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,434,f (s == State.RUN_PASSES_NOT_RUN_IN_PREV_ITER) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,448,if (state == State.RUN_PASSES_NOT_RUN_IN_PREV_ITER) {
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,436, = State.RUN_PASSES_THAT_CHANGED_STH_IN_PREV_ITER;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,450,state = State.RUN_PASSES_THAT_CHANGED_STH_IN_PREV_ITER;
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,440, else if (!lastIterMadeChanges) {
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,441, = State.RUN_PASSES_NOT_RUN_IN_PREV_ITER;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,454,} else { // state == State.RUN_PASSES_THAT_CHANGED_STH_IN_PREV_ITER
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,455,if (!lastIterMadeChanges) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,456,state = State.RUN_PASSES_NOT_RUN_IN_PREV_ITER;
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,459,or (String passName : OPTIMAL_ORDER) {
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,460,or (NamedPass pass : myPasses) {
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,461,f (pass.name.equals(passName)) {
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,462,ptimalPasses.add(pass);
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,475,for (String passInOptimalOrder : OPTIMAL_ORDER) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,476,for (NamedPass loopablePass : myPasses) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,477,if (loopablePass.name.equals(passInOptimalOrder)) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,478,optimalPasses.add(loopablePass);
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,490,"* An object used when running many NamedPass loopable passes as a Loop pass,"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,491,* to keep track of how far along we are.
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,22,mport com.google.common.collect.Lists;
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,25,mport com.google.javascript.jscomp.CompilerOptions.TracerMode;
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,29,mport java.io.ByteArrayOutputStream;
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,30,mport java.io.PrintStream;
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,31,mport java.util.List;
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,32,mport java.util.regex.Pattern;
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2696,/ Checks that the summary and the log in the output of PerformanceTracker
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2697,/ have the expected number of columns
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2698,ublic void testPerfTracker() {
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2699,yteArrayOutputStream output = new ByteArrayOutputStream();
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2700,rintStream outstream = new PrintStream(output);
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2701,ompiler compiler = new Compiler(outstream);
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2702,ompilerOptions options = new CompilerOptions();
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2703,ist<SourceFile> inputs = Lists.newArrayList();
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2704,ist<SourceFile> externs = Lists.newArrayList();
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2706,ptions.setTracerMode(TracerMode.ALL);
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2707,"nputs.add(SourceFile.fromCode(""foo"", ""function fun(){}""));"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2708,"ompiler.compile(externs, inputs, options);"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2709,utstream.flush();
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2710,utstream.close();
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2711,attern p = Pattern.compile(
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2712,".*Summary:\npass,runtime,runs,changingRuns,reduction,gzReduction"" +"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2713,".*TOTAL:"" +"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2714,"\nRuntime\\(ms\\): [0-9]+"" +"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2715,"\n#Runs: [0-9]+"" +"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2716,"\n#Changing runs: [0-9]+"" +"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2717,"\n#Loopable runs: [0-9]+"" +"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2718,"\n#Changing loopable runs: [0-9]+"" +"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2719,"\nEstimated Reduction\\(bytes\\): [0-9]+"" +"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2720,"\nEstimated GzReduction\\(bytes\\): [0-9]+"" +"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2721,"\nEstimated Size\\(bytes\\): [0-9]+"" +"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2722,"\nEstimated GzSize\\(bytes\\): [0-9]+"" +"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2723,"\n\nLog:\n"" +"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2724,"pass,runtime,runs,changingRuns,reduction,gzReduction,size,gzSize.*"","
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2725,attern.DOTALL);
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2726,ssertTrue(p.matcher(output.toString()).matches());
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,40,"haseOptimizer po = new PhaseOptimizer(compiler, null, null);"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,41,o.consume(passes);
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,42,"o.setSanityCheck(new PassFactory(""sanityCheck"", false) {"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,43,Override
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,44,rotected CompilerPass create(AbstractCompiler compiler) {
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,45,eturn new SanityCheck(compiler);
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,48,ompiler.setPhaseOptimizer(po);
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,49,eturn po;
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,38,"PhaseOptimizer phaseopt = new PhaseOptimizer(compiler, null, null);"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,39,phaseopt.consume(passes);
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,40,phaseopt.setSanityCheck(
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,41,"new PassFactory(""sanityCheck"", false) {"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,42,@Override
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,43,protected CompilerPass create(AbstractCompiler compiler) {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,44,return new SanityCheck(compiler);
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,47,compiler.setPhaseOptimizer(phaseopt);
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,48,return phaseopt;
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,123,"asses.add(new PassFactory(""collapseObjectLiterals"", false) {"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,124,Override
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,125,rotected CompilerPass create(AbstractCompiler compiler) {
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,126,eturn new InlineObjectLiterals(
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,127,"ompiler, compiler.getUniqueNameIdSupplier());"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,122,passes.add(
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,123,"new PassFactory(""collapseObjectLiterals"", false) {"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,124,@Override
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,125,protected CompilerPass create(AbstractCompiler compiler) {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,126,return new InlineObjectLiterals(
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,127,"compiler, compiler.getUniqueNameIdSupplier());"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,133,"asses.add(new PassFactory(""removeUnreachableCode"", false) {"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,134,Override
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,135,rotected CompilerPass create(AbstractCompiler compiler) {
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,136,"eturn new UnreachableCodeElimination(compiler, true);"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,133,passes.add(
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,134,"new PassFactory(""removeUnreachableCode"", false) {"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,135,@Override
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,136,protected CompilerPass create(AbstractCompiler compiler) {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,137,"return new UnreachableCodeElimination(compiler, true);"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,142,"asses.add(new PassFactory(""inlineFunctions"", false) {"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,143,Override
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,144,rotected CompilerPass create(AbstractCompiler compiler) {
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,145,"eturn new InlineFunctions(compiler,"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,146,"ompiler.getUniqueNameIdSupplier(), true, true, true, true, true);"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,143,passes.add(
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,144,"new PassFactory(""inlineFunctions"", false) {"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,145,@Override
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,146,protected CompilerPass create(AbstractCompiler compiler) {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,147,return new InlineFunctions(
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,148,"compiler, compiler.getUniqueNameIdSupplier(),"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,149,"true, true, true, true, true);"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,152,"asses.add(new PassFactory(""inlineVariables"", false) {"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,153,Override
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,154,rotected CompilerPass create(AbstractCompiler compiler) {
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,155,"eturn new InlineVariables(compiler, InlineVariables.Mode.ALL, true);"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,155,passes.add(
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,156,"new PassFactory(""inlineVariables"", false) {"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,157,@Override
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,158,protected CompilerPass create(AbstractCompiler compiler) {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,159,return new InlineVariables(
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,160,"compiler, InlineVariables.Mode.ALL, true);"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,161,"asses.add(new PassFactory(""peepholeOptimizations"", false) {"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,162,Override
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,163,rotected CompilerPass create(AbstractCompiler compiler) {
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,164,inal boolean late = false;
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,165,"eturn new PeepholeOptimizationsPass(compiler,"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,166,"ew PeepholeMinimizeConditions(late),"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,167,"ew PeepholeSubstituteAlternateSyntax(late),"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,168,"ew PeepholeReplaceKnownMethods(late),"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,169,"ew PeepholeRemoveDeadCode(),"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,170,"ew PeepholeFoldConstants(late),"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,171,ew PeepholeCollectPropertyAssignments());
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,166,passes.add(
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,167,"new PassFactory(""peepholeOptimizations"", false) {"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,168,@Override
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,169,protected CompilerPass create(AbstractCompiler compiler) {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,170,final boolean late = false;
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,171,"return new PeepholeOptimizationsPass(compiler,"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,172,"new PeepholeMinimizeConditions(late),"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,173,"new PeepholeSubstituteAlternateSyntax(late),"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,174,"new PeepholeReplaceKnownMethods(late),"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,175,"new PeepholeRemoveDeadCode(),"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,176,"new PeepholeFoldConstants(late),"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,177,new PeepholeCollectPropertyAssignments());
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,177,"asses.add(new PassFactory(""removeUnusedClassProperties"", false) {"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,178,Override
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,179,rotected CompilerPass create(AbstractCompiler compiler) {
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,180,eturn new RemoveUnusedClassProperties(compiler);
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,183,passes.add(
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,184,"new PassFactory(""removeUnusedClassProperties"", false) {"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,185,@Override
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,186,protected CompilerPass create(AbstractCompiler compiler) {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,187,return new RemoveUnusedClassProperties(compiler);
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,186,"asses.add(new PassFactory(""removeUnusedVars"", false) {"
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,187,Override
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,188,rotected CompilerPass create(AbstractCompiler compiler) {
+False,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,189,"eturn new RemoveUnusedVars(compiler, false, false, false);"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,193,passes.add(
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,194,"new PassFactory(""removeUnusedVars"", false) {"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,195,@Override
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,196,protected CompilerPass create(AbstractCompiler compiler) {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,197,"return new RemoveUnusedVars(compiler, false, false, false);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,2,* Copyright 2013 The Closure Compiler Authors.
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,17,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,19,import com.google.common.collect.ImmutableMap;
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,20,import com.google.javascript.jscomp.CompilerOptions.TracerMode;
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,21,import com.google.javascript.jscomp.PerformanceTracker.Stats;
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,22,import com.google.javascript.rhino.Node;
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,23,import com.google.javascript.rhino.Token;
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,25,import junit.framework.TestCase;
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,27,import java.io.ByteArrayOutputStream;
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,28,import java.io.PrintStream;
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,29,import java.util.regex.Pattern;
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,32,* Unit tests for PerformanceTracker.
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,35,public class PerformanceTrackerTest extends TestCase {
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,36,private Node emptyScript = new Node(Token.SCRIPT);
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,38,public void testStatsCalculation() {
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,39,PerformanceTracker tracker =
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,40,"new PerformanceTracker(emptyScript, TracerMode.ALL);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,41,CodeChangeHandler handler = tracker.getCodeChangeHandler();
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,43,// It's sufficient for this test to assume that a single run of any pass
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,44,"// takes some fixed amount of time, say 5ms."
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,45,int passRuntime = 5;
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,47,"tracker.recordPassStart(""noloopA"", true);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,48,handler.reportChange();
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,49,"tracker.recordPassStop(""noloopA"", passRuntime);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,51,"tracker.recordPassStart(""noloopB"", true);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,52,handler.reportChange();
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,53,"tracker.recordPassStop(""noloopB"", passRuntime);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,55,"tracker.recordPassStart(""loopA"", false);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,56,handler.reportChange();
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,57,"tracker.recordPassStop(""loopA"", passRuntime);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,59,"tracker.recordPassStart(""loopA"", false);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,60,"tracker.recordPassStop(""loopA"", passRuntime);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,62,"tracker.recordPassStart(""noloopB"", true);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,63,handler.reportChange();
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,64,"tracker.recordPassStop(""noloopB"", passRuntime);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,66,"tracker.recordPassStart(""loopB"", false);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,67,"tracker.recordPassStop(""loopB"", passRuntime);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,69,"tracker.recordPassStart(""noloopB"", true);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,70,"tracker.recordPassStop(""noloopB"", passRuntime);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,72,int numRuns = tracker.getRuns();
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,74,"assertEquals(numRuns, 7);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,75,"assertEquals(tracker.getRuntime(), numRuns * passRuntime);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,76,"assertEquals(tracker.getLoopRuns(), 3);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,77,"assertEquals(tracker.getChanges(), 4); /* reportChange was called 4 times */"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,78,"assertEquals(tracker.getLoopChanges(), 1);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,80,"ImmutableMap<String, Stats> stats = tracker.getStats();"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,81,"Stats st = stats.get(""noloopA"");"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,82,"assertEquals(st.runs, 1);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,83,"assertEquals(st.runtime, passRuntime);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,84,"assertEquals(st.changes, 1);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,86,"st = stats.get(""noloopB"");"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,87,"assertEquals(st.runs, 3);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,88,"assertEquals(st.runtime, 3 * passRuntime);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,89,"assertEquals(st.changes, 2);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,91,"st = stats.get(""loopA"");"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,92,"assertEquals(st.runs, 2);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,93,"assertEquals(st.runtime, 2 * passRuntime);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,94,"assertEquals(st.changes, 1);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,96,"st = stats.get(""loopB"");"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,97,"assertEquals(st.runs, 1);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,98,"assertEquals(st.runtime, passRuntime);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,99,"assertEquals(st.changes, 0);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,102,public void testOutputFormat() {
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,103,PerformanceTracker tracker =
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,104,"new PerformanceTracker(emptyScript, TracerMode.ALL);"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,105,ByteArrayOutputStream output = new ByteArrayOutputStream();
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,106,PrintStream outstream = new PrintStream(output);
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,107,tracker.outputTracerReport(outstream);
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,108,outstream.flush();
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,109,outstream.close();
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,110,Pattern p = Pattern.compile(
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,111,""".*Summary:\npass,runtime,runs,changingRuns,reduction,gzReduction"" +"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,112,""".*TOTAL:"" +"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,113,"""\nRuntime\\(ms\\): [0-9]+"" +"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,114,"""\n#Runs: [0-9]+"" +"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,115,"""\n#Changing runs: [0-9]+"" +"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,116,"""\n#Loopable runs: [0-9]+"" +"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,117,"""\n#Changing loopable runs: [0-9]+"" +"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,118,"""\nEstimated Reduction\\(bytes\\): [0-9]+"" +"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,119,"""\nEstimated GzReduction\\(bytes\\): [0-9]+"" +"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,120,"""\nEstimated Size\\(bytes\\): -?[0-9]+"" +"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,121,"""\nEstimated GzSize\\(bytes\\): -?[0-9]+"" +"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,122,"""\n\nLog:\n"" +"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,123,"""pass,runtime,runs,changingRuns,reduction,gzReduction,size,gzSize.*"","
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,124,Pattern.DOTALL);
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,125,String outputString = output.toString();
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,126,"assertTrue(""Unexpected output from PerformanceTracker:\n"" + outputString,"
+True,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,test/com/google/javascript/jscomp/PerformanceTrackerTest.java,127,p.matcher(outputString).matches());
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,67,ublic void testLoop3() {
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,67,public void testSchedulingOfLoopablePasses() {
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,71,// The pass iterations can be grouped as: [x y] [x y] [x] [x] [y]
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,88,ssertTrue(e.getMessage().contains(PhaseOptimizer.OPTIMIZE_LOOP_ERROR));
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,89,"assertTrue(e.getMessage(),"
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,90,e.getMessage().contains(PhaseOptimizer.OPTIMIZE_LOOP_ERROR));
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,92,ublic void testCombined() {
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,94,public void testSchedulingOfAnyKindOfPasses1() {
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,101,ublic void testConsumption1() {
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,103,public void testSchedulingOfAnyKindOfPasses2() {
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,112,// The pass iterations can be grouped as:
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,113,// [a] [b c d] [b c d] [c] [b d] [e] [f]
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,113,ublic void testConsumption2() {
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,117,public void testSchedulingOfAnyKindOfPasses3() {
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,122,ublic void testConsumption3() {
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,126,public void testSchedulingOfAnyKindOfPasses4() {

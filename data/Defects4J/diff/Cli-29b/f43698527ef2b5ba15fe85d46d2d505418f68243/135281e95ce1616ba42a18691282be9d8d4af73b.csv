@@ -1,0 +1,477 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,2,* Licensed to the Apache Software Foundation (ASF) under one or more
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,3,* contributor license agreements.  See the NOTICE file distributed with
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,4,* this work for additional information regarding copyright ownership.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,5,"* The ASF licenses this file to You under the Apache License, Version 2.0"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,6,"* (the ""License""); you may not use this file except in compliance with"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,7,* the License.  You may obtain a copy of the License at
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,9,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,11,"* Unless required by applicable law or agreed to in writing, software"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,12,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,13,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,14,* See the License for the specific language governing permissions and
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,15,* limitations under the License.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,18,package org.apache.commons.cli;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,20,import java.util.ArrayList;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,21,import java.util.List;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,22,import java.util.Iterator;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,25,* Default parser.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,27,* @author Emmanuel Bourg
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,28,"* @version $Revision$, $Date$"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,29,* @since 1.3
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,31,public class DefaultParser implements CommandLineParser
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,33,protected CommandLine cmd;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,34,protected Options options;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,35,protected boolean stopAtNonOption;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,37,/** The token currently processed. */
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,38,protected String currentToken;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,40,/** The last option parsed. */
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,41,protected Option currentOption;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,43,/** Flag indicating if tokens should no longer be analysed and simply added as arguments of the command line. */
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,44,protected boolean skipParsing;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,46,/** The required options expected to be found when parsing the command line. */
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,47,protected List expectedOpts;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,49,"public CommandLine parse(Options options, String[] arguments) throws ParseException"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,51,"return parse(options, arguments, false);"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,54,"public CommandLine parse(Options options, String[] arguments, boolean stopAtNonOption) throws ParseException"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,56,this.options = options;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,57,this.stopAtNonOption = stopAtNonOption;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,58,skipParsing = false;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,59,currentOption = null;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,60,expectedOpts = new ArrayList(options.getRequiredOptions());
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,62,// clear the data from the groups
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,63,for (Iterator it = options.getOptionGroups().iterator(); it.hasNext();)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,65,OptionGroup group = (OptionGroup) it.next();
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,66,group.setSelected(null);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,69,cmd = new CommandLine();
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,71,if (arguments != null)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,73,for (int i = 0; i < arguments.length; i++)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,75,handleToken(arguments[i]);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,79,// check the arguments of the last option
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,80,checkRequiredArgs();
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,82,checkRequiredOptions();
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,84,return cmd;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,88,* Throws a {@link MissingOptionException} if all of the required options
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,89,* are not present.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,91,* @throws MissingOptionException if any of the required Options
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,92,* are not present.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,94,private void checkRequiredOptions() throws MissingOptionException
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,96,// if there are required options that have not been processsed
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,97,if (!expectedOpts.isEmpty())
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,99,throw new MissingOptionException(expectedOpts);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,104,* Throw a {@link MissingArgumentException} if the current option
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,105,* didn't receive the number of arguments expected.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,107,private void checkRequiredArgs() throws ParseException
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,109,if (currentOption != null && currentOption.requiresArg())
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,111,throw new MissingArgumentException(currentOption);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,116,* Handle any command line token.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,118,* @param token the command line token to handle
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,119,* @throws ParseException
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,121,private void handleToken(String token) throws ParseException
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,123,currentToken = token;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,125,if (skipParsing)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,127,cmd.addArg(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,129,"else if (""--"".equals(token))"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,131,skipParsing = true;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,133,else if (currentOption != null && currentOption.acceptsArg() && isArgument(token))
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,135,currentOption.addValueForProcessing(Util.stripLeadingAndTrailingQuotes(token));
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,137,"else if (token.startsWith(""--""))"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,139,handleLongOption(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,141,"else if (token.startsWith(""-"") && !""-"".equals(token))"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,143,handleShortAndLongOption(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,145,else
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,147,handleUnknownToken(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,150,if (currentOption != null && !currentOption.acceptsArg())
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,152,currentOption = null;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,157,* Returns true is the token is a valid argument.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,159,* @param token
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,161,private boolean isArgument(String token)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,163,return !isOption(token) || isNegativeNumber(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,167,* Check if the token is a negative number.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,169,* @param token
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,171,private boolean isNegativeNumber(String token)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,173,try
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,175,Double.parseDouble(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,176,return true;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,178,catch (NumberFormatException e)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,180,return false;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,185,* Tells if the token looks like an option.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,187,* @param token
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,189,private boolean isOption(String token)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,191,return isLongOption(token) || isShortOption(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,195,* Tells if the token looks like a short option.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,197,* @param token
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,199,private boolean isShortOption(String token)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,201,"// short options (-S, -SV, -S=V, -SV1=V2, -S1S2)"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,202,"return token.startsWith(""-"") && token.length() >= 2 && options.hasShortOption(token.substring(1, 2));"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,206,* Tells if the token looks like a long option.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,208,* @param token
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,210,private boolean isLongOption(String token)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,212,"if (!token.startsWith(""-"") || token.length() == 1)"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,214,return false;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,217,"int pos = token.indexOf(""="");"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,218,"String t = pos == -1 ? token : token.substring(0, pos);"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,220,if (!options.getMatchingOptions(t).isEmpty())
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,222,"// long or partial long options (--L, -L, --L=V, -L=V, --l, --l=V)"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,223,return true;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,225,"else if (getLongPrefix(token) != null && !token.startsWith(""--""))"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,227,// -LV
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,228,return true;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,231,return false;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,235,* Handles an unknown token. If the token starts with a dash an
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,236,* UnrecognizedOptionException is thrown. Otherwise the token is added
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,237,* to the arguments of the command line. If the stopAtNonOption flag
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,238,"* is set, this stops the parsing and the remaining tokens are added"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,239,* as-is in the arguments of the command line.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,241,* @param token the command line token to handle
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,243,private void handleUnknownToken(String token) throws ParseException
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,245,"if (token.startsWith(""-"") && token.length() > 1 && !stopAtNonOption)"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,247,"throw new UnrecognizedOptionException(""Unrecognized option: "" + token, token);"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,250,cmd.addArg(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,251,if (stopAtNonOption)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,253,skipParsing = true;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,258,* Handles the following tokens:
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,260,* --L
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,261,* --L=V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,262,* --L V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,263,* --l
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,265,* @param token the command line token to handle
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,267,private void handleLongOption(String token) throws ParseException
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,269,if (token.indexOf('=') == -1)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,271,handleLongOptionWithoutEqual(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,273,else
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,275,handleLongOptionWithEqual(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,280,* Handles the following tokens:
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,282,* --L
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,283,* -L
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,284,* --l
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,285,* -l
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,287,* @param token the command line token to handle
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,289,private void handleLongOptionWithoutEqual(String token) throws ParseException
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,291,List matchingOpts = options.getMatchingOptions(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,292,if (matchingOpts.isEmpty())
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,294,handleUnknownToken(currentToken);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,296,else if (matchingOpts.size() > 1)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,298,"throw new AmbiguousOptionException(token, matchingOpts);"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,300,else
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,302,handleOption(options.getOption((String) matchingOpts.get(0)));
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,307,* Handles the following tokens:
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,309,* --L=V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,310,* -L=V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,311,* --l=V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,312,* -l=V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,314,* @param token the command line token to handle
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,316,private void handleLongOptionWithEqual(String token) throws ParseException
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,318,int pos = token.indexOf('=');
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,320,String value = token.substring(pos + 1);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,322,"String opt = token.substring(0, pos);"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,324,List matchingOpts = options.getMatchingOptions(opt);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,325,if (matchingOpts.isEmpty())
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,327,handleUnknownToken(currentToken);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,329,else if (matchingOpts.size() > 1)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,331,"throw new AmbiguousOptionException(opt, matchingOpts);"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,333,else
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,335,Option option = options.getOption((String) matchingOpts.get(0));
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,337,if (option.acceptsArg())
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,339,handleOption(option);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,340,currentOption.addValueForProcessing(value);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,341,currentOption = null;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,343,else
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,345,handleUnknownToken(currentToken);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,351,* Handles the following tokens:
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,353,* -S
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,354,* -SV
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,355,* -S V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,356,* -S=V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,357,* -S1S2
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,358,* -S1S2 V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,359,* -SV1=V2
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,361,* -L
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,362,* -LV
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,363,* -L V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,364,* -L=V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,365,* -l
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,367,* @param token the command line token to handle
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,369,private void handleShortAndLongOption(String token) throws ParseException
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,371,String t = Util.stripLeadingHyphens(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,373,int pos = t.indexOf('=');
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,375,if (t.length() == 1)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,377,// -S
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,378,if (options.hasShortOption(t))
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,380,handleOption(options.getOption(t));
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,382,else
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,384,handleUnknownToken(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,387,else if (pos == -1)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,389,if (options.hasShortOption(t))
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,391,handleOption(options.getOption(t));
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,393,else if (!options.getMatchingOptions(t).isEmpty())
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,395,// -L or -l
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,396,handleLongOptionWithoutEqual(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,398,else
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,400,// look for a long prefix (-Xmx512m)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,401,String opt = getLongPrefix(t);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,403,if (opt != null && options.getOption(opt).acceptsArg())
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,405,handleOption(options.getOption(opt));
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,406,currentOption.addValueForProcessing(t.substring(opt.length()));
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,407,currentOption = null;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,409,else if (isJavaProperty(t))
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,411,// -SV1 (-Dflag)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,412,"handleOption(options.getOption(t.substring(0, 1)));"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,413,currentOption.addValueForProcessing(t.substring(1));
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,414,currentOption = null;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,416,else
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,418,// -S1S2S3 or -S1S2V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,419,handleConcatenatedOptions(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,423,else
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,425,"String opt = t.substring(0, pos);"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,426,String value = t.substring(pos + 1);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,428,if (opt.length() == 1)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,430,// -S=V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,431,Option option = options.getOption(opt);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,432,if (option != null && option.acceptsArg())
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,434,handleOption(option);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,435,currentOption.addValueForProcessing(value);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,436,currentOption = null;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,438,else
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,440,handleUnknownToken(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,443,else if (isJavaProperty(opt))
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,445,// -SV1=V2 (-Dkey=value)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,446,"handleOption(options.getOption(opt.substring(0, 1)));"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,447,currentOption.addValueForProcessing(opt.substring(1));
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,448,currentOption.addValueForProcessing(value);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,449,currentOption = null;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,451,else
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,453,// -L=V or -l=V
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,454,handleLongOptionWithEqual(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,460,* Search for a prefix that is the long name of an option (-Xmx512m)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,462,* @param token
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,464,private String getLongPrefix(String token)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,466,String t = Util.stripLeadingHyphens(token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,468,int i;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,469,String opt = null;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,470,for (i = t.length() - 2; i > 1; i--)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,472,"String prefix = t.substring(0, i);"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,473,if (options.hasLongOption(prefix))
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,475,opt = prefix;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,476,break;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,480,return opt;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,484,* Check if the specified token is a Java-like property (-Dkey=value).
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,486,private boolean isJavaProperty(String token)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,488,"String opt = token.substring(0, 1);"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,489,Option option = options.getOption(opt);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,491,return option != null && (option.getArgs() >= 2 || option.getArgs() == Option.UNLIMITED_VALUES);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,494,private void handleOption(Option option) throws ParseException
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,496,// check the previous option before handling the next one
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,497,checkRequiredArgs();
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,499,option = (Option) option.clone();
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,501,updateRequiredOptions(option);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,503,cmd.addOption(option);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,505,if (option.hasArg())
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,507,currentOption = option;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,509,else
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,511,currentOption = null;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,516,* Removes the option or its group from the list of expected elements.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,518,* @param option
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,520,private void updateRequiredOptions(Option option) throws AlreadySelectedException
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,522,if (option.isRequired())
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,524,expectedOpts.remove(option.getKey());
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,527,// if the option is in an OptionGroup make that option the selected option of the group
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,528,if (options.getOptionGroup(option) != null)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,530,OptionGroup group = options.getOptionGroup(option);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,532,if (group.isRequired())
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,534,expectedOpts.remove(group);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,537,group.setSelected(option);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,542,* Breaks <code>token</code> into its constituent parts
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,543,* using the following algorithm.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,545,* <ul>
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,546,"*  <li>ignore the first character (""<b>-</b>"")</li>"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,547,*  <li>foreach remaining character check if an {@link Option}
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,548,*  exists with that id.</li>
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,549,*  <li>if an {@link Option} does exist then add that character
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,550,"*  prepended with ""<b>-</b>"" to the list of processed tokens.</li>"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,551,*  <li>if the {@link Option} can have an argument value and there
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,552,*  are remaining characters in the token then add the remaining
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,553,*  characters as a token to the list of processed tokens.</li>
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,554,*  <li>if an {@link Option} does <b>NOT</b> exist <b>AND</b>
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,555,*  <code>stopAtNonOption</code> <b>IS</b> set then add the special token
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,556,"*  ""<b>--</b>"" followed by the remaining characters and also"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,557,*  the remaining tokens directly to the processed tokens list.</li>
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,558,*  <li>if an {@link Option} does <b>NOT</b> exist <b>AND</b>
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,559,*  <code>stopAtNonOption</code> <b>IS NOT</b> set then add that
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,560,"*  character prepended with ""<b>-</b>"".</li>"
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,561,* </ul>
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,563,* @param token The current token to be <b>burst</b>
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,564,* at the first non-Option encountered.
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,566,protected void handleConcatenatedOptions(String token) throws ParseException
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,568,for (int i = 1; i < token.length(); i++)
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,570,String ch = String.valueOf(token.charAt(i));
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,572,if (options.hasOption(ch))
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,574,handleOption(options.getOption(ch));
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,576,if (currentOption != null && (token.length() != (i + 1)))
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,578,// add the trail as an argument of the option
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,579,currentOption.addValueForProcessing(token.substring(i + 1));
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,580,break;
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,583,else
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,585,handleUnknownToken(stopAtNonOption && i > 1 ? token.substring(i) : token);
+True,src/java/org/apache/commons/cli/DefaultParser.java,src/java/org/apache/commons/cli/DefaultParser.java,586,break;
+False,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,468,f ((numberOfArgs > 0) && (values.size() > (numberOfArgs - 1)))
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,468,if (!acceptsArg())
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,675,* Tells if the option can accept more arguments.
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,677,* @return false if the maximum number of arguments is reached
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,678,* @since 1.3
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,680,boolean acceptsArg()
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,682,return (hasArg() || hasArgs() || hasOptionalArg()) && (numberOfArgs <= 0 || values.size() < numberOfArgs);
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,686,* Tells if the option requires more arguments to be valid.
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,688,* @return false if the option doesn't require more arguments
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,689,* @since 1.3
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,691,boolean requiresArg()
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,693,if (optionalArg)
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,695,return false;
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,697,if (numberOfArgs == UNLIMITED_VALUES)
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,699,return values.size() < 1;
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,701,else
+True,src/java/org/apache/commons/cli/Option.java,src/java/org/apache/commons/cli/Option.java,703,return acceptsArg();
+False,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,246, @return true if the named {@link Option} is a member
+False,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,247, of this {@link Options}
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,246,* @return true if the named {@link Option} is a member of this {@link Options}
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,256,* Returns whether the named {@link Option} is a member of this {@link Options}.
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,258,* @param opt long name of the {@link Option}
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,259,* @return true if the named {@link Option} is a member of this {@link Options}
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,260,* @since 1.3
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,262,public boolean hasLongOption(String opt)
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,264,opt = Util.stripLeadingHyphens(opt);
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,266,return longOpts.containsKey(opt);
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,270,* Returns whether the named {@link Option} is a member of this {@link Options}.
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,272,* @param opt short name of the {@link Option}
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,273,* @return true if the named {@link Option} is a member of this {@link Options}
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,274,* @since 1.3
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,276,public boolean hasShortOption(String opt)
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,278,opt = Util.stripLeadingHyphens(opt);
+True,src/java/org/apache/commons/cli/Options.java,src/java/org/apache/commons/cli/Options.java,280,return shortOpts.containsKey(opt);
+True,src/test/org/apache/commons/cli/BasicParserTest.java,src/test/org/apache/commons/cli/BasicParserTest.java,32,public void testDoubleDash2() throws Exception
+True,src/test/org/apache/commons/cli/BasicParserTest.java,src/test/org/apache/commons/cli/BasicParserTest.java,34,// not supported by the BasicParser
+True,src/test/org/apache/commons/cli/BasicParserTest.java,src/test/org/apache/commons/cli/BasicParserTest.java,37,public void testLongWithoutEqualSingleDash() throws Exception
+True,src/test/org/apache/commons/cli/BasicParserTest.java,src/test/org/apache/commons/cli/BasicParserTest.java,39,// not supported by the BasicParser
+True,src/test/org/apache/commons/cli/BasicParserTest.java,src/test/org/apache/commons/cli/BasicParserTest.java,42,public void testAmbiguousLongWithoutEqualSingleDash() throws Exception
+True,src/test/org/apache/commons/cli/BasicParserTest.java,src/test/org/apache/commons/cli/BasicParserTest.java,44,// not supported by the basicParser
+True,src/test/org/apache/commons/cli/BasicParserTest.java,src/test/org/apache/commons/cli/BasicParserTest.java,47,public void testNegativeOption() throws Exception
+True,src/test/org/apache/commons/cli/BasicParserTest.java,src/test/org/apache/commons/cli/BasicParserTest.java,49,// not supported by the BasicParser (CLI-184)
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,2,* Licensed to the Apache Software Foundation (ASF) under one or more
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,3,* contributor license agreements.  See the NOTICE file distributed with
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,4,* this work for additional information regarding copyright ownership.
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,5,"* The ASF licenses this file to You under the Apache License, Version 2.0"
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,6,"* (the ""License""); you may not use this file except in compliance with"
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,7,* the License.  You may obtain a copy of the License at
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,9,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,11,"* Unless required by applicable law or agreed to in writing, software"
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,12,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,13,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,14,* See the License for the specific language governing permissions and
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,15,* limitations under the License.
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,18,package org.apache.commons.cli;
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,21,* @author Emmanuel Bourg
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,22,"* @version $Revision$, $Date$"
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,24,public class DefaultParserTest extends ParserTestCase {
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,26,public void setUp() {
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,27,super.setUp();
+True,src/test/org/apache/commons/cli/DefaultParserTest.java,src/test/org/apache/commons/cli/DefaultParserTest.java,28,parser = new DefaultParser();
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,28,public void testDoubleDash2() throws Exception
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,30,// not supported by the GnuParser
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,33,public void testLongWithoutEqualSingleDash() throws Exception
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,35,// not supported by the GnuParser
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,38,public void testAmbiguousLongWithoutEqualSingleDash() throws Exception
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,40,// not supported by the GnuParser
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,43,public void testNegativeOption() throws Exception
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,45,// not supported by the GnuParser (CLI-184)
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,48,public void testLongWithUnexpectedArgument1() throws Exception
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,50,// not supported by the GnuParser
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,53,public void testLongWithUnexpectedArgument2() throws Exception
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,55,// not supported by the GnuParser
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,58,public void testShortWithUnexpectedArgument() throws Exception
+True,src/test/org/apache/commons/cli/GnuParserTest.java,src/test/org/apache/commons/cli/GnuParserTest.java,60,// not supported by the GnuParser
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,160,public void testDoubleDash2() throws Exception
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,162,Options options = new Options();
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,163,options.addOption(OptionBuilder.hasArg().create('n'));
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,164,options.addOption(OptionBuilder.create('m'));
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,166,try
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,168,"parser.parse(options, new String[]{""-n"", ""--"", ""-m""});"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,169,"fail(""MissingArgumentException not thrown for option -n"");"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,171,catch (MissingArgumentException e)
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,173,"assertNotNull(""option null"", e.getOption());"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,174,"assertEquals(""n"", e.getOption().getOpt());"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,249,public void testNegativeOption() throws Exception
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,251,"String[] args = new String[] { ""-b"", ""-1""} ;"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,253,"options.addOption(""1"", false, null);"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,255,"CommandLine cl = parser.parse(options, args);"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,256,"assertEquals(""-1"", cl.getOptionValue(""b""));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,315,public void testLongWithoutEqualSingleDash() throws Exception
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,317,"String[] args = new String[] { ""-foobar"" };"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,319,Options options = new Options();
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,320,"options.addOption(OptionBuilder.withLongOpt(""foo"").hasArg().create('f'));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,322,"CommandLine cl = parser.parse(options, args);"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,324,"assertEquals(""bar"", cl.getOptionValue(""foo""));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,327,public void testAmbiguousLongWithoutEqualSingleDash() throws Exception
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,329,"String[] args = new String[] { ""-b"", ""-foobar"" };"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,331,Options options = new Options();
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,332,"options.addOption(OptionBuilder.withLongOpt(""foo"").hasOptionalArg().create('f'));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,333,"options.addOption(OptionBuilder.withLongOpt(""bar"").hasOptionalArg().create('b'));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,335,"CommandLine cl = parser.parse(options, args);"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,337,"assertTrue(cl.hasOption(""b""));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,338,"assertTrue(cl.hasOption(""f""));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,339,"assertEquals(""bar"", cl.getOptionValue(""foo""));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,342,public void testLongWithoutEqualDoubleDash() throws Exception
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,344,"String[] args = new String[] { ""--foobar"" };"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,346,Options options = new Options();
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,347,"options.addOption(OptionBuilder.withLongOpt(""foo"").hasArg().create('f'));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,349,"CommandLine cl = parser.parse(options, args, true);"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,351,"assertFalse(cl.hasOption(""foo"")); // foo isn't expected to be recognized with a double dash"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,354,public void testLongWithUnexpectedArgument1() throws Exception
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,356,"String[] args = new String[] { ""--foo=bar"" };"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,358,Options options = new Options();
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,359,"options.addOption(OptionBuilder.withLongOpt(""foo"").create('f'));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,361,try
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,363,"parser.parse(options, args);"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,365,catch (UnrecognizedOptionException e)
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,367,"assertEquals(""--foo=bar"", e.getOption());"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,368,return;
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,371,"fail(""UnrecognizedOptionException not thrown"");"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,374,public void testLongWithUnexpectedArgument2() throws Exception
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,376,"String[] args = new String[] { ""-foobar"" };"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,378,Options options = new Options();
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,379,"options.addOption(OptionBuilder.withLongOpt(""foo"").create('f'));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,381,try
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,383,"parser.parse(options, args);"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,385,catch (UnrecognizedOptionException e)
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,387,"assertEquals(""-foobar"", e.getOption());"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,388,return;
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,391,"fail(""UnrecognizedOptionException not thrown"");"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,394,public void testShortWithUnexpectedArgument() throws Exception
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,396,"String[] args = new String[] { ""-f=bar"" };"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,398,Options options = new Options();
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,399,"options.addOption(OptionBuilder.withLongOpt(""foo"").create('f'));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,401,try
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,403,"parser.parse(options, args);"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,405,catch (UnrecognizedOptionException e)
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,407,"assertEquals(""-f=bar"", e.getOption());"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,408,return;
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,411,"fail(""UnrecognizedOptionException not thrown"");"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,857,public void testUnlimitedArgs() throws Exception
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,859,"String[] args = new String[]{""-e"", ""one"", ""two"", ""-f"", ""alpha""};"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,861,Options options = new Options();
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,862,"options.addOption(OptionBuilder.hasArgs().create(""e""));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,863,"options.addOption(OptionBuilder.hasArgs().create(""f""));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,865,"CommandLine cl = parser.parse(options, args);"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,867,"assertTrue(""Confirm -e is set"", cl.hasOption(""e""));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,868,"assertEquals(""number of arg for -e"", 2, cl.getOptionValues(""e"").length);"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,869,"assertTrue(""Confirm -f is set"", cl.hasOption(""f""));"
+True,src/test/org/apache/commons/cli/ParserTestCase.java,src/test/org/apache/commons/cli/ParserTestCase.java,870,"assertEquals(""number of arg for -f"", 1, cl.getOptionValues(""f"").length);"
+True,src/test/org/apache/commons/cli/PosixParserTest.java,src/test/org/apache/commons/cli/PosixParserTest.java,33,public void testDoubleDash2() throws Exception
+True,src/test/org/apache/commons/cli/PosixParserTest.java,src/test/org/apache/commons/cli/PosixParserTest.java,35,// not supported by the PosixParser
+True,src/test/org/apache/commons/cli/PosixParserTest.java,src/test/org/apache/commons/cli/PosixParserTest.java,38,public void testLongWithoutEqualSingleDash() throws Exception
+True,src/test/org/apache/commons/cli/PosixParserTest.java,src/test/org/apache/commons/cli/PosixParserTest.java,40,// not supported by the PosixParser
+True,src/test/org/apache/commons/cli/PosixParserTest.java,src/test/org/apache/commons/cli/PosixParserTest.java,43,public void testAmbiguousLongWithoutEqualSingleDash() throws Exception
+True,src/test/org/apache/commons/cli/PosixParserTest.java,src/test/org/apache/commons/cli/PosixParserTest.java,45,// not supported by the PosixParser
+True,src/test/org/apache/commons/cli/PosixParserTest.java,src/test/org/apache/commons/cli/PosixParserTest.java,48,public void testNegativeOption() throws Exception
+True,src/test/org/apache/commons/cli/PosixParserTest.java,src/test/org/apache/commons/cli/PosixParserTest.java,50,// not supported by the PosixParser (CLI-184)
+True,src/test/org/apache/commons/cli/PosixParserTest.java,src/test/org/apache/commons/cli/PosixParserTest.java,53,public void testLongWithUnexpectedArgument1() throws Exception
+True,src/test/org/apache/commons/cli/PosixParserTest.java,src/test/org/apache/commons/cli/PosixParserTest.java,55,// not supported by the PosixParser

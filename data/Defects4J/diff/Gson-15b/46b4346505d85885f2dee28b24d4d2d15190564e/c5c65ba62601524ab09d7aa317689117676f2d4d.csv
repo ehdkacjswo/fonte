@@ -1,0 +1,1129 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,2,* Copyright (C) 2010 Google Inc.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,5,* you may not use this file except in compliance with the License.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,6,* You may obtain a copy of the License at
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,8,*      http://www.apache.org/licenses/LICENSE-2.0
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,13,* See the License for the specific language governing permissions and
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,14,* limitations under the License.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,17,package com.google.gson.stream;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,19,import java.io.Closeable;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,20,import java.io.EOFException;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,21,import java.io.IOException;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,22,import java.io.Reader;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,25,"* Reads a JSON (<a href=""http://www.ietf.org/rfc/rfc4627.txt"">RFC 4627</a>)"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,26,* encoded value as a stream of tokens. This stream includes both literal
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,27,"* values (strings, numbers, booleans, and nulls) as well as the begin and"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,28,* end delimiters of objects and arrays. The tokens are traversed in
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,29,"* depth-first order, the same order that they appear in the JSON document."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,30,"* Within JSON objects, name/value pairs are represented by a single token."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,32,* <h3>Parsing JSON</h3>
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,33,"* To create a recursive descent parser for your own JSON streams, first create"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,34,* an entry point method that creates a {@code JsonReader}.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,36,"* <p>Next, create handler methods for each structure in your JSON text. You'll"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,37,* need a method for each object type and for each array type.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,38,* <ul>
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,39,"*   <li>Within <strong>array handling</strong> methods, first call {@link"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,40,*       #beginArray} to consume the array's opening bracket. Then create a
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,41,"*       while loop that accumulates values, terminating when {@link #hasNext}"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,42,"*       is false. Finally, read the array's closing bracket by calling {@link"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,43,*       #endArray}.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,44,"*   <li>Within <strong>object handling</strong> methods, first call {@link"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,45,*       #beginObject} to consume the object's opening brace. Then create a
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,46,*       while loop that assigns values to local variables based on their name.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,47,"*       This loop should terminate when {@link #hasNext} is false. Finally,"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,48,*       read the object's closing brace by calling {@link #endObject}.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,49,* </ul>
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,50,"* <p>When a nested object or array is encountered, delegate to the"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,51,* corresponding handler method.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,53,"* <p>When an unknown name is encountered, strict parsers should fail with an"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,54,* exception. Lenient parsers should call {@link #skipValue()} to recursively
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,55,"* skip the value's nested tokens, which may otherwise conflict."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,57,"* <p>If a value may be null, you should first check using {@link #peek()}."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,58,* Null literals can be consumed using either {@link #nextNull()} or {@link
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,59,* #skipValue()}.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,61,* <h3>Example</h3>
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,62,* Suppose we'd like to parse a stream of messages such as the following: <pre> {@code
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,65,"*     ""id"": 912345678901,"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,66,"*     ""text"": ""How do I read a JSON stream in Java?"","
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,67,"*     ""geo"": null,"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,68,"*     ""user"": {"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,69,"*       ""name"": ""json_newb"","
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,70,"*       ""followers_count"": 41"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,74,"*     ""id"": 912345678902,"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,75,"*     ""text"": ""@json_newb just use JsonReader!"","
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,76,"*     ""geo"": [50.454722, -104.606667],"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,77,"*     ""user"": {"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,78,"*       ""name"": ""jesse"","
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,79,"*       ""followers_count"": 2"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,82,* ]}</pre>
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,83,* This code implements the parser for the above structure: <pre>   {@code
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,85,*   public List<Message> readJsonStream(InputStream in) throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,86,"*     JsonReader reader = new JsonReader(new InputStreamReader(in, ""UTF-8""));"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,87,*     try {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,88,*       return readMessagesArray(reader);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,89,*     } finally {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,90,*       reader.close();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,94,*   public List<Message> readMessagesArray(JsonReader reader) throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,95,*     List<Message> messages = new ArrayList<Message>();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,97,*     reader.beginArray();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,98,*     while (reader.hasNext()) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,99,*       messages.add(readMessage(reader));
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,101,*     reader.endArray();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,102,*     return messages;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,105,*   public Message readMessage(JsonReader reader) throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,106,*     long id = -1;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,107,*     String text = null;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,108,*     User user = null;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,109,*     List<Double> geo = null;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,111,*     reader.beginObject();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,112,*     while (reader.hasNext()) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,113,*       String name = reader.nextName();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,114,"*       if (name.equals(""id"")) {"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,115,*         id = reader.nextLong();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,116,"*       } else if (name.equals(""text"")) {"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,117,*         text = reader.nextString();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,118,"*       } else if (name.equals(""geo"") && reader.peek() != JsonToken.NULL) {"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,119,*         geo = readDoublesArray(reader);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,120,"*       } else if (name.equals(""user"")) {"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,121,*         user = readUser(reader);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,122,*       } else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,123,*         reader.skipValue();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,126,*     reader.endObject();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,127,"*     return new Message(id, text, user, geo);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,130,*   public List<Double> readDoublesArray(JsonReader reader) throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,131,*     List<Double> doubles = new ArrayList<Double>();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,133,*     reader.beginArray();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,134,*     while (reader.hasNext()) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,135,*       doubles.add(reader.nextDouble());
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,137,*     reader.endArray();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,138,*     return doubles;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,141,*   public User readUser(JsonReader reader) throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,142,*     String username = null;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,143,*     int followersCount = -1;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,145,*     reader.beginObject();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,146,*     while (reader.hasNext()) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,147,*       String name = reader.nextName();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,148,"*       if (name.equals(""name"")) {"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,149,*         username = reader.nextString();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,150,"*       } else if (name.equals(""followers_count"")) {"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,151,*         followersCount = reader.nextInt();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,152,*       } else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,153,*         reader.skipValue();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,156,*     reader.endObject();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,157,"*     return new User(username, followersCount);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,158,*   }}</pre>
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,160,* <h3>Number Handling</h3>
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,161,* This reader permits numeric values to be read as strings and string values to
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,162,"* be read as numbers. For example, both elements of the JSON array {@code"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,163,"* [1, ""1""]} may be read using either {@link #nextInt} or {@link #nextString}."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,164,* This behavior is intended to prevent lossy numeric conversions: double is
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,165,* JavaScript's only numeric type and very large values like {@code
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,166,* 9007199254740993} cannot be represented exactly on that platform. To minimize
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,167,"* precision loss, extremely large values should be written and read as strings"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,168,* in JSON.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,170,"* <a name=""nonexecuteprefix""/><h3>Non-Execute Prefix</h3>"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,171,* Web servers that serve private data using JSON may be vulnerable to <a
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,172,"* href=""http://en.wikipedia.org/wiki/JSON#Cross-site_request_forgery"">Cross-site"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,173,"* request forgery</a> attacks. In such an attack, a malicious site gains access"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,174,* to a private JSON file by executing it with an HTML {@code <script>} tag.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,176,"* <p>Prefixing JSON files with <code>"")]}'\n""</code> makes them non-executable"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,177,"* by {@code <script>} tags, disarming the attack. Since the prefix is malformed"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,178,"* JSON, strict parsing fails when it is encountered. This class permits the"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,179,* non-execute prefix when {@link #setLenient(boolean) lenient parsing} is
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,180,* enabled.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,182,* <p>Each {@code JsonReader} may be used to read a single JSON stream. Instances
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,183,* of this class are not thread safe.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,185,* @author Jesse Wilson
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,186,* @since 1.6
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,188,public class JsonReader2 implements Closeable {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,189,private static final int PEEKED_NONE = 0;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,190,private static final int PEEKED_BEGIN_OBJECT = 1;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,191,private static final int PEEKED_END_OBJECT = 2;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,192,private static final int PEEKED_BEGIN_ARRAY = 3;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,193,private static final int PEEKED_END_ARRAY = 4;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,194,private static final int PEEKED_TRUE = 5;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,195,private static final int PEEKED_FALSE = 6;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,196,private static final int PEEKED_NULL = 7;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,197,private static final int PEEKED_SINGLE_QUOTED = 8;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,198,private static final int PEEKED_DOUBLE_QUOTED = 9;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,199,private static final int PEEKED_UNQUOTED = 10;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,200,private static final int PEEKED_SINGLE_QUOTED_NAME = 11;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,201,private static final int PEEKED_DOUBLE_QUOTED_NAME = 12;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,202,private static final int PEEKED_UNQUOTED_NAME = 13;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,203,"/** When this is returned, the integer value is stored in peekedInteger. */"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,204,private static final int PEEKED_INTEGER = 14;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,205,private static final int PEEKED_NUMBER = 15;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,206,private static final int PEEKED_EOF = 16;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,208,/** The input JSON. */
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,209,private final Reader in;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,211,/** True to accept non-spec compliant JSON */
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,212,private boolean lenient = false;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,215,"* Use a manual buffer to easily read and unread upcoming characters, and"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,216,* also so we can create strings without an intermediate StringBuilder.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,217,"* We decode literals directly out of this buffer, so it must be at least as"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,218,* long as the longest token that can be reported as a number.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,220,private final char[] buffer = new char[1024];
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,221,private int pos = 0;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,222,private int limit = 0;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,225,* The offset of the first character in the buffer.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,227,private int bufferStartLine = 1;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,228,private int bufferStartColumn = 1;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,230,private int peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,233,* A peeked value that was composed entirely of digits with an optional
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,234,* leading dash. Positive values may not have a leading 0.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,236,private long peekedInteger;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,239,* The number of characters in the peeked number.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,241,private int peekedNumberLength;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,244,* The nesting stack. Using a manual array rather than an ArrayList saves 20%.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,246,private int[] stack = new int[32];
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,247,private int stackSize = 0;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,249,stack[stackSize++] = JsonScope.EMPTY_DOCUMENT;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,253,* Creates a new instance that reads a JSON-encoded stream from {@code in}.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,255,public JsonReader2(Reader in) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,256,if (in == null) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,257,"throw new NullPointerException(""in == null"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,259,this.in = in;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,263,"* Configure this parser to be  be liberal in what it accepts. By default,"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,264,* this parser is strict and only accepts JSON as specified by <a
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,265,"* href=""http://www.ietf.org/rfc/rfc4627.txt"">RFC 4627</a>. Setting the"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,266,* parser to lenient causes it to ignore the following syntax errors:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,268,* <ul>
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,269,"*   <li>Streams that start with the <a href=""#nonexecuteprefix"">non-execute"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,270,"*       prefix</a>, <code>"")]}'\n""</code>."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,271,"*   <li>Streams that include multiple top-level values. With strict parsing,"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,272,*       each stream must contain exactly one top-level value.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,273,"*   <li>Top-level values of any type. With strict parsing, the top-level"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,274,*       value must be an object or an array.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,275,*   <li>Numbers may be {@link Double#isNaN() NaNs} or {@link
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,276,*       Double#isInfinite() infinities}.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,277,*   <li>End of line comments starting with {@code //} or {@code #} and
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,278,*       ending with a newline character.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,279,*   <li>C-style comments starting with {@code /*} and ending with
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,280,*       {@code *}{@code /}. Such comments may not be nested.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,281,*   <li>Names that are unquoted or {@code 'single quoted'}.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,282,*   <li>Strings that are unquoted or {@code 'single quoted'}.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,283,"*   <li>Array elements separated by {@code ;} instead of {@code ,}."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,284,*   <li>Unnecessary array separators. These are interpreted as if null
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,285,*       was the omitted value.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,286,*   <li>Names and values separated by {@code =} or {@code =>} instead of
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,287,*       {@code :}.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,288,"*   <li>Name/value pairs separated by {@code ;} instead of {@code ,}."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,289,* </ul>
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,291,public final void setLenient(boolean lenient) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,292,this.lenient = lenient;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,296,* Returns true if this parser is liberal in what it accepts.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,298,public final boolean isLenient() {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,299,return lenient;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,303,* Consumes the next token from the JSON stream and asserts that it is the
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,304,* beginning of a new array.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,306,public void beginArray() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,307,int p = peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,308,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,309,p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,311,if (p == PEEKED_BEGIN_ARRAY) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,312,push(JsonScope.EMPTY_ARRAY);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,313,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,314,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,315,"throw new IllegalStateException(""Expected BEGIN_ARRAY but was "" + peek()"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,316,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,321,* Consumes the next token from the JSON stream and asserts that it is the
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,322,* end of the current array.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,324,public void endArray() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,325,int p = peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,326,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,327,p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,329,if (p == PEEKED_END_ARRAY) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,330,stackSize--;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,331,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,332,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,333,"throw new IllegalStateException(""Expected END_ARRAY but was "" + peek()"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,334,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,339,* Consumes the next token from the JSON stream and asserts that it is the
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,340,* beginning of a new object.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,342,public void beginObject() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,343,int p = peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,344,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,345,p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,347,if (p == PEEKED_BEGIN_OBJECT) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,348,push(JsonScope.EMPTY_OBJECT);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,349,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,350,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,351,"throw new IllegalStateException(""Expected BEGIN_OBJECT but was "" + peek()"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,352,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,357,* Consumes the next token from the JSON stream and asserts that it is the
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,358,* end of the current object.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,360,public void endObject() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,361,int p = peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,362,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,363,p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,365,if (p == PEEKED_END_OBJECT) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,366,stackSize--;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,367,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,368,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,369,"throw new IllegalStateException(""Expected END_OBJECT but was "" + peek()"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,370,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,375,* Returns true if the current array or object has another element.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,377,public boolean hasNext() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,378,int p = peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,379,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,380,p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,382,return p != PEEKED_END_OBJECT && p != PEEKED_END_ARRAY;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,386,* Returns the type of the next token without consuming it.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,388,public JsonToken peek() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,389,int p = peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,390,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,391,p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,394,switch (p) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,395,case PEEKED_BEGIN_OBJECT:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,396,return JsonToken.BEGIN_OBJECT;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,397,case PEEKED_END_OBJECT:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,398,return JsonToken.END_OBJECT;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,399,case PEEKED_BEGIN_ARRAY:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,400,return JsonToken.BEGIN_ARRAY;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,401,case PEEKED_END_ARRAY:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,402,return JsonToken.END_ARRAY;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,403,case PEEKED_SINGLE_QUOTED_NAME:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,404,case PEEKED_DOUBLE_QUOTED_NAME:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,405,case PEEKED_UNQUOTED_NAME:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,406,return JsonToken.NAME;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,407,case PEEKED_TRUE:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,408,case PEEKED_FALSE:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,409,return JsonToken.BOOLEAN;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,410,case PEEKED_NULL:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,411,return JsonToken.NULL;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,412,case PEEKED_SINGLE_QUOTED:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,413,case PEEKED_DOUBLE_QUOTED:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,414,case PEEKED_UNQUOTED:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,415,return JsonToken.STRING;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,416,case PEEKED_INTEGER:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,417,case PEEKED_NUMBER:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,418,return JsonToken.NUMBER;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,419,case PEEKED_EOF:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,420,return JsonToken.END_DOCUMENT;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,421,default:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,422,throw new AssertionError();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,426,private int doPeek() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,427,int peekStack = stack[stackSize - 1];
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,428,if (peekStack == JsonScope.EMPTY_ARRAY) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,429,stack[stackSize - 1] = JsonScope.NONEMPTY_ARRAY;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,430,} else if (peekStack == JsonScope.NONEMPTY_ARRAY) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,431,// Look for a comma before the next element.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,432,int c = nextNonWhitespace(true);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,433,switch (c) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,434,case ']':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,435,return peeked = PEEKED_END_ARRAY;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,436,case ';':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,437,checkLenient(); // fall-through
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,438,"case ',':"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,439,break;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,440,default:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,441,"throw syntaxError(""Unterminated array"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,443,} else if (peekStack == JsonScope.EMPTY_OBJECT || peekStack == JsonScope.NONEMPTY_OBJECT) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,444,stack[stackSize - 1] = JsonScope.DANGLING_NAME;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,445,// Look for a comma before the next element.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,446,if (peekStack == JsonScope.NONEMPTY_OBJECT) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,447,int c = nextNonWhitespace(true);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,448,switch (c) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,449,case '}':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,450,return peeked = PEEKED_END_OBJECT;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,451,case ';':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,452,checkLenient(); // fall-through
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,453,"case ',':"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,454,break;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,455,default:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,456,"throw syntaxError(""Unterminated object"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,459,int c = nextNonWhitespace(true);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,460,switch (c) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,461,"case '""':"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,462,return peeked = PEEKED_DOUBLE_QUOTED_NAME;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,463,case '\'':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,464,checkLenient();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,465,return peeked = PEEKED_SINGLE_QUOTED_NAME;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,466,case '}':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,467,if (peekStack != JsonScope.NONEMPTY_OBJECT) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,468,return peeked = PEEKED_END_OBJECT;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,469,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,470,"throw syntaxError(""Expected name"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,472,default:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,473,checkLenient();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,474,pos--; // Don't consume the first character in an unquoted string.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,475,if (isLiteral((char) c)) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,476,return peeked = PEEKED_UNQUOTED_NAME;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,477,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,478,"throw syntaxError(""Expected name"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,481,} else if (peekStack == JsonScope.DANGLING_NAME) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,482,stack[stackSize - 1] = JsonScope.NONEMPTY_OBJECT;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,483,// Look for a colon before the value.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,484,int c = nextNonWhitespace(true);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,485,switch (c) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,486,case ':':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,487,break;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,488,case '=':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,489,checkLenient();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,490,if ((pos < limit || fillBuffer(1)) && buffer[pos] == '>') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,491,pos++;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,493,break;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,494,default:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,495,"throw syntaxError(""Expected ':'"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,497,} else if (peekStack == JsonScope.EMPTY_DOCUMENT) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,498,stack[stackSize - 1] = JsonScope.NONEMPTY_DOCUMENT;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,499,} else if (peekStack == JsonScope.NONEMPTY_DOCUMENT) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,500,int c = nextNonWhitespace(false);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,501,if (c == -1) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,502,return peeked = PEEKED_EOF;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,503,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,504,checkLenient();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,505,pos--;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,507,} else if (peekStack == JsonScope.CLOSED) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,508,"throw new IllegalStateException(""JsonReader is closed"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,511,int c = nextNonWhitespace(true);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,512,switch (c) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,513,case ']':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,514,if (peekStack == JsonScope.EMPTY_ARRAY) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,515,return peeked = PEEKED_END_ARRAY;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,517,"// fall-through to handle "",]"""
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,518,case ';':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,519,"case ',':"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,520,"// In lenient mode, a 0-length literal in an array means 'null'."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,521,if (peekStack == JsonScope.EMPTY_ARRAY || peekStack == JsonScope.NONEMPTY_ARRAY) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,522,checkLenient();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,523,pos--;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,524,return peeked = PEEKED_NULL;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,525,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,526,"throw syntaxError(""Unexpected value"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,528,case '\'':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,529,checkLenient();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,530,return peeked = PEEKED_SINGLE_QUOTED;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,531,"case '""':"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,532,if (stackSize == 1) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,533,checkLenient();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,535,return peeked = PEEKED_DOUBLE_QUOTED;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,536,case '[':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,537,return peeked = PEEKED_BEGIN_ARRAY;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,538,case '{':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,539,return peeked = PEEKED_BEGIN_OBJECT;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,540,default:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,541,pos--; // Don't consume the first character in a literal value.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,544,if (stackSize == 1) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,545,checkLenient();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,548,int result = peekKeyword();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,549,if (result != PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,550,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,553,result = peekNumber();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,554,if (result != PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,555,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,558,if (!isLiteral(buffer[pos])) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,559,"throw syntaxError(""Expected value"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,562,checkLenient();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,563,return peeked = PEEKED_UNQUOTED;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,566,private int peekKeyword() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,567,// Figure out which keyword we're matching against by its first character.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,568,char c = buffer[pos];
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,569,String keyword;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,570,String keywordUpper;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,571,int peeking;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,572,if (c == 't' || c == 'T') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,573,"keyword = ""true"";"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,574,"keywordUpper = ""TRUE"";"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,575,peeking = PEEKED_TRUE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,576,} else if (c == 'f' || c == 'F') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,577,"keyword = ""false"";"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,578,"keywordUpper = ""FALSE"";"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,579,peeking = PEEKED_FALSE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,580,} else if (c == 'n' || c == 'N') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,581,"keyword = ""null"";"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,582,"keywordUpper = ""NULL"";"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,583,peeking = PEEKED_NULL;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,584,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,585,return PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,588,// Confirm that chars [1..length) match the keyword.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,589,int length = keyword.length();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,590,for (int i = 1; i < length; i++) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,591,if (pos + i >= limit && !fillBuffer(i + 1)) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,592,return PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,594,c = buffer[pos + i];
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,595,if (c != keyword.charAt(i) && c != keywordUpper.charAt(i)) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,596,return PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,600,if ((pos + length < limit || fillBuffer(length + 1))
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,601,&& isLiteral(buffer[pos + length])) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,602,"return PEEKED_NONE; // Don't match trues, falsey or nullsoft!"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,605,// We've found the keyword followed either by EOF or by a non-literal character.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,606,pos += length;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,607,return peeked = peeking;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,610,private int peekNumber() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,611,long integer = 0; // Negative to accommodate Long.MIN_VALUE more easily.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,612,boolean negative = false;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,613,boolean fitsInLong = true;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,614,int i = 0;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,615,int c = get(i);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,617,// TODO: figure out a way to speed up repopulating 'c'
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,619,if (c == '-') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,620,negative = true;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,621,c = get(++i);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,624,if (c == '0') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,625,c = get(++i);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,626,} else if (c >= '1' && c <= '9') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,627,integer -= (c - '0');
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,628,c = get(++i);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,629,while (c >= '0' && c <= '9') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,630,long newInteger = integer * 10 - (c - '0');
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,631,fitsInLong &= newInteger < integer;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,632,integer = newInteger;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,633,c = get(++i);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,635,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,636,return PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,639,if (c == -1 || !isLiteral((char) c)) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,640,if (fitsInLong) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,641,peekedInteger = negative ? integer : -integer;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,642,pos += i;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,643,return peeked = PEEKED_INTEGER;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,644,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,645,peekedNumberLength = i;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,646,return peeked = PEEKED_NUMBER;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,650,if (c == '.') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,651,c = get(++i);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,652,while (c >= '0' && c <= '9') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,653,c = get(++i);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,657,if (c == 'e' || c == 'E') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,658,c = get(++i);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,659,if (c == '+' || c == '-') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,660,c = get(++i);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,662,if (c >= '0' && c <= '9') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,663,c = get(++i);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,664,while (c >= '0' && c <= '9') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,665,c = get(++i);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,667,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,668,return PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,672,if (c == -1 || !isLiteral((char) c)) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,673,peekedNumberLength = i;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,674,return peeked = PEEKED_NUMBER;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,677,return PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,681,"* Returns a character at position {@code pos + offset}, reading additional"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,682,* bytes into the buffer if necessary.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,684,private int get(int offset) throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,685,return (pos + offset < limit || fillBuffer(offset + 1)) ? buffer[pos + offset] : -1;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,688,private boolean isLiteral(char c) throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,689,switch (c) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,690,case '/':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,691,case '\\':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,692,case ';':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,693,case '#':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,694,case '=':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,695,checkLenient(); // fall-through
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,696,case '{':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,697,case '}':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,698,case '[':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,699,case ']':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,700,case ':':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,701,"case ',':"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,702,case ' ':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,703,case '\t':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,704,case '\f':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,705,case '\r':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,706,case '\n':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,707,return false;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,708,default:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,709,return true;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,714,"* Returns the next token, a {@link com.google.gson.stream.JsonToken#NAME property name}, and"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,715,* consumes it.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,717,* @throws java.io.IOException if the next token in the stream is not a property
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,718,*     name.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,720,public String nextName() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,721,int p = peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,722,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,723,p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,725,String result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,726,if (p == PEEKED_UNQUOTED_NAME) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,727,result = nextUnquotedValue();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,728,} else if (p == PEEKED_SINGLE_QUOTED_NAME) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,729,result = nextQuotedValue('\'');
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,730,} else if (p == PEEKED_DOUBLE_QUOTED_NAME) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,731,"result = nextQuotedValue('""');"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,732,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,733,"throw new IllegalStateException(""Expected a name but was "" + peek()"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,734,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,736,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,737,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,741,"* Returns the {@link com.google.gson.stream.JsonToken#STRING string} value of the next token,"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,742,"* consuming it. If the next token is a number, this method will return its"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,743,* string form.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,745,* @throws IllegalStateException if the next token is not a string or if
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,746,*     this reader is closed.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,748,public String nextString() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,749,int p = peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,750,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,751,p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,753,String result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,754,if (p == PEEKED_UNQUOTED) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,755,result = nextUnquotedValue();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,756,} else if (p == PEEKED_SINGLE_QUOTED) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,757,result = nextQuotedValue('\'');
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,758,} else if (p == PEEKED_DOUBLE_QUOTED) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,759,"result = nextQuotedValue('""');"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,760,} else if (p == PEEKED_INTEGER) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,761,result = Long.toString(peekedInteger);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,762,} else if (p == PEEKED_NUMBER) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,763,"result = new String(buffer, pos, peekedNumberLength);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,764,pos += peekedNumberLength;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,765,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,766,"throw new IllegalStateException(""Expected a string but was "" + peek()"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,767,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,769,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,770,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,774,"* Returns the {@link com.google.gson.stream.JsonToken#BOOLEAN boolean} value of the next token,"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,775,* consuming it.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,777,* @throws IllegalStateException if the next token is not a boolean or if
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,778,*     this reader is closed.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,780,public boolean nextBoolean() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,781,int p = peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,782,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,783,p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,785,if (p == PEEKED_TRUE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,786,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,787,return true;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,788,} else if (p == PEEKED_FALSE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,789,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,790,return false;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,792,"throw new IllegalStateException(""Expected a boolean but was "" + peek()"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,793,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,797,* Consumes the next token from the JSON stream and asserts that it is a
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,798,* literal null.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,800,* @throws IllegalStateException if the next token is not null or if this
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,801,*     reader is closed.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,803,public void nextNull() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,804,int p = peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,805,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,806,p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,808,if (p == PEEKED_NULL) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,809,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,810,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,811,"throw new IllegalStateException(""Expected null but was "" + peek()"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,812,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,817,"* Returns the {@link com.google.gson.stream.JsonToken#NUMBER double} value of the next token,"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,818,"* consuming it. If the next token is a string, this method will attempt to"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,819,* parse it as a double using {@link Double#parseDouble(String)}.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,821,* @throws IllegalStateException if the next token is not a literal value.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,822,* @throws NumberFormatException if the next literal value cannot be parsed
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,823,"*     as a double, or is non-finite."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,825,public double nextDouble() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,826,int p = peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,827,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,828,p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,831,if (p == PEEKED_INTEGER) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,832,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,833,return (double) peekedInteger;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,836,String asString;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,837,if (p == PEEKED_NUMBER) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,838,"asString = new String(buffer, pos, peekedNumberLength);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,839,pos += peekedNumberLength;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,840,} else if (p == PEEKED_SINGLE_QUOTED || p == PEEKED_DOUBLE_QUOTED) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,841,"asString = nextQuotedValue(p == PEEKED_SINGLE_QUOTED ? '\'' : '""');"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,842,} else if (p == PEEKED_UNQUOTED) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,843,asString = nextUnquotedValue();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,844,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,845,"throw new IllegalStateException(""Expected a double but was "" + peek()"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,846,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,849,double result = Double.parseDouble(asString); // don't catch this NumberFormatException.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,850,if (!lenient && (Double.isNaN(result) || Double.isInfinite(result))) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,851,"throw new MalformedJsonException(""JSON forbids NaN and infinities: "" + result"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,852,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,854,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,855,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,859,"* Returns the {@link com.google.gson.stream.JsonToken#NUMBER long} value of the next token,"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,860,"* consuming it. If the next token is a string, this method will attempt to"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,861,* parse it as a long. If the next token's numeric value cannot be exactly
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,862,"* represented by a Java {@code long}, this method throws."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,864,* @throws IllegalStateException if the next token is not a literal value.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,865,* @throws NumberFormatException if the next literal value cannot be parsed
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,866,"*     as a number, or exactly represented as a long."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,868,public long nextLong() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,869,int p = peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,870,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,871,p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,874,if (p == PEEKED_INTEGER) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,875,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,876,return peekedInteger;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,879,String asString;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,880,if (p == PEEKED_NUMBER) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,881,"asString = new String(buffer, pos, peekedNumberLength);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,882,pos += peekedNumberLength;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,883,} else if (p == PEEKED_SINGLE_QUOTED || p == PEEKED_DOUBLE_QUOTED) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,884,"asString = nextQuotedValue(p == PEEKED_SINGLE_QUOTED ? '\'' : '""');"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,885,try {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,886,long result = Long.parseLong(asString);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,887,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,888,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,889,} catch (NumberFormatException ignored) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,890,// Fall back to parse as a double below.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,892,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,893,"throw new IllegalStateException(""Expected a long but was "" + peek()"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,894,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,897,double asDouble = Double.parseDouble(asString); // don't catch this NumberFormatException.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,898,long result = (long) asDouble;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,899,if (result != asDouble) { // Make sure no precision was lost casting to 'long'.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,900,"throw new NumberFormatException(""Expected a long but was "" + asString"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,901,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,903,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,904,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,908,"* Returns the string up to but not including {@code quote}, unescaping any"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,909,* character escape sequences encountered along the way. The opening quote
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,910,"* should have already been read. This consumes the closing quote, but does"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,911,* not include it in the returned string.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,913,"* @param quote either ' or ""."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,914,* @throws NumberFormatException if any unicode escape sequences are
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,915,*     malformed.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,917,private String nextQuotedValue(char quote) throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,918,"// Like nextNonWhitespace, this uses locals 'p' and 'l' to save inner-loop field access."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,919,char[] buffer = this.buffer;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,920,StringBuilder builder = null;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,921,while (true) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,922,int p = pos;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,923,int l = limit;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,924,/* the index of the first character not yet appended to the builder. */
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,925,int start = p;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,926,while (p < l) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,927,int c = buffer[p++];
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,929,if (c == quote) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,930,pos = p;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,931,if (false /* TODO: fast skipping */) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,932,"return ""skipped!"";"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,933,} else if (builder == null) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,934,"return new String(buffer, start, p - start - 1);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,935,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,936,"builder.append(buffer, start, p - start - 1);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,937,return builder.toString();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,940,} else if (c == '\\') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,941,pos = p;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,942,if (builder == null) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,943,builder = new StringBuilder();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,945,"builder.append(buffer, start, p - start - 1);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,946,builder.append(readEscapeCharacter());
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,947,p = pos;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,948,l = limit;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,949,start = p;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,953,if (builder == null) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,954,builder = new StringBuilder();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,956,"builder.append(buffer, start, p - start);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,957,pos = p;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,958,if (!fillBuffer(1)) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,959,"throw syntaxError(""Unterminated string"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,965,* Returns an unquoted value as a string.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,967,"@SuppressWarnings(""fallthrough"")"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,968,private String nextUnquotedValue() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,969,StringBuilder builder = null;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,970,int i = 0;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,972,findNonLiteralCharacter:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,973,while (true) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,974,for (; pos + i < limit; i++) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,975,switch (buffer[pos + i]) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,976,case '/':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,977,case '\\':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,978,case ';':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,979,case '#':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,980,case '=':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,981,checkLenient(); // fall-through
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,982,case '{':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,983,case '}':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,984,case '[':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,985,case ']':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,986,case ':':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,987,"case ',':"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,988,case ' ':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,989,case '\t':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,990,case '\f':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,991,case '\r':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,992,case '\n':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,993,break findNonLiteralCharacter;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,997,// Attempt to load the entire literal into the buffer at once.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,998,if (i < buffer.length) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,999,if (fillBuffer(i + 1)) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1000,continue;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1001,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1002,break;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1006,// use a StringBuilder when the value is too long. This is too long to be a number!
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1007,if (builder == null) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1008,builder = new StringBuilder();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1010,"builder.append(buffer, pos, i);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1011,pos += i;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1012,i = 0;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1013,if (!fillBuffer(1)) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1014,break;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1018,String result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1019,if (false /* TODO: fast skipping */) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1020,"result = ""skipped!"";"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1021,} else if (builder == null) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1022,"result = new String(buffer, pos, i);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1023,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1024,"builder.append(buffer, pos, i);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1025,result = builder.toString();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1027,pos += i;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1028,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1032,"* Returns the {@link com.google.gson.stream.JsonToken#NUMBER int} value of the next token,"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1033,"* consuming it. If the next token is a string, this method will attempt to"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1034,* parse it as an int. If the next token's numeric value cannot be exactly
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1035,"* represented by a Java {@code int}, this method throws."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1037,* @throws IllegalStateException if the next token is not a literal value.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1038,* @throws NumberFormatException if the next literal value cannot be parsed
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1039,"*     as a number, or exactly represented as an int."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1041,public int nextInt() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1042,int p = peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1043,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1044,p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1047,int result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1048,if (p == PEEKED_INTEGER) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1049,result = (int) peekedInteger;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1050,if (peekedInteger != result) { // Make sure no precision was lost casting to 'int'.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1051,"throw new NumberFormatException(""Expected an int but was "" + peekedInteger"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1052,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1054,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1055,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1058,String asString;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1059,if (p == PEEKED_NUMBER) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1060,"asString = new String(buffer, pos, peekedNumberLength);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1061,pos += peekedNumberLength;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1062,} else if (p == PEEKED_SINGLE_QUOTED || p == PEEKED_DOUBLE_QUOTED) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1063,"asString = nextQuotedValue(p == PEEKED_SINGLE_QUOTED ? '\'' : '""');"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1064,try {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1065,result = Integer.parseInt(asString);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1066,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1067,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1068,} catch (NumberFormatException ignored) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1069,// Fall back to parse as a double below.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1071,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1072,"throw new IllegalStateException(""Expected an int but was "" + peek()"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1073,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1076,double asDouble = Double.parseDouble(asString); // don't catch this NumberFormatException.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1077,result = (int) asDouble;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1078,if (result != asDouble) { // Make sure no precision was lost casting to 'int'.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1079,"throw new NumberFormatException(""Expected an int but was "" + asString"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1080,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1082,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1083,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1087,* Closes this JSON reader and the underlying {@link java.io.Reader}.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1089,public void close() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1090,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1091,stack[0] = JsonScope.CLOSED;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1092,stackSize = 1;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1093,in.close();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1097,"* Skips the next value recursively. If it is an object or array, all nested"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1098,* elements are skipped. This method is intended for use when the JSON token
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1099,* stream contains unrecognized or unhandled values.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1101,public void skipValue() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1102,int count = 0;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1103,do {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1104,int p = doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1105,if (p == PEEKED_BEGIN_ARRAY) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1106,push(JsonScope.EMPTY_ARRAY);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1107,count++;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1108,} else if (p == PEEKED_BEGIN_OBJECT) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1109,push(JsonScope.EMPTY_OBJECT);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1110,count++;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1111,} else if (p == PEEKED_END_ARRAY) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1112,stackSize--;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1113,count--;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1114,} else if (p == PEEKED_END_OBJECT) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1115,stackSize--;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1116,count--;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1117,} else if (p == PEEKED_UNQUOTED_NAME || p == PEEKED_UNQUOTED) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1118,nextUnquotedValue();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1119,} else if (p == PEEKED_SINGLE_QUOTED || p == PEEKED_SINGLE_QUOTED_NAME) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1120,nextQuotedValue('\'');
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1121,} else if (p == PEEKED_DOUBLE_QUOTED || p == PEEKED_DOUBLE_QUOTED_NAME) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1122,"nextQuotedValue('""');"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1123,} else if (p == PEEKED_NUMBER) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1124,pos += peekedNumberLength;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1126,peeked = PEEKED_NONE;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1127,} while (count != 0);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1130,private void push(int newTop) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1131,if (stackSize == stack.length) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1132,int[] newStack = new int[stackSize * 2];
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1133,"System.arraycopy(stack, 0, newStack, 0, stackSize);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1134,stack = newStack;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1136,stack[stackSize++] = newTop;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1140,* Returns true once {@code limit - pos >= minimum}. If the data is
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1141,"* exhausted before that many characters are available, this returns"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1142,* false.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1144,private boolean fillBuffer(int minimum) throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1145,char[] buffer = this.buffer;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1147,"// Before clobbering the old characters, update where buffer starts"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1148,// Using locals here saves ~2%.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1149,int line = bufferStartLine;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1150,int column = bufferStartColumn;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1151,"for (int i = 0, p = pos; i < p; i++) {"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1152,if (buffer[i] == '\n') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1153,line++;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1154,column = 1;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1155,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1156,column++;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1159,bufferStartLine = line;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1160,bufferStartColumn = column;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1162,if (limit != pos) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1163,limit -= pos;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1164,"System.arraycopy(buffer, pos, buffer, 0, limit);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1165,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1166,limit = 0;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1169,pos = 0;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1170,int total;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1171,"while ((total = in.read(buffer, limit, buffer.length - limit)) != -1) {"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1172,limit += total;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1174,"// if this is the first read, consume an optional byte order mark (BOM) if it exists"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1175,if (bufferStartLine == 1 && bufferStartColumn == 1 && limit > 0 && buffer[0] == '\ufeff') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1176,pos++;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1177,bufferStartColumn--;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1180,if (limit >= minimum) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1181,return true;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1184,return false;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1187,private int getLineNumber() {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1188,int result = bufferStartLine;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1189,for (int i = 0; i < pos; i++) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1190,if (buffer[i] == '\n') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1191,result++;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1194,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1197,private int getColumnNumber() {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1198,int result = bufferStartColumn;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1199,for (int i = 0; i < pos; i++) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1200,if (buffer[i] == '\n') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1201,result = 1;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1202,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1203,result++;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1206,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1210,* Returns the next character in the stream that is neither whitespace nor a
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1211,"* part of a comment. When this returns, the returned character is always at"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1212,* {@code buffer[pos-1]}; this means the caller can always push back the
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1213,* returned character by decrementing {@code pos}.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1215,private int nextNonWhitespace(boolean throwOnEof) throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1217,* This code uses ugly local variables 'p' and 'l' representing the 'pos'
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1218,* and 'limit' fields respectively. Using locals rather than fields saves
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1219,* a few field reads for each whitespace character in a pretty-printed
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1220,"* document, resulting in a 5% speedup. We need to flush 'p' to its field"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1221,* before any (potentially indirect) call to fillBuffer() and reread both
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1222,* 'p' and 'l' after any (potentially indirect) call to the same method.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1224,char[] buffer = this.buffer;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1225,int p = pos;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1226,int l = limit;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1227,while (true) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1228,if (p == l) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1229,pos = p;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1230,if (!fillBuffer(1)) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1231,break;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1233,p = pos;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1234,l = limit;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1237,int c = buffer[p++];
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1238,switch (c) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1239,case '\t':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1240,case ' ':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1241,case '\n':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1242,case '\r':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1243,continue;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1245,case '/':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1246,pos = p;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1247,if (p == l) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1248,pos--; // push back '/' so it's still in the buffer when this method returns
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1249,boolean charsLoaded = fillBuffer(2);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1250,pos++; // consume the '/' again
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1251,if (!charsLoaded) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1252,return c;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1256,checkLenient();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1257,char peek = buffer[pos];
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1258,switch (peek) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1259,case '*':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1260,// skip a /* c-style comment */
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1261,pos++;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1262,"if (!skipTo(""*/"")) {"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1263,"throw syntaxError(""Unterminated comment"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1265,p = pos + 2;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1266,l = limit;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1267,continue;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1269,case '/':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1270,// skip a // end-of-line comment
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1271,pos++;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1272,skipToEndOfLine();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1273,p = pos;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1274,l = limit;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1275,continue;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1277,default:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1278,return c;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1281,case '#':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1282,pos = p;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1284,* Skip a # hash end-of-line comment. The JSON RFC doesn't
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1285,"* specify this behaviour, but it's required to parse"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1286,* existing documents. See http://b/2571423.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1288,checkLenient();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1289,skipToEndOfLine();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1290,p = pos;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1291,l = limit;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1292,continue;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1294,default:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1295,pos = p;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1296,return c;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1299,if (throwOnEof) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1300,"throw new EOFException(""End of input"""
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1301,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1302,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1303,return -1;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1307,private void checkLenient() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1308,if (!lenient) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1309,"throw syntaxError(""Use JsonReader.setLenient(true) to accept malformed JSON"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1314,* Advances the position until after the next newline character. If the line
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1315,"* is terminated by ""\r\n"", the '\n' must be consumed as whitespace by the"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1316,* caller.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1318,private void skipToEndOfLine() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1319,while (pos < limit || fillBuffer(1)) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1320,char c = buffer[pos++];
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1321,if (c == '\r' || c == '\n') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1322,break;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1327,private boolean skipTo(String toFind) throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1328,outer:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1329,for (; pos + toFind.length() <= limit || fillBuffer(toFind.length()); pos++) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1330,for (int c = 0; c < toFind.length(); c++) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1331,if (buffer[pos + c] != toFind.charAt(c)) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1332,continue outer;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1335,return true;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1337,return false;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1340,@Override public String toString() {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1341,return getClass().getSimpleName()
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1342,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber();"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1346,* Unescapes the character identified by the character or characters that
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1347,* immediately follow a backslash. The backslash '\' should have already
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1348,"* been read. This supports both unicode escapes ""u000A"" and two-character"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1349,"* escapes ""\n""."
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1351,* @throws NumberFormatException if any unicode escape sequences are
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1352,*     malformed.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1354,private char readEscapeCharacter() throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1355,if (pos == limit && !fillBuffer(1)) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1356,"throw syntaxError(""Unterminated escape sequence"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1359,char escaped = buffer[pos++];
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1360,switch (escaped) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1361,case 'u':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1362,if (pos + 4 > limit && !fillBuffer(4)) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1363,"throw syntaxError(""Unterminated escape sequence"");"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1365,"// Equivalent to Integer.parseInt(stringPool.get(buffer, pos, 4), 16);"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1366,char result = 0;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1367,"for (int i = pos, end = i + 4; i < end; i++) {"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1368,char c = buffer[i];
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1369,result <<= 4;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1370,if (c >= '0' && c <= '9') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1371,result += (c - '0');
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1372,} else if (c >= 'a' && c <= 'f') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1373,result += (c - 'a' + 10);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1374,} else if (c >= 'A' && c <= 'F') {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1375,result += (c - 'A' + 10);
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1376,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1377,"throw new NumberFormatException(""\\u"" + new String(buffer, pos, 4));"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1380,pos += 4;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1381,return result;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1383,case 't':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1384,return '\t';
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1386,case 'b':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1387,return '\b';
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1389,case 'n':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1390,return '\n';
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1392,case 'r':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1393,return '\r';
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1395,case 'f':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1396,return '\f';
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1398,case '\'':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1399,"case '""':"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1400,case '\\':
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1401,default:
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1402,return escaped;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1407,* Throws a new IO exception with the given message and a context snippet
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1408,* with this reader's content.
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1410,private IOException syntaxError(String message) throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1411,throw new MalformedJsonException(message
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1412,"+ "" at line "" + getLineNumber() + "" column "" + getColumnNumber());"
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1415,/*static {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1416,JsonReaderInternalAccess.INSTANCE = new JsonReaderInternalAccess() {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1417,@Override public void promoteNameToValue(JsonReader reader) throws IOException {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1418,if (reader instanceof JsonTreeReader) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1419,((JsonTreeReader)reader).promoteNameToValue();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1420,return;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1422,int p = reader.peeked;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1423,if (p == PEEKED_NONE) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1424,p = reader.doPeek();
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1426,if (p == PEEKED_DOUBLE_QUOTED_NAME) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1427,reader.peeked = PEEKED_DOUBLE_QUOTED;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1428,} else if (p == PEEKED_SINGLE_QUOTED_NAME) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1429,reader.peeked = PEEKED_SINGLE_QUOTED;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1430,} else if (p == PEEKED_UNQUOTED_NAME) {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1431,reader.peeked = PEEKED_UNQUOTED;
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1432,} else {
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1433,"throw new IllegalStateException(""Expected a name but was "" + reader.peek() + "" """
+True,gson/src/main/java/com/google/gson/stream/JsonReader2.java,gson/src/main/java/com/google/gson/stream/JsonReader2.java,1434,"+ "" at line "" + reader.getLineNumber() + "" column "" + reader.getColumnNumber());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,19,import com.google.gson.JsonSyntaxException;
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,20,import com.google.gson.reflect.TypeToken;
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,24,import java.lang.reflect.Type;
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,26,import java.util.Map;
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,433,"* This test fails because there's no double for -9223372036854775809, and our"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,434,* long parsing uses Double.parseDouble() for fractional values.
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,437,"JsonReader reader = new JsonReader(new StringReader(""[-9223372036854775809]""));"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,438,reader.setLenient(true);
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,439,reader.beginArray();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,440,"assertEquals(JsonToken.NUMBER, reader.peek());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,441,try {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,442,reader.nextLong();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,443,fail();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,444,} catch (NumberFormatException expected) {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,446,"assertEquals(-9223372036854775809d, reader.nextDouble());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,449,public void testPeekMuchLargerThanLongMinValue() throws IOException {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,596,public void testIntegerMismatchFailuresDoNotAdvance() throws IOException {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,597,"JsonReader reader = new JsonReader(new StringReader(""[1.5]""));"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,598,reader.beginArray();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,599,try {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,600,reader.nextInt();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,601,fail();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,602,} catch (NumberFormatException expected) {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,604,"assertEquals(1.5d, reader.nextDouble());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,605,reader.endArray();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1058,public void testStrictTopLevelString() {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1059,"JsonReader reader = new JsonReader(new StringReader(""\""a\""""));"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1060,try {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1061,reader.nextBoolean();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1062,fail();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1063,} catch (IOException expected) {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1067,public void testLenientTopLevelString() throws IOException {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1068,"JsonReader reader = new JsonReader(new StringReader(""\""a\""""));"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1069,reader.setLenient(true);
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1070,"assertEquals(""a"", reader.nextString());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1071,"assertEquals(JsonToken.END_DOCUMENT, reader.peek());"
+False,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1111,"estFailWithPosition(""Expected literal value at line 6 column 3"","
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1160,"testFailWithPosition(""Expected value at line 6 column 3"","
+False,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1117,"estFailWithPosition(""Expected literal value at line 6 column 3"","
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1166,"testFailWithPosition(""Expected value at line 6 column 3"","
+False,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1122,"estFailWithPosition(""Expected literal value at line 1 column 4"","
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1171,"testFailWithPosition(""Expected value at line 1 column 4"","
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1336,public void testEmptyStringName() throws IOException {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1337,"JsonReader reader = new JsonReader(new StringReader(""{\""\"":true}""));"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1338,reader.setLenient(true);
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1339,"assertEquals(JsonToken.BEGIN_OBJECT, reader.peek());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1340,reader.beginObject();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1341,"assertEquals(JsonToken.NAME, reader.peek());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1342,"assertEquals("""", reader.nextName());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1343,"assertEquals(JsonToken.BOOLEAN, reader.peek());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1344,"assertEquals(true, reader.nextBoolean());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1345,"assertEquals(JsonToken.END_OBJECT, reader.peek());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1346,reader.endObject();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1347,"assertEquals(JsonToken.END_DOCUMENT, reader.peek());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1350,public void testStrictExtraCommasInMaps() throws IOException {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1351,"JsonReader reader = new JsonReader(new StringReader(""{\""a\"":\""b\"",}""));"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1352,reader.beginObject();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1353,"assertEquals(""a"", reader.nextName());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1354,"assertEquals(""b"", reader.nextString());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1355,try {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1356,reader.peek();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1357,fail();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1358,} catch (IOException expected) {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1362,public void testLenientExtraCommasInMaps() throws IOException {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1363,"JsonReader reader = new JsonReader(new StringReader(""{\""a\"":\""b\"",}""));"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1364,reader.setLenient(true);
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1365,reader.beginObject();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1366,"assertEquals(""a"", reader.nextName());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1367,"assertEquals(""b"", reader.nextString());"
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1368,try {
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1369,reader.peek();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1370,fail();
+True,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,gson/src/test/java/com/google/gson/stream/JsonReaderTest.java,1371,} catch (IOException expected) {

@@ -1,0 +1,134 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,503,* Rename private properties to disambiguate between unrelated fields based on
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,504,* the coding convention.
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,506,boolean disambiguatePrivateProperties;
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,1847,* @return Whether disambiguate private properties is enabled.
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,1849,public boolean isDisambiguatePrivateProperties() {
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,1850,return disambiguatePrivateProperties;
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,1854,* @param value Whether to enable private property disambiguation based on
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,1855,* the coding convention.
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,1857,public void setDisambiguatePrivateProperties(boolean value) {
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,1858,this.disambiguatePrivateProperties = value;
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,381,// Property disambiguation should only run once and needs to be done
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,382,"// soon after type checking, both so that it can make use of type"
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,383,// information and so that other passes can take advantage of the renamed
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,384,// properties.
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,385,if (options.disambiguatePrivateProperties) {
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,386,passes.add(disambiguatePrivateProperties);
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1524,** Devirtualize property names based on type information. */
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1532,/** Disambiguate property names based on the coding convention. */
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1533,final PassFactory disambiguatePrivateProperties =
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1534,"new PassFactory(""disambiguatePrivateProperties"", true) {"
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1535,@Override
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1536,protected CompilerPass create(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1537,return new DisambiguatePrivateProperties(compiler);
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1541,/** Disambiguate property names based on type information. */
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,2,* Copyright 2013 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,16,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,18,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,19,import com.google.javascript.rhino.Token;
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,22,"* Disambiguate properties by file, when they are private by naming convention."
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,24,class DisambiguatePrivateProperties
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,25,"implements NodeTraversal.Callback, CompilerPass {"
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,27,private final AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,28,private String fileid;
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,29,private int id = 0;
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,31,DisambiguatePrivateProperties(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,32,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,35,@Override
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,36,"public void process(Node externs, Node root) {"
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,37,"NodeTraversal.traverse(compiler, root, this);"
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,40,@Override
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,41,"public boolean shouldTraverse(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,42,if (n.isScript()) {
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,43,"this.fileid = ""$"" + this.id++;"
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,45,return true;
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,48,@Override
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,49,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,50,switch (n.getType()) {
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,51,case Token.GETPROP:
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,52,maybeRename(n.getLastChild());
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,53,break;
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,54,case Token.STRING_KEY:
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,55,case Token.GETTER_DEF:
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,56,case Token.SETTER_DEF:
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,57,maybeRename(n);
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,58,break;
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,62,private void maybeRename(Node n) {
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,63,CodingConvention convention = compiler.getCodingConvention();
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,64,String prop = n.getString();
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,65,if (!n.getBooleanProp(Node.QUOTED_PROP) && convention.isPrivate(prop)) {
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,66,n.setString(prop + fileid);
+True,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,src/com/google/javascript/jscomp/DisambiguatePrivateProperties.java,67,compiler.reportCodeChange();
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,2,* Copyright 2013 The Closure Compiler Authors.
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,16,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,19,* Unit test for the Compiler DisambiguatPrivateeProperties pass.
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,21,* @author johnlenz@google.com (John Lenz)
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,23,public class DisambiguatePrivatePropertiesTest extends CompilerTestCase {
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,25,private boolean useGoogleCodingConvention = true;
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,27,@Override
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,28,protected CompilerPass getProcessor(Compiler compiler) {
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,29,return new DisambiguatePrivateProperties(compiler);
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,32,@Override
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,33,protected CodingConvention getCodingConvention() {
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,34,if (useGoogleCodingConvention) {
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,35,return new GoogleCodingConvention();
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,36,} else {
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,37,return new ClosureCodingConvention();
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,41,@Override
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,42,protected int getNumRepetitions() {
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,43,return 1;
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,46,@Override
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,47,protected void setUp() throws Exception {
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,48,useGoogleCodingConvention = true;
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,51,public void testNoRenaming1() {
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,52,useGoogleCodingConvention = true;
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,54,// Not variables
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,55,"testSame(""var x_"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,57,// Not standard props
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,58,"testSame(""x.prop"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,60,// Not annotated props (we don't use type information)
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,61,"testSame(""var x = {};\n/** @private */ x.prop;"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,64,// Not quoted props
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,65,"testSame(""({})['prop_'];"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,66,"testSame(""({'prop_': 1});"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,67,"testSame(""({get 'prop_'(){ return 1} });"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,68,"testSame(""({set 'prop_'(a){this.a = 1} });"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,70,useGoogleCodingConvention = false;
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,72,// Not when the coding convention doesn't understand it.
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,73,"testSame(""({}).prop_;"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,74,"testSame(""({prop_: 1});"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,75,"testSame(""({get prop_(){ return 1} });"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,76,"testSame(""({set prop_(a){this.a = 1} });"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,79,public void testRenaming1() {
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,80,useGoogleCodingConvention = true;
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,82,test(
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,83,"""({}).prop_;"","
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,84,"""({}).prop_$0;"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,86,test(
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,87,"""({prop_: 1});"","
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,88,"""({prop_$0: 1});"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,90,test(
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,91,"""({get prop_(){ return 1} });"","
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,92,"""({get prop_$0(){ return 1} });"");"
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,94,test(
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,95,"""({set prop_(a){this.a = 1} });"","
+True,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,test/com/google/javascript/jscomp/DisambiguatePrivatePropertiesTest.java,96,"""({set prop_$0(a){this.a = 1} });"");"

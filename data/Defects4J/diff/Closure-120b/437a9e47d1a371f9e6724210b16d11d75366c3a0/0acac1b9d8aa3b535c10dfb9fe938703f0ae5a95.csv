@@ -1,0 +1,113 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2040,hile (n != jsRoot) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2040,while (n != jsRoot && n.getParent() != null) {
+False,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2042,f (n.isFunction()) { return n; }
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2042,if (n.isFunction()) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2043,return n;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,38,import java.util.HashMap;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3290,"* Given an AST and its copy, map the root node of each scope of main to the"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3291,* corresponding root node of clone
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3293,"public static Map<Node, Node> mapMainToClone(Node main, Node clone) {"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3294,Preconditions.checkState(main.isEquivalentTo(clone));
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3295,"Map<Node, Node> mtoc = new HashMap<Node, Node>();"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3296,"mtoc.put(main, clone);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3297,"mtocHelper(mtoc, main, clone);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3298,return mtoc;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3301,"private static void mtocHelper(Map<Node, Node> map, Node main, Node clone) {"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3302,if (main.isFunction()) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3303,"map.put(main, clone);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3305,"Node mchild = main.getFirstChild(), cchild = clone.getFirstChild();"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3306,while (mchild != null) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3307,"mtocHelper(map, mchild, cchild);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3308,mchild = mchild.getNext();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3309,cchild = cchild.getNext();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3313,/** Checks that the scope roots marked as changed have indeed changed */
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3314,"public static void verifyScopeChanges(Map<Node, Node> map,"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3315,"Node main, boolean verifyUnchangedNodes) {"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3316,"// If verifyUnchangedNodes is false, we are comparing the initial AST to the"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3317,// final AST. Don't check unmarked nodes b/c they may have been changed by
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3318,// non-loopable passes.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3319,"// If verifyUnchangedNodes is true, we are comparing the ASTs before & after"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3320,// a pass. Check all scope roots.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3321,"final Map<Node, Node> mtoc = map;"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3322,final boolean checkUnchanged = verifyUnchangedNodes;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3323,Node clone = mtoc.get(main);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3324,if (main.getChangeTime() > clone.getChangeTime()) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3325,Preconditions.checkState(!main.isEquivalentToShallow(clone));
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3326,} else if (checkUnchanged) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3327,Preconditions.checkState(main.isEquivalentToShallow(clone));
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3329,"visitPreOrder(main,"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3330,new Visitor() {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3331,@Override
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3332,public void visit(Node n) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3333,if (n.isFunction() && mtoc.containsKey(n)) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3334,Node clone = mtoc.get(n);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3335,if (n.getChangeTime() > clone.getChangeTime()) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3336,Preconditions.checkState(!n.isEquivalentToShallow(clone));
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3337,} else if (checkUnchanged) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3338,Preconditions.checkState(n.isEquivalentToShallow(clone));
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3343,Predicates.<Node>alwaysTrue());
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,106,// Used for sanity checks between loopable passes
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,107,private Node lastAst;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,108,"private Map<Node, Node> mtoc; // Stands for ""main to clone"""
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,119,this.jsRoot = compiler.getJsRoot();
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,207,setSanityCheckState();
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,210,private void setSanityCheckState() {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,211,lastAst = jsRoot.cloneTree();
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,212,"mtoc = NodeUtil.mapMainToClone(jsRoot, lastAst);"
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,225,sRoot = root;
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,246,"oid maybeSanityCheck(Node externs, Node root) {"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,255,"private void maybeSanityCheck(Node externs, Node root) {"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,258,"NodeUtil.verifyScopeChanges(mtoc, jsRoot, true);"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,259,setSanityCheckState();
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,302,urrentScope = n;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,313,// NodeTraversal causes setScope calls outside loops; ignore them.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,314,if (inLoop) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,315,currentScope = n.isFunction() ? n : compiler.getEnclosingScope(n);
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,393,urrentScope = root;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,407,setScope(root);
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,25,mport com.google.javascript.jscomp.NodeTraversal.AbstractPreOrderCallback;
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,34,mport java.util.HashMap;
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,741,"rivate Map<Node, Node> findCorrespondingNodes(Node n1, Node n2) {"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,742,reconditions.checkState(n1.isEquivalentTo(n2));
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,743,"ap<Node, Node> correspondingNodes = new HashMap<Node, Node>();"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,744,"orrespondingNodes.put(n1, n2);"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,745,"orrespondingNodesHelper(correspondingNodes, n1, n2);"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,746,eturn correspondingNodes;
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,749,"rivate void correspondingNodesHelper(Map<Node, Node> map, Node n1, Node n2) {"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,750,f (n1.isFunction()) {
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,751,"ap.put(n1, n2);"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,753,"or (Node child1 = n1.getFirstChild(), child2 = n2.getFirstChild();"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,754,hild1 != null;
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,755,"hild1 = child1.getNext(), child2 = child2.getNext()) {"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,756,"orrespondingNodesHelper(map, child1, child2);"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,799,"inal Map<Node, Node> nodeMap ="
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,800,"indCorrespondingNodes(mainRoot, mainRootClone);"
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,778,"Map<Node, Node> mtoc = NodeUtil.mapMainToClone(mainRoot, mainRootClone);"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,944,"/ If a scope is marked as changed, it should not be shallow-equivalent"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,945,/ to its corresponding cloned scope. The converse is false b/c we don't
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,946,/ track changes to scopes by non-loopable passes.
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,947,f (mainRoot.getChangeTime() != 0) {
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,948,ssertFalse(mainRoot.isEquivalentToShallow(nodeMap.get(mainRoot)));
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,950,"odeTraversal.traverse(compiler, mainRoot,"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,951,ew AbstractPreOrderCallback() {
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,952,Override
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,953,ublic final boolean shouldTraverse(
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,954,"odeTraversal t, Node n, Node p) {"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,955,f (n.isFunction() &&
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,956,.getChangeTime() != 0 && nodeMap.containsKey(n)) {
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,957,ssertFalse(n.isEquivalentToShallow(nodeMap.get(n)));
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,959,eturn true;
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,922,// Check correctness of the changed-scopes-only traversal
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,923,"NodeUtil.verifyScopeChanges(mtoc, mainRoot, false);"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,39,"po.setSanityCheck(new PassFactory(""sanityCheck"", false) {"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,40,@Override
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,41,protected CompilerPass create(AbstractCompiler compiler) {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,42,return new SanityCheck(compiler);
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,101,ublic void testSanityCheck() {
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,102,oop loop = optimizer.addFixedPointLoop();
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,103,"ddLoopedPass(loop, ""x"", 1);"
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,104,"ddOneTimePass(""z"");"
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,105,ptimizer.setSanityCheck(
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,106,"reatePassFactory(""sanity"", createPass(""sanity"", 0), false));"
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,107,"ssertPasses(""x"", ""sanity"", ""x"", ""sanity"", ""z"", ""sanity"");"

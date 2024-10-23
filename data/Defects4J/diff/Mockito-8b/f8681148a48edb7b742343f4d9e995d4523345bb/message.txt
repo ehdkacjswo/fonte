@@ -1,0 +1,32 @@
+- in order to start seperating serializable funtionality (sorry 5 hg versions again)
+-- created a MockitoMethod Interface
+-- changed MockitoMethod to SerializableMockitoMethod which implements MockitoMethod
+-- return MockitoMethod everywhere we were calling the getMethod before
+-- added methods to MockitoMethod that match the methods we were using from a normal Method
+
+- in order to begin separation of serializable from non-serializable mocks
+-- renamed MockitoMethodProxy to SerializableMockitoMethodProxy
+-- created MockitMethodProxy interface
+-- return MockitoMehtodProxy in all classes that were using a MethodProxy. (CGLIBHacker, FilteredCGLIBProxyRealMethod, HasCGLIBMethodProxy, MethodInterceptorFilter)
+
+- in order to begin separation of serializable from non-serializable mocks
+-- renamed MockitoMethodProxy to SerializableMockitoMethodProxy
+-- created MockitMethodProxy interface
+-- return MockitoMehtodProxy in all classes that were using a MethodProxy. (CGLIBHacker, FilteredCGLIBProxyRealMethod, HasCGLIBMethodProxy, MethodInterceptorFilter)
+
+- in order to begin separation of serializable from non-serializable mocks
+-- add serializable MockSetting
+-- when creating MockitoMockProxy look at the isSerializable setting and create SerializableMockitoMockProxy or DelegatingMockitoMockProxy
+-- not sure about the createMockitoMethodProxy in IMockHandler
+
+- in order to begin separation of serializable from non-serializable mocks
+-- added createMockitoMethod to IMockHandler and MockHandler (still need to ask szczepan about this??? but is only place that has settings)
+--- createMockitoMethod determines which MockitoMethod to create based on MockSettings.isSerializable.
+-- changed Invocation to take MockitoMethod instead of Method
+
+--HG--
+rename : src/org/mockito/internal/creation/MockitoMethodProxy.java => src/org/mockito/internal/creation/SerializableMockitoMethodProxy.java
+rename : src/org/mockito/internal/invocation/MockitoMethod.java => src/org/mockito/internal/invocation/SerializableMockitoMethod.java
+rename : test/org/mockito/internal/creation/MockitoMethodProxyTest.java => test/org/mockito/internal/creation/SerializableMockitoMethodProxyTest.java
+rename : test/org/mockito/internal/invocation/MockitoMethodTest.java => test/org/mockito/internal/invocation/SerializableMockitoMethodTest.java
+extra : convert_revision : svn%3Aaa2aecf3-ea3e-0410-9d70-716747e7c967/trunk%401655

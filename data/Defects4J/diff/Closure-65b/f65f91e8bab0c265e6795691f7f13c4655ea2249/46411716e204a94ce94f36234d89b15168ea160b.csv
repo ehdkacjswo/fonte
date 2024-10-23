@@ -1,0 +1,213 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,2,* Copyright 2008 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,17,package com.google.javascript.jscomp.deps;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,19,import com.google.common.base.CharMatcher;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,20,import com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,21,import com.google.javascript.jscomp.ErrorManager;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,23,import java.io.Reader;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,24,import java.io.StringReader;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,25,import java.util.Collection;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,26,import java.util.logging.Logger;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,27,import java.util.regex.Matcher;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,28,import java.util.regex.Pattern;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,31,* A parser that can extract dependency information from a .js file.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,33,* @author agrieve@google.com (Andrew Grieve)
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,34,* @author ielashi@google.com (Islam El-Ashi)
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,36,public class JsFunctionParser extends JsFileLineParser {
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,38,public static class SymbolInfo {
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,39,public final String functionName;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,40,public final String symbol;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,42,"private SymbolInfo(String functionName, String symbol) {"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,43,this.functionName = functionName;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,44,this.symbol = symbol;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,48,private static Logger logger = Logger.getLogger(JsFunctionParser.class.getName());
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,50,/** Pattern for matching functions. */
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,51,private Pattern pattern;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,53,/** Matcher used in the parsing. */
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,54,private Matcher matcher;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,56,/** Symbols parsed. */
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,57,private Collection<SymbolInfo> symbols;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,59,/** Functions to parse */
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,60,private Collection<String> functionsToParse;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,63,* Constructor
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,65,* @param functions Functions to parse.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,66,* @param errorManager Handles parse errors.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,68,"public JsFunctionParser(Collection<String> functions, ErrorManager errorManager) {"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,69,super(errorManager);
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,70,functionsToParse = functions;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,71,pattern = getPattern(functions);
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,72,"matcher = pattern.matcher("""");"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,76,* Constructs a pattern to extract the arguments of the given functions.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,78,* @param functions Functions to parse.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,79,* @return A pattern to extract {@code functions}' arguments.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,81,private Pattern getPattern(Collection<String> functions) {
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,82,"StringBuilder sb = new StringBuilder(""(?:^|;)\\s*("");"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,84,for (String function : functions) {
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,85,"sb.append(Pattern.quote(function) + ""|"");"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,88,// remove last '|'
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,89,sb.deleteCharAt(sb.length() - 1);
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,90,"sb.append("")\\s*\\((.*?)\\)"");"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,92,return Pattern.compile(sb.toString());
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,96,* Parses the given file and returns the dependency information that it
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,97,* contained.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,99,* @param filePath Path to the file to parse.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,100,* @param fileContents The contents to parse.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,101,* @return A collection containing all symbols found in the
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,102,*     file.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,104,"public Collection<SymbolInfo> parseFile(String filePath, String fileContents) {"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,105,"return parseReader(filePath, new StringReader(fileContents));"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,108,"private Collection<SymbolInfo> parseReader(String filePath, Reader fileContents) {"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,109,symbols = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,111,"logger.fine(""Parsing Source: "" + filePath);"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,112,"doParse(filePath, fileContents);"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,114,return symbols;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,118,"* Parses a line of javascript, extracting dependency information."
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,120,@Override
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,121,protected boolean parseLine(String line) throws ParseException {
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,122,boolean hasFunctions = false;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,123,boolean parseLine = false;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,125,// Quick sanity check that will catch most cases. This is a performance
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,126,// win for people with a lot of JS.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,127,for (String function : functionsToParse) {
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,128,if (line.indexOf(function) != -1) {
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,129,parseLine = true;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,130,break;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,134,if (parseLine) {
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,135,matcher.reset(line);
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,136,while (matcher.find()) {
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,137,hasFunctions = true;
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,138,String functionName = matcher.group(1);
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,139,String arg = parseJsString(matcher.group(2)); // Parse the param.
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,140,"symbols.add(new SymbolInfo(functionName, arg));"
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,144,return !shortcutMode || hasFunctions ||
+True,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,src/com/google/javascript/jscomp/deps/JsFunctionParser.java,145,CharMatcher.WHITESPACE.matchesAllOf(line);
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,2,* Copyright 2008 The Closure Compiler Authors.
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,17,package com.google.javascript.jscomp.deps;
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,19,import com.google.common.collect.Lists;
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,20,import com.google.javascript.jscomp.ErrorManager;
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,21,import com.google.javascript.jscomp.PrintStreamErrorManager;
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,22,import com.google.javascript.jscomp.deps.JsFunctionParser.SymbolInfo;
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,24,import junit.framework.TestCase;
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,26,import java.util.Collection;
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,27,import java.util.Iterator;
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,30,* Tests for {@link JsFunctionParser}
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,32,* @author agrieve@google.com (Andrew Grieve)
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,33,* @author ielashi@google.com (Islam El-Ashi)
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,35,public class JsFunctionParserTest extends TestCase {
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,36,"private static final String SRC_PATH = ""a"";"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,37,private JsFunctionParser parser;
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,38,private ErrorManager errorManager;
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,39,private Collection<String> functions = Lists.newArrayList(
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,40,"""goog.require"", ""goog.provide"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,42,@Override
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,43,public void setUp() {
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,44,errorManager = new PrintStreamErrorManager(System.err);
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,45,"parser = new JsFunctionParser(functions, errorManager);"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,46,parser.setShortcutMode(true);
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,50,* Tests:
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,51,"*  -Parsing of comments,"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,52,"*  -Parsing of different styles of quotes,"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,53,*  -Correct recording of what was parsed.
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,55,public void testParseFile() {
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,56,"final String CONTENTS = ""/*"""
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,57,"+ ""goog.provide('no1');*//*\n"""
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,58,"+ ""goog.provide('no2');\n"""
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,59,"+ ""*/goog.provide('yes1');\n"""
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,60,"+ ""/* blah */goog.provide(\""yes2\"")/* blah*/\n"""
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,61,"+ ""goog.require('yes3'); // goog.provide('no3');\n"""
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,62,"+ ""// goog.provide('no4');\n"""
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,63,"+ ""goog.require(\""bar.data.SuperstarAddStarThreadActionRequestDelegate\""); """
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,64,"+ ""//no new line at eof"";"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,66,"Collection<SymbolInfo> symbols = parser.parseFile(SRC_PATH, CONTENTS);"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,68,Iterator<SymbolInfo> i = symbols.iterator();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,69,SymbolInfo symbolInfo = i.next();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,70,"assertEquals(symbolInfo.symbol, ""yes1"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,71,"assertEquals(symbolInfo.functionName, ""goog.provide"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,73,symbolInfo = i.next();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,74,"assertEquals(symbolInfo.symbol, ""yes2"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,75,"assertEquals(symbolInfo.functionName, ""goog.provide"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,77,symbolInfo = i.next();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,78,"assertEquals(symbolInfo.symbol, ""yes3"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,79,"assertEquals(symbolInfo.functionName, ""goog.require"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,81,symbolInfo = i.next();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,82,"assertEquals(symbolInfo.symbol, ""bar.data.SuperstarAddStarThreadActionRequestDelegate"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,83,"assertEquals(symbolInfo.functionName, ""goog.require"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,85,"assertEquals(symbols.size(), 4);"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,86,"assertEquals(0, errorManager.getErrorCount());"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,87,"assertEquals(0, errorManager.getWarningCount());"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,90,public void testMultiplePerLine() {
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,91,"final String CONTENTS = ""goog.provide('yes1');goog.provide('yes2');/*"""
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,92,"+ ""goog.provide('no1');*/goog.provide('yes3');//goog.provide('no2');"";"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,94,"Collection<SymbolInfo> symbols = parser.parseFile(SRC_PATH, CONTENTS);"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,96,Iterator<SymbolInfo> i = symbols.iterator();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,97,SymbolInfo symbolInfo = i.next();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,98,"assertEquals(symbolInfo.symbol, ""yes1"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,99,"assertEquals(symbolInfo.functionName, ""goog.provide"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,101,symbolInfo = i.next();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,102,"assertEquals(symbolInfo.symbol, ""yes2"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,103,"assertEquals(symbolInfo.functionName, ""goog.provide"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,105,symbolInfo = i.next();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,106,"assertEquals(symbolInfo.symbol, ""yes3"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,107,"assertEquals(symbolInfo.functionName, ""goog.provide"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,109,"assertEquals(symbols.size(), 3);"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,110,"assertEquals(0, errorManager.getErrorCount());"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,111,"assertEquals(0, errorManager.getWarningCount());"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,114,public void testShortcutMode1() {
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,115,"// For efficiency reasons, we stop reading after the ctor."
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,116,"final String CONTENTS = "" // hi ! \n /* this is a comment */ """
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,117,"+ ""goog.provide('yes1');\n /* and another comment */ \n"""
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,118,"+ ""goog.provide('yes2'); // include this\n"""
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,119,"+ ""function foo() {}\n"""
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,120,"+ ""goog.provide('no1');"";"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,122,"Collection<SymbolInfo> symbols = parser.parseFile(SRC_PATH, CONTENTS);"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,124,Iterator<SymbolInfo> i = symbols.iterator();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,125,SymbolInfo symbolInfo = i.next();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,126,"assertEquals(symbolInfo.symbol, ""yes1"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,127,"assertEquals(symbolInfo.functionName, ""goog.provide"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,129,symbolInfo = i.next();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,130,"assertEquals(symbolInfo.symbol, ""yes2"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,131,"assertEquals(symbolInfo.functionName, ""goog.provide"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,133,"assertEquals(symbols.size(), 2);"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,134,"assertEquals(0, errorManager.getErrorCount());"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,135,"assertEquals(0, errorManager.getWarningCount());"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,138,public void testShortcutMode2() {
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,139,"final String CONTENTS = ""/** goog.provide('no1'); \n"" +"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,140,""" * goog.provide('no2');\n */\n"""
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,141,"+ ""goog.provide('yes1');\n"";"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,143,"Collection<SymbolInfo> symbols = parser.parseFile(SRC_PATH, CONTENTS);"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,145,Iterator<SymbolInfo> i = symbols.iterator();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,146,SymbolInfo symbolInfo = i.next();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,147,"assertEquals(symbolInfo.symbol, ""yes1"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,148,"assertEquals(symbolInfo.functionName, ""goog.provide"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,150,"assertEquals(symbols.size(), 1);"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,151,"assertEquals(0, errorManager.getErrorCount());"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,152,"assertEquals(0, errorManager.getWarningCount());"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,155,public void testShortcutMode3() {
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,156,"final String CONTENTS = ""/**\n"" +"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,157,""" * goog.provide('no1');\n */\n"""
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,158,"+ ""goog.provide('yes1');\n"";"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,160,"Collection<SymbolInfo> symbols = parser.parseFile(SRC_PATH, CONTENTS);"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,162,Iterator<SymbolInfo> i = symbols.iterator();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,163,SymbolInfo symbolInfo = i.next();
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,164,"assertEquals(symbolInfo.symbol, ""yes1"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,165,"assertEquals(symbolInfo.functionName, ""goog.provide"");"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,166,"assertEquals(0, errorManager.getErrorCount());"
+True,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java,167,"assertEquals(0, errorManager.getWarningCount());"

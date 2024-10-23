@@ -1,0 +1,124 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,789,"pdateTypeOfParameters(n, fnType);"
+False,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,790,"pdateTypeOfThisOnClosure(n, fnType);"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,789,"backwardsInferenceFromCallSite(n, fnType);"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,855,* We only do forward type inference. We do not do full backwards
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,856,* type inference.
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,858,"* In other words, if we have,"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,859,* <code>
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,860,* var x = f();
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,861,* g(x);
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,862,* </code>
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,863,* a forward type-inference engine would try to figure out the type
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,864,"* of ""x"" from the return type of ""f"". A backwards type-inference engine"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,865,"* would try to figure out the type of ""x"" from the parameter type of ""g""."
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,867,"* However, there are a few special syntactic forms where we do some"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,868,"* some half-assed backwards type-inference, because programmers"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,869,"* expect it in this day and age. To take an example from java,"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,870,* <code>
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,871,* List<String> x = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,872,* </code>
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,873,* The Java compiler will be able to infer the generic type of the List
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,874,* returned by newArrayList().
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,876,"* In much the same way, we do some special-case backwards inference for"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,877,* JS. Those cases are enumerated here.
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,879,"private void backwardsInferenceFromCallSite(Node n, FunctionType fnType) {"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,880,"updateTypeOfParameters(n, fnType);"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,881,"updateTypeOfThisOnClosure(n, fnType);"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,882,"updateBind(n, fnType);"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,886,"* When ""bind"" is called on a function, we infer the type of the returned"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,887,"* ""bound"" function by looking at the number of parameters in the call site."
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,889,"private void updateBind(Node n, FunctionType fnType) {"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,890,"// TODO(nicksantos): Use the coding convention, so that we get goog.bind"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,891,// for free.
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,892,Node calledFn = n.getFirstChild();
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,893,boolean looksLikeBind = calledFn.isGetProp()
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,894,"&& calledFn.getLastChild().getString().equals(""bind"");"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,895,if (!looksLikeBind) {
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,896,return;
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,899,Node callTarget = calledFn.getFirstChild();
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,900,FunctionType callTargetFn = getJSType(callTarget)
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,901,.restrictByNotNullOrUndefined().toMaybeFunctionType();
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,902,if (callTargetFn == null) {
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,903,return;
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,906,n.setJSType(callTargetFn.getBindReturnType(n.getChildCount() - 1));
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,520,"/ Notice that ""call"" and ""bind"" have the same argument signature,"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,521,"/ except that all the arguments of ""bind"" (except the first)"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,522,/ are optional.
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,523,unctionBuilder builder = new FunctionBuilder(registry)
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,524,withReturnType(
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,525,sCall ?
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,526,etReturnType() :
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,527,new FunctionBuilder(registry)
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,528,withReturnType(getReturnType()).build()));
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,530,ode origParams = getParametersNode();
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,531,f (origParams != null) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,532,ode params = origParams.cloneTree();
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,534,"ode thisTypeNode = Node.newString(Token.NAME, ""thisType"");"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,535,hisTypeNode.setJSType(
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,536,egistry.createOptionalNullableType(getTypeOfThis()));
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,537,arams.addChildToFront(thisTypeNode);
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,538,hisTypeNode.setOptionalArg(isCall);
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,540,f (isBind) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,541,/ The arguments of bind() are unique in that they are all
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,542,/ optional but not undefinable.
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,543,or (Node current = thisTypeNode.getNext();
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,544,urrent != null; current = current.getNext()) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,545,urrent.setOptionalArg(true);
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,549,uilder.withParamsNode(params);
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,552,"efineDeclaredProperty(name, builder.build(), source);"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,520,"defineDeclaredProperty(name, getCallOrBindSignature(isCall), source);"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,547,"* Get the return value of calling ""bind"" on this function"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,548,* with the specified number of arguments.
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,550,"* If -1 is passed, then we will return a result that accepts"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,551,* any parameters.
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,553,public FunctionType getBindReturnType(int argsToBind) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,554,FunctionBuilder builder = new FunctionBuilder(registry)
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,555,.withReturnType(getReturnType());
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,556,if (argsToBind >= 0) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,557,Node origParams = getParametersNode();
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,558,if (origParams != null) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,559,Node params = origParams.cloneTree();
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,560,for (int i = 1; i < argsToBind && params.getFirstChild() != null; i++) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,561,params.removeFirstChild();
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,563,builder.withParamsNode(params);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,566,return builder.build();
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,570,"* Notice that ""call"" and ""bind"" have the same argument signature,"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,571,"* except that all the arguments of ""bind"" (except the first)"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,572,* are optional.
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,574,private FunctionType getCallOrBindSignature(boolean isCall) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,575,boolean isBind = !isCall;
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,576,FunctionBuilder builder = new FunctionBuilder(registry)
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,577,.withReturnType(isCall ? getReturnType() : getBindReturnType(-1));
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,579,Node origParams = getParametersNode();
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,580,if (origParams != null) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,581,Node params = origParams.cloneTree();
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,583,"Node thisTypeNode = Node.newString(Token.NAME, ""thisType"");"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,584,thisTypeNode.setJSType(
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,585,registry.createOptionalNullableType(getTypeOfThis()));
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,586,params.addChildToFront(thisTypeNode);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,587,thisTypeNode.setOptionalArg(isCall);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,589,if (isBind) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,590,// The arguments of bind() are unique in that they are all
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,591,// optional but not undefinable.
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,592,for (Node current = thisTypeNode.getNext();
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,593,current != null; current = current.getNext()) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,594,current.setOptionalArg(true);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,598,builder.withParamsNode(params);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,601,return builder.build();
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6242,public void testFunctionBind3() throws Exception {
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6243,testTypes(
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6244,"""/** @type {function(number, string): boolean} */"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6245,"""function f(x, y) { return true; }"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6246,"""f.bind(null, 3)(true);"","
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6247,"""actual parameter 1 of function does not match formal parameter\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6248,"""found   : boolean\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6249,"""required: string"");"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6252,public void testGoogBind1() throws Exception {
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6253,// We currently do not support goog.bind natively.
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6254,testClosureTypes(
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6255,"""var goog = {}; goog.bind = function(var_args) {};"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6256,"""/** @type {function(number): boolean} */"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6257,"""function f(x, y) { return true; }"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6258,"""f(goog.bind(f, null, 'x')());"","
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6259,null);

@@ -1,0 +1,67 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2509,f (!isExprAssign(n)) {
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2510,eturn false;
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2512,eturn isPrototypeProperty(n.getFirstChild().getFirstChild());
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2509,return isExprAssign(n) &&
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2510,isPrototypeProperty(n.getFirstChild().getFirstChild());
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2520,f (lhsString == null) {
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2521,eturn false;
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2523,"nt prototypeIdx = lhsString.indexOf("".prototype."");"
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2524,eturn prototypeIdx != -1;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2518,"return lhsString != null && lhsString.contains("".prototype."");"
+False,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,32,mport com.google.javascript.jscomp.CheckLevel;
+False,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1002,** Check that we don't create new properties on structs. */
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1002,"* After a struct object is created, we can't add new properties to it, with"
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1003,"* one exception. We allow creation of ""static"" properties like"
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1004,* Foo.prototype.bar = baz;
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1005,"* where Foo.prototype is a struct, if the assignment happens at the top level"
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1006,* and the constructor Foo is defined in the same file.
+False,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1009,f (objType.isStruct() && !objType.hasProperty(pname)) {
+False,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1010,f (!(obj.isThis() &&
+False,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1011,etJSType(t.getScope().getRootNode()).isConstructor())) {
+False,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1012,"eport(t, prop, ILLEGAL_PROPERTY_CREATION);"
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1015,if (!objType.isStruct() || objType.hasProperty(pname)) {
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1016,return;
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1018,Scope s = t.getScope();
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1019,if (obj.isThis() && getJSType(s.getRootNode()).isConstructor()) {
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1020,return;
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1022,"// Prop created outside ctor, check that it's a static prop"
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1023,Node assgnStm = lvalue.getParent().getParent();
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1024,if (objType instanceof ObjectType &&
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1025,s.isGlobal() &&
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1026,NodeUtil.isPrototypePropertyDeclaration(assgnStm)) {
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1027,ObjectType instance =
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1028,objType.toObjectType().getOwnerFunction().getInstanceType();
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1029,String file = lvalue.getSourceFileName();
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1030,Node ctor = instance.getConstructor().getSource();
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1031,if (ctor != null && ctor.getSourceFileName().equals(file)) {
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1032,return;
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1035,"report(t, prop, ILLEGAL_PROPERTY_CREATION);"
+False,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1699,f( functionJSDocInfo != null  &&
+True,src/com/google/javascript/jscomp/TypeCheck.java,src/com/google/javascript/jscomp/TypeCheck.java,1720,if (functionJSDocInfo != null  &&
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4113,"Square.prototype.id = function(x) { return x; };\n"","
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4114,"Cannot add a property to a struct instance "" +"
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4115,"after it is constructed."");"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4113,"""Square.prototype.id = function(x) { return x; };"");"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4122,"""/** @constructor */\n"" +"
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4126,"Bar.prototype.someprop = 123;\n"","
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4127,"Cannot add a property to a struct instance "" +"
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4128,"after it is constructed."");"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4125,"""Bar.prototype.someprop = 123;"");"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4128,public void testSetprop12() throws Exception {
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4129,// Create property on a constructor of structs (which isn't itself a struct)
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4130,"testTypes(""/**\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4131,""" * @constructor\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4132,""" * @struct\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4133,""" */\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4134,"""function Foo() {}\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4135,"""Foo.someprop = 123;"");"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4312,"""/** @constructor */\n"" +"
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,11146,"tring FN_DECL = ""/** \n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,11154,"String fnDecl = ""/** \n"" +"
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,11154,N_DECL +
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,11162,fnDecl +
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,11161,N_DECL +
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,11169,fnDecl +
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,11170,N_DECL +
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,11178,fnDecl +

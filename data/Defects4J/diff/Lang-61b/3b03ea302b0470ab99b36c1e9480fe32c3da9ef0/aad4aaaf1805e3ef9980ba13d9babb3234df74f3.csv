@@ -1,0 +1,1040 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,56,import java.io.Serializable;
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,57, <p>A range of characters. Able to understand the idea of a contiguous
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,58," sublist of an alphabet, a negated concept, and a set of characters.</p>"
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,60, <p>Used by <code>CharSet</code> to handle sets of characters.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,59,"* <p>A contiguous range of characters, optionally negated.</p>"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,61,* <p>This class is immutable.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,62," @author <a href=""bayard@generationjava.com"">Henri Yandell</a>"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,63,* @author Henri Yandell
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,66," @version $Id: CharRange.java,v 1.9 2003/08/02 11:20:49 scolebourne Exp $"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,67,"* @version $Id: CharRange.java,v 1.10 2003/08/02 18:18:33 scolebourne Exp $"
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,68,lass CharRange {
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,71, <p>Used internally to represent <code>null</code> in a char.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,73,rivate static final char UNSET = 0;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,69,public final class CharRange implements Serializable {
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,75,rivate char start;
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,76,rivate char close;
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,77,rivate boolean negated;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,71,"/** Serialization lock, Lang version 2.0 */"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,72,static final long serialVersionUID = 8270183163158333422L;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,74,"/** The first character, inclusive, in the range */"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,75,private final char start;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,76,"/** The last character, inclusive, in the range */"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,77,private final char end;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,78,/** True if the range is everything except the characters specified */
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,79,private final boolean negated;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,81,/** Cached toString */
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,82,private transient String iToString;
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,80, <p>Construct a <code>CharRange</code> over a single character.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,86,* <p>Constructs a <code>CharRange</code> over a single character.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,82, @param start char over which this range is placed
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,88,* @param ch  only character in this range
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,84,ublic CharRange(char start) {
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,85,his.start = start;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,90,public CharRange(char ch) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,91,"this(ch, ch, false);"
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,89, <p>Construct a <code>CharRange</code> over a set of characters.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,95,* <p>Constructs a <code>CharRange</code> over a set of characters.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,91, @param start  char start character in this range. inclusive
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,92, @param close  char close character in this range. inclusive
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,97,"* @param start  first character, inclusive, in this range"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,98,"* @param end  last character, inclusive, in this range"
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,94,"ublic CharRange(char start, char close) {"
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,95,his.start = start;
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,96,his.close = close;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,100,"public CharRange(char start, char end) {"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,101,"this(start, end, false);"
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,100, <p>Construct a <code>CharRange</code> over a set of characters.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,105,"* <p>Constructs a <code>CharRange</code> over a set of characters,"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,106,* optionally negating the range.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,102, @param start  String start first character is in this range (inclusive).
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,103, @param close  String first character is close character in this
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,104,  range (inclusive).
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,105, @throws NullPointerException if either String is <code>null</code>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,108,* <p>A negated range includes everything except that defined by the
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,109,* start and end characters.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,111,"* <p>If start and end are in the wrong order, they are reversed."
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,112,* Thus <code>a-e</code> is the same as <code>e-a</code>.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,114,"* @param start  first character, inclusive, in this range"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,115,"* @param end  last character, inclusive, in this range"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,116,* @param negated  true to express everything except the range
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,107,"ublic CharRange(String start, String close) {"
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,108,his.start = start.charAt(0);
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,109,his.close = close.charAt(0);
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,118,"public CharRange(char start, char end, boolean negated) {"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,119,super();
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,120,if (start > end) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,121,char temp = start;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,122,start = end;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,123,end = temp;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,126,this.start = start;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,127,this.end = end;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,128,this.negated = negated;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,131,// Accessors
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,113, <p>Get the start character for this character range.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,134,* <p>Gets the start character for this character range.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,115, @return start char (inclusive)
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,136,* @return the start char (inclusive)
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,122, <p>Get the end character for this character range.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,143,* <p>Gets the end character for this character range.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,124, @return end char (inclusive)
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,145,* @return the end char (inclusive)
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,127,eturn this.close;
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,131, <p>Set the start character for this character range.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,133, @param ch  start char (inclusive)
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,135,ublic void setStart(char ch) {
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,136,his.start = ch;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,148,return this.end;
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,140, <p>Set the end character for this character range.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,152,* <p>Is this <code>CharRange</code> negated.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,142, @param ch  start char (inclusive)
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,154,* <p>A negated range includes everything except that defined by the
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,155,* start and end characters.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,157,* @return <code>true</code> is negated
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,144,ublic void setEnd(char ch) {
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,145,his.close = ch;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,159,public boolean isNegated() {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,160,return negated;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,163,// Contains
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,149, <p>Is this <code>CharRange</code> over many characters.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,166,* <p>Is the character specified contained in this range.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,151, @return boolean <code>true</code> is many characters
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,168,* @param ch  the character to check
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,169,* @return <code>true</code> if this range contains the input character
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,153,ublic boolean isRange() {
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,154,eturn this.close != UNSET;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,171,public boolean contains(char ch) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,172,return ((ch >= start && ch <= end) != negated);
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,158, <p>Is the passed in character <code>ch</code> inside
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,176,* <p>Are all the characters of the passed in range contained in
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,161, @param ch character to test for
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,162, @return boolean <code>true</code> is in range
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,179,* @param range  the range to check against
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,180,* @return <code>true</code> if this range entirely contains the input range
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,181,* @throws IllegalArgumentException if <code>null</code> input
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,164,ublic boolean inRange(char ch) {
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,165,f( isRange() ) {
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,166,eturn ((ch >= start) && (ch <= close));
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,183,public boolean contains(CharRange range) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,184,if (range == null) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,185,"throw new IllegalArgumentException(""The Range must not be null"");"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,187,if (negated) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,188,if (range.negated) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,189,return (start >= range.start && end <= range.end);
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,190,} else {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,191,return (range.end < start || range.start > end);
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,168,eturn start == ch;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,194,if (range.negated) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,195,return (start == 0 && end == Character.MAX_VALUE);
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,196,} else {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,197,return (start <= range.start && end >= range.end);
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,202,// Basics
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,173, <p>Checks if this <code>CharRange</code> is negated.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,175, @return boolean <code>true</code> is negated
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,205,"* <p>Compares two CharRange objects, returning true if they represent"
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,206,* exactly the same range of characters defined in the same way.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,208,* @param obj  the object to compare to
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,209,* @return true if equal
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,177,ublic boolean isNegated() {
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,178,eturn negated;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,211,public boolean equals(Object obj) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,212,if (obj == this) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,213,return true;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,215,if (obj instanceof CharRange == false) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,216,return false;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,218,CharRange other = (CharRange) obj;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,219,return (start == other.start && end == other.end && negated == other.negated);
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,182, <p>Sets this character range to be negated or not.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,184, <p>This implies that this <code>CharRange</code> is over
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,185, all characters except the ones in this range.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,223,* <p>Gets a hashCode compatable with the equals method.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,187, @param negated  <code>true</code> to negate the range
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,225,* @return a suitable hashCode
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,189,ublic void setNegated(boolean negated) {
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,190,his.negated = negated;
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,227,public int hashCode() {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,228,return 83 + start + 7 * end + (negated ? 1 : 0);
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,194, <p>Output a string representation of the character range.</p>
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,232,* <p>Gets a string representation of the character range.</p>
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,199,tringBuffer buf = new StringBuffer(4);
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,200,f (isNegated()) {
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,201,uf.append('^');
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,203,uf.append(start);
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,204,f (isRange()) {
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,205,uf.append('-');
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,206,uf.append(close);
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,237,if (iToString == null) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,238,StringBuffer buf = new StringBuffer(4);
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,239,if (isNegated()) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,240,buf.append('^');
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,242,buf.append(start);
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,243,if (start != end) {
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,244,buf.append('-');
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,245,buf.append(end);
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,247,iToString = buf.toString();
+False,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,208,eturn buf.toString();
+True,src/java/org/apache/commons/lang/CharRange.java,src/java/org/apache/commons/lang/CharRange.java,249,return iToString;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,56,import java.io.Serializable;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,57,import java.util.HashMap;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,58,import java.util.HashSet;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,57,mport java.util.LinkedList;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,58,mport java.util.List;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,60,import java.util.Map;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,61,import java.util.Set;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,66,"* <p>This class is immutable, but subclasses may not be.</p>"
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,63," @author <a href=""bayard@generationjava.com"">Henri Yandell</a>"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,68,* @author Henri Yandell
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,66," @version $Id: CharSet.java,v 1.9 2003/07/31 21:32:47 scolebourne Exp $"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,71,"* @version $Id: CharSet.java,v 1.10 2003/08/02 18:18:33 scolebourne Exp $"
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,68,ublic class CharSet {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,73,public class CharSet implements Serializable {
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,70,rivate List set = new LinkedList();
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,75,"/** Serialization lock, Lang version 2.0 */"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,76,static final long serialVersionUID = 5947847346149275958L;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,78,/** A CharSet defining no characters */
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,79,public static final CharSet EMPTY = new CharSet((String) null);
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,80,"/** A CharSet defining ASCII alphabetic characters ""a-zA-Z"" */"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,81,"public static final CharSet ASCII_ALPHA = new CharSet(""a-zA-Z"");"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,82,"/** A CharSet defining ASCII alphabetic characters ""a-z"" */"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,83,"public static final CharSet ASCII_ALPHA_LOWER = new CharSet(""a-z"");"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,84,"/** A CharSet defining ASCII alphabetic characters ""A-Z"" */"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,85,"public static final CharSet ASCII_ALPHA_UPPER = new CharSet(""A-Z"");"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,86,"/** A CharSet defining ASCII alphabetic characters ""0-9"" */"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,87,"public static final CharSet ASCII_NUMERIC = new CharSet(""0-9"");"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,90,* A Map of the common cases used in the factory.
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,91,* Subclasses can add more common patterns if desired.
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,93,protected static final Map COMMON = new HashMap();
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,94,static {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,95,"COMMON.put(null, EMPTY);"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,96,"COMMON.put("""", EMPTY);"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,97,"COMMON.put(""a-zA-Z"", ASCII_ALPHA);"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,98,"COMMON.put(""A-Za-z"", ASCII_ALPHA);"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,99,"COMMON.put(""a-z"", ASCII_ALPHA_LOWER);"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,100,"COMMON.put(""A-Z"", ASCII_ALPHA_UPPER);"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,101,"COMMON.put(""0-9"", ASCII_NUMERIC);"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,104,/** Shared range for the dash character */
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,105,private static final CharRange DASH = new CharRange('-');
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,106,/** Shared range for the negate character */
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,107,private static final CharRange NEGATE = new CharRange('^');
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,109,/** The set of CharRange objects */
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,110,private Set set = new HashSet();
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,73, <p>Restricted constructor.</p>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,114,* <p>Factory method to create a new CharSet using a special syntax.</p>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,116,* <ul>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,117,"*  <li><code>null</code> or empty string ("""")"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,118,* - set containing no characters</li>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,119,"*  <li>Single character, such as ""a"""
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,120,*  - set containing just that character</li>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,121,"*  <li>Multi character, such as ""a-e"""
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,122,*  - set containing characters from one character to the other</li>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,123,"*  <li>Negated, such as ""^a"" or ""^a-e"""
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,124,*  - set containing all characters except those defined</li>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,125,"*  <li>Combinations, such as ""abe-g"""
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,126,*  - set containing all the characters from the individual sets</li>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,127,* </ul>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,129,"* <p>If the same range is defined twice using the same syntax, only"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,130,* one range will be kept.
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,131,"* Thus, ""a-ca-c"" creates only one range of ""a-c""."
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,132,"* However, ""a-cabc"" creates two ranges as they are defined differently.</p>"
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,75, <p>Use the factory method
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,76, {@link CharSetUtils#evaluateSet(java.lang.String[])}.</p>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,134,* <p>All CharSet objects returned by this method will be immutable.</p>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,136,"* @param setStr  the String describing the set, may be null"
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,78,rotected CharSet(String set) {
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,79,dd(set);
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,138,public static CharSet getInstance(String setStr) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,139,Object set = COMMON.get(setStr);
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,140,if (set != null) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,141,return (CharSet) set;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,143,return new CharSet(setStr);
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,83, <p>Restricted constructor.</p>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,148,* <p>Constructs a new CharSet using the set syntax.</p>
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,85, <p>Use the factory method
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,86, {@link CharSetUtils#evaluateSet(java.lang.String[])}.</p>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,150,"* @param setStr  the String describing the set, may be null"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,152,protected CharSet(String setStr) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,153,super();
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,154,add(setStr);
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,158,* <p>Constructs a new CharSet using the set syntax.
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,159,* Each string is merged in with the set.</p>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,164,super();
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,173,* <p>Add a set definition string to the <code>CharSet</code>.</p>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,175,* @param str  set definition string
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,177,protected void add(String str) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,178,if (str == null) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,179,return;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,182,int len = str.length();
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,183,switch (len) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,184,case 0:
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,185,// do nothing
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,186,break;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,188,case 1:
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,189,set.add(new CharRange(str.charAt(0)));
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,190,break;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,192,default:
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,193,int start = -1;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,194,boolean negated = false;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,195,for (int i = 0; i < len; i++) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,196,char ch = str.charAt(i);
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,197,if (ch == '-') {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,198,if (start == -1) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,199,// dash found not as range separator
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,200,// treat as ordinary start block char
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,201,start = ch;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,202,} else if (i == len - 1) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,203,"// dash is last character, store two single characters"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,204,"set.add(new CharRange((char) start, (char) start, negated));"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,205,set.add(DASH);
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,206,start = -1;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,207,negated = false;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,208,} else {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,209,"// range block found, store it"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,210,"set.add(new CharRange((char) start, str.charAt(++i), negated));"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,211,start = -1;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,212,negated = false;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,214,} else if (ch == '^') {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,215,if (start == -1) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,216,if (negated) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,217,"// double negate, treat second as ordinary start block char"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,218,start = ch;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,219,} else {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,220,// negate next block
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,221,negated = true;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,223,} else {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,224,"// previous block has ended, store it"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,225,"set.add(new CharRange((char) start, (char) start, negated));"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,226,start = -1;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,227,negated = true;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,229,} else {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,230,if (start == -1) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,231,// start of block
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,232,start = ch;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,233,} else {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,234,"// previous block has ended, store it, and start next block"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,235,"set.add(new CharRange((char) start, (char) start, negated));"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,236,start = ch;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,237,negated = false;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,241,// handle leftovers
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,242,if (start != -1) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,243,"set.add(new CharRange((char) start, (char) start, negated));"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,244,} else if (negated) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,245,set.add(NEGATE);
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,247,break;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,253,* <p>Gets the internal set as an array of CharRange objects.</p>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,255,* @return an array of immutable CharRange objects
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,257,public CharRange[] getCharRanges() {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,258,return (CharRange[]) set.toArray(new CharRange[set.size()]);
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,102, @return <code>true</code> if it does contain the character
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,103,  <code>ch</code>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,267,* @return <code>true</code> if the set contains the characters
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,106,terator iterator = set.iterator();
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,107,oolean bool = false;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,108,hile (iterator.hasNext()) {
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,109,harRange range = (CharRange) iterator.next();
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,110,f (range.isNegated()) {
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,111,f (!range.inRange(ch)) {
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,112,ool = true;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,114, else {
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,115,f (range.inRange(ch)) {
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,116,ool = true;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,270,for (Iterator it = set.iterator(); it.hasNext();) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,271,CharRange range = (CharRange) it.next();
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,272,if (range.contains(ch)) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,273,return true;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,120,eturn bool;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,276,return false;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,279,// Basics
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,124, <p>Add a set definition string to the <code>CharSet</code>.</p>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,282,"* <p>Compares two CharSet objects, returning true if they represent"
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,283,* exactly the same set of characters defined in the same way.</p>
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,126, @param str  set definition string
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,285,* <p>The two sets <code>abc</code> and <code>a-c</code> are <i>not</i>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,286,* equal according to this method.</p>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,289,* @param obj  the object to compare to
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,290,* @return true if equal
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,128,rotected void add(String str) {
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,129,f (str == null) {
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,130,eturn;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,292,public boolean equals(Object obj) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,293,if (obj == this) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,294,return true;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,132,nt sz = str.length();
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,133,harRange range = null;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,135,"f (""-"".equals(str)) {"
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,136,ange = new CharRange('-');
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,137,et.add(range);
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,138,eturn;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,141,oolean end = false;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,142,oolean negated = false;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,143,or (int i = 0; i < sz; i++) {
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,144,har ch = str.charAt(i);
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,145,f (ch == '-') {
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,146,nd = true;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,147,ontinue;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,149,f (end) {
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,150,ange.setEnd(ch);
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,151,ontinue;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,153,f (ch == '^') {
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,154,egated = true;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,155,ontinue;
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,157,ange = new CharRange(ch);
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,158,ange.setNegated(negated);
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,159,et.add(range);
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,296,if (obj instanceof CharSet == false) {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,297,return false;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,299,CharSet other = (CharSet) obj;
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,300,return (set.equals(other.set));
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,164, <p>Returns a string representation of the set.</p>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,304,* <p>Gets a hashCode compatable with the equals method.</p>
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,306,* @return a suitable hashCode
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,308,public int hashCode() {
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,309,return 89 + set.hashCode();
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,313,* <p>Gets a string representation of the set.</p>
+False,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,166, @return string representation
+True,src/java/org/apache/commons/lang/CharSet.java,src/java/org/apache/commons/lang/CharSet.java,315,* @return string representation of the set
+False,src/java/org/apache/commons/lang/CharSetUtils.java,src/java/org/apache/commons/lang/CharSetUtils.java,66," @version $Id: CharSetUtils.java,v 1.19 2003/08/01 20:45:17 scolebourne Exp $"
+True,src/java/org/apache/commons/lang/CharSetUtils.java,src/java/org/apache/commons/lang/CharSetUtils.java,66,"* @version $Id: CharSetUtils.java,v 1.20 2003/08/02 18:18:33 scolebourne Exp $"
+True,src/java/org/apache/commons/lang/CharSetUtils.java,src/java/org/apache/commons/lang/CharSetUtils.java,101,* @deprecated Use {@link CharSet#getInstance(String)}.
+True,src/java/org/apache/commons/lang/CharSetUtils.java,src/java/org/apache/commons/lang/CharSetUtils.java,102,*             Method will be removed in Commons Lang 3.0.
+False,src/java/org/apache/commons/lang/CharSetUtils.java,src/java/org/apache/commons/lang/CharSetUtils.java,102,ublic static CharSet evaluateSet(String set) {
+False,src/java/org/apache/commons/lang/CharSetUtils.java,src/java/org/apache/commons/lang/CharSetUtils.java,103,f (set == null) {
+True,src/java/org/apache/commons/lang/CharSetUtils.java,src/java/org/apache/commons/lang/CharSetUtils.java,104,public static CharSet evaluateSet(String setStr) {
+True,src/java/org/apache/commons/lang/CharSetUtils.java,src/java/org/apache/commons/lang/CharSetUtils.java,105,if (setStr == null) {
+False,src/java/org/apache/commons/lang/CharSetUtils.java,src/java/org/apache/commons/lang/CharSetUtils.java,106,eturn new CharSet(new String[] {set});
+True,src/java/org/apache/commons/lang/CharSetUtils.java,src/java/org/apache/commons/lang/CharSetUtils.java,108,return CharSet.getInstance(setStr);
+True,src/java/org/apache/commons/lang/CharSetUtils.java,src/java/org/apache/commons/lang/CharSetUtils.java,130,* @deprecated Use {@link CharSet#getInstance(String)}.
+True,src/java/org/apache/commons/lang/CharSetUtils.java,src/java/org/apache/commons/lang/CharSetUtils.java,131,*             Method will be removed in Commons Lang 3.0.
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,2,"* The Apache Software License, Version 1.1"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,4,* Copyright (c) 2003 The Apache Software Foundation.  All rights
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,5,* reserved.
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,7,"* Redistribution and use in source and binary forms, with or without"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,8,"* modification, are permitted provided that the following conditions"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,9,* are met:
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,11,* 1. Redistributions of source code must retain the above copyright
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,12,"*    notice, this list of conditions and the following disclaimer."
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,14,* 2. Redistributions in binary form must reproduce the above copyright
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,15,"*    notice, this list of conditions and the following disclaimer in"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,16,*    the documentation and/or other materials provided with the
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,17,*    distribution.
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,19,"* 3. The end-user documentation included with the redistribution, if"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,20,"*    any, must include the following acknowlegement:"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,21,"*       ""This product includes software developed by the"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,22,"*        Apache Software Foundation (http://www.apache.org/)."""
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,23,"*    Alternately, this acknowlegement may appear in the software itself,"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,24,*    if and wherever such third-party acknowlegements normally appear.
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,26,"* 4. The names ""The Jakarta Project"", ""Commons"", and ""Apache Software"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,27,"*    Foundation"" must not be used to endorse or promote products derived"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,28,*    from this software without prior written permission. For written
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,29,"*    permission, please contact apache@apache.org."
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,31,"* 5. Products derived from this software may not be called ""Apache"""
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,32,"*    nor may ""Apache"" appear in their names without prior written"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,33,*    permission of the Apache Software Foundation.
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,35,* THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,36,"* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,37,* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,38,* DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,39,"* ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,40,"* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,41,"* LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,42,"* USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,43,"* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,44,* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,45,"* OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,46,* SUCH DAMAGE.
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,49,* This software consists of voluntary contributions made by many
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,50,* individuals on behalf of the Apache Software Foundation.  For more
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,51,"* information on the Apache Software Foundation, please see"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,52,* <http://www.apache.org/>.
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,54,package org.apache.commons.lang;
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,56,import java.lang.reflect.Modifier;
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,58,import junit.framework.Test;
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,59,import junit.framework.TestCase;
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,60,import junit.framework.TestSuite;
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,61,import junit.textui.TestRunner;
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,64,* Unit tests {@link org.apache.commons.lang.CharRange}.
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,66,* @author Stephen Colebourne
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,67,"* @version $Id: CharRangeTest.java,v 1.1 2003/08/02 18:18:33 scolebourne Exp $"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,69,public class CharRangeTest extends TestCase {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,71,public CharRangeTest(String name) {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,72,super(name);
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,75,public static void main(String[] args) {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,76,TestRunner.run(suite());
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,79,public static Test suite() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,80,TestSuite suite = new TestSuite(CharRangeTest.class);
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,81,"suite.setName(""CharRange Tests"");"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,82,return suite;
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,85,protected void setUp() throws Exception {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,86,super.setUp();
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,89,protected void tearDown() throws Exception {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,90,super.tearDown();
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,94,public void testClass() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,95,"assertEquals(true, Modifier.isPublic(CharRange.class.getModifiers()));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,96,"assertEquals(true, Modifier.isFinal(CharRange.class.getModifiers()));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,100,public void testConstructorAccessors_Char() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,101,CharRange rangea = new CharRange('a');
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,102,CharRange rangeb = new CharRange('b');
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,103,"assertEquals('a', rangea.getStart());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,104,"assertEquals('a', rangea.getEnd());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,105,"assertEquals(false, rangea.isNegated());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,106,"assertEquals(""a"", rangea.toString());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,109,public void testConstructorAccessors_CharChar_Same() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,110,"CharRange rangea = new CharRange('a', 'a');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,111,"assertEquals('a', rangea.getStart());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,112,"assertEquals('a', rangea.getEnd());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,113,"assertEquals(false, rangea.isNegated());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,114,"assertEquals(""a"", rangea.toString());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,117,public void testConstructorAccessors_CharChar_Normal() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,118,"CharRange rangea = new CharRange('a', 'e');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,119,"assertEquals('a', rangea.getStart());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,120,"assertEquals('e', rangea.getEnd());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,121,"assertEquals(false, rangea.isNegated());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,122,"assertEquals(""a-e"", rangea.toString());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,125,public void testConstructorAccessors_CharChar_Reversed() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,126,"CharRange rangea = new CharRange('e', 'a');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,127,"assertEquals('a', rangea.getStart());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,128,"assertEquals('e', rangea.getEnd());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,129,"assertEquals(false, rangea.isNegated());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,130,"assertEquals(""a-e"", rangea.toString());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,133,public void testConstructorAccessors_CharCharBoolean_Same() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,134,"CharRange rangea = new CharRange('a', 'a', false);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,135,"assertEquals('a', rangea.getStart());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,136,"assertEquals('a', rangea.getEnd());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,137,"assertEquals(false, rangea.isNegated());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,138,"assertEquals(""a"", rangea.toString());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,141,public void testConstructorAccessors_CharCharBoolean_Normal() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,142,"CharRange rangea = new CharRange('a', 'e', false);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,143,"assertEquals('a', rangea.getStart());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,144,"assertEquals('e', rangea.getEnd());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,145,"assertEquals(false, rangea.isNegated());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,146,"assertEquals(""a-e"", rangea.toString());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,149,public void testConstructorAccessors_CharCharBoolean_Reversed() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,150,"CharRange rangea = new CharRange('e', 'a', false);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,151,"assertEquals('a', rangea.getStart());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,152,"assertEquals('e', rangea.getEnd());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,153,"assertEquals(false, rangea.isNegated());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,154,"assertEquals(""a-e"", rangea.toString());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,157,public void testConstructorAccessors_CharCharBoolean_SameNegated() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,158,"CharRange rangea = new CharRange('a', 'a', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,159,"assertEquals('a', rangea.getStart());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,160,"assertEquals('a', rangea.getEnd());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,161,"assertEquals(true, rangea.isNegated());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,162,"assertEquals(""^a"", rangea.toString());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,165,public void testConstructorAccessors_CharCharBoolean_NormalNegated() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,166,"CharRange rangea = new CharRange('a', 'e', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,167,"assertEquals('a', rangea.getStart());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,168,"assertEquals('e', rangea.getEnd());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,169,"assertEquals(true, rangea.isNegated());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,170,"assertEquals(""^a-e"", rangea.toString());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,173,public void testConstructorAccessors_CharCharBoolean_ReversedNegated() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,174,"CharRange rangea = new CharRange('e', 'a', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,175,"assertEquals('a', rangea.getStart());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,176,"assertEquals('e', rangea.getEnd());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,177,"assertEquals(true, rangea.isNegated());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,178,"assertEquals(""^a-e"", rangea.toString());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,182,public void testEquals_Object() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,183,CharRange rangea = new CharRange('a');
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,184,"CharRange rangeae = new CharRange('a', 'e');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,185,"CharRange rangenotbf = new CharRange('b', 'f', false);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,187,"assertEquals(false, rangea.equals(null));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,189,"assertEquals(true, rangea.equals(rangea));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,190,"assertEquals(true, rangea.equals(new CharRange('a')));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,191,"assertEquals(true, rangeae.equals(rangeae));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,192,"assertEquals(true, rangeae.equals(new CharRange('a', 'e')));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,193,"assertEquals(true, rangenotbf.equals(rangenotbf));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,194,"assertEquals(true, rangenotbf.equals(new CharRange('b', 'f', false)));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,196,"assertEquals(false, rangea.equals(rangeae));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,197,"assertEquals(false, rangea.equals(rangenotbf));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,198,"assertEquals(false, rangeae.equals(rangea));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,199,"assertEquals(false, rangeae.equals(rangenotbf));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,200,"assertEquals(false, rangenotbf.equals(rangea));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,201,"assertEquals(false, rangenotbf.equals(rangeae));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,204,public void testHashCode() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,205,CharRange rangea = new CharRange('a');
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,206,"CharRange rangeae = new CharRange('a', 'e');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,207,"CharRange rangenotbf = new CharRange('b', 'f', false);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,209,"assertEquals(true, rangea.hashCode() == rangea.hashCode());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,210,"assertEquals(true, rangea.hashCode() == new CharRange('a').hashCode());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,211,"assertEquals(true, rangeae.hashCode() == rangeae.hashCode());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,212,"assertEquals(true, rangeae.hashCode() == new CharRange('a', 'e').hashCode());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,213,"assertEquals(true, rangenotbf.hashCode() == rangenotbf.hashCode());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,214,"assertEquals(true, rangenotbf.hashCode() == new CharRange('b', 'f', false).hashCode());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,216,"assertEquals(false, rangea.hashCode() == rangeae.hashCode());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,217,"assertEquals(false, rangea.hashCode() == rangenotbf.hashCode());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,218,"assertEquals(false, rangeae.hashCode() == rangea.hashCode());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,219,"assertEquals(false, rangeae.hashCode() == rangenotbf.hashCode());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,220,"assertEquals(false, rangenotbf.hashCode() == rangea.hashCode());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,221,"assertEquals(false, rangenotbf.hashCode() == rangeae.hashCode());"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,225,public void testContains_Char() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,226,CharRange range = new CharRange('c');
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,227,"assertEquals(false, range.contains('b'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,228,"assertEquals(true, range.contains('c'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,229,"assertEquals(false, range.contains('d'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,230,"assertEquals(false, range.contains('e'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,232,"range = new CharRange('c', 'd');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,233,"assertEquals(false, range.contains('b'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,234,"assertEquals(true, range.contains('c'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,235,"assertEquals(true, range.contains('d'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,236,"assertEquals(false, range.contains('e'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,238,"range = new CharRange('d', 'c');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,239,"assertEquals(false, range.contains('b'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,240,"assertEquals(true, range.contains('c'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,241,"assertEquals(true, range.contains('d'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,242,"assertEquals(false, range.contains('e'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,244,"range = new CharRange('c', 'd', false);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,245,"assertEquals(false, range.contains('b'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,246,"assertEquals(true, range.contains('c'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,247,"assertEquals(true, range.contains('d'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,248,"assertEquals(false, range.contains('e'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,250,"range = new CharRange('c', 'd', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,251,"assertEquals(true, range.contains('b'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,252,"assertEquals(false, range.contains('c'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,253,"assertEquals(false, range.contains('d'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,254,"assertEquals(true, range.contains('e'));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,255,"assertEquals(true, range.contains((char) 0));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,256,"assertEquals(true, range.contains(Character.MAX_VALUE));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,260,public void testContains_Charrange() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,261,CharRange a = new CharRange('a');
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,262,CharRange b = new CharRange('b');
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,263,CharRange c = new CharRange('c');
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,264,CharRange c2 = new CharRange('c');
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,265,CharRange d = new CharRange('d');
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,266,CharRange e = new CharRange('e');
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,267,"CharRange cd = new CharRange('c', 'd');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,268,"CharRange bd = new CharRange('b', 'd');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,269,"CharRange bc = new CharRange('b', 'c');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,270,"CharRange ab = new CharRange('a', 'b');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,271,"CharRange de = new CharRange('d', 'e');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,272,"CharRange ef = new CharRange('e', 'f');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,273,"CharRange ae = new CharRange('a', 'e');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,275,// normal/normal
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,276,"assertEquals(false, c.contains(b));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,277,"assertEquals(true, c.contains(c));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,278,"assertEquals(true, c.contains(c2));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,279,"assertEquals(false, c.contains(d));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,281,"assertEquals(false, c.contains(cd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,282,"assertEquals(false, c.contains(bd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,283,"assertEquals(false, c.contains(bc));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,284,"assertEquals(false, c.contains(ab));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,285,"assertEquals(false, c.contains(de));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,287,"assertEquals(true, cd.contains(c));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,288,"assertEquals(true, bd.contains(c));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,289,"assertEquals(true, bc.contains(c));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,290,"assertEquals(false, ab.contains(c));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,291,"assertEquals(false, de.contains(c));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,293,"assertEquals(true, ae.contains(b));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,294,"assertEquals(true, ae.contains(ab));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,295,"assertEquals(true, ae.contains(bc));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,296,"assertEquals(true, ae.contains(cd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,297,"assertEquals(true, ae.contains(de));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,299,"CharRange notb = new CharRange('b', 'b', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,300,"CharRange notc = new CharRange('c', 'c', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,301,"CharRange notd = new CharRange('d', 'd', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,302,"CharRange notab = new CharRange('a', 'b', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,303,"CharRange notbc = new CharRange('b', 'c', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,304,"CharRange notbd = new CharRange('b', 'd', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,305,"CharRange notcd = new CharRange('c', 'd', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,306,"CharRange notde = new CharRange('d', 'e', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,307,"CharRange notae = new CharRange('a', 'e', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,308,"CharRange all = new CharRange((char) 0, Character.MAX_VALUE);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,309,"CharRange allbutfirst = new CharRange((char) 1, Character.MAX_VALUE);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,311,// normal/negated
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,312,"assertEquals(false, c.contains(notc));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,313,"assertEquals(false, c.contains(notbd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,314,"assertEquals(true, all.contains(notc));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,315,"assertEquals(true, all.contains(notbd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,316,"assertEquals(false, allbutfirst.contains(notc));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,317,"assertEquals(false, allbutfirst.contains(notbd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,319,// negated/normal
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,320,"assertEquals(true, notc.contains(a));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,321,"assertEquals(true, notc.contains(b));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,322,"assertEquals(false, notc.contains(c));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,323,"assertEquals(true, notc.contains(d));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,324,"assertEquals(true, notc.contains(e));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,326,"assertEquals(true, notc.contains(ab));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,327,"assertEquals(false, notc.contains(bc));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,328,"assertEquals(false, notc.contains(bd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,329,"assertEquals(false, notc.contains(cd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,330,"assertEquals(true, notc.contains(de));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,331,"assertEquals(false, notc.contains(ae));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,332,"assertEquals(false, notc.contains(all));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,333,"assertEquals(false, notc.contains(allbutfirst));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,335,"assertEquals(true, notbd.contains(a));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,336,"assertEquals(false, notbd.contains(b));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,337,"assertEquals(false, notbd.contains(c));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,338,"assertEquals(false, notbd.contains(d));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,339,"assertEquals(true, notbd.contains(e));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,341,"assertEquals(true, notcd.contains(ab));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,342,"assertEquals(false, notcd.contains(bc));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,343,"assertEquals(false, notcd.contains(bd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,344,"assertEquals(false, notcd.contains(cd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,345,"assertEquals(false, notcd.contains(de));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,346,"assertEquals(false, notcd.contains(ae));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,347,"assertEquals(true, notcd.contains(ef));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,348,"assertEquals(false, notcd.contains(all));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,349,"assertEquals(false, notcd.contains(allbutfirst));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,351,// negated/negated
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,352,"assertEquals(false, notc.contains(notb));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,353,"assertEquals(true, notc.contains(notc));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,354,"assertEquals(false, notc.contains(notd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,356,"assertEquals(false, notc.contains(notab));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,357,"assertEquals(true, notc.contains(notbc));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,358,"assertEquals(true, notc.contains(notbd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,359,"assertEquals(true, notc.contains(notcd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,360,"assertEquals(false, notc.contains(notde));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,362,"assertEquals(false, notbd.contains(notb));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,363,"assertEquals(false, notbd.contains(notc));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,364,"assertEquals(false, notbd.contains(notd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,366,"assertEquals(false, notbd.contains(notab));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,367,"assertEquals(false, notbd.contains(notbc));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,368,"assertEquals(true, notbd.contains(notbd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,369,"assertEquals(false, notbd.contains(notcd));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,370,"assertEquals(false, notbd.contains(notde));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,371,"assertEquals(true, notbd.contains(notae));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,375,public void testSerialization() {
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,376,CharRange range = new CharRange('a');
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,377,"assertEquals(range, SerializationUtils.clone(range));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,378,"range = new CharRange('a', 'e');"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,379,"assertEquals(range, SerializationUtils.clone(range));"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,380,"range = new CharRange('a', 'e', true);"
+True,src/test/org/apache/commons/lang/CharRangeTest.java,src/test/org/apache/commons/lang/CharRangeTest.java,381,"assertEquals(range, SerializationUtils.clone(range));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,2,"* The Apache Software License, Version 1.1"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,4,* Copyright (c) 2003 The Apache Software Foundation.  All rights
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,5,* reserved.
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,7,"* Redistribution and use in source and binary forms, with or without"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,8,"* modification, are permitted provided that the following conditions"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,9,* are met:
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,11,* 1. Redistributions of source code must retain the above copyright
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,12,"*    notice, this list of conditions and the following disclaimer."
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,14,* 2. Redistributions in binary form must reproduce the above copyright
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,15,"*    notice, this list of conditions and the following disclaimer in"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,16,*    the documentation and/or other materials provided with the
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,17,*    distribution.
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,19,"* 3. The end-user documentation included with the redistribution, if"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,20,"*    any, must include the following acknowlegement:"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,21,"*       ""This product includes software developed by the"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,22,"*        Apache Software Foundation (http://www.apache.org/)."""
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,23,"*    Alternately, this acknowlegement may appear in the software itself,"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,24,*    if and wherever such third-party acknowlegements normally appear.
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,26,"* 4. The names ""The Jakarta Project"", ""Commons"", and ""Apache Software"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,27,"*    Foundation"" must not be used to endorse or promote products derived"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,28,*    from this software without prior written permission. For written
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,29,"*    permission, please contact apache@apache.org."
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,31,"* 5. Products derived from this software may not be called ""Apache"""
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,32,"*    nor may ""Apache"" appear in their names without prior written"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,33,*    permission of the Apache Software Foundation.
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,35,* THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,36,"* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,37,* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,38,* DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,39,"* ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,40,"* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,41,"* LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,42,"* USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,43,"* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,44,* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,45,"* OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,46,* SUCH DAMAGE.
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,49,* This software consists of voluntary contributions made by many
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,50,* individuals on behalf of the Apache Software Foundation.  For more
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,51,"* information on the Apache Software Foundation, please see"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,52,* <http://www.apache.org/>.
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,54,package org.apache.commons.lang;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,56,import java.lang.reflect.Modifier;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,58,import junit.framework.Test;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,59,import junit.framework.TestCase;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,60,import junit.framework.TestSuite;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,61,import junit.textui.TestRunner;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,64,* Unit tests {@link org.apache.commons.lang.CharSet}.
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,66,* @author Stephen Colebourne
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,67,"* @version $Id: CharSetTest.java,v 1.1 2003/08/02 18:18:33 scolebourne Exp $"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,69,public class CharSetTest extends TestCase {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,71,public CharSetTest(String name) {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,72,super(name);
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,75,public static void main(String[] args) {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,76,TestRunner.run(suite());
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,79,public static Test suite() {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,80,TestSuite suite = new TestSuite(CharSetTest.class);
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,81,"suite.setName(""CharSet Tests"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,82,return suite;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,85,protected void setUp() throws Exception {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,86,super.setUp();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,89,protected void tearDown() throws Exception {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,90,super.tearDown();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,94,public void testClass() {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,95,"assertEquals(true, Modifier.isPublic(CharSet.class.getModifiers()));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,96,"assertEquals(false, Modifier.isFinal(CharSet.class.getModifiers()));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,100,public void testGetInstance() {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,101,"assertSame(CharSet.EMPTY, CharSet.getInstance(null));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,102,"assertSame(CharSet.EMPTY, CharSet.getInstance(""""));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,103,"assertSame(CharSet.ASCII_ALPHA, CharSet.getInstance(""a-zA-Z""));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,104,"assertSame(CharSet.ASCII_ALPHA, CharSet.getInstance(""A-Za-z""));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,105,"assertSame(CharSet.ASCII_ALPHA_LOWER, CharSet.getInstance(""a-z""));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,106,"assertSame(CharSet.ASCII_ALPHA_UPPER, CharSet.getInstance(""A-Z""));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,107,"assertSame(CharSet.ASCII_NUMERIC, CharSet.getInstance(""0-9""));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,111,public void testConstructor_String_simple() {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,112,CharSet set;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,113,CharRange[] array;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,115,set = CharSet.getInstance((String) null);
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,116,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,117,"assertEquals(""[]"", set.toString());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,118,"assertEquals(0, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,120,"set = CharSet.getInstance("""");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,121,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,122,"assertEquals(""[]"", set.toString());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,123,"assertEquals(0, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,125,"set = CharSet.getInstance(""a"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,126,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,127,"assertEquals(""[a]"", set.toString());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,128,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,129,"assertEquals(""a"", array[0].toString());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,131,"set = CharSet.getInstance(""^a"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,132,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,133,"assertEquals(""[^a]"", set.toString());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,134,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,135,"assertEquals(""^a"", array[0].toString());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,137,"set = CharSet.getInstance(""a-e"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,138,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,139,"assertEquals(""[a-e]"", set.toString());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,140,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,141,"assertEquals(""a-e"", array[0].toString());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,143,"set = CharSet.getInstance(""^a-e"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,144,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,145,"assertEquals(""[^a-e]"", set.toString());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,146,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,147,"assertEquals(""^a-e"", array[0].toString());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,150,public void testConstructor_String_combo() {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,151,CharSet set;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,152,CharRange[] array;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,154,"set = CharSet.getInstance(""abc"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,155,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,156,"assertEquals(3, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,157,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,158,"assertEquals(true, ArrayUtils.contains(array, new CharRange('b')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,159,"assertEquals(true, ArrayUtils.contains(array, new CharRange('c')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,161,"set = CharSet.getInstance(""a-ce-f"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,162,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,163,"assertEquals(2, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,164,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a', 'c')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,165,"assertEquals(true, ArrayUtils.contains(array, new CharRange('e', 'f')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,167,"set = CharSet.getInstance(""ae-f"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,168,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,169,"assertEquals(2, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,170,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,171,"assertEquals(true, ArrayUtils.contains(array, new CharRange('e', 'f')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,173,"set = CharSet.getInstance(""e-fa"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,174,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,175,"assertEquals(2, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,176,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,177,"assertEquals(true, ArrayUtils.contains(array, new CharRange('e', 'f')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,179,"set = CharSet.getInstance(""ae-fm-pz"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,180,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,181,"assertEquals(4, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,182,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,183,"assertEquals(true, ArrayUtils.contains(array, new CharRange('e', 'f')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,184,"assertEquals(true, ArrayUtils.contains(array, new CharRange('m', 'p')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,185,"assertEquals(true, ArrayUtils.contains(array, new CharRange('z')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,188,public void testConstructor_String_comboNegated() {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,189,CharSet set;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,190,CharRange[] array;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,192,"set = CharSet.getInstance(""^abc"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,193,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,194,"assertEquals(3, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,195,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a', 'a', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,196,"assertEquals(true, ArrayUtils.contains(array, new CharRange('b')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,197,"assertEquals(true, ArrayUtils.contains(array, new CharRange('c')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,199,"set = CharSet.getInstance(""b^ac"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,200,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,201,"assertEquals(3, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,202,"assertEquals(true, ArrayUtils.contains(array, new CharRange('b')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,203,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a', 'a', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,204,"assertEquals(true, ArrayUtils.contains(array, new CharRange('c')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,206,"set = CharSet.getInstance(""db^ac"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,207,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,208,"assertEquals(4, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,209,"assertEquals(true, ArrayUtils.contains(array, new CharRange('d')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,210,"assertEquals(true, ArrayUtils.contains(array, new CharRange('b')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,211,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a', 'a', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,212,"assertEquals(true, ArrayUtils.contains(array, new CharRange('c')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,214,"set = CharSet.getInstance(""^b^a"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,215,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,216,"assertEquals(2, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,217,"assertEquals(true, ArrayUtils.contains(array, new CharRange('b', 'b', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,218,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a', 'a', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,220,"set = CharSet.getInstance(""b^a-c^z"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,221,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,222,"assertEquals(3, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,223,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a', 'c', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,224,"assertEquals(true, ArrayUtils.contains(array, new CharRange('z', 'z', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,225,"assertEquals(true, ArrayUtils.contains(array, new CharRange('b')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,228,public void testConstructor_String_oddDash() {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,229,CharSet set;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,230,CharRange[] array;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,232,"set = CharSet.getInstance(""-"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,233,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,234,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,235,"assertEquals(true, ArrayUtils.contains(array, new CharRange('-')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,237,"set = CharSet.getInstance(""--"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,238,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,239,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,240,"assertEquals(true, ArrayUtils.contains(array, new CharRange('-')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,242,"set = CharSet.getInstance(""---"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,243,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,244,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,245,"assertEquals(true, ArrayUtils.contains(array, new CharRange('-')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,247,"set = CharSet.getInstance(""----"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,248,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,249,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,250,"assertEquals(true, ArrayUtils.contains(array, new CharRange('-')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,252,"set = CharSet.getInstance(""-a"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,253,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,254,"assertEquals(2, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,255,"assertEquals(true, ArrayUtils.contains(array, new CharRange('-')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,256,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,258,"set = CharSet.getInstance(""a-"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,259,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,260,"assertEquals(2, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,261,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,262,"assertEquals(true, ArrayUtils.contains(array, new CharRange('-')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,264,"set = CharSet.getInstance(""a--"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,265,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,266,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,267,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a', '-')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,269,"set = CharSet.getInstance(""--a"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,270,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,271,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,272,"assertEquals(true, ArrayUtils.contains(array, new CharRange('-', 'a')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,275,public void testConstructor_String_oddNegate() {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,276,CharSet set;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,277,CharRange[] array;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,278,"set = CharSet.getInstance(""^"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,279,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,280,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,281,"assertEquals(true, ArrayUtils.contains(array, new CharRange('^')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,283,"set = CharSet.getInstance(""^^"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,284,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,285,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,286,"assertEquals(true, ArrayUtils.contains(array, new CharRange('^', '^', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,288,"set = CharSet.getInstance(""^^^"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,289,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,290,"assertEquals(2, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,291,"assertEquals(true, ArrayUtils.contains(array, new CharRange('^', '^', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,292,"assertEquals(true, ArrayUtils.contains(array, new CharRange('^', '^')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,294,"set = CharSet.getInstance(""^^^^"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,295,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,296,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,297,"assertEquals(true, ArrayUtils.contains(array, new CharRange('^', '^', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,299,"set = CharSet.getInstance(""a^"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,300,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,301,"assertEquals(2, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,302,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,303,"assertEquals(true, ArrayUtils.contains(array, new CharRange('^')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,305,"set = CharSet.getInstance(""^a-"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,306,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,307,"assertEquals(2, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,308,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a', 'a', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,309,"assertEquals(true, ArrayUtils.contains(array, new CharRange('-')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,311,"set = CharSet.getInstance(""^^-c"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,312,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,313,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,314,"assertEquals(true, ArrayUtils.contains(array, new CharRange('^', 'c', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,316,"set = CharSet.getInstance(""^c-^"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,317,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,318,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,319,"assertEquals(true, ArrayUtils.contains(array, new CharRange('c', '^', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,321,"set = CharSet.getInstance(""^c-^d"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,322,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,323,"assertEquals(2, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,324,"assertEquals(true, ArrayUtils.contains(array, new CharRange('c', '^', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,325,"assertEquals(true, ArrayUtils.contains(array, new CharRange('d')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,327,"set = CharSet.getInstance(""^^-"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,328,array = set.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,329,"assertEquals(2, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,330,"assertEquals(true, ArrayUtils.contains(array, new CharRange('^', '^', true)));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,331,"assertEquals(true, ArrayUtils.contains(array, new CharRange('-')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,335,public void testEquals_Object() {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,336,"CharSet abc = CharSet.getInstance(""abc"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,337,"CharSet abc2 = CharSet.getInstance(""abc"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,338,"CharSet atoc = CharSet.getInstance(""a-c"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,339,"CharSet atoc2 = CharSet.getInstance(""a-c"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,340,"CharSet notatoc = CharSet.getInstance(""^a-c"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,341,"CharSet notatoc2 = CharSet.getInstance(""^a-c"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,343,"assertEquals(false, abc.equals(null));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,345,"assertEquals(true, abc.equals(abc));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,346,"assertEquals(true, abc.equals(abc2));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,347,"assertEquals(false, abc.equals(atoc));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,348,"assertEquals(false, abc.equals(notatoc));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,350,"assertEquals(false, atoc.equals(abc));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,351,"assertEquals(true, atoc.equals(atoc));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,352,"assertEquals(true, atoc.equals(atoc2));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,353,"assertEquals(false, atoc.equals(notatoc));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,355,"assertEquals(false, notatoc.equals(abc));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,356,"assertEquals(false, notatoc.equals(atoc));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,357,"assertEquals(true, notatoc.equals(notatoc));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,358,"assertEquals(true, notatoc.equals(notatoc2));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,361,public void testHashCode() {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,362,"CharSet abc = CharSet.getInstance(""abc"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,363,"CharSet abc2 = CharSet.getInstance(""abc"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,364,"CharSet atoc = CharSet.getInstance(""a-c"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,365,"CharSet atoc2 = CharSet.getInstance(""a-c"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,366,"CharSet notatoc = CharSet.getInstance(""^a-c"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,367,"CharSet notatoc2 = CharSet.getInstance(""^a-c"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,369,"assertEquals(abc.hashCode(), abc.hashCode());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,370,"assertEquals(abc.hashCode(), abc2.hashCode());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,371,"assertEquals(atoc.hashCode(), atoc.hashCode());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,372,"assertEquals(atoc.hashCode(), atoc2.hashCode());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,373,"assertEquals(notatoc.hashCode(), notatoc.hashCode());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,374,"assertEquals(notatoc.hashCode(), notatoc2.hashCode());"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,378,public void testContains_Char() {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,379,"CharSet btod = CharSet.getInstance(""b-d"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,380,"CharSet bcd = CharSet.getInstance(""bcd"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,381,"CharSet bd = CharSet.getInstance(""bd"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,382,"CharSet notbtod = CharSet.getInstance(""^b-d"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,384,"assertEquals(false, btod.contains('a'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,385,"assertEquals(true, btod.contains('b'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,386,"assertEquals(true, btod.contains('c'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,387,"assertEquals(true, btod.contains('d'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,388,"assertEquals(false, btod.contains('e'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,390,"assertEquals(false, bcd.contains('a'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,391,"assertEquals(true, bcd.contains('b'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,392,"assertEquals(true, bcd.contains('c'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,393,"assertEquals(true, bcd.contains('d'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,394,"assertEquals(false, bcd.contains('e'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,396,"assertEquals(false, bd.contains('a'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,397,"assertEquals(true, bd.contains('b'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,398,"assertEquals(false, bd.contains('c'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,399,"assertEquals(true, bd.contains('d'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,400,"assertEquals(false, bd.contains('e'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,402,"assertEquals(true, notbtod.contains('a'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,403,"assertEquals(false, notbtod.contains('b'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,404,"assertEquals(false, notbtod.contains('c'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,405,"assertEquals(false, notbtod.contains('d'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,406,"assertEquals(true, notbtod.contains('e'));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,410,public void testSerialization() {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,411,"CharSet set = CharSet.getInstance(""a"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,412,"assertEquals(set, SerializationUtils.clone(set));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,413,"set = CharSet.getInstance(""a-e"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,414,"assertEquals(set, SerializationUtils.clone(set));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,415,"set = CharSet.getInstance(""be-f^a-z"");"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,416,"assertEquals(set, SerializationUtils.clone(set));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,420,public void testStatics() {
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,421,CharRange[] array;
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,423,array = CharSet.EMPTY.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,424,"assertEquals(0, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,426,array = CharSet.ASCII_ALPHA.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,427,"assertEquals(2, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,428,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a', 'z')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,429,"assertEquals(true, ArrayUtils.contains(array, new CharRange('A', 'Z')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,431,array = CharSet.ASCII_ALPHA_LOWER.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,432,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,433,"assertEquals(true, ArrayUtils.contains(array, new CharRange('a', 'z')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,435,array = CharSet.ASCII_ALPHA_UPPER.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,436,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,437,"assertEquals(true, ArrayUtils.contains(array, new CharRange('A', 'Z')));"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,439,array = CharSet.ASCII_NUMERIC.getCharRanges();
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,440,"assertEquals(1, array.length);"
+True,src/test/org/apache/commons/lang/CharSetTest.java,src/test/org/apache/commons/lang/CharSetTest.java,441,"assertEquals(true, ArrayUtils.contains(array, new CharRange('0', '9')));"
+False,src/test/org/apache/commons/lang/LangTestSuite.java,src/test/org/apache/commons/lang/LangTestSuite.java,67," @version $Id: LangTestSuite.java,v 1.18 2003/05/24 12:11:02 scolebourne Exp $"
+True,src/test/org/apache/commons/lang/LangTestSuite.java,src/test/org/apache/commons/lang/LangTestSuite.java,67,"* @version $Id: LangTestSuite.java,v 1.19 2003/08/02 18:18:33 scolebourne Exp $"
+True,src/test/org/apache/commons/lang/LangTestSuite.java,src/test/org/apache/commons/lang/LangTestSuite.java,93,suite.addTest(CharRangeTest.suite());
+True,src/test/org/apache/commons/lang/LangTestSuite.java,src/test/org/apache/commons/lang/LangTestSuite.java,94,suite.addTest(CharSetTest.suite());

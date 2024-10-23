@@ -1,0 +1,64 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,179,*  There are 52 bits in the mantissa of a double.
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,180,"*  For additional precision, the code splits double numbers into two parts,"
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,181,"*  by clearing the low order 30 bits if possible, and then performs the arithmetic"
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,182,*  on each half separately.
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,187,* Equivalent to 2^30.
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,181,rivate static final double HEX_40000000 = 1073741824.0;
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,189,private static final long HEX_40000000 = 0x40000000L; // 1073741824L
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,191,/** Mask used to clear low order 30 bits */
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,192,private static final long MASK_30BITS = -1L - (HEX_40000000 -1); // 0xFFFFFFFFC0000000L;
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,247,// Generic helper methods
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,250,* Get the sign information (works even for 0).
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,252,* @param d the value to check
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,254,"* @return +1.0 or -1.0, never 0.0"
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,256,private static double getSign(double d){ // TODO perhaps move to MathUtils?
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,257,long l = Double.doubleToLongBits(d);
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,258,return l < 0 ? -1.0 : 1.0;
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,262,* Get the high order bits from the mantissa.
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,263,* Equivalent to adding and subtracting HEX_40000 but also works for very large numbers
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,265,* @param d the value to split
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,266,* @return the high order part of the mantissa
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,268,private static double doubleHighPart(double d) {
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,269,if (d > -MathUtils.SAFE_MIN && d < MathUtils.SAFE_MIN){
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,270,return d; // These are un-normalised - don't try to convert
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,272,long xl = Double.doubleToLongBits(d);
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,273,xl = xl & MASK_30BITS; // Drop low order bits
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,274,return Double.longBitsToDouble(xl);
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2753, @return atan(xa + xb) (or angle shifted by &pi; if leftPlane is true)
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2794,* @return atan(xa + xb) (or angle shifted by {@code PI} if leftPlane is true)
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2760,eturn xa;
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2801,return leftPlane ? getSign(xa) * Math.PI : xa;
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2917,eturn 0.0;
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2958,return y; // return +/- 0.0
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2919,eturn Math.PI;
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2960,return getSign(y) * Math.PI;
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2923,f (result != result) { // y must be infinite
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2924,eturn x/y;
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2975,// y cannot now be zero
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3022,// Neither y nor x can be infinite or NAN here
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2993,f (x > 8e298 || x < -8e298) { // This would cause split of x to fail
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2994, *= 9.31322574615478515625E-10;
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2995, *= 9.31322574615478515625E-10;
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3034,// Compute ratio r = y/x
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3035,final double r = y/x;
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3036,if (Double.isInfinite(r)) { // bypass calculations that can create NaN
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3037,"return atan(r, 0, x < 0);"
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2998,/ Split y
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,2999,ouble temp = x * HEX_40000000;
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3000,inal double xa = x + temp - temp;
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3001,inal double xb = x - xa;
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3003,/ Compute ratio r = x/y
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3004,inal double r = y/x;
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3005,emp = r * HEX_40000000;
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3006,ouble ra = r + temp - temp;
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3040,double ra = doubleHighPart(r);
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3043,// Split x
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3044,final double xa = doubleHighPart(x);
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3045,final double xb = x - xa;
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3011,emp = ra + rb;
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3049,double temp = ra + rb;
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3053,if (ra == 0 && (y < 0)) { // Fix up the sign so atan works correctly
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3054,ra = -0.0;
+False,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3293,esult = result * x; // ensure correct sign
+True,src/main/java/org/apache/commons/math/util/FastMath.java,src/main/java/org/apache/commons/math/util/FastMath.java,3335,result = result * x; // ensure correct sign if calculation underflows

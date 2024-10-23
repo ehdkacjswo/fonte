@@ -1,0 +1,308 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/TightenTypes.java,src/com/google/javascript/jscomp/TightenTypes.java,939,et<ObjectType> types = getTypeRegistry().getTypesWithProperty(prop);
+False,src/com/google/javascript/jscomp/TightenTypes.java,src/com/google/javascript/jscomp/TightenTypes.java,940,or (ObjectType type : types) {
+False,src/com/google/javascript/jscomp/TightenTypes.java,src/com/google/javascript/jscomp/TightenTypes.java,941,"ctions.addAll(getImplicitActionsFromPropNonUnion(type, prop, fnNode));"
+True,src/com/google/javascript/jscomp/TightenTypes.java,src/com/google/javascript/jscomp/TightenTypes.java,937,for (ObjectType type :
+True,src/com/google/javascript/jscomp/TightenTypes.java,src/com/google/javascript/jscomp/TightenTypes.java,938,getTypeRegistry().getEachReferenceTypeWithProperty(prop)) {
+True,src/com/google/javascript/jscomp/TightenTypes.java,src/com/google/javascript/jscomp/TightenTypes.java,939,actions.addAll(
+True,src/com/google/javascript/jscomp/TightenTypes.java,src/com/google/javascript/jscomp/TightenTypes.java,940,getImplicitActionsFromPropNonUnion(
+True,src/com/google/javascript/jscomp/TightenTypes.java,src/com/google/javascript/jscomp/TightenTypes.java,941,"type, prop, fnNode));"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,51,import com.google.common.collect.ImmutableList;
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,63,mport java.util.LinkedHashSet;
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,116,"rivate final Map<String, Set<ObjectType>> typesIndexedByProperty ="
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,116,"private final Map<String, UnionTypeBuilder> typesIndexedByProperty ="
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,119,// A map of properties to each reference type on which those
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,120,// properties have been declared. Each type has a unique name used
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,121,// for de-duping.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,122,"private final Map<String, Map<String, ObjectType>>"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,123,eachRefTypeIndexedByProperty = Maps.newHashMap();
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,228,eachRefTypeIndexedByProperty.clear();
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,537,// Register the prototype property. See the comments below in
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,538,// registerPropertyOnType about the bootstrapping process.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,539,"registerPropertyOnType(""prototype"", OBJECT_FUNCTION_TYPE);"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,588,bjectType owner = null;
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,590,"/ Properties can only be defined on object types, so normalize everything"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,591,/ to discrete object types.
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,592,f (type instanceof ObjectType) {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,593,wner = (ObjectType) type;
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,594, else if (getNativeType(ALL_TYPE).isSubtype(type)) {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,595,wner = getNativeObjectType(JSTypeNative.OBJECT_TYPE);
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,596, else if (type instanceof UnionType) {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,597,or (JSType alternate : ((UnionType) type).getAlternates()) {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,598,"egisterPropertyOnType(propertyName, alternate);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,599,UnionTypeBuilder typeSet = typesIndexedByProperty.get(propertyName);
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,600,if (typeSet == null) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,601,typeSet = new UnionTypeBuilder(this);
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,602,"typesIndexedByProperty.put(propertyName, typeSet);"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,602,f (owner == null) {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,603,eturn;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,605,typeSet.addAlternate(type);
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,606,"addReferenceTypeIndexedByProperty(propertyName, type);"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,606,et<ObjectType> typeSet = typesIndexedByProperty.get(propertyName);
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,607,f (typeSet == null) {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,608,ypesIndexedByProperty.put(
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,609,"ropertyName, typeSet = new LinkedHashSet<ObjectType>());"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,608,// Clear cached values that depend on typesIndexedByProperty.
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,612,ypeSet.add(owner);
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,612,private void addReferenceTypeIndexedByProperty(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,613,"String propertyName, JSType type) {"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,614,if (type instanceof ObjectType && ((ObjectType) type).hasReferenceName()) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,615,"Map<String, ObjectType> typeSet ="
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,616,eachRefTypeIndexedByProperty.get(propertyName);
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,617,if (typeSet == null) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,618,typeSet = Maps.newHashMap();
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,619,"eachRefTypeIndexedByProperty.put(propertyName, typeSet);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,621,ObjectType objType = (ObjectType) type;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,622,"typeSet.put(objType.getReferenceName(), objType);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,623,} else if (type instanceof NamedType) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,624,addReferenceTypeIndexedByProperty(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,625,"propertyName, ((NamedType) type).getReferencedType());"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,626,} else if (type instanceof UnionType) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,627,for (JSType alternate : ((UnionType) type).getAlternates()) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,628,"addReferenceTypeIndexedByProperty(propertyName, alternate);"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,626,nionTypeBuilder builder = new UnionTypeBuilder(this);
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,627,or (JSType alt : typesIndexedByProperty.get(propertyName)) {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,628,uilder.addAlternate(alt);
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,630,SType built = builder.build();
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,644,JSType built = typesIndexedByProperty.get(propertyName).build();
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,642,or (JSType alt : typesIndexedByProperty.get(propertyName)) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,656,for (JSType alt :
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,657,typesIndexedByProperty.get(propertyName).getAlternates()) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,669,"* Like most types in our type system, the collection of types returned"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,670,* will be collapsed. This means that if a type is defined on
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,671,"* {@code Object} and on {@code Array}, it would be reasonable for this"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,672,"* method to return either {@code [Object, Array]} or just {@code [Object]}."
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,655,ublic Set<ObjectType> getTypesWithProperty(String propertyName) {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,656,et<ObjectType> typeSet = typesIndexedByProperty.get(propertyName);
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,657,f (typeSet == null) {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,658,et<ObjectType> set = new LinkedHashSet<ObjectType>();
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,659,et.add(getNativeObjectType(NO_TYPE));
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,660,eturn set;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,674,public Iterable<JSType> getTypesWithProperty(String propertyName) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,675,if (typesIndexedByProperty.containsKey(propertyName)) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,676,return typesIndexedByProperty.get(propertyName).getAlternates();
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,677,} else {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,678,return ImmutableList.of();
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,683,* Returns each reference type that has a property {@code propertyName}
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,684,* defined on it.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,686,"* Unlike most types in our type system, the collection of types returned"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,687,* will not be collapsed. This means that if a type is defined on
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,688,"* {@code Object} and on {@code Array}, this method must return"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,689,"* {@code [Object, Array]}. It would not be correct to collapse them to"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,690,* {@code [Object]}.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,692,public Iterable<ObjectType> getEachReferenceTypeWithProperty(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,693,String propertyName) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,694,if (eachRefTypeIndexedByProperty.containsKey(propertyName)) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,695,return eachRefTypeIndexedByProperty.get(propertyName).values();
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,696,} else {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,697,return ImmutableList.of();
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,662,eturn typeSet;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,246,"boolean result = defineProperty(propertyName, type, false, inExterns);"
+False,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,247,/ or defineInferredProperty.
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,249,// or defineDeclaredProperty. Because the properties defined an an
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,250,"// object can affect subtyping, it's slightly more efficient"
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,251,// to register this after defining the property.
+False,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,250,"eturn defineProperty(propertyName, type, false, inExterns);"
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,254,return result;
+False,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,264,/ All property definitions go through this method
+False,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,265,/ or defineDeclaredProperty.
+False,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,266,"egistry.registerPropertyOnType(propertyName, this);"
+False,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,274,"eturn defineProperty(propertyName, type, true, inExterns);"
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,274,"boolean result = defineProperty(propertyName, type, true, inExterns);"
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,276,// All property definitions go through this method
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,277,// or defineDeclaredProperty. Because the properties defined an an
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,278,"// object can affect subtyping, it's slightly more efficient"
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,279,// to register this after defining the property.
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,280,"registry.registerPropertyOnType(propertyName, this);"
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,282,return result;
+False,src/com/google/javascript/rhino/jstype/RecordType.java,src/com/google/javascript/rhino/jstype/RecordType.java,188,or (ObjectType alt : registry.getTypesWithProperty(propName)) {
+True,src/com/google/javascript/rhino/jstype/RecordType.java,src/com/google/javascript/rhino/jstype/RecordType.java,188,for (ObjectType alt :
+True,src/com/google/javascript/rhino/jstype/RecordType.java,src/com/google/javascript/rhino/jstype/RecordType.java,189,registry.getEachReferenceTypeWithProperty(propName)) {
+False,src/com/google/javascript/rhino/jstype/UnionType.java,src/com/google/javascript/rhino/jstype/UnionType.java,359, vector contains it.  Since the {@link #equals} method above conforms to
+False,src/com/google/javascript/rhino/jstype/UnionType.java,src/com/google/javascript/rhino/jstype/UnionType.java,360," the necessary semantics for the collection, everything works out just"
+False,src/com/google/javascript/rhino/jstype/UnionType.java,src/com/google/javascript/rhino/jstype/UnionType.java,361, fine.
+True,src/com/google/javascript/rhino/jstype/UnionType.java,src/com/google/javascript/rhino/jstype/UnionType.java,359,* vector contains it.
+False,src/com/google/javascript/rhino/jstype/UnionType.java,src/com/google/javascript/rhino/jstype/UnionType.java,367,ublic boolean contains(JSType alternate) {
+False,src/com/google/javascript/rhino/jstype/UnionType.java,src/com/google/javascript/rhino/jstype/UnionType.java,368,eturn alternates.contains(alternate);
+True,src/com/google/javascript/rhino/jstype/UnionType.java,src/com/google/javascript/rhino/jstype/UnionType.java,365,public boolean contains(JSType type) {
+True,src/com/google/javascript/rhino/jstype/UnionType.java,src/com/google/javascript/rhino/jstype/UnionType.java,366,for (JSType alt : alternates) {
+True,src/com/google/javascript/rhino/jstype/UnionType.java,src/com/google/javascript/rhino/jstype/UnionType.java,367,if (alt.isEquivalentTo(type)) {
+True,src/com/google/javascript/rhino/jstype/UnionType.java,src/com/google/javascript/rhino/jstype/UnionType.java,368,return true;
+True,src/com/google/javascript/rhino/jstype/UnionType.java,src/com/google/javascript/rhino/jstype/UnionType.java,371,return false;
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,83,Iterable<JSType> getAlternates() {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,84,JSType specialCaseType = reduceAlternatesWithoutUnion();
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,85,if (specialCaseType != null) {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,86,return ImmutableList.of(specialCaseType);
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,88,return alternates;
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,153,* Reduce the alternates into a non-union type.
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,154,* If the alternates can't be accurately represented with a non-union
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,155,"* type, return null."
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,157,private JSType reduceAlternatesWithoutUnion() {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,158,if (isAllType) {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,159,return registry.getNativeType(ALL_TYPE);
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,160,} else if (isNativeUnknownType) {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,161,if (areAllUnknownsChecked) {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,162,return registry.getNativeType(CHECKED_UNKNOWN_TYPE);
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,163,} else {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,164,return registry.getNativeType(UNKNOWN_TYPE);
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,166,} else {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,167,int size = alternates.size();
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,168,if (size > MAX_UNION_SIZE) {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,169,return registry.getNativeType(UNKNOWN_TYPE);
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,170,} else if (size > 1) {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,171,return null;
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,172,} else if (size == 1) {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,173,return alternates.iterator().next();
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,174,} else {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,175,return registry.getNativeType(NO_TYPE);
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,151,f (isAllType) {
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,152,esult = registry.getNativeType(ALL_TYPE);
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,153, else if (isNativeUnknownType) {
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,154,f (areAllUnknownsChecked) {
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,155,esult = registry.getNativeType(CHECKED_UNKNOWN_TYPE);
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,156, else {
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,157,esult = registry.getNativeType(UNKNOWN_TYPE);
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,159, else {
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,160,nt size = alternates.size();
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,161,f (size > MAX_UNION_SIZE) {
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,162,esult = registry.getNativeType(UNKNOWN_TYPE);
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,163, else {
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,164,f (size > 1) {
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,165,"esult = new UnionType(registry, getAlternateListCopy());"
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,166, else if (size == 1) {
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,167,esult = alternates.iterator().next();
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,168, else {
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,169,esult = registry.getNativeType(NO_TYPE);
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,187,result = reduceAlternatesWithoutUnion();
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,188,if (result == null) {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,189,"result = new UnionType(registry, getAlternateListCopy());"
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,77,"public static void assertTypeNotEquals(JSType a, JSType b) {"
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,78,"assertTypeNotEquals("""", a, b);"
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,81,"public static void assertTypeNotEquals(String message, JSType a, JSType b) {"
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,82,Assert.assertFalse(
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,83,message +
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,84,"(message.isEmpty() ? """" : ""\n"") +"
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,85,"""Type: "" + b + ""\n"","
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,86,a.isEquivalentTo(b));
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,87,Assert.assertFalse(
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,88,message +
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,89,""" Equals is not symmetric.\n"" +"
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,90,"""Type: "" + b + ""\n"","
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,91,b.isEquivalentTo(a));
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,105,Assert.assertTrue(
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,106,message +
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,107,""" Equals is not symmetric.\n"" +"
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,108,"""Expected: "" + b + ""\n"" +"
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,109,"""Actual  : "" + a,"
+True,src/com/google/javascript/rhino/testing/Asserts.java,src/com/google/javascript/rhino/testing/Asserts.java,110,b.isEquivalentTo(a));
+False,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,21,mport com.google.common.collect.Sets;
+False,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,6186,"ets.newHashSet(objectType),"
+True,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,6185,"Lists.newArrayList(objectType),"
+False,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,6202,"ets.newHashSet(OBJECT_TYPE),"
+True,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,6201,"Lists.newArrayList(OBJECT_TYPE),"
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,21,mport com.google.common.collect.Sets;
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6788,"ets.newHashSet(objectType),"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6787,"Lists.newArrayList(objectType),"
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6804,"ets.newHashSet(OBJECT_TYPE),"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,6803,"Lists.newArrayList(OBJECT_TYPE),"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7571,public void testMissingProperty37() throws Exception {
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7572,// This used to emit a missing property warning because we couldn't
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7573,"// determine that the inf(Foo, {isVisible:boolean}) == SubFoo."
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7574,testTypes(
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7575,"""/** @param {{isVisible: boolean}} x */ function f(x){"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7576,"""  x.isVisible = false;"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7578,"""/** @constructor */ function Foo() {}"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7579,"""/**\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7580,""" * @constructor \n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7581,""" * @extends {Foo}\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7582,""" */ function SubFoo() {}"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7583,"""/** @type {boolean} */ SubFoo.prototype.isVisible = true;"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7584,"""/**\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7585,""" * @param {Foo} x\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7586,""" * @return {boolean}\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7587,""" */\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7588,"""function g(x) { return x.isVisible; }"");"
+False,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,29,mport com.google.common.collect.Sets;
+False,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,96,"ssertEquals(Sets.newHashSet(foo), registry.getTypesWithProperty(""bar""));"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,95,"assertEquals(Lists.newArrayList(foo), registry.getTypesWithProperty(""bar""));"
+False,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,107,"ssertEquals(Sets.newHashSet(foo), registry.getTypesWithProperty(""Bar""));"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,106,"assertEquals(Lists.newArrayList(foo), registry.getTypesWithProperty(""Bar""));"
+False,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,119,"ssertEquals(Sets.newHashSet(foo), registry.getTypesWithProperty(""Bar""));"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,118,"assertEquals(Lists.newArrayList(foo), registry.getTypesWithProperty(""Bar""));"
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,61,mport java.util.Set;
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3513,ssertTrue(googBar.isEquivalentTo(googBar));
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3514,ssertFalse(googBar.isEquivalentTo(googSubBar));
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3512,"assertTypeEquals(googBar, googBar);"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,3513,"assertTypeNotEquals(googBar, googSubBar);"
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4371,ssertFalse(googBar.isEquivalentTo(googBar.getInstanceType()));
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4372,ssertFalse(googBar.getInstanceType().isEquivalentTo(googBar));
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4370,"assertTypeNotEquals(googBar, googBar.getInstanceType());"
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4474,/ test != to non-NamedType
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4475,"ssertFalse(a.equals(""type1""));"
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4922,et<JSType> allObjects = Sets.newHashSet();
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4917,List<JSType> allObjects = Lists.newArrayList();
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4931,"ssertEquals(Sets.newHashSet(type),"
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4932,egistry.getTypesWithProperty(propName));
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4929,List<JSType> typesWithProp =
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4930,Lists.newArrayList(registry.getTypesWithProperty(propName));
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4931,String message = type.toString();
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4932,"assertEquals(message, 1, typesWithProp.size());"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4933,"assertTypeEquals(type, typesWithProp.get(0));"
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4938,"ssertEquals(registry.getTypesWithProperty(""GRRR""),"
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4939,ets.newHashSet(NO_TYPE));
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4940,"ssertEquals(allObjects, registry.getTypesWithProperty(""allHaz""));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4940,"assertTypeListEquals(registry.getTypesWithProperty(""GRRR""),"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4941,Lists.newArrayList(NO_TYPE));
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4942,"assertTypeListEquals(allObjects,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4943,"registry.getTypesWithProperty(""allHaz""));"
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5349,ssertTrue(OBJECT_FUNCTION_TYPE.getSubTypes().contains(googBar));
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5350,ssertTrue(googBar.getSubTypes().contains(googSubBar));
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5351,ssertFalse(googBar.getSubTypes().contains(googSubSubBar));
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5352,ssertFalse(googSubBar.getSubTypes().contains(googSubBar));
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5353,ssertTrue(googSubBar.getSubTypes().contains(googSubSubBar));
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5352,assertTrue(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5353,containsType(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5354,"OBJECT_FUNCTION_TYPE.getSubTypes(), googBar));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5355,assertTrue(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5356,containsType(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5357,"googBar.getSubTypes(), googSubBar));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5358,assertFalse(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5359,containsType(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5360,"googBar.getSubTypes(), googSubSubBar));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5361,assertFalse(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5362,containsType(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5363,"googSubBar.getSubTypes(), googSubBar));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5364,assertTrue(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5365,containsType(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5366,"googSubBar.getSubTypes(), googSubSubBar));"
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5357,ssertTrue(registry.getDirectImplementors(
+False,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5358,nterfaceType.getInstanceType()).contains(googBar));
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5370,assertTrue(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5371,containsType(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5372,registry.getDirectImplementors(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5373,"interfaceType.getInstanceType()),"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5374,googBar));
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5377,private static boolean containsType(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5378,"Iterable<? extends JSType> types, JSType type) {"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5379,for (JSType alt : types) {
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5380,if (alt.isEquivalentTo(type)) {
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5381,return true;
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5384,return false;
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5387,private static boolean assertTypeListEquals(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5388,"Iterable<? extends JSType> typeListA,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5389,Iterable<? extends JSType> typeListB) {
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5390,for (JSType alt : typeListA) {
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5391,assertTrue(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5392,"""List : "" + typeListA + ""\n"" +"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5393,"""does not contain: "" + alt,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5394,"containsType(typeListA, alt));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5396,for (JSType alt : typeListB) {
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5397,assertTrue(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5398,"""List : "" + typeListB + ""\n"" +"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5399,"""does not contain: "" + alt,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5400,"containsType(typeListB, alt));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5402,return false;
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5417,"private void assertTypeNotEquals(JSType a, JSType b) {"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5418,"Asserts.assertTypeNotEquals(a, b);"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5421,"private void assertTypeNotEquals(String msg, JSType a, JSType b) {"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5422,"Asserts.assertTypeNotEquals(msg, a, b);"

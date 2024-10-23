@@ -1,0 +1,33 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,47,"} else if (tq.matches(""<![CDATA["")) {"
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,48,parseCdata();
+False,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,61,/ TODO: this puts comments into nodes that should not hold them (e.g. img).
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,93,String tagName = tq.consumeWord();
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,95,if (tagName.isEmpty()) { // doesn't look like a start tag after all; put < back on stack and handle as text
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,96,"tq.addFirst(""&lt;"");"
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,97,parseTextNode();
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,98,return;
+False,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,94,tring tagName = tq.consumeWord();
+False,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,159,"/ TODO: work out whitespace requirements (between blocks, between inlines)"
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,174,private void parseCdata() {
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,175,"tq.consume(""<![CDATA["");"
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,176,"String rawText = tq.chompTo(""]]>"");"
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,177,"TextNode textNode = new TextNode(rawText, baseUri); // constructor does not escape"
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,178,last().addChild(textNode);
+True,src/main/java/org/jsoup/parser/TokenQueue.java,src/main/java/org/jsoup/parser/TokenQueue.java,42,public void addFirst(Character c) {
+True,src/main/java/org/jsoup/parser/TokenQueue.java,src/main/java/org/jsoup/parser/TokenQueue.java,43,queue.addFirst(c);
+True,src/main/java/org/jsoup/parser/TokenQueue.java,src/main/java/org/jsoup/parser/TokenQueue.java,46,public void addFirst(String seq) {
+True,src/main/java/org/jsoup/parser/TokenQueue.java,src/main/java/org/jsoup/parser/TokenQueue.java,47,char[] chars = seq.toCharArray();
+True,src/main/java/org/jsoup/parser/TokenQueue.java,src/main/java/org/jsoup/parser/TokenQueue.java,48,for (int i = chars.length - 1; i >= 0; i--) {
+True,src/main/java/org/jsoup/parser/TokenQueue.java,src/main/java/org/jsoup/parser/TokenQueue.java,49,addFirst(chars[i]);
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,165,@Test public void handlesCdata() {
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,166,"String h = ""<div id=1><![CData[<html>\n<foo><&amp;]]></div>""; // ""cdata"" insensitive. the &amp; in there should remain literal"
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,167,Document doc = Jsoup.parse(h);
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,168,"Element div = doc.getElementById(""1"");"
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,169,"assertEquals(""<html>\n<foo><&amp;"", div.text());"
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,170,"assertEquals(0, div.children().size());"
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,171,"assertEquals(1, div.childNodes().size()); // no elements, one text node"
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,174,@Test public void handlesInvalidStartTags() {
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,175,"String h = ""<div>Hello < There <&amp;></div>""; // parse to <div {#text=Hello < There <&>}>"
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,176,Document doc = Jsoup.parse(h);
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,177,"assertEquals(""Hello < There <&>"", doc.select(""div"").first().text());"

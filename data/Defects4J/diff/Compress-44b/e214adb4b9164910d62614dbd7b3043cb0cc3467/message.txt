@@ -1,0 +1,12 @@
+COMPRESS-296 Parallel compression. Added StreamCompressor and ScatterZipOutputStream.
+
+StreamCompressor is an extract of the deflation algorithm from ZipArchiveOutputStream, which unfortunately
+was too conflated with writing a file in a particular structure. Using the actual zip file format as an
+intermediate format for scatter-streams turned out to be fairly inefficient. ScatterZipOuputStream
+is 2-3x faster than using a zip file as intermediate format.
+
+It would be possibly to refactor ZipArchiveOutputStream to use StreamCompressor, but there would
+be a slight break in backward compatibility regarding the protected writeOut method, which
+is moved to the streamCompressor class.
+
+git-svn-id: https://svn.apache.org/repos/asf/commons/proper/compress/trunk@1647329 13f79535-47bb-0310-9956-ffa450edef68

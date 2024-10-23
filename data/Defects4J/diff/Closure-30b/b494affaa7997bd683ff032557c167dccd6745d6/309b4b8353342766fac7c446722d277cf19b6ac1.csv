@@ -1,0 +1,171 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,22,mport com.google.common.collect.LinkedHashMultimap;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,22,import com.google.common.collect.ImmutableList;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,23,import com.google.common.collect.Lists;
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,24,mport com.google.common.collect.Multimap;
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,25,mport com.google.common.collect.Sets;
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,29,mport com.google.javascript.jscomp.NodeTraversal.AbstractShallowCallback;
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,37,mport java.util.Set;
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,67,** Maps a function to the callsites contained in that function. */
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,68,"rivate Multimap<Function, Callsite> callsitesByContainingFunction ="
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,69,inkedHashMultimap.create();
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,86, Maps a function to the callsites targeting that function.
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,88, This data structure is only filled in if computeBackwardGraph is true.
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,90,"rivate Multimap<Function, Callsite> callsitesByTargetingFunction;"
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,99, Maps a callsite to the functions known to be targeted by that callsite.
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,101, This data structure is only filled in if computeBackwardGraph if false.
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,103,"rivate Multimap<Callsite, Function> targetFunctionsByCallsite;"
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,152,f (computeForwardGraph) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,153,argetFunctionsByCallsite = LinkedHashMultimap.create();
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,156,f (computeBackwardGraph) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,157,allsitesByTargetingFunction = LinkedHashMultimap.create();
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,176,reateFunctions(jsRoot);
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,178,/ Depends on createFunctions already being called.
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,179,reateCallsites();
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,184,/ Depends on createCallsites already being called
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,185,onnectCallsitesToTargets(definitionProvider);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,150,"createFunctionsAndCallsites(jsRoot, definitionProvider);"
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,263,eturn callsitesByContainingFunction.values();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,228,return callsitesByNode.values();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,232,* Creates {@link Function}s and {@link Callsite}s in a single
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,233,* AST traversal.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,235,"private void createFunctionsAndCallsites(Node jsRoot,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,236,final DefinitionProvider provider) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,237,// Create fake function representing global execution
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,238,mainFunction = createFunction(jsRoot);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,240,"NodeTraversal.traverse(compiler, jsRoot, new AbstractPostOrderCallback() {"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,241,@Override
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,242,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,243,int nodeType = n.getType();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,245,if (nodeType == Token.CALL || nodeType == Token.NEW) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,246,Callsite callsite = createCallsite(n);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,248,Node containingFunctionNode = t.getScopeRoot();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,250,Function containingFunction =
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,251,functionsByNode.get(containingFunctionNode);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,253,if (containingFunction == null) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,254,containingFunction = createFunction(containingFunctionNode);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,256,callsite.containingFunction = containingFunction;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,257,containingFunction.addCallsiteInFunction(callsite);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,259,"connectCallsiteToTargets(callsite, provider);"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,261,} else if (NodeUtil.isFunction(n)) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,262,if (!functionsByNode.containsKey(n)) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,263,createFunction(n);
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,279,rivate void createFunctions(Node jsRoot) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,280,/ Create fake function representing global execution
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,281,ainFunction = createFunction(jsRoot);
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,283,or (Node n : collectAllFunctionNodesInSubtree(jsRoot)) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,284,reateFunction(n);
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,295,rivate void createCallsites() {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,296,or (Function function : getAllFunctions()) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,297,ollection<Node> callsitesInFunction =
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,298,ollectCallsiteNodesInShallowSubtree(function.getBodyNode());
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,300,or (Node callsiteNode : callsitesInFunction) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,301,allsite callsite = createCallsite(callsiteNode);
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,303,"allsitesByContainingFunction.put(function, callsite);"
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,304,allsite.containingFunction = function;
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,310, Maps each Callsite to the Function(s) it could call
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,291,* Maps a Callsite to the Function(s) it could call
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,313," If the definitionProvider cannot determine the target of a Callsite,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,294,"* If the definitionProvider cannot determine the target of the Callsite,"
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,316, If the definitionProvider determines that the target of a Callsite
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,297,* If the definitionProvider determines that the target of the Callsite
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,301,* @param callsite The callsite for which target functions should be found
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,323,rivate void connectCallsitesToTargets(DefinitionProvider definitionProvider)
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,325,or (Function function : getAllFunctions()) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,326,or (Callsite callsite : callsitesByContainingFunction.get(function)) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,327,ollection<Definition> definitions =
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,328,"ookupDefinitionsForTargetsOfCall(callsite.getAstNode(),"
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,329,efinitionProvider);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,305,"private void connectCallsiteToTargets(Callsite callsite,"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,306,DefinitionProvider definitionProvider) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,307,Collection<Definition> definitions =
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,308,"lookupDefinitionsForTargetsOfCall(callsite.getAstNode(),"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,309,definitionProvider);
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,331,f (definitions == null) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,332,allsite.hasUnknownTarget = true;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,311,if (definitions == null) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,312,callsite.hasUnknownTarget = true;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,313,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,314,for (Definition definition : definitions) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,315,if (definition.isExtern()) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,316,callsite.hasExternTarget = true;
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,334,or (Definition definition : definitions) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,335,f (definition.isExtern()) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,336,allsite.hasExternTarget = true;
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,337, else {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,338,ode target = definition.getRValue();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,318,Node target = definition.getRValue();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,320,if (target != null && NodeUtil.isFunction(target)) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,321,Function targetFunction = functionsByNode.get(target);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,323,if (targetFunction == null) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,324,targetFunction = createFunction(target);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,327,if (computeForwardGraph) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,328,callsite.addPossibleTarget(targetFunction);
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,340,f (target != null && NodeUtil.isFunction(target)) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,341,unction targetFunction = functionsByNode.get(target);
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,343,f (computeForwardGraph) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,344,"argetFunctionsByCallsite.put(callsite, targetFunction);"
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,347,f (computeBackwardGraph) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,348,"allsitesByTargetingFunction.put(targetFunction, callsite);"
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,350, else {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,351,allsite.hasUnknownTarget = true;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,331,if (computeBackwardGraph) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,332,targetFunction.addCallsitePossiblyTargetingFunction(callsite);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,334,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,335,callsite.hasUnknownTarget = true;
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,616,rivate Set<Node> collectAllFunctionNodesInSubtree(Node subtree) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,617,inal Set<Node> functionNodes = Sets.newLinkedHashSet();
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,619,"odeTraversal.traverse(compiler, subtree, new AbstractPostOrderCallback() {"
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,620,Override
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,621,"ublic void visit(NodeTraversal t, Node n, Node parent) {"
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,622,f (NodeUtil.isFunction(n)) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,623,unctionNodes.add(n);
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,628,eturn functionNodes;
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,631,rivate Collection<Node> collectCallsiteNodesInShallowSubtree(Node subtree) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,632,inal Collection<Node> callsites = Sets.newLinkedHashSet();
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,634,"odeTraversal.traverse(compiler, subtree, new AbstractShallowCallback() {"
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,635,Override
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,636,"ublic void visit(NodeTraversal t, Node potentialCallsite, Node parent) {"
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,637,nt nodeType = potentialCallsite.getType();
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,638,f (nodeType == Token.CALL || nodeType == Token.NEW) {
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,639,allsites.add(potentialCallsite);
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,644,eturn callsites;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,611,private Collection<Callsite> callsitesInFunction;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,613,private Collection<Callsite> callsitesPossiblyTargetingFunction;
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,705, Returns the callsites in this functon.
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,660,* Returns the callsites in this function.
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,708,eturn CallGraph.this.callsitesByContainingFunction.get(this);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,663,if (callsitesInFunction != null) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,664,return callsitesInFunction;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,665,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,666,return ImmutableList.of();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,670,private void addCallsiteInFunction(Callsite callsite) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,671,if (callsitesInFunction == null) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,672,callsitesInFunction = Lists.newLinkedList(callsite);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,673,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,674,callsitesInFunction.add(callsite);
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,724,eturn CallGraph.this.callsitesByTargetingFunction.get(this);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,691,if (callsitesPossiblyTargetingFunction != null) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,692,return callsitesPossiblyTargetingFunction;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,693,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,694,return ImmutableList.of();
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,728," ""from a backward-forward CallGraph"");"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,699,"+ ""from a non-backward CallGraph"");"
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,703,private void addCallsitePossiblyTargetingFunction(Callsite callsite) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,704,Preconditions.checkState(computeBackwardGraph);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,705,if (callsitesPossiblyTargetingFunction == null) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,706,callsitesPossiblyTargetingFunction = Lists.newLinkedList(callsite);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,707,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,708,callsitesPossiblyTargetingFunction.add(callsite);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,740,private Collection<Function> possibleTargets;
+False,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,788,eturn CallGraph.this.targetFunctionsByCallsite.get(this);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,770,if (possibleTargets != null) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,771,return possibleTargets;
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,772,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,773,return ImmutableList.of();
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,782,private void addPossibleTarget(Function target) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,783,Preconditions.checkState(computeForwardGraph);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,785,if (possibleTargets == null) {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,786,possibleTargets = Lists.newLinkedList(target);
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,787,} else {
+True,src/com/google/javascript/jscomp/CallGraph.java,src/com/google/javascript/jscomp/CallGraph.java,788,possibleTargets.add(target);

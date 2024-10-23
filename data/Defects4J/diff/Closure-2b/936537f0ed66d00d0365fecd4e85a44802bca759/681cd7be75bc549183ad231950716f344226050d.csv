@@ -1,0 +1,31 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1375,/ Node parent = node.getParent();
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1376,f (isStatementBlock(parent)
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1377,| isSwitchCase(node)
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1378,"| isTryFinallyNode(parent, node)) {"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1375,"if (isTryFinallyNode(parent, node)) { // A BLOCK node used as a ""finally"""
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1376,// A finally node can simply be removed.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1377,parent.removeChild(node);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1378,} else if (node.getType() == Token.BLOCK) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1379,// Simply empty the block.  This maintains source location and
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1380,"// ""synthetic""-ness."
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1381,node.detachChildren();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1382,} else if (isStatementBlock(parent)
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1383,|| isSwitchCase(node)) {
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1390, else if (node.getType() == Token.BLOCK) {
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1391,/ Simply empty the block.  This maintains source location and
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1392,"/ ""synthetic""-ness."
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1393,ode.detachChildren();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,721,public void testRemoveChildBlock() {
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,722,Compiler compiler = new Compiler();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,724,"Node root = parse(""{{x()}}"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,726,// Test removing the inner block.
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,727,Node actual = root.cloneTree();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,729,Node outerBlockNode = actual.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,730,Node innerBlockNode = outerBlockNode.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,731,innerBlockNode.setIsSyntheticBlock(true);
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,733,"NodeUtil.removeChild(outerBlockNode, innerBlockNode);"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,734,"String expected = ""{{}}"";"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,735,String difference = parse(expected).checkTreeEquals(actual);
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,736,if (difference != null) {
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,737,"assertTrue(""Nodes do not match:\n"" + difference, false);"

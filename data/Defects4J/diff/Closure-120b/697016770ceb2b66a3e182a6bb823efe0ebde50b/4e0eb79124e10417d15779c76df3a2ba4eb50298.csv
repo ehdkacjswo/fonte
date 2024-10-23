@@ -1,0 +1,58 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,18,import com.google.common.collect.ImmutableSet;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,25,import java.util.Set;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,51,"private static final String WINDOW = ""window"";"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,52,private static final Set<String> SPECIAL_EXTERNS =
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,53,"ImmutableSet.of(WINDOW, ""eval"", ""arguments"");"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,97,// Extra pass which makes all extern global symbols reference window
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,98,// explicitly.
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,99,"NodeTraversal.traverse(compiler, root,"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,100,new MakeExternsReferenceWindowExplicitly());
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,277,* Rewrites extern names to be explicit children of window instead of only
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,278,* implicitly referencing it.
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,279,* This enables injecting window into a scope and make all global symbol
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,280,* depend on the injected object.
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,282,private class MakeExternsReferenceWindowExplicitly extends
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,283,AbstractPostOrderCallback {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,285,@Override
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,286,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,287,if (!n.isName()) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,288,return;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,290,String name = n.getString();
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,291,Scope.Var var = t.getScope().getVar(name);
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,292,if (name.length() > 0 && (var == null || var.isExtern()) &&
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,293,!globalSymbolNamespace.equals(name) &&
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,294,!SPECIAL_EXTERNS.contains(name)) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,295,"parent.replaceChild(n, IR.getprop(IR.name(WINDOW), IR.string(name))"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,296,.srcrefTree(n));
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,297,compiler.reportCodeChange();
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,123,public void testExterns() {
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,124,"test(""var document;"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,125,"""document"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,126,"""window.document"", null, null);"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,127,"test(""var document;"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,128,"""document.getElementsByTagName('test')"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,129,"""window.document.getElementsByTagName('test')"", null, null);"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,130,"test(""var document;"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,131,"""window.document.getElementsByTagName('test')"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,132,"""window.document.getElementsByTagName('test')"", null, null);"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,133,"test(""var document;document.getElementsByTagName"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,134,"""document.getElementsByTagName('test')"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,135,"""window.document.getElementsByTagName('test')"", null, null);"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,136,"test(""var document,navigator"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,137,"""document.navigator;navigator"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,138,"""window.document.navigator;window.navigator"", null, null);"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,139,"test(""var iframes"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,140,"""function test() { iframes.resize(); }"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,141,"""_.test = function() { window.iframes.resize(); }"", null, null);"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,142,"test(""var iframes"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,143,"""var foo = iframes;"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,144,"""_.foo = window.iframes;"", null, null);"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,145,// Special names.
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,146,"test(""var arguments, window, eval;"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,147,"""arguments;window;eval;"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,148,"""arguments;window;eval;"", null, null);"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,149,// Actually not an extern.
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,150,"test("""","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,151,"""document"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,152,"""window.document"", null, null);"

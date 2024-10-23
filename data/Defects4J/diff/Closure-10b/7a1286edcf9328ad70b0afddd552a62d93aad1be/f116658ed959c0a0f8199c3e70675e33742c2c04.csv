@@ -1,0 +1,176 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,979,/ For now we only support .join() and .indexOf()
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,979,"// For now we only support .join(),"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,980,"// .indexOf(), .substring() and .substr()"
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,981,ubtree = tryFoldStringJoin(subtree);
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,982,subtree = tryFoldArrayJoin(subtree);
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,984,ubtree = tryFoldStringIndexOf(subtree);
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,985,subtree = tryFoldKnownStringMethods(subtree);
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,991, Try to evaluate String.indexOf/lastIndexOf:
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,992,"     ""abcdef"".indexOf(""bc"") -> 1"
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,993,"     ""abcdefbc"".indexOf(""bc"", 3) -> 6"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,992,* Try to eveluate known String methods
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,993,"*    .indexOf(), .substr(), .substring()"
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,995,rivate Node tryFoldStringIndexOf(Node n) {
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,996,reconditions.checkArgument(n.getType() == Token.CALL);
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,995,private Node tryFoldKnownStringMethods(Node subtree) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,996,Preconditions.checkArgument(subtree.getType() == Token.CALL);
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,998,ode left = n.getFirstChild();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,998,// check if this is a call on a string method
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,999,// then dispatch to specific folding method.
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1000,Node callTarget = subtree.getFirstChild();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1001,if (callTarget == null) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1002,return subtree;
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1000,f (left == null) {
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1001,eturn n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1005,Node firstArg = callTarget.getNext();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1006,if (firstArg == null) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1007,return subtree;
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1004,ode right = left.getNext();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1010,if (!NodeUtil.isGet(callTarget) ||
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1011,!NodeUtil.isImmutableValue(firstArg)) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1012,return subtree;
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1006,f (right == null) {
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1007,eturn n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1015,Node stringNode = callTarget.getFirstChild();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1016,Node functionName = stringNode.getNext();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1018,if ((stringNode.getType() != Token.STRING) || (
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1019,(functionName.getType() != Token.STRING))) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1020,return subtree;
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1010,f (!NodeUtil.isGetProp(left) || !NodeUtil.isImmutableValue(right)) {
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1011,eturn n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1023,String functionNameString = functionName.getString();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1024,"if (functionNameString.equals(""indexOf"") ||"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1025,"functionNameString.equals(""lastIndexOf"")) {"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1026,"subtree = tryFoldStringIndexOf(subtree, functionNameString,"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1027,"stringNode, firstArg);"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1028,"} else if (functionNameString.equals(""substr"")) {"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1029,"subtree = tryFoldStringSubstr(subtree, stringNode, firstArg);"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1030,"} else if (functionNameString.equals(""substring"")) {"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1031,"subtree = tryFoldStringSubstring(subtree, stringNode, firstArg);"
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1014,ode lstringNode = left.getFirstChild();
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1015,ode functionName = lstringNode.getNext();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1034,return subtree;
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1017,f ((lstringNode.getType() != Token.STRING) ||
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1018,"!functionName.getString().equals(""indexOf"") &&"
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1019,"functionName.getString().equals(""lastIndexOf""))) {"
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1020,eturn n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1038,* Try to evaluate String.indexOf/lastIndexOf:
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1039,"*     ""abcdef"".indexOf(""bc"") -> 1"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1040,"*     ""abcdefbc"".indexOf(""bc"", 3) -> 6"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1042,private Node tryFoldStringIndexOf(
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1043,"Node n, String functionName, Node lstringNode, Node firstArg) {"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1044,Preconditions.checkArgument(n.getType() == Token.CALL);
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1045,Preconditions.checkArgument(lstringNode.getType() == Token.STRING);
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1024,"oolean isIndexOf = functionName.getString().equals(""indexOf"");"
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1025,ode firstArg = right;
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1026,ode secondArg = right.getNext();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1048,"boolean isIndexOf = functionName.equals(""indexOf"");"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1049,Node secondArg = firstArg.getNext();
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1055,rivate Node tryFoldStringJoin(Node n) {
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1056,ode left = n.getFirstChild();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1078,private Node tryFoldArrayJoin(Node n) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1079,Node callTarget = n.getFirstChild();
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1058,f (left == null) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1081,if (callTarget == null) {
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1062,ode right = left.getNext();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1085,Node right = callTarget.getNext();
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1068,f (!NodeUtil.isGetProp(left) || !NodeUtil.isImmutableValue(right)) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1091,if (!NodeUtil.isGetProp(callTarget) || !NodeUtil.isImmutableValue(right)) {
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1072,ode arrayNode = left.getFirstChild();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1095,Node arrayNode = callTarget.getFirstChild();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1191,* Try to fold .substr() calls on strings
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1193,"private Node tryFoldStringSubstr(Node n, Node stringNode, Node arg1) {"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1194,Preconditions.checkArgument(n.getType() == Token.CALL);
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1195,Preconditions.checkArgument(stringNode.getType() == Token.STRING);
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1197,"int start, length;"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1198,String stringAsString = stringNode.getString();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1200,// TODO(nicksantos): We really need a NodeUtil.getNumberValue
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1201,// function.
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1202,if (arg1 != null && arg1.getType() == Token.NUMBER) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1203,start = (int) arg1.getDouble();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1204,} else {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1205,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1208,Node arg2 = arg1.getNext();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1209,if (arg2 != null) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1210,if (arg2.getType() == Token.NUMBER) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1211,length = (int) arg2.getDouble();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1212,} else {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1213,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1216,if (arg2.getNext() != null) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1217,"// If we got more args than we expected, bail out."
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1218,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1220,} else {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1221,// parameter 2 not passed
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1222,length = stringAsString.length() - start;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1225,// Don't handle these cases. The specification actually does
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1226,"// specify the behavior in some of these cases, but we haven't"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1227,// done a thorough investigation that it is correctly implemented
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1228,// in all browsers.
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1229,if ((start + length) > stringAsString.length() ||
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1230,(length < 0) ||
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1231,(start < 0)) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1232,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1235,"String result = stringAsString.substring(start, start + length);"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1236,Node resultNode = Node.newString(result);
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1238,Node parent = n.getParent();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1239,"parent.replaceChild(n, resultNode);"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1240,reportCodeChange();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1241,return resultNode;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1245,* Try to fold .substring() calls on strings
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1247,"private Node tryFoldStringSubstring(Node n, Node stringNode, Node arg1) {"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1248,Preconditions.checkArgument(n.getType() == Token.CALL);
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1249,Preconditions.checkArgument(stringNode.getType() == Token.STRING);
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1251,"int start, end;"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1252,String stringAsString = stringNode.getString();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1254,if (arg1 != null && arg1.getType() == Token.NUMBER) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1255,start = (int) arg1.getDouble();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1256,} else {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1257,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1260,Node arg2 = arg1.getNext();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1261,if (arg2 != null) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1262,if (arg2.getType() == Token.NUMBER) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1263,end = (int) arg2.getDouble();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1264,} else {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1265,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1268,if (arg2.getNext() != null) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1269,"// If we got more args than we expected, bail out."
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1270,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1272,} else {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1273,// parameter 2 not passed
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1274,end = stringAsString.length();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1277,// Don't handle these cases. The specification actually does
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1278,"// specify the behavior in some of these cases, but we haven't"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1279,// done a thorough investigation that it is correctly implemented
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1280,// in all browsers.
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1281,if ((end > stringAsString.length()) ||
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1282,(start > stringAsString.length()) ||
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1283,(end < 0) ||
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1284,(start < 0)) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1285,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1288,"String result = stringAsString.substring(start, end);"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1289,Node resultNode = Node.newString(result);
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1291,Node parent = n.getParent();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1292,"parent.replaceChild(n, resultNode);"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1293,reportCodeChange();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1294,return resultNode;
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,411,public void testFoldStringSubstr() {
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,412,"fold(""x = 'abcde'.substr(0,2)"", ""x = 'ab'"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,413,"fold(""x = 'abcde'.substr(1,2)"", ""x = 'bc'"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,414,"fold(""x = 'abcde'['substr'](1,3)"", ""x = 'bcd'"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,415,"fold(""x = 'abcde'.substr(2)"", ""x = 'cde'"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,417,// we should be leaving negative indexes alone for now
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,418,"foldSame(""x = 'abcde'.substr(-1)"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,419,"foldSame(""x = 'abcde'.substr(1, -2)"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,420,"foldSame(""x = 'abcde'.substr(1, 2, 3)"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,421,"foldSame(""x = 'a'.substr(0, 2)"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,424,public void testFoldStringSubstring() {
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,425,"fold(""x = 'abcde'.substring(0,2)"", ""x = 'ab'"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,426,"fold(""x = 'abcde'.substring(1,2)"", ""x = 'b'"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,427,"fold(""x = 'abcde'['substring'](1,3)"", ""x = 'bc'"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,428,"fold(""x = 'abcde'.substring(2)"", ""x = 'cde'"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,430,// we should be leaving negative indexes alone for now
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,431,"foldSame(""x = 'abcde'.substring(-1)"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,432,"foldSame(""x = 'abcde'.substring(1, -2)"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,433,"foldSame(""x = 'abcde'.substring(1, 2, 3)"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,434,"foldSame(""x = 'a'.substring(0, 2)"");"

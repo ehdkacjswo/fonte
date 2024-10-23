@@ -1,0 +1,226 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,417, Defines variable(s) or modifies types based on the content of the node
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,418," {@code n}. A variable definition creates variables in the current scope,"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,419," a function definition creates a binding, and an assignment updates the"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,420, type of the namespaces on which the definition is made (e.g.
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,421, {@code goog.FOO = 6}).
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,422," @param n a {@link Token#VAR}, {@link Token#FUNCTION} or"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,423,     {@link Token#ASSIGN} node
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,424, @param parent {@code n}'s parent
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,417,* Asserts that it's ok to define this node's name.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,418,* The node should have a source name and be of the specified type.
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,426,"oid define(Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,420,"void assertDefinitionNode(Node n, int type) {"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,422,Preconditions.checkState(n.getType() == type);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,426,* Defines a catch parameter.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,428,"void defineCatch(Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,429,"assertDefinitionNode(n, Token.CATCH);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,430,Node catchName = n.getFirstChild();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,431,"defineSlot(catchName, n, null);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,435,* Defines a VAR initialization.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,437,"void defineVar(Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,438,"assertDefinitionNode(n, Token.VAR);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,430,witch (n.getType()) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,431,ase Token.CATCH:
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,432,ode catchName = n.getFirstChild();
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,433,"efineSlot(catchName, n, null);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,434,reak;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,440,if (n.hasMoreThanOneChild()) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,441,if (info != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,442,// multiple children
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,443,"compiler.report(JSError.make(sourceName, n, MULTIPLE_VAR_DEF));"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,445,for (Node name : n.children()) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,446,"defineName(name, n, parent, name.getJSDocInfo());"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,448,} else {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,449,Node name = n.getFirstChild();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,450,"defineName(name, n, parent,"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,451,(info != null) ? info : name.getJSDocInfo());
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,436,ase Token.VAR:
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,437,f (n.hasMoreThanOneChild()) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,438,f (info != null) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,439,/ multiple children
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,440,"ompiler.report(JSError.make(sourceName, n, MULTIPLE_VAR_DEF));"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,442,or (Node name : n.children()) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,443,"efineName(name, n, parent, name.getJSDocInfo());"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,445, else {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,446,ode name = n.getFirstChild();
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,447,"efineName(name, n, parent,"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,448,info != null) ? info : name.getJSDocInfo());
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,450,reak;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,456,* Defines a declared function.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,458,"void defineDeclaredFunction(Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,459,"assertDefinitionNode(n, Token.FUNCTION);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,452,ase Token.FUNCTION:
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,453,nt parentType = parent.getType();
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,454,reconditions.checkState(
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,455,scope.isLocal() || parentType != Token.ASSIGN) &&
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,456,"arentType != Token.NAME,"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,457,"function defined as standalone function when it is being "" +"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,458,"assigned"");"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,459,tring functionName = n.getFirstChild().getString();
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,460,"unctionType functionType = getFunctionType(functionName, n, info,"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,461,ull);
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,462,f (NodeUtil.isFunctionDeclaration(n)) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,463,"efineSlot(n.getFirstChild(), n, functionType);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,465,reak;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,461,JSDocInfo info = n.getJSDocInfo();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,462,int parentType = parent.getType();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,463,Preconditions.checkState(
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,464,(scope.isLocal() || parentType != Token.ASSIGN) &&
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,465,"parentType != Token.NAME,"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,466,"""function defined as standalone function when it is being "" +"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,467,"""assigned"");"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,468,String functionName = n.getFirstChild().getString();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,469,"FunctionType functionType = getFunctionType(functionName, n, info,"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,470,null);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,471,if (NodeUtil.isFunctionDeclaration(n)) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,472,"defineSlot(n.getFirstChild(), n, functionType);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,467,ase Token.ASSIGN:
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,468,/ TODO(nicksantos): We should support direct assignment to a
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,469,"/ prototype, as in:"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,470,/ Foo.prototype = {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,471,"/   a: function() { ... },"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,472,/   b: function() { ... }
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,474,"/ Right now (6/23/08), we understand most of this syntax, but we"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,475,"/ don't tie the ""a"" and ""b"" methods to the context of Foo."
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,477,ode rvalue = n.getLastChild();
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,478,ode lvalue = n.getFirstChild();
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,479,nfo = (info != null) ? info : rvalue.getJSDocInfo();
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,480,f (rvalue.getType() == Token.FUNCTION ||
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,481,nfo != null && info.isConstructor()) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,482,"etFunctionType(lvalue.getQualifiedName(), rvalue, info,"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,483,value);
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,484, else if (info != null && info.hasEnumParameterType()) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,485,"SType type = getEnumType(lvalue.getQualifiedName(), n, rvalue,"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,486,"nfo.getEnumParameterType().evaluate(scope, typeRegistry));"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,487,f (type != null) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,488,"etDeferredType(lvalue, type);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,491,reak;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,477,* Defines a qualified name assign to an enum or constructor.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,479,"void defineNamedTypeAssign(Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,480,"assertDefinitionNode(n, Token.ASSIGN);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,481,JSDocInfo info = n.getJSDocInfo();
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,493,efault:
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,494,hrow new IllegalStateException(Integer.toString(n.getType()));
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,483,// TODO(nicksantos): We should support direct assignment to a
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,484,"// prototype, as in:"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,485,// Foo.prototype = {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,486,"//   a: function() { ... },"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,487,//   b: function() { ... }
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,489,"// Right now (6/23/08), we understand most of this syntax, but we"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,490,"// don't tie the ""a"" and ""b"" methods to the context of Foo."
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,492,Node rvalue = n.getLastChild();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,493,Node lvalue = n.getFirstChild();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,494,info = (info != null) ? info : rvalue.getJSDocInfo();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,495,if (rvalue.getType() == Token.FUNCTION ||
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,496,info != null && info.isConstructor()) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,497,"getFunctionType(lvalue.getQualifiedName(), rvalue, info,"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,498,lvalue);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,499,} else if (info != null && info.hasEnumParameterType()) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,500,"JSType type = getEnumType(lvalue.getQualifiedName(), n, rvalue,"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,501,"info.getEnumParameterType().evaluate(scope, typeRegistry));"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,502,if (type != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,503,"setDeferredType(lvalue, type);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,843,ubclassRelationship relationship =
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,844,odingConvention.getClassesDefinedByCall(n);
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,845,f (relationship != null) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,846,bjectType superClass = ObjectType.cast(
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,847,ypeRegistry.getType(relationship.superclassName));
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,848,bjectType subClass = ObjectType.cast(
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,849,ypeRegistry.getType(relationship.subclassName));
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,850,f (superClass != null && subClass != null) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,851,unctionType superCtor = superClass.getConstructor();
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,852,unctionType subCtor = subClass.getConstructor();
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,854,f (relationship.type == SubclassType.INHERITS) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,855,"alidator.expectSuperType(t, n, superClass, subClass);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,858,f (superCtor != null && subCtor != null) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,859,odingConvention.applySubclassRelationship(
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,860,"uperCtor, subCtor, relationship.type);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,865,tring singletonGetterClassName =
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,866,odingConvention.getSingletonGetterClassName(n);
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,867,f (singletonGetterClassName != null) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,868,bjectType objectType = ObjectType.cast(
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,869,ypeRegistry.getType(singletonGetterClassName));
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,870,f (objectType != null) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,871,unctionType functionType = objectType.getConstructor();
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,873,f (functionType != null) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,874,unctionType getterType =
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,875,ypeRegistry.createFunctionType(objectType);
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,876,"odingConvention.applySingletonGetter(functionType, getterType,"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,877,bjectType);
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,882,elegateRelationship delegateRelationship =
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,883,odingConvention.getDelegateRelationship(n);
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,884,f (delegateRelationship != null) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,885,pplyDelegateRelationship(delegateRelationship);
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,888,bjectLiteralCast objectLiteralCast =
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,889,"odingConvention.getObjectLiteralCast(t, n);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,890,f (objectLiteralCast != null) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,891,bjectType type = ObjectType.cast(
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,892,ypeRegistry.getType(objectLiteralCast.typeName));
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,893,f (type != null && type.getConstructor() != null) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,894,"etDeferredType(objectLiteralCast.objectNode, type);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,895, else {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,896,"ompiler.report(JSError.make(t.getSourceName(), n,"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,897,ONSTRUCTOR_EXPECTED));
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,853,"checkForClassDefiningCalls(t, n, parent);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,912,"efine(n, parent);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,867,"defineDeclaredFunction(n, parent);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,917,"efine(n, parent);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,872,"defineNamedTypeAssign(n, parent);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,932,"efine(n, parent);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,887,"defineCatch(n, parent);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,936,"efine(n, parent);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,891,"defineVar(n, parent);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,912,* Look for class-defining calls.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,913,"* Because JS has no 'native' syntax for defining classes,"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,914,* this is often very coding-convention dependent and business-logic heavy.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,916,private void checkForClassDefiningCalls(
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,917,"NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,918,SubclassRelationship relationship =
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,919,codingConvention.getClassesDefinedByCall(n);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,920,if (relationship != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,921,ObjectType superClass = ObjectType.cast(
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,922,typeRegistry.getType(relationship.superclassName));
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,923,ObjectType subClass = ObjectType.cast(
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,924,typeRegistry.getType(relationship.subclassName));
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,925,if (superClass != null && subClass != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,926,FunctionType superCtor = superClass.getConstructor();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,927,FunctionType subCtor = subClass.getConstructor();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,929,if (relationship.type == SubclassType.INHERITS) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,930,"validator.expectSuperType(t, n, superClass, subClass);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,933,if (superCtor != null && subCtor != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,934,codingConvention.applySubclassRelationship(
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,935,"superCtor, subCtor, relationship.type);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,940,String singletonGetterClassName =
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,941,codingConvention.getSingletonGetterClassName(n);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,942,if (singletonGetterClassName != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,943,ObjectType objectType = ObjectType.cast(
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,944,typeRegistry.getType(singletonGetterClassName));
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,945,if (objectType != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,946,FunctionType functionType = objectType.getConstructor();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,948,if (functionType != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,949,FunctionType getterType =
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,950,typeRegistry.createFunctionType(objectType);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,951,"codingConvention.applySingletonGetter(functionType, getterType,"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,952,objectType);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,957,DelegateRelationship delegateRelationship =
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,958,codingConvention.getDelegateRelationship(n);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,959,if (delegateRelationship != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,960,applyDelegateRelationship(delegateRelationship);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,963,ObjectLiteralCast objectLiteralCast =
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,964,"codingConvention.getObjectLiteralCast(t, n);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,965,if (objectLiteralCast != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,966,ObjectType type = ObjectType.cast(
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,967,typeRegistry.getType(objectLiteralCast.typeName));
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,968,if (type != null && type.getConstructor() != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,969,"setDeferredType(objectLiteralCast.objectNode, type);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,970,} else {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,971,"compiler.report(JSError.make(t.getSourceName(), n,"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,972,CONSTRUCTOR_EXPECTED));
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,978,* Apply special properties that only apply to delegates.
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1358,"efine(n, parent);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1382,"defineDeclaredFunction(n, parent);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1386,"defineCatch(n, parent);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1387,break;
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1363,"efine(n, parent);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1390,"defineVar(n, parent);"

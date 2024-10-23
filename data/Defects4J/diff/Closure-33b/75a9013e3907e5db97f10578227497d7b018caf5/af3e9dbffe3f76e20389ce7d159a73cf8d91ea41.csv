@@ -1,0 +1,269 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,20,import com.google.javascript.jscomp.ReferenceCollectingCallback.ReferenceCollection;
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,21,import com.google.javascript.jscomp.ReferenceCollectingCallback.ReferenceMap;
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,22,import com.google.javascript.jscomp.Scope.Var;
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,29,import java.util.Map;
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,303,// TODO(bashir) It would be good to extract a single dumb data object with
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,304,// only getters and setters that keeps all global information we keep for a
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,305,// compiler instance. Then move some of the functions of this class there.
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,308,* Updates the list of references for variables in global scope.
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,310,* @param refMapPatch Maps each variable to all of its references; may contain
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,311,*     references collected from the whole AST or only a SCRIPT sub-tree.
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,312,* @param collectionRoot The root of sub-tree in which reference collection
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,313,*     has been done. This should either be a SCRIPT node (if collection is
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,314,*     done on a single file) or it is assumed that collection is on full AST.
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,316,"abstract void updateGlobalVarReferences(Map<Var, ReferenceCollection>"
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,317,"refMapPatch, Node collectionRoot);"
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,320,* This can be used to get the list of all references to all global variables
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,321,* based on all previous calls to {@code updateGlobalVarReferences}.
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,323,* @return The reference collection map associated to global scope variable.
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,325,abstract ReferenceMap getGlobalVarReferences();
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,27,import com.google.javascript.jscomp.ReferenceCollectingCallback.ReferenceCollection;
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,28,import com.google.javascript.jscomp.ReferenceCollectingCallback.ReferenceMap;
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,29,import com.google.javascript.jscomp.Scope.Var;
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,176,private GlobalVarReferenceMap globalRefMap = null;
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1992,@Override
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1993,"void updateGlobalVarReferences(Map<Var, ReferenceCollection> refMapPatch,"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1994,Node collectionRoot) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1995,Preconditions.checkState(collectionRoot.getType() == Token.SCRIPT
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1996,|| collectionRoot.getType() == Token.BLOCK);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1997,if (globalRefMap == null) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1998,globalRefMap = new GlobalVarReferenceMap(getInputsInOrder());
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2000,"globalRefMap.updateGlobalVarReferences(refMapPatch, collectionRoot);"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2003,@Override
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2004,ReferenceMap getGlobalVarReferences() {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2005,return globalRefMap;
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,994,rivate final PassFactory checkVariableReferences =
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,995,"ew PassFactory(""checkVariableReferences"", true) {"
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,994,private final HotSwapPassFactory checkVariableReferences =
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,995,"new HotSwapPassFactory(""checkVariableReferences"", true) {"
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,997,rotected CompilerPass createInternal(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,997,protected HotSwapCompilerPass createInternal(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,2,* Copyright 2011 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,19,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,20,import com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,21,import com.google.common.collect.Maps;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,22,import com.google.javascript.jscomp.ReferenceCollectingCallback.Reference;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,23,import com.google.javascript.jscomp.ReferenceCollectingCallback.ReferenceCollection;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,24,import com.google.javascript.jscomp.ReferenceCollectingCallback.ReferenceMap;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,25,import com.google.javascript.jscomp.Scope.Var;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,26,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,27,import com.google.javascript.rhino.Token;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,29,import java.util.List;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,30,import java.util.Map;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,31,import java.util.Map.Entry;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,34,* An implementation for {@code ReferenceMap} that is specific to global scope
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,35,* and can be used in different passes. In other words instead of relying on
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,36,* Var object it relies on the name of the variable. It also supports hot-swap
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,37,* update of reference map for a specific script.
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,39,* @see ReferenceCollectingCallback#exitScope(NodeTraversal)
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,41,* @author bashir@google.com (Bashir Sadjad)
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,43,class GlobalVarReferenceMap implements ReferenceMap {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,45,"private Map<String, ReferenceCollection> refMap = null;"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,47,"private final Map<String, Integer> inputOrder;"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,50,* @param inputs The ordered list of all inputs for the compiler.
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,52,GlobalVarReferenceMap(List<CompilerInput> inputs) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,53,inputOrder = Maps.newHashMap();
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,54,int ind = 0;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,55,for (CompilerInput input : inputs) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,56,"inputOrder.put(input.getName(), ind);"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,57,ind++;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,61,@Override
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,62,public ReferenceCollection getReferences(Var var) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,63,if (!var.isGlobal()) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,64,return null;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,66,return refMap.get(var.getName());
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,70,* Resets global var reference map with the new provide map.
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,72,* @param globalRefMap The reference map result of a
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,73,*     {@link ReferenceCollectingCallback} pass collected from the whole AST.
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,75,private void resetGlobalVarReferences(
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,76,"Map<Var, ReferenceCollection> globalRefMap) {"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,77,refMap = Maps.newHashMap();
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,78,"for (Entry<Var, ReferenceCollection> entry : globalRefMap.entrySet()) {"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,79,Var var = entry.getKey();
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,80,if (var.isGlobal()) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,81,"refMap.put(var.getName(), entry.getValue());"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,87,* Updates the internal reference map based on the provided parameters. If
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,88,"* {@code scriptRoot} is not SCRIPT, it basically replaces the internal map"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,89,"* with the new one, otherwise it replaces all the information associated to"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,90,* the given script.
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,92,* @param refMapPatch The reference map result of a
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,93,*     {@link ReferenceCollectingCallback} pass which might be collected from
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,94,*     the whole AST or just a sub-tree associated to a SCRIPT node.
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,95,* @param root AST sub-tree root on which reference collection was done.
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,97,"void updateGlobalVarReferences(Map<Var, ReferenceCollection>"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,98,"refMapPatch, Node root) {"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,99,if (refMap == null || root.getType() != Token.SCRIPT) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,100,resetGlobalVarReferences(refMapPatch);
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,101,return;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,103,String sourceName = NodeUtil.getSourceName(root);
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,104,Preconditions.checkNotNull(sourceName);
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,105,// Note there are two assumptions here (i) the order of compiler inputs
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,106,// has not changed and (ii) all references are in the order they appear
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,107,// in AST (this is enforced in ReferenceCollectionCallback).
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,108,removeScriptReferences(sourceName);
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,109,"for (Entry<Var, ReferenceCollection> entry : refMapPatch.entrySet()) {"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,110,Var var = entry.getKey();
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,111,if (var.isGlobal()) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,112,"replaceReferences(var.getName(), sourceName, entry.getValue());"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,117,private void removeScriptReferences(String sourceName) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,118,// TODO(bashir): If this is too slow it is not too difficult to make it
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,119,// faster with keeping an index for variables accessed in sourceName.
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,120,for (ReferenceCollection collection : refMap.values()) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,121,if (collection == null) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,122,continue;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,124,List<Reference> oldRefs = collection.references;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,125,"SourceRefRange range = findSourceRefRange(oldRefs, sourceName);"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,126,List<Reference> newRefs = Lists.newArrayList(range.refsBefore());
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,127,newRefs.addAll(range.refsAfter());
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,128,collection.references = newRefs;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,132,"private void replaceReferences(String varName, String sourceName,"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,133,ReferenceCollection newSourceCollection) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,134,ReferenceCollection combined = new ReferenceCollection();
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,135,List<Reference> combinedRefs = combined.references;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,136,ReferenceCollection oldCollection = refMap.get(varName);
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,137,"refMap.put(varName, combined);"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,138,if (oldCollection == null) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,139,combinedRefs.addAll(newSourceCollection.references);
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,140,return;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,142,// otherwise replace previous references that are from sourceName
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,143,"SourceRefRange range = findSourceRefRange(oldCollection.references,"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,144,sourceName);
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,145,combinedRefs.addAll(range.refsBefore());
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,146,combinedRefs.addAll(newSourceCollection.references);
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,147,combinedRefs.addAll(range.refsAfter());
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,151,* Finds the range of references associated to {@code sourceName}. Note that
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,152,* even if there is no sourceName references the returned information can be
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,153,* used to decide where to insert new sourceName refs.
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,155,"private SourceRefRange findSourceRefRange(List<Reference> refList,"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,156,String sourceName) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,157,"// TODO(bashir): We can do binary search here, but since this is fast enough"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,158,"// right now, we just do a linear search for simplicity."
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,159,int lastBefore = -1;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,160,int firstAfter = refList.size();
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,161,int index = 0;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,162,int sourceInputOrder = inputOrder.get(sourceName);
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,163,for (Reference ref : refList) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,164,int order = inputOrder.get(ref.getSourceName());
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,165,if (order < sourceInputOrder) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,166,lastBefore = index;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,167,} else if (order > sourceInputOrder) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,168,firstAfter = index;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,169,break;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,171,index++;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,173,"return new SourceRefRange(refList, lastBefore, firstAfter);"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,176,private static class SourceRefRange {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,177,private final int lastBefore;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,178,private final int firstAfter;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,179,private final List<Reference> refList;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,181,"SourceRefRange(List<Reference> refList, int lastBefore,"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,182,int firstAfter) {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,183,"this.lastBefore = Math.max(lastBefore, -1);"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,184,"this.firstAfter = Math.min(firstAfter, refList.size());"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,185,this.refList = refList;
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,188,/** Note that the returned list is backed by {@code refList}! */
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,189,List<Reference> refsBefore() {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,190,"return refList.subList(0, lastBefore + 1);"
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,193,/** Note that the returned list is backed by {@code refList}! */
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,194,List<Reference> refsAfter() {
+True,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,src/com/google/javascript/jscomp/GlobalVarReferenceMap.java,195,"return refList.subList(firstAfter, refList.size());"
+True,src/com/google/javascript/jscomp/InlineObjectLiterals.java,src/com/google/javascript/jscomp/InlineObjectLiterals.java,28,import com.google.javascript.jscomp.ReferenceCollectingCallback.ReferenceMap;
+False,src/com/google/javascript/jscomp/InlineObjectLiterals.java,src/com/google/javascript/jscomp/InlineObjectLiterals.java,83,"ublic void afterExitScope(NodeTraversal t,"
+False,src/com/google/javascript/jscomp/InlineObjectLiterals.java,src/com/google/javascript/jscomp/InlineObjectLiterals.java,84,"ap<Var, ReferenceCollection> referenceMap) {"
+True,src/com/google/javascript/jscomp/InlineObjectLiterals.java,src/com/google/javascript/jscomp/InlineObjectLiterals.java,84,"public void afterExitScope(NodeTraversal t, ReferenceMap referenceMap) {"
+False,src/com/google/javascript/jscomp/InlineObjectLiterals.java,src/com/google/javascript/jscomp/InlineObjectLiterals.java,92,eferenceCollection referenceInfo = referenceMap.get(v);
+True,src/com/google/javascript/jscomp/InlineObjectLiterals.java,src/com/google/javascript/jscomp/InlineObjectLiterals.java,92,ReferenceCollection referenceInfo = referenceMap.getReferences(v);
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,28,import com.google.javascript.jscomp.ReferenceCollectingCallback.ReferenceMap;
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,159,"ublic void afterExitScope(NodeTraversal t,"
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,160,"ap<Var, ReferenceCollection> referenceMap) {"
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,160,"public void afterExitScope(NodeTraversal t, ReferenceMap referenceMap) {"
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,170,"ap<Var, ReferenceCollection> referenceMap) {"
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,170,ReferenceMap referenceMap) {
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,174,eferenceCollection referenceInfo = referenceMap.get(v);
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,174,ReferenceCollection referenceInfo = referenceMap.getReferences(v);
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,196,"rivate void doInlinesForScope(NodeTraversal t,"
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,197,"ap<Var, ReferenceCollection> referenceMap) {"
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,196,"private void doInlinesForScope(NodeTraversal t, ReferenceMap referenceMap) {"
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,204,eferenceCollection referenceInfo = referenceMap.get(v);
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,203,ReferenceCollection referenceInfo = referenceMap.getReferences(v);
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,228,"cope scope, Map<Var, ReferenceCollection> referenceMap) {"
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,227,"Scope scope, ReferenceMap referenceMap) {"
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,231,eferenceCollection refs = referenceMap.get(arguments);
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,230,ReferenceCollection refs = referenceMap.getReferences(arguments);
+False,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,45,"lass ReferenceCollectingCallback implements ScopedCallback, CompilerPass {"
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,45,"class ReferenceCollectingCallback implements ScopedCallback,"
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,46,HotSwapCompilerPass {
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,100,@Override
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,106,* Same as process but only runs on a part of AST associated to one script.
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,108,@Override
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,109,public void hotSwapScript(Node scriptRoot) {
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,110,"NodeTraversal.traverse(compiler, scriptRoot, this);"
+False,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,154,"ehavior.afterExitScope(t, referenceMap);"
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,164,if (t.getScope().isGlobal()) {
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,165,// Update global scope reference lists when we are done with it.
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,166,"compiler.updateGlobalVarReferences(referenceMap, t.getScopeRoot());"
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,167,"behavior.afterExitScope(t, compiler.getGlobalVarReferences());"
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,168,} else {
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,169,"behavior.afterExitScope(t, new ReferenceMapWrapper(referenceMap));"
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,232,interface ReferenceMap {
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,233,ReferenceCollection getReferences(Var var);
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,236,private static class ReferenceMapWrapper implements ReferenceMap {
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,237,"private final Map<Var, ReferenceCollection> referenceMap;"
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,239,"public ReferenceMapWrapper(Map<Var, ReferenceCollection> referenceMap) {"
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,240,this.referenceMap = referenceMap;
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,243,@Override
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,244,public ReferenceCollection getReferences(Var var) {
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,245,return referenceMap.get(var);
+False,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,224,"oid afterExitScope(NodeTraversal t,"
+False,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,225,"ap<Var, ReferenceCollection> referenceMap);"
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,257,"void afterExitScope(NodeTraversal t, ReferenceMap referenceMap);"
+False,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,230,"ublic void afterExitScope(NodeTraversal t,"
+False,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,231,"ap<Var, ReferenceCollection> referenceMap) {}"
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,262,"public void afterExitScope(NodeTraversal t, ReferenceMap referenceMap) {}"
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,631,* Determines whether this block is equivalent to the very first block that
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,632,* is created when reference collection traversal enters global scope. Note
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,633,* that when traversing a single script in a hot-swap fashion a new instance
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,634,* of {@code BasicBlock} is created.
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,636,* @return true if this is global scope block.
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,638,boolean isGlobalScopeBlock() {
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,639,return getParent() == null;
+False,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,615,eturn currentBlock == this;
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,658,if (currentBlock == this) {
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,659,return true;
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,661,if (isGlobalScopeBlock() && thatBlock.isGlobalScopeBlock()) {
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,662,return true;
+True,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,src/com/google/javascript/jscomp/ReferenceCollectingCallback.java,664,return false;
+False,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,24,mport com.google.javascript.jscomp.ReferenceCollectingCallback.ReferenceCollection;
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,24,import com.google.javascript.jscomp.ReferenceCollectingCallback.ReferenceMap;
+False,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,31,mport java.util.Map;
+False,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,42,lass VariableReferenceCheck implements CompilerPass {
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,41,class VariableReferenceCheck implements HotSwapCompilerPass {
+False,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,56,rivate AbstractCompiler compiler;
+False,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,57,rivate CheckLevel checkLevel;
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,55,private final AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,56,private final CheckLevel checkLevel;
+False,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,61,rivate Set<BasicBlock> blocksWithDeclarations = Sets.newHashSet();
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,60,private final Set<BasicBlock> blocksWithDeclarations = Sets.newHashSet();
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,75,@Override
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,76,public void hotSwapScript(Node scriptRoot) {
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,77,ReferenceCollectingCallback callback = new ReferenceCollectingCallback(
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,78,"compiler, new ReferenceCheckingBehavior());"
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,79,callback.hotSwapScript(scriptRoot);
+False,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,83,"ublic void afterExitScope(NodeTraversal t,"
+False,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,84,"ap<Var, ReferenceCollection> referenceMap) {"
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,89,"public void afterExitScope(NodeTraversal t, ReferenceMap referenceMap) {"
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,90,// TODO(bashir) In hot-swap version this means that for global scope we
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,91,// only go through all global variables accessed in the modified file not
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,92,// all global variables. This should be fixed.
+False,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,89,"heckVar(t, v, referenceMap.get(v).references);"
+True,src/com/google/javascript/jscomp/VariableReferenceCheck.java,src/com/google/javascript/jscomp/VariableReferenceCheck.java,97,"checkVar(t, v, referenceMap.getReferences(v).references);"

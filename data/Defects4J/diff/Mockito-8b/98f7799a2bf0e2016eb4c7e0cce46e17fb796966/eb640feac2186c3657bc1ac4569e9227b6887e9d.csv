@@ -1,0 +1,804 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,7,mport org.mockito.invocation.InvocationListener;
+True,src/org/mockito/MockSettings.java,src/org/mockito/MockSettings.java,7,import org.mockito.listeners.InvocationListener;
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,16,import org.mockito.internal.util.StringJoiner;
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,17,import org.mockito.listeners.InvocationListener;
+False,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,572,hrow new MockitoException(join(
+False,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,573,"invocationListeners() does not accept null parameters"""
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,574,"throw new MockitoException(""invocationListeners() does not accept null parameters"");"
+False,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,578,hrow new MockitoException(join(
+False,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,579,"invocationListeners() requires at least one listener"""
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,578,"throw new MockitoException(""invocationListeners() requires at least one listener"");"
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,581,"public void invocationListenerThrewException(InvocationListener listener, Throwable listenerThrowable) {"
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,582,throw new MockitoException(StringJoiner.join(
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,583,"""The invocation listener with type "" + listener.getClass().getName(),"
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,584,"""threw an exception : "" + listenerThrowable.getClass().getName() + listenerThrowable.getMessage()), listenerThrowable);"
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,1,package org.mockito.internal;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,3,import org.mockito.exceptions.Reporter;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,4,import org.mockito.internal.creation.MockSettingsImpl;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,5,import org.mockito.internal.invocation.Invocation;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,6,import org.mockito.internal.listeners.NotifiedMethodInvocationReport;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,7,import org.mockito.internal.stubbing.InvocationContainer;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,8,import org.mockito.listeners.InvocationListener;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,9,import org.mockito.stubbing.Answer;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,10,import org.mockito.stubbing.VoidMethodStubbable;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,12,import java.util.List;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,15,"* Handler, that call all listeners wanted for this mock, before delegating it"
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,16,* to the parameterized handler.
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,18,"* Also imposterize MockHandler, delegate all call of MockHandlerInterface to the real mockHandler"
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,20,"public class InvocationNotifierHandler<T> implements MockitoInvocationHandler, MockHandlerInterface<T>  {"
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,22,private List<InvocationListener> invocationListeners;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,23,private MockHandler<T> mockHandler;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,25,"public InvocationNotifierHandler(MockHandler<T> mockHandler, MockSettingsImpl settings) {"
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,26,this.mockHandler = mockHandler;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,27,this.invocationListeners = settings.getInvocationListeners();
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,30,public Object handle(Invocation invocation) throws Throwable {
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,31,try {
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,32,Object returnedValue = mockHandler.handle(invocation);
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,33,"notifyMethodCall(invocation, returnedValue);"
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,34,return returnedValue;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,35,} catch (Throwable t){
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,36,"notifyMethodCallException(invocation, t);"
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,37,throw t;
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,42,"private void notifyMethodCall(Invocation invocation, Object returnValue) {"
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,43,for (InvocationListener listener : invocationListeners) {
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,44,try {
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,45,"listener.reportInvocation(new NotifiedMethodInvocationReport(invocation, returnValue));"
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,46,} catch(Throwable listenerThrowable) {
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,47,"new Reporter().invocationListenerThrewException(listener, listenerThrowable);"
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,52,"private void notifyMethodCallException(Invocation invocation, Throwable exception) {"
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,53,for (InvocationListener listener : invocationListeners) {
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,54,try {
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,55,"listener.reportInvocation(new NotifiedMethodInvocationReport(invocation, exception));"
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,56,} catch(Throwable listenerThrowable) {
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,57,"new Reporter().invocationListenerThrewException(listener, listenerThrowable);"
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,62,public MockSettingsImpl getMockSettings() {
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,63,return mockHandler.getMockSettings();
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,66,public VoidMethodStubbable<T> voidMethodStubbable(T mock) {
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,67,return mockHandler.voidMethodStubbable(mock);
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,70,public void setAnswersForStubbing(List<Answer> answers) {
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,71,mockHandler.setAnswersForStubbing(answers);
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,74,public InvocationContainer getInvocationContainer() {
+True,src/org/mockito/internal/InvocationNotifierHandler.java,src/org/mockito/internal/InvocationNotifierHandler.java,75,return mockHandler.getInvocationContainer();
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,7,mport org.mockito.exceptions.base.MockitoException;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,15,mport org.mockito.internal.util.StringJoiner;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,18,mport org.mockito.invocation.InvocationListener;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,19,mport org.mockito.invocation.MethodCallReport;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,59,ry {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,60,bject returnValue = handleAllTypesOfInvocations(invocation);
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,61,"otifyAllListenerOfInvocationWithReturnValue(invocation, returnValue);"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,62,eturn returnValue;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,63, catch(Exception e) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,64,"otifyAllListenerOfInvocationWithException(invocation, e);"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,65,hrow e;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,69,rivate Object handleAllTypesOfInvocations(Invocation invocation)
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,70,hrows Throwable {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,94,f (((MockAwareVerificationMode) verificationMode).getMock() == invocation.getMock()) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,95,"erificationDataImpl data = new VerificationDataImpl(invocationContainerImpl, invocationMatcher);"
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,78,if (((MockAwareVerificationMode) verificationMode).getMock() == invocation.getMock()) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,79,"VerificationDataImpl data = new VerificationDataImpl(invocationContainerImpl, invocationMatcher);"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,99,/ this means there is an invocation on a different mock. Re-adding verification mode
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,83,// this means there is an invocation on a different mock. Re-adding verification mode
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,146,"rivate void notifyAllListenerOfInvocationWithReturnValue(Invocation invocation, Object returnValue) {"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,147,or (InvocationListener listener : mockSettings.getInvocationListeners()) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,148,"otifyListenerOfInvocationWithReturnValue(invocation, returnValue, listener);"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,152,"rivate void notifyAllListenerOfInvocationWithException(Invocation invocation, Exception exception) {"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,153,or (InvocationListener listener : mockSettings.getInvocationListeners()) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,154,"otifyListenerOfInvocationWithException(invocation, exception, listener);"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,158,"rivate void notifyListenerOfInvocationWithReturnValue(Invocation invocation, Object returnValue, InvocationListener listener) {"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,159,ry {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,160,"istener.reportInvocation(MethodCallReport.of(invocation, returnValue, getStubbingLocationOrNull(invocation)));"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,161, catch(RuntimeException e) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,162,"hrow new MockitoException(StringJoiner.join(""An invocation listener threw an exception."","
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,163,"The listener has the class "" + listener.getClass().getName()), e);"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,167,"rivate void notifyListenerOfInvocationWithException(Invocation invocation, Exception exception, InvocationListener listener) {"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,168,ry {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,169,"istener.reportInvocation(MethodCallReport.of(invocation, exception, getStubbingLocationOrNull(invocation)));"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,170, catch(RuntimeException e) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,171,"hrow new MockitoException(StringJoiner.join(""An invocation listener threw an exception."","
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,172,"The listener has the class "" + listener.getClass().getName()), e);"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,176,rivate String getStubbingLocationOrNull(Invocation invocation) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,177,eturn (invocation.stubInfo() == null) ? null : invocation.stubInfo().stubbedAt();
+False,src/org/mockito/internal/creation/MockSettingsImpl.java,src/org/mockito/internal/creation/MockSettingsImpl.java,11,mport org.mockito.invocation.InvocationListener;
+True,src/org/mockito/internal/creation/MockSettingsImpl.java,src/org/mockito/internal/creation/MockSettingsImpl.java,11,import org.mockito.listeners.InvocationListener;
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,4,mport org.mockito.invocation.InvocationListener;
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,5,mport org.mockito.invocation.MethodCallReport;
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,4,import org.mockito.listeners.InvocationListener;
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,5,import org.mockito.listeners.MethodInvocationReport;
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,29,ublic void reportInvocation(MethodCallReport methodCallReport) {
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,30,f (methodCallReport.threwException()) {
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,31,nCallWithThrowable(
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,32,"ethodCallReport.getInvocation(),"
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,33,"ethodCallReport.getThrowable(),"
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,34,ethodCallReport.getLocationOfStubbing()
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,29,public void reportInvocation(MethodInvocationReport methodInvocationReport) {
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,30,printHeader();
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,31,printStubInfo(methodInvocationReport);
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,32,printInvocation(methodInvocationReport.getInvocation());
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,33,printReturnedValueOrThrowable(methodInvocationReport);
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,34,printFooter();
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,37,private void printReturnedValueOrThrowable(MethodInvocationReport methodInvocationReport) {
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,38,if (methodInvocationReport.threwException()) {
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,39,"String message = methodInvocationReport.getThrowable().getMessage() == null ? """" : "" with message "" + methodInvocationReport.getThrowable().getMessage();"
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,40,"printlnIndented(""has thrown: "" + methodInvocationReport.getThrowable().getClass() + message);"
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,37,nNormalCall(
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,38,"ethodCallReport.getInvocation(),"
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,39,"ethodCallReport.getReturnedValue(),"
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,40,ethodCallReport.getLocationOfStubbing()
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,42,"String type = (methodInvocationReport.getReturnedValue() == null) ? """" : "" ("" + methodInvocationReport.getReturnedValue().getClass().getName() + "")"";"
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,43,"printlnIndented(""has returned: \"""" + methodInvocationReport.getReturnedValue() + ""\"""" + type);"
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,45,"rivate void onNormalCall(PrintableInvocation invocation, Object returnedValue, String locationOfStubbing) {"
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,46,rintHeader();
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,47,rintCommonInfos(invocation);
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,48,"rintlnIndented(""has returned: \"""" + returnedValue + ""\"""" + ((returnedValue == null) ? """" : "" ("" + returnedValue.getClass().getName() + "")""));"
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,49,f (locationOfStubbing == null) {
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,50,rintMethodHasNotBeenStubbed();
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,51, else {
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,52,rintMethodHasBeenStubbed(locationOfStubbing);
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,54,rintFooter();
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,57,"rivate void onCallWithThrowable(PrintableInvocation invocation, Throwable throwable, String locationOfStubbing) {"
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,58,rintHeader();
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,59,rintCommonInfos(invocation);
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,60,"rintlnIndented(""has thrown: "" + throwable.getClass() + "" with message "" + throwable.getMessage());"
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,61,f (locationOfStubbing == null) {
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,62,rintMethodHasNotBeenStubbed();
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,63, else {
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,64,rintMethodHasBeenStubbed(locationOfStubbing);
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,66,rintFooter();
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,47,private void printStubInfo(MethodInvocationReport methodInvocationReport) {
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,48,if (methodInvocationReport.getLocationOfStubbing() != null) {
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,49,"printlnIndented(""stubbed: "" + methodInvocationReport.getLocationOfStubbing());"
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,69,rivate void printHeader() {
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,53,private void printHeader() {
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,74,rivate void printMethodHasNotBeenStubbed() {
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,75,"rintlnIndented(""Method has not been stubbed."");"
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,78,rivate void printMethodHasBeenStubbed(String locationOfStubbing) {
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,79,"rintlnIndented(""Method has been stubbed."");"
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,80,rintlnIndented(locationOfStubbing);
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,83,rivate void printCommonInfos(PrintableInvocation invocation) {
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,58,private void printInvocation(PrintableInvocation invocation) {
+False,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,86,rintlnIndented(invocation.getLocation().toString());
+True,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,src/org/mockito/internal/debugging/VerboseMockInvocationLogger.java,61,"printlnIndented(""invoked: "" + invocation.getLocation().toString());"
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,1,package org.mockito.internal.listeners;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,3,import org.mockito.exceptions.PrintableInvocation;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,4,import org.mockito.internal.invocation.Invocation;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,5,import org.mockito.listeners.MethodInvocationReport;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,8,* Report on a method call
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,10,public class NotifiedMethodInvocationReport implements MethodInvocationReport {
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,11,private final Invocation invocation;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,12,private Object returnedValue;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,13,private Throwable throwable;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,17,* Build a new {@link org.mockito.listeners.MethodInvocationReport} with a return value.
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,20,* @param invocation Information on the method call
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,21,* @param returnedValue The value returned by the method invocation
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,23,"public NotifiedMethodInvocationReport(Invocation invocation, Object returnedValue) {"
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,24,this.invocation = invocation;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,25,this.returnedValue = returnedValue;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,29,* Build a new {@link org.mockito.listeners.MethodInvocationReport} with a return value.
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,32,* @param invocation Information on the method call
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,33,* @param throwable Tha throwable raised by the method invocation
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,35,"public NotifiedMethodInvocationReport(Invocation invocation, Throwable throwable) {"
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,36,this.invocation = invocation;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,37,this.throwable = throwable;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,40,public PrintableInvocation getInvocation() {
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,41,return invocation;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,44,public Object getReturnedValue() {
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,45,return returnedValue;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,48,public Throwable getThrowable() {
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,49,return throwable;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,52,public boolean threwException() {
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,53,return throwable != null;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,56,public String getLocationOfStubbing() {
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,57,return (invocation.stubInfo() == null) ? null : invocation.stubInfo().stubbedAt();
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,61,public boolean equals(Object o) {
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,62,if (this == o) return true;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,63,if (o == null || getClass() != o.getClass()) return false;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,65,NotifiedMethodInvocationReport that = (NotifiedMethodInvocationReport) o;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,67,if (invocation != null ? !invocation.equals(that.invocation) : that.invocation != null) return false;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,68,if (returnedValue != null ? !returnedValue.equals(that.returnedValue) : that.returnedValue != null)
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,69,return false;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,70,if (throwable != null ? !throwable.equals(that.throwable) : that.throwable != null) return false;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,72,return true;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,75,public int hashCode() {
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,76,int result = invocation != null ? invocation.hashCode() : 0;
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,77,result = 31 * result + (returnedValue != null ? returnedValue.hashCode() : 0);
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,78,result = 31 * result + (throwable != null ? throwable.hashCode() : 0);
+True,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,src/org/mockito/internal/listeners/NotifiedMethodInvocationReport.java,79,return result;
+False,src/org/mockito/internal/util/ConsoleMockitoLogger.java,src/org/mockito/internal/util/ConsoleMockitoLogger.java,13,ystem.out.print(what.toString());
+True,src/org/mockito/internal/util/ConsoleMockitoLogger.java,src/org/mockito/internal/util/ConsoleMockitoLogger.java,13,System.out.print(what);
+False,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,7,mport static org.mockito.Mockito.RETURNS_DEFAULTS;
+False,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,8,mport static org.mockito.Mockito.withSettings;
+False,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,10,mport org.mockito.cglib.proxy.*;
+True,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,7,import org.mockito.cglib.proxy.Callback;
+True,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,8,import org.mockito.cglib.proxy.Factory;
+True,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,10,import org.mockito.internal.InvocationNotifierHandler;
+True,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,20,import static org.mockito.Mockito.RETURNS_DEFAULTS;
+True,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,21,import static org.mockito.Mockito.withSettings;
+False,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,42,"ethodInterceptorFilter filter = new MethodInterceptorFilter(mockHandler, settings);"
+True,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,44,"InvocationNotifierHandler<T> invocationNotifierHandler = new InvocationNotifierHandler<T>(mockHandler, settings);"
+True,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,45,"MethodInterceptorFilter filter = new MethodInterceptorFilter(invocationNotifierHandler, settings);"
+True,src/org/mockito/internal/util/StringJoiner.java,src/org/mockito/internal/util/StringJoiner.java,11,"return join(out, linesToBreak);"
+True,src/org/mockito/internal/util/StringJoiner.java,src/org/mockito/internal/util/StringJoiner.java,14,"private static String join(StringBuilder out, Object[] linesToBreak) {"
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,1,ackage org.mockito.invocation;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,3,mport org.mockito.exceptions.PrintableInvocation;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,6, Represent a method call on a mock.
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,8, <p>
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,9,"     Contains the information on the mock, the location of the stub"
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,10,"     the return value if it returned something (maybe null), or an"
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,11,     exception if one was thrown when the method was invoked.
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,12, </p>
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,14,ublic class MethodCallReport {
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,15,rivate final PrintableInvocation invocation;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,16,rivate Object returnedValue;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,17,rivate Throwable throwable;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,18,rivate final String locationOfStubbing;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,21, Build a new {@link MethodCallReport} with a return value.
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,23, @param printableInvocation Information on the method call
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,24, @param returnedValue The value returned by the method invocation
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,25, @param location The location of the stub
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,26, @return A new MethodCallReport
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,28,"ublic static MethodCallReport of(PrintableInvocation printableInvocation, Object returnedValue, String location) {"
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,29,"eturn new MethodCallReport(printableInvocation, returnedValue, location);"
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,33, Build a new {@link MethodCallReport} with a return value.
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,35, @param printableInvocation Information on the method call
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,36, @param throwable Tha throwable raised by the method invocation
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,37, @param location THe location of the stub
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,38, @return A new MethodCallReport
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,40,"ublic static MethodCallReport of(PrintableInvocation printableInvocation, Throwable throwable, String location) {"
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,41,"eturn new MethodCallReport(printableInvocation, throwable, location);"
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,44,"rivate MethodCallReport(PrintableInvocation invocation, Object returnedValue, String locationOfStubbing) {"
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,45,his.invocation = invocation;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,46,his.returnedValue = returnedValue;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,47,his.locationOfStubbing = locationOfStubbing;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,50,"rivate MethodCallReport(PrintableInvocation invocation, Throwable throwable, String locationOfStubbing) {"
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,51,his.invocation = invocation;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,52,his.throwable = throwable;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,53,his.locationOfStubbing = locationOfStubbing;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,57," @return Information on the method call, never {@code null}"
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,59,ublic PrintableInvocation getInvocation() {
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,60,eturn invocation;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,64," @return The resulting value of the method invocation, may be <code>null</code>"
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,66,ublic Object getReturnedValue() {
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,67,eturn returnedValue;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,71," @return The throwable raised by the method invocation, maybe <code>null</code>"
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,73,ublic Throwable getThrowable() {
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,74,eturn throwable;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,78," @return <code>true</code> if an exception was raised, <code>false</code> otherwise"
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,80,ublic boolean threwException() {
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,81,eturn throwable != null;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,85, @return Location of the stub invocation
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,87,ublic String getLocationOfStubbing() {
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,88,eturn locationOfStubbing;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,91,/ Generated
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,92,Override
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,93,ublic boolean equals(Object o) {
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,94,f (this == o) return true;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,95,f (o == null || getClass() != o.getClass()) return false;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,97,ethodCallReport that = (MethodCallReport) o;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,99,f (invocation != null ? !invocation.equals(that.invocation) : that.invocation != null) return false;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,100,f (locationOfStubbing != null ? !locationOfStubbing.equals(that.locationOfStubbing) : that.locationOfStubbing != null)
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,101,eturn false;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,102,f (returnedValue != null ? !returnedValue.equals(that.returnedValue) : that.returnedValue != null)
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,103,eturn false;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,104,f (throwable != null ? !throwable.equals(that.throwable) : that.throwable != null) return false;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,106,eturn true;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,109,Override
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,110,ublic int hashCode() {
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,111,nt result = invocation != null ? invocation.hashCode() : 0;
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,112,esult = 31 * result + (returnedValue != null ? returnedValue.hashCode() : 0);
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,113,esult = 31 * result + (throwable != null ? throwable.hashCode() : 0);
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,114,esult = 31 * result + (locationOfStubbing != null ? locationOfStubbing.hashCode() : 0);
+False,src/org/mockito/invocation/MethodCallReport.java,src/org/mockito/invocation/MethodCallReport.java,115,eturn result;
+False,src/org/mockito/invocation/InvocationListener.java,src/org/mockito/listeners/InvocationListener.java,5,ackage org.mockito.invocation;
+True,src/org/mockito/invocation/InvocationListener.java,src/org/mockito/listeners/InvocationListener.java,5,package org.mockito.listeners;
+False,src/org/mockito/invocation/InvocationListener.java,src/org/mockito/listeners/InvocationListener.java,23, @param methodCallReport Information about the method call that just happened.
+True,src/org/mockito/invocation/InvocationListener.java,src/org/mockito/listeners/InvocationListener.java,23,* @param methodInvocationReport Information about the method call that just happened.
+False,src/org/mockito/invocation/InvocationListener.java,src/org/mockito/listeners/InvocationListener.java,25, @see MethodCallReport
+True,src/org/mockito/invocation/InvocationListener.java,src/org/mockito/listeners/InvocationListener.java,25,* @see MethodInvocationReport
+False,src/org/mockito/invocation/InvocationListener.java,src/org/mockito/listeners/InvocationListener.java,27,oid reportInvocation(MethodCallReport methodCallReport);
+True,src/org/mockito/invocation/InvocationListener.java,src/org/mockito/listeners/InvocationListener.java,27,void reportInvocation(MethodInvocationReport methodInvocationReport);
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,1,package org.mockito.listeners;
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,3,import org.mockito.exceptions.PrintableInvocation;
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,6,* Represent a method call on a mock.
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,8,* <p>
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,9,"*     Contains the information on the mock, the location of the stub"
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,10,"*     the return value if it returned something (maybe null), or an"
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,11,*     exception if one was thrown when the method was invoked.
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,12,* </p>
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,14,public interface MethodInvocationReport {
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,16,"* @return Information on the method call, never {@code null}"
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,18,PrintableInvocation getInvocation();
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,21,"* @return The resulting value of the method invocation, may be <code>null</code>"
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,23,Object getReturnedValue();
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,26,"* @return The throwable raised by the method invocation, maybe <code>null</code>"
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,28,Throwable getThrowable();
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,31,"* @return <code>true</code> if an exception was raised, <code>false</code> otherwise"
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,33,boolean threwException();
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,36,* @return Location of the stub invocation
+True,src/org/mockito/listeners/MethodInvocationReport.java,src/org/mockito/listeners/MethodInvocationReport.java,38,String getLocationOfStubbing();
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,1,package org.mockito.internal;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,3,import org.junit.Before;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,4,import org.junit.Test;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,5,import org.junit.runner.RunWith;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,6,import org.mockito.Mock;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,7,import org.mockito.Spy;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,8,import org.mockito.exceptions.base.MockitoException;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,9,import org.mockito.internal.creation.MockSettingsImpl;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,10,import org.mockito.internal.invocation.Invocation;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,11,import org.mockito.internal.listeners.NotifiedMethodInvocationReport;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,12,import org.mockito.listeners.InvocationListener;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,13,import org.mockito.listeners.MethodInvocationReport;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,14,import org.mockito.runners.MockitoJUnitRunner;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,15,import org.mockito.stubbing.Answer;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,16,import org.mockitousage.IMethods;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,18,import java.text.ParseException;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,19,import java.util.ArrayList;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,21,import static org.fest.assertions.Assertions.assertThat;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,22,import static org.mockito.BDDMockito.given;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,23,import static org.mockito.BDDMockito.willThrow;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,24,import static org.mockito.Matchers.any;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,25,import static org.mockito.Matchers.anyList;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,26,import static org.mockito.Mockito.mock;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,27,import static org.mockito.Mockito.verify;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,30,@RunWith(MockitoJUnitRunner.class)
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,31,"@SuppressWarnings(""unchecked"")"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,32,public class InvocationNotifierHandlerTest {
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,33,"private static final String SOME_LOCATION = ""some location"";"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,34,private static final RuntimeException SOME_EXCEPTION = new RuntimeException();
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,35,private static final OutOfMemoryError SOME_ERROR = new OutOfMemoryError();
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,36,private static final Answer SOME_ANSWER = mock(Answer.class);
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,39,@Mock private InvocationListener listener1;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,40,@Mock private InvocationListener listener2;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,41,@Spy private CustomListener customListener;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,43,@Mock private Invocation invocation;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,44,@Mock private MockHandler mockHandler;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,46,private InvocationNotifierHandler notifier;
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,48,@Before
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,49,public void setUp() throws Exception {
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,50,notifier = new InvocationNotifierHandler(
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,51,"mockHandler,"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,52,"(MockSettingsImpl) new MockSettingsImpl().invocationListeners(customListener, listener1, listener2)"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,56,@Test
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,57,public void should_notify_all_listeners_when_calling_delegate_handler() throws Throwable {
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,58,// given
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,59,"given(mockHandler.handle(invocation)).willReturn(""returned value"");"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,61,// when
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,62,notifier.handle(invocation);
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,64,// then
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,65,"verify(listener1).reportInvocation(new NotifiedMethodInvocationReport(invocation, ""returned value""));"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,66,"verify(listener2).reportInvocation(new NotifiedMethodInvocationReport(invocation, ""returned value""));"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,69,@Test
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,70,public void should_notify_all_listeners_when_called_delegate_handler_returns_ex() throws Throwable {
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,71,// given
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,72,"Exception computedException = new Exception(""computed"");"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,73,given(mockHandler.handle(invocation)).willReturn(computedException);
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,75,// when
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,76,notifier.handle(invocation);
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,78,// then
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,79,"verify(listener1).reportInvocation(new NotifiedMethodInvocationReport(invocation, (Object) computedException));"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,80,"verify(listener2).reportInvocation(new NotifiedMethodInvocationReport(invocation, (Object) computedException));"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,83,@Test(expected = ParseException.class)
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,84,public void should_notify_all_listeners_when_called_delegate_handler_throws_exception_and_rethrow_it() throws Throwable {
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,85,// given
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,86,"ParseException parseException = new ParseException("""", 0);"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,87,given(mockHandler.handle(invocation)).willThrow(parseException);
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,89,// when
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,90,try {
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,91,notifier.handle(invocation);
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,92,} finally {
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,93,// then
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,94,"verify(listener1).reportInvocation(new NotifiedMethodInvocationReport(invocation, parseException));"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,95,"verify(listener2).reportInvocation(new NotifiedMethodInvocationReport(invocation, parseException));"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,99,@Test
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,100,public void should_report_listener_exception() throws Throwable {
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,101,willThrow(new NullPointerException()).given(customListener).reportInvocation(any(MethodInvocationReport.class));
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,103,try {
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,104,notifier.handle(invocation);
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,105,} catch (MockitoException me) {
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,106,assertThat(me.getMessage())
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,107,".contains(""invocation listener"")"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,108,".contains(""CustomListener"")"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,109,".contains(""threw an exception"")"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,110,".contains(""NullPointerException"");"
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,114,@Test
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,115,public void should_delegate_all_MockHandlerInterface_to_the_parameterized_MockHandler() throws Exception {
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,116,notifier.getInvocationContainer();
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,117,notifier.getMockSettings();
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,118,notifier.voidMethodStubbable(mock(IMethods.class));
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,119,notifier.setAnswersForStubbing(new ArrayList<Answer>());
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,121,verify(mockHandler).getInvocationContainer();
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,122,verify(mockHandler).getMockSettings();
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,123,verify(mockHandler).voidMethodStubbable(any());
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,124,verify(mockHandler).setAnswersForStubbing(anyList());
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,127,private static class CustomListener implements InvocationListener {
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,128,public void reportInvocation(MethodInvocationReport methodInvocationReport) {
+True,test/org/mockito/internal/InvocationNotifierHandlerTest.java,test/org/mockito/internal/InvocationNotifierHandlerTest.java,129,// nop
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,8,mport org.mockito.Mock;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,12,mport org.mockito.internal.invocation.*;
+True,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,11,import org.mockito.internal.invocation.Invocation;
+True,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,12,import org.mockito.internal.invocation.InvocationBuilder;
+True,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,13,import org.mockito.internal.invocation.InvocationMatcher;
+True,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,14,import org.mockito.internal.invocation.MatchersBinder;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,14,mport org.mockito.internal.progress.MockingProgress;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,17,mport org.mockito.internal.stubbing.answers.DoesNothing;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,18,mport org.mockito.internal.verification.MockAwareVerificationMode;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,20,mport org.mockito.invocation.InvocationListener;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,21,mport org.mockito.invocation.InvocationOnMock;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,22,mport org.mockito.invocation.MethodCallReport;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,23,mport org.mockito.stubbing.Answer;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,24,mport org.mockito.verification.VerificationMode;
+True,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,19,import org.mockito.listeners.InvocationListener;
+True,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,20,import org.mockito.listeners.MethodInvocationReport;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,27,mport java.util.ArrayList;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,29,mport java.util.List;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,33,mport static org.mockito.Mockito.*;
+True,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,27,import static org.mockito.Mockito.doThrow;
+True,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,28,import static org.mockito.Mockito.mock;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,38,rivate static final OutOfMemoryError SOME_ERROR = new OutOfMemoryError();
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,39,rivate static final RuntimeException SOME_EXCEPTION = new RuntimeException();
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,40,"rivate static final String SOME_RETURN_VALUE = ""some return value"";"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,41,"rivate static final String SOME_LOCATION = ""some location"";"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,42,"SuppressWarnings(""rawtypes"")"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,43,rivate static final Answer SOME_ANSWER = mock(Answer.class);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,44,rivate static final StubbedInvocationMatcher SOME_INVOCATION_MATCHER = mock(StubbedInvocationMatcher.class);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,45,rivate static final Invocation SOME_INVOCATION = mock(Invocation.class);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,46,Mock
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,47,rivate InvocationListener listener1;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,48,Mock
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,49,rivate InvocationListener listener2;
+True,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,33,private StubbedInvocationMatcher stubbedInvocationMatcher = mock(StubbedInvocationMatcher.class);
+True,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,34,private Invocation invocation = mock(Invocation.class);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,76,Test
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,77,ublic void shouldNotifyInvocationHandlerDuringStubVoid() throws Throwable {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,78,/ given
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,79,"ockHandler<?> handler = createHandlerWithListeners(listener1, listener2);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,80,tubWithInvocationDuringStubVoid(handler);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,81,nvocation invocation = createInvocationWithStubbingLocation(SOME_LOCATION);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,83,andler.handle(invocation);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,85,/ then
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,86,"erify(listener1).reportInvocation(MethodCallReport.of(invocation, null, SOME_LOCATION));"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,87,"erify(listener2).reportInvocation(MethodCallReport.of(invocation, null, SOME_LOCATION));"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,90,rivate Invocation createInvocationWithStubbingLocation(String stubbingLocation) {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,91,nvocation invocation = mock(Invocation.class);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,93,tubInfo stubInfo = mock(StubInfo.class);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,94,iven(invocation.stubInfo()).willReturn(stubInfo);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,96,iven(stubInfo.stubbedAt()).willReturn(stubbingLocation);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,98,eturn invocation;
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,101,Test
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,102,ublic void shouldNotifyInvocationHandlerDuringVerification() throws Throwable {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,103,/ given
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,104,"ockHandler<?> handler = createHandlerWithListeners(listener1, listener2);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,105,tubProgressWithVerification(handler);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,106,nvocation invocation = createInvocationWithStubbingLocation(SOME_LOCATION);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,108,/ when
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,109,andler.handle(invocation);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,111,/ then
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,112,"erify(listener1).reportInvocation(MethodCallReport.of(invocation, null, SOME_LOCATION));"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,113,"erify(listener2).reportInvocation(MethodCallReport.of(invocation, null, SOME_LOCATION));"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,116,Test
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,117,ublic void shouldNotifyInvocationHandlerDuringOrdinaryInvocationWithGivenReturnValue() throws Throwable {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,118,/ given
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,119,"ockHandler<?> handler = createHandlerWithListeners(listener1, listener2);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,120,"tubOrdinaryInvocationWithReturnValue(handler, SOME_RETURN_VALUE);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,121,nvocation invocation = createInvocationWithStubbingLocation(SOME_LOCATION);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,123,/ when
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,124,andler.handle(invocation);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,126,/ then
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,127,"erify(listener1).reportInvocation(MethodCallReport.of(invocation, SOME_RETURN_VALUE, SOME_LOCATION));"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,128,"erify(listener2).reportInvocation(MethodCallReport.of(invocation, SOME_RETURN_VALUE, SOME_LOCATION));"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,131,Test
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,132,ublic void shouldNotifyInvocationHandlerDuringOrdinaryInvocationResultingInException() throws Throwable {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,133,/ given
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,134,"ockHandler<?> handler = createHandlerWithListeners(listener1, listener2);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,135,"tubOrdinaryInvocationWithThrowable(handler, SOME_EXCEPTION);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,136,nvocation invocation = createInvocationWithStubbingLocation(SOME_LOCATION);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,138,/ when
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,139,ry {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,140,andler.handle(invocation);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,141,"ail(""Exception was not rethrown."");"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,142, catch (RuntimeException e) {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,143,/ then
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,144,"erify(listener1).reportInvocation(MethodCallReport.of(invocation, SOME_EXCEPTION, SOME_LOCATION));"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,145,"erify(listener2).reportInvocation(MethodCallReport.of(invocation, SOME_EXCEPTION, SOME_LOCATION));"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,149,Test
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,150,ublic void shouldNotNotifyInvocationHandlerDuringOrdinaryInvocationResultingInError() throws Throwable {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,151,/ given
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,152,"ockHandler<?> handler = createHandlerWithListeners(listener1, listener2);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,153,"tubOrdinaryInvocationWithThrowable(handler, SOME_ERROR);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,154,nvocation invocation = createInvocationWithStubbingLocation(SOME_LOCATION);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,156,/ when
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,157,ry {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,158,andler.handle(invocation);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,159,"ail(""Error was not rethrown."");"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,160, catch (Error e) {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,161,/ then
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,162,"erifyZeroInteractions(listener1, listener2);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,166,Test
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,167,ublic void shouldNotifyInvocationHandlerDuringOrdinaryInvocationWithDefaultReturnValue() throws Throwable {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,168,/ given
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,169,"ockHandler<?> handler = createHandlerWithListeners(listener1, listener2);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,170,tubOrdinaryInvocationWithDefaultReturnValue(handler);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,171,nvocation invocation = createInvocationWithStubbingLocation(SOME_LOCATION);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,173,/ when
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,174,andler.handle(invocation);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,176,/ then
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,177,"erify(listener1).reportInvocation(MethodCallReport.of(invocation, null, SOME_LOCATION));"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,178,"erify(listener2).reportInvocation(MethodCallReport.of(invocation, null, SOME_LOCATION));"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,185,oThrow(SOME_EXCEPTION).when(throwingListener).reportInvocation(any(MethodCallReport.class));
+True,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,69,doThrow(new Throwable()).when(throwingListener).reportInvocation(any(MethodInvocationReport.class));
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,189,andler.handle(SOME_INVOCATION);
+True,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,73,handler.handle(invocation);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,199,"tubOrdinaryInvocationWithInvocationMatcher(handler, SOME_INVOCATION_MATCHER);"
+True,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,85,"stubOrdinaryInvocationWithInvocationMatcher(handler, stubbedInvocationMatcher);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,202,"rivate void stubOrdinaryInvocationWithReturnValue(MockHandler<?> handler, Object returnValue) throws Throwable {"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,203,tubbedInvocationMatcher matcher = mock(StubbedInvocationMatcher.class);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,204,iven(matcher.answer(any(InvocationOnMock.class))).willReturn(returnValue);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,205,"tubOrdinaryInvocationWithInvocationMatcher(handler, matcher);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,208,"rivate void stubOrdinaryInvocationWithThrowable(MockHandler<?> handler, Throwable throwable) throws Throwable {"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,209,tubbedInvocationMatcher matcher = mock(StubbedInvocationMatcher.class);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,210,iven(matcher.answer(any(InvocationOnMock.class))).willThrow(throwable);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,211,"tubOrdinaryInvocationWithInvocationMatcher(handler, matcher);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,214,rivate void stubOrdinaryInvocationWithDefaultReturnValue(MockHandler<?> handler) {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,215,iven(handler.getMockSettings().getDefaultAnswer()).willReturn(SOME_ANSWER);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,216,"tubOrdinaryInvocationWithInvocationMatcher(handler, null);"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,224,rivate void stubProgressWithVerification(MockHandler<?> handler) {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,225,andler.mockingProgress = mock(MockingProgress.class);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,227,/ Needs to be unequal to null.
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,228,erificationMode mode = mock(MockAwareVerificationMode.class);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,229,iven(handler.mockingProgress.pullVerificationMode()).willReturn(mode);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,232,"SuppressWarnings(""rawtypes"")"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,233,rivate void stubWithInvocationDuringStubVoid(MockHandler handler) {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,234,tubWithPreviouslySetVoidAnswer(handler);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,235,tubHandlerStateWithPreviousStubVoidInvocation(handler);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,238,rivate void stubHandlerStateWithPreviousStubVoidInvocation(MockHandler<?> handler) {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,239,tubbedInvocationMatcher invocationContainer = mock(StubbedInvocationMatcher.class);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,240,"iven(handler.matchersBinder.bindMatchers(any(ArgumentMatcherStorage.class), any(Invocation.class)))"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,241,willReturn(invocationContainer);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,243,nvocation invocation = mock(Invocation.class);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,244,iven(invocationContainer.getInvocation()).willReturn(invocation);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,246,iven(invocation.isVoid()).willReturn(true);
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,249,"SuppressWarnings(""rawtypes"")"
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,250,rivate void stubWithPreviouslySetVoidAnswer(MockHandler handler) {
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,251,ist<Answer> answers = new ArrayList<Answer>();
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,252,nswers.add(new DoesNothing());
+False,test/org/mockito/internal/MockHandlerTest.java,test/org/mockito/internal/MockHandlerTest.java,253,andler.setAnswersForStubbing(answers);
+False,test/org/mockito/internal/creation/MockSettingsImplTest.java,test/org/mockito/internal/creation/MockSettingsImplTest.java,12,mport org.mockito.invocation.InvocationListener;
+True,test/org/mockito/internal/creation/MockSettingsImplTest.java,test/org/mockito/internal/creation/MockSettingsImplTest.java,12,import org.mockito.listeners.InvocationListener;
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,7,import org.junit.After;
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,10,mport org.mockito.invocation.MethodCallReport;
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,11,import org.mockito.internal.invocation.Invocation;
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,12,import org.mockito.internal.invocation.InvocationBuilder;
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,13,import org.mockito.internal.invocation.StubInfo;
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,14,import org.mockito.internal.listeners.NotifiedMethodInvocationReport;
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,16,mport static org.mockito.BDDMockito.given;
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,17,mport static org.mockito.Mockito.mock;
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,23,rivate PrintableInvocation invocation;
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,26,private Invocation invocation = new InvocationBuilder().toInvocation();
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,27,private PrintableInvocation stubbedInvocation = new InvocationBuilder().toInvocation();
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,25,Before public void init_Listener() throws Exception {
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,29,@Before
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,30,public void init_Listener() throws Exception {
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,30,Before public void init_Invocation() {
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,31,nvocation = mock(PrintableInvocation.class);
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,32,iven(invocation.getLocation()).willReturn(mock(Location.class));
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,35,@After
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,36,public void tearDown() throws Exception {
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,37,System.out.println(output);
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,40,@Test
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,41,public void should_print_to_system_out() {
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,42,assertThat(new VerboseMockInvocationLogger().printStream).isSameAs(System.out);
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,36,ublic void shouldPrintToSystemOut() {
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,37,ssertThat(new VerboseMockInvocationLogger().printStream).isSameAs(System.out);
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,46,public void should_print_invocation_with_return_value() {
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,47,// when
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,48,"listener.reportInvocation(new NotifiedMethodInvocationReport(invocation, ""return value""));"
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,40,Test
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,41,ublic void shouldPrintInvocationWithReturnValueToStream() {
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,50,// then
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,51,assertThat(printed())
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,52,.contains(invocation.toString())
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,53,.contains(invocation.getLocation().toString())
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,54,".contains(""return value"");"
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,57,@Test
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,58,public void should_print_invocation_with_exception() {
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,43,"istener.reportInvocation(MethodCallReport.of(invocation, ""return value"", ""location of stubbing""));"
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,60,"listener.reportInvocation(new NotifiedMethodInvocationReport(invocation, new ThirdPartyException()));"
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,45,/ then
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,62,// then
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,49,"contains(""return value"")"
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,50,"contains(""location of stubbing"");"
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,66,.contains(ThirdPartyException.class.getName());
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,69,@Test
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,70,public void should_print_if_method_has_not_been_stubbed() throws Exception {
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,71,"listener.reportInvocation(new NotifiedMethodInvocationReport(invocation, ""whatever""));"
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,53,Test
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,54,ublic void shouldPrintInvocationWithExceptionToStream() {
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,55,/ when
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,56,"istener.reportInvocation(MethodCallReport.of(invocation, new ThirdPartyException(), ""location of stubbing""));"
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,73,"assertThat(printed()).doesNotContain(""stubbed"");"
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,76,@Test
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,77,public void should_print_stubbed_info_if_availbable() throws Exception {
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,78,invocation.markStubbed(new StubInfo(stubbedInvocation));
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,80,"listener.reportInvocation(new NotifiedMethodInvocationReport(invocation, ""whatever""));"
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,58,/ then
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,60,contains(invocation.toString())
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,61,contains(invocation.getLocation().toString())
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,62,contains(ThirdPartyException.class.getName())
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,63,"contains(""location of stubbing"");"
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,83,".contains(""stubbed"")"
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,84,.contains(stubbedInvocation.getLocation().toString());
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,66,Test
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,67,ublic void shouldLogNumberOfInteractions() {
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,68,/ when & then
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,69,"istener.reportInvocation(MethodCallReport.of(invocation, new ThirdPartyException(), ""location of stubbing""));"
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,70,"ssertThat(printed()).contains(""#1"");"
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,87,@Test
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,88,public void should_log_count_of_interactions() {
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,89,// when & then
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,90,"listener.reportInvocation(new NotifiedMethodInvocationReport(invocation, new ThirdPartyException()));"
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,91,"assertThat(printed()).contains(""#1"");"
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,72,"istener.reportInvocation(MethodCallReport.of(invocation, new ThirdPartyException(), ""other location""));"
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,73,"ssertThat(printed()).contains(""#2"");"
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,93,"listener.reportInvocation(new NotifiedMethodInvocationReport(invocation, new ThirdPartyException()));"
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,94,"assertThat(printed()).contains(""#2"");"
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,75,"istener.reportInvocation(MethodCallReport.of(invocation, new ThirdPartyException(), ""location of stubbing""));"
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,76,"ssertThat(printed()).contains(""#3"");"
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,96,"listener.reportInvocation(new NotifiedMethodInvocationReport(invocation, new ThirdPartyException()));"
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,97,"assertThat(printed()).contains(""#3"");"
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,83,rivate static class ThirdPartyException extends Exception {
+False,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,84,rivate static final long serialVersionUID = 3022739107688491354L;
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,104,private static class ThirdPartyException extends Exception {
+True,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,test/org/mockito/internal/debugging/VerboseMockInvocationLoggerTest.java,105,private static final long serialVersionUID = 3022739107688491354L;
+True,test/org/mockito/internal/invocation/InvocationBuilder.java,test/org/mockito/internal/invocation/InvocationBuilder.java,7,import org.mockito.Mockito;
+True,test/org/mockito/internal/invocation/InvocationBuilder.java,test/org/mockito/internal/invocation/InvocationBuilder.java,8,import org.mockitousage.IMethods;
+False,test/org/mockito/internal/invocation/InvocationBuilder.java,test/org/mockito/internal/invocation/InvocationBuilder.java,11,mport org.mockito.Mockito;
+False,test/org/mockito/internal/invocation/InvocationBuilder.java,test/org/mockito/internal/invocation/InvocationBuilder.java,12,mport org.mockitousage.IMethods;
+True,test/org/mockito/internal/invocation/InvocationBuilder.java,test/org/mockito/internal/invocation/InvocationBuilder.java,15,* Build an invocation.
+True,test/org/mockito/internal/invocation/InvocationBuilder.java,test/org/mockito/internal/invocation/InvocationBuilder.java,28,* Build the invocation
+True,test/org/mockito/internal/invocation/InvocationBuilder.java,test/org/mockito/internal/invocation/InvocationBuilder.java,30,"* If the method was not specified, use IMethods methods."
+True,test/org/mockito/internal/invocation/InvocationBuilder.java,test/org/mockito/internal/invocation/InvocationBuilder.java,32,* @return invocation
+False,test/org/mockito/internal/util/MockUtilTest.java,test/org/mockito/internal/util/MockUtilTest.java,7,mport java.util.ArrayList;
+False,test/org/mockito/internal/util/MockUtilTest.java,test/org/mockito/internal/util/MockUtilTest.java,8,mport java.util.List;
+True,test/org/mockito/internal/util/MockUtilTest.java,test/org/mockito/internal/util/MockUtilTest.java,17,import java.util.ArrayList;
+True,test/org/mockito/internal/util/MockUtilTest.java,test/org/mockito/internal/util/MockUtilTest.java,18,import java.util.List;
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,7,mport org.junit.Ignore;
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,11,mport org.mockito.internal.matchers.Contains;
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,12,mport org.mockito.internal.matchers.Equals;
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,13,mport org.mockito.internal.matchers.InstanceOf;
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,14,mport org.mockito.invocation.InvocationListener;
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,15,mport org.mockito.invocation.MethodCallReport;
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,16,mport org.mockitousage.debugging.VerboseLoggingOfInvocationsOnMockTest.ThirdPartyException;
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,17,mport org.mockitoutil.TestBase;
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,10,import org.mockito.listeners.InvocationListener;
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,11,import org.mockito.listeners.MethodInvocationReport;
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,13,import static org.fest.assertions.Assertions.assertThat;
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,14,import static org.junit.Assert.fail;
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,20,mport static org.mockito.Matchers.isA;
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,16,import static org.mockito.BDDMockito.willReturn;
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,27,ublic class InvocationListenerCallbackTest extends TestBase {
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,24,public class InvocationListenerCallbackTest {
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,26,"// Cannot use a mockito-mock here: during stubbing, the listener1 will be called"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,27,// and mockito will confuse the mocks.
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,28,private RememberingListener listener1 = new RememberingListener();
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,29,private RememberingListener listener2 = new RememberingListener();
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,31,@Test
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,32,public void should_call_single_listener_when_mock_return_normally() throws Exception {
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,33,// given
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,34,"Foo foo = mock(Foo.class, withSettings().invocationListeners(listener1));"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,35,"willReturn(""basil"").given(foo).giveMeSomeString(""herb"");"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,37,// when
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,38,"foo.giveMeSomeString(""herb"");"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,40,// then
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,41,"assertThatHasBeenNotified(listener1, ""basil"", getClass().getSimpleName());"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,44,@Test
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,45,public void should_call_all_listener_when_mock_return_normally() throws Exception {
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,46,// given
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,47,"Foo foo = mock(Foo.class, withSettings().invocationListeners(listener1, listener2));"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,48,"given(foo.giveMeSomeString(""herb"")).willReturn(""rosemary"");"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,50,// when
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,51,"foo.giveMeSomeString(""herb"");"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,53,// then
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,54,"assertThatHasBeenNotified(listener1, ""rosemary"", getClass().getSimpleName());"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,55,"assertThatHasBeenNotified(listener2, ""rosemary"", getClass().getSimpleName());"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,30,ublic void givenInvocationReturningValue_shouldCallSingleListenerWithCorrectCallback() throws Exception {
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,31,/ given
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,32,"/ Cannot use a mockito-mock here: during stubbing, the listener will be called"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,33,/ and mockito will confuse the mocks.
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,34,ememberingListener listener = new RememberingListener();
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,35,"oo foo = mock(Foo.class, withSettings().invocationListeners(listener));"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,36,"iven(foo.giveMeSomeString(""argument"")).willReturn(""returned"");"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,38,/ when
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,39,"oo.giveMeSomeString(""argument"");"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,41,"ssertHasBeenNotified(listener, new InstanceOf(PrintableInvocation.class),"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,42,"ew Equals(""returned""), new Contains(getClass().getSimpleName()));"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,45,Test
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,46,ublic void givenInvocationReturningValue_shouldCallMultipleListeners() throws Exception {
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,47,/ given
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,48,"/ Cannot use a mockito-mock here: during stubbing, the listener will be called"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,49,/ and mockito will confuse the mocks.
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,50,ememberingListener listener1 = new RememberingListener();
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,51,ememberingListener listener2 = new RememberingListener();
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,52,"oo foo = mock(Foo.class, withSettings().invocationListeners(listener1, listener2));"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,53,"iven(foo.giveMeSomeString(""argument"")).willReturn(""returned"");"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,55,/ when
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,56,"oo.giveMeSomeString(""argument"");"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,58,/ then
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,59,"ssertHasBeenNotified(listener1, new InstanceOf(PrintableInvocation.class),"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,60,"ew Equals(""returned""), new Contains(getClass().getSimpleName()));"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,61,"ssertHasBeenNotified(listener2, new InstanceOf(PrintableInvocation.class),"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,62,"ew Equals(""returned""), new Contains(getClass().getSimpleName()));"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,65,Test
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,66,"Ignore(""not anymore, waiting complete refactoring to be removed"")"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,67,ublic void givenInvocationThrowingException_shouldCallSingleListenerWithCorrectCallback() throws Exception {
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,68,/ given
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,69,nvocationListener listener = mock(InvocationListener.class);
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,70,untimeException expectedException = new ThirdPartyException();
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,71,"oo foo = mock(Foo.class, withSettings().invocationListeners(listener));"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,72,"oThrow(expectedException).when(foo).doSomething(""argument"");"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,74,/ when
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,75,ry {
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,76,"oo.doSomething(""argument"");"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,77,"ail(""Exception expected."");"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,78, catch (ThirdPartyException actualException) {
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,79,/ then
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,80,"ssertSame(expectedException, actualException);"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,81,erify(listener).reportInvocation(isA(MethodCallReport.class));
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,85,Test
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,86,ublic void givenInvocationThrowingException_shouldCallMultipleListeners() throws Exception {
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,87,/ given
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,88,"nvocationListener listener1 = mock(InvocationListener.class, ""listener1"");"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,89,"nvocationListener listener2 = mock(InvocationListener.class, ""listener2"");"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,90,"oo foo = mock(Foo.class, withSettings().invocationListeners(listener1, listener2));"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,91,"oThrow(new ThirdPartyException()).when(foo).doSomething(""argument"");"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,93,/ when
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,94,ry {
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,95,"oo.doSomething(""argument"");"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,96,"ail(""Exception expected."");"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,97, catch (ThirdPartyException actualException) {
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,98,/ then
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,60,public void should_call_all_listener_when_mock_throws_exception() throws Exception {
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,61,// given
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,62,"InvocationListener listener1 = mock(InvocationListener.class, ""listener1"");"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,63,"InvocationListener listener2 = mock(InvocationListener.class, ""listener2"");"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,64,"Foo foo = mock(Foo.class, withSettings().invocationListeners(listener1, listener2));"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,65,"doThrow(new OvenNotWorking()).when(foo).doSomething(""cook"");"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,67,// when
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,68,try {
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,69,"foo.doSomething(""cook"");"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,70,"fail(""Exception expected."");"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,71,} catch (OvenNotWorking actualException) {
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,72,// then
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,100,rderedVerify.verify(listener1).reportInvocation(any(MethodCallReport.class));
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,101,rderedVerify.verify(listener2).reportInvocation(any(MethodCallReport.class));
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,105,"rivate void assertHasBeenNotified(RememberingListener listener, InstanceOf m, Equals m2, Contains m3) {"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,106,"ssertThat(listener.invocation, m);"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,107,"ssertThat(listener.returnValue, m2);"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,108,"ssertThat(listener.locationOfStubbing, m3);"
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,111,tatic class RememberingListener implements InvocationListener {
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,113,rintableInvocation invocation;
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,114,bject returnValue;
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,115,tring locationOfStubbing;
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,117,ublic void reportInvocation(MethodCallReport mcr) {
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,118,his.invocation = mcr.getInvocation();
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,119,his.returnValue = mcr.getReturnedValue();
+False,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,120,his.locationOfStubbing = mcr.getLocationOfStubbing();
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,74,orderedVerify.verify(listener1).reportInvocation(any(MethodInvocationReport.class));
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,75,orderedVerify.verify(listener2).reportInvocation(any(MethodInvocationReport.class));
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,79,static class OvenNotWorking extends RuntimeException { }
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,81,"private void assertThatHasBeenNotified(RememberingListener listener, Object returned, String location) {"
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,82,assertThat(listener.returnValue).isEqualTo(returned);
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,83,assertThat(listener.invocation).isNotNull();
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,84,assertThat(listener.locationOfStubbing).contains(getClass().getSimpleName());
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,87,private static class RememberingListener implements InvocationListener {
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,88,PrintableInvocation invocation;
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,89,Object returnValue;
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,90,String locationOfStubbing;
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,92,public void reportInvocation(MethodInvocationReport mcr) {
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,93,this.invocation = mcr.getInvocation();
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,94,this.returnValue = mcr.getReturnedValue();
+True,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,test/org/mockitousage/debugging/InvocationListenerCallbackTest.java,95,this.locationOfStubbing = mcr.getLocationOfStubbing();
+True,test/org/mockitousage/debugging/VerboseLoggingOfInvocationsOnMockTest.java,test/org/mockitousage/debugging/VerboseLoggingOfInvocationsOnMockTest.java,11,import org.junit.runner.RunWith;
+True,test/org/mockitousage/debugging/VerboseLoggingOfInvocationsOnMockTest.java,test/org/mockitousage/debugging/VerboseLoggingOfInvocationsOnMockTest.java,14,import org.mockito.runners.MockitoJUnitRunner;
+True,test/org/mockitousage/debugging/VerboseLoggingOfInvocationsOnMockTest.java,test/org/mockitousage/debugging/VerboseLoggingOfInvocationsOnMockTest.java,32,@RunWith(MockitoJUnitRunner.class)
+False,test/org/mockitousage/debugging/VerboseLoggingOfInvocationsOnMockTest.java,test/org/mockitousage/debugging/VerboseLoggingOfInvocationsOnMockTest.java,46,ystem.setOut(original);
+True,test/org/mockitousage/debugging/VerboseLoggingOfInvocationsOnMockTest.java,test/org/mockitousage/debugging/VerboseLoggingOfInvocationsOnMockTest.java,49,System.setOut(original);

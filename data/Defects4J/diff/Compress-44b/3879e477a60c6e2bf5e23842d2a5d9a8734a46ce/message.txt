@@ -1,0 +1,25 @@
+Assume a record is using ZIP64 if and only if the ZIP64 extended information
+extra field is present.
+
+http://www.pkware.com/documents/casestudies/APPNOTE.TXT says:
+
+      When extracting, if 
+      the zip64 extended information extra field is present for 
+      the file the compressed and uncompressed sizes will be 8
+      byte values.
+
+when talking about the data descriptor, making the extra field the the
+thing to decide upon.  InfoZip's ZIP 3.0 agrees with this interpretation.
+I even found this in ZIP 3.0' zipfile.c:
+
+      /* PKZIP does not care of the version set in a CDH: if  */
+      /* there is a zip64 extra field assigned to a CDH PKZIP */
+      /* uses it, we should do so, too.                       */
+
+so "version made by" is ignored in the central directory.  The comment
+is not present when looking at the local file header, I'm not yet decided
+whether to ignore the version there as well.
+
+
+
+git-svn-id: https://svn.apache.org/repos/asf/commons/proper/compress/branches/zip64@1150985 13f79535-47bb-0310-9956-ffa450edef68

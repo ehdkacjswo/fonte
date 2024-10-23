@@ -1,0 +1,20 @@
+This house-cleaning improves UnivariateImpl, in a number of ways.
+
+1.) insertValue is abolished and its contents are now in addValue
+
+2.) UnivariateImpl now extends AbstractStoredUnivariate to deligate to
+ those methods directly for calculating statistics when storage is active, all methods
+ deligate to AbstractStoreUniv when the DoubleArray is no longer null. This also means
+that a majority of the StoreUnivariate interface is now implemented in Univariate to provide
+deligates when storage is active, and to throw runtime exceptions when its not (this at least until 
+we establish rolling implementations for those methods). We should consider consolidating the 
+StoreUnivariate interface into the Univariate interface
+
+3.) Calculations in addValue have been reorganized, only calculations for
+the storageless solution are now present in this class. otherwise the value is 
+added/Rolling to the Double array when appropriate.
+
+I'm satisfied that it passes all Unit tests.
+
+
+git-svn-id: https://svn.apache.org/repos/asf/jakarta/commons/proper/math/trunk@140910 13f79535-47bb-0310-9956-ffa450edef68

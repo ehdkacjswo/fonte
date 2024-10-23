@@ -1,0 +1,141 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,18,import com.google.common.annotations.VisibleForTesting;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,20,import com.google.common.collect.Sets;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,65,private final Set<String> crossModuleNames = Sets.newHashSet();
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,67,@VisibleForTesting
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,68,static boolean assumeCrossModuleNames = false;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,82,private boolean isCrossModuleName(String name) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,83,return assumeCrossModuleNames || crossModuleNames.contains(name);
+False,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,92,/ (If necessary the 3 traversals could be combined. They are left
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,102,// (If necessary the 4 traversals could be combined. They are left
+False,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,97,/ 2. rewriting all references to be property accesses of the single symbol.
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,107,// 2. find global names than are used in more than one module. Those that
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,108,//    are have to be rewritten.
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,109,"NodeTraversal.traverse(compiler, root, new FindCrossModuleNamesCallback());"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,110,// 3. rewriting all references to be property accesses of the single symbol.
+False,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,99,/ 3. removing the var from every statement in global scope.
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,112,// 4. removing the var from statements in global scope if the declared names
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,113,//    have been rewritten in the previous pass.
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,153,* Find all global names that are used in more than one module. The following
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,154,* compiler transformations can ignore the globals that are not.
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,156,private class FindCrossModuleNamesCallback extends
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,157,AbstractPostOrderCallback {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,158,@Override
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,159,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,160,if (n.isName()) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,161,String name = n.getString();
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,162,"if ("""".equals(name) || crossModuleNames.contains(name)) {"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,163,return;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,165,Scope s = t.getScope();
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,166,Scope.Var v = s.getVar(name);
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,167,if (v == null || !v.isGlobal()) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,168,return;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,170,CompilerInput input = v.getInput();
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,171,if (input == null) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,172,// We know nothing. Assume name is used across modules.
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,173,crossModuleNames.add(name);
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,174,return;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,176,// Compare the module where the variable is declared to the current
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,177,"// module. If they are different, the variable is used across modules."
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,178,JSModule module = input.getModule();
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,179,if (module != t.getModule()) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,180,crossModuleNames.add(name);
+False,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,181,f (!var.isExtern() && (name.equals(globalSymbolNamespace) ||
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,229,if (!var.isExtern() && !var.isGlobal() &&
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,230,(name.equals(globalSymbolNamespace) ||
+False,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,196,"eplaceSymbol(n, name);"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,245,"replaceSymbol(n, name, t.getInput());"
+False,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,199,"rivate void replaceSymbol(Node node, String name) {"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,248,"private void replaceSymbol(Node node, String name, CompilerInput input) {"
+False,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,201,ode replacement = IR.getprop(
+False,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,202,"R.name(globalSymbolNamespace).srcref(node),"
+False,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,203,R.string(name).srcref(node));
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,250,boolean isCrossModule = isCrossModuleName(name);
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,251,if (!isCrossModule) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,252,// When a non cross module name appears outside a var declaration we
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,253,// never have to do anything.
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,254,if (!parent.isVar()) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,255,return;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,257,"// If it is a var declaration, but no cross module names are declared"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,258,// we also don't have to do anything.
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,259,boolean hasCrossModuleChildren = false;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,260,for (Node c : parent.children()) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,261,// Var child is no longer a name means it was transformed already
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,262,// which means there was a cross module name.
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,263,if (!c.isName() || isCrossModuleName(c.getString())) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,264,hasCrossModuleChildren = true;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,265,break;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,268,if (!hasCrossModuleChildren) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,269,return;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,272,Node replacement = isCrossModule
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,273,? IR.getprop(
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,274,"IR.name(globalSymbolNamespace).srcref(node),"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,275,IR.string(name).srcref(node))
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,276,: IR.name(name).srcref(node);
+False,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,210, else {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,283,} else if (isCrossModule) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,286,// If we changed a non cross module name that was in a var declaration
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,287,// we need to preserve that var declaration. Because it is global
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,288,"// anyway, we just put it at the beginning of the current input."
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,289,// Example:
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,290,"// var crossModule = i++, notCrossModule = i++"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,291,// becomes
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,292,"// var notCrossModule;_.crossModule = i++, notCrossModule = i++"
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,293,if (!isCrossModule && parent.isVar()) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,294,input.getAstRoot(compiler).addChildToFront(
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,295,IR.var(IR.name(name).srcref(node)).srcref(node));
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,331,boolean allName = true;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,333,if (!c.isName()) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,334,allName = false;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,341,"// If every child of a var declares a name, it must stay in place."
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,342,// This is the case if none of the declared variables cross module
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,343,// boundaries.
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,344,if (allName) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,345,return;
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,391,if (globalSymbolNamespace.equals(name) ||
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,392,SPECIAL_EXTERNS.contains(name)) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,393,return;
+False,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,297,f (name.length() > 0 && (var == null || var.isExtern()) &&
+False,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,298,globalSymbolNamespace.equals(name) &&
+False,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,299,SPECIAL_EXTERNS.contains(name)) {
+True,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,src/com/google/javascript/jscomp/RescopeGlobalSymbols.java,396,if (name.length() > 0 && (var == null || var.isExtern())) {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,41,@Override public void setUp() {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,42,super.setUp();
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,43,RescopeGlobalSymbols.assumeCrossModuleNames = true;
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,34,@Override public void setUp() throws Exception {
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,35,super.setUp();
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,36,RescopeGlobalSymbols.assumeCrossModuleNames = true;
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,54,public void testVarDeclarations_allSameModule() {
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,55,RescopeGlobalSymbols.assumeCrossModuleNames = false;
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,56,"testSame(""var a = 1;"");"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,57,"testSame(""var a = 1, b = 2, c = 3;"");"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,58,"testSame(""var a = 'str', b = 1, c = { foo: 'bar' }, d = function() {};"");"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,59,"testSame(""if(1){var x = 1;}"");"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,60,"testSame(""var x;"");"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,61,"testSame(""var a, b = 1;"");"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,64,public void testVarDeclarations_acrossModules() {
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,65,RescopeGlobalSymbols.assumeCrossModuleNames = false;
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,66,test(createModules(
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,67,"""var a = 1;"", ""a""),"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,68,"new String[] {""_.a = 1"", ""_.a""});"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,69,test(createModules(
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,70,"""var a = 1, b = 2, c = 3;"", ""a;c;""),"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,71,"new String[] {""var b;_.a = 1; b = 2; _.c = 3;"", ""_.a;_.c""});"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,72,test(createModules(
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,73,"""var a = 1, b = 2, c = 3;"", ""b;c;""),"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,74,"new String[] {""var a;a = 1; _.b = 2; _.c = 3;"", ""_.b;_.c""});"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,75,test(createModules(
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,76,"""var a = 1, b = 2, c = 3;b;c;"", ""a;c;""),"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,77,"new String[] {""var b;_.a = 1; b = 2; _.c = 3;b;_.c"", ""_.a;_.c""});"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,78,test(createModules(
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,79,"""var a, b = 1;"", ""b""),"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,80,"new String[] {""var a;_.b = 1;"", ""_.b""});"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,84,RescopeGlobalSymbols.assumeCrossModuleNames = false;
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,85,test(createModules(
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,86,"""for (var i = 0, c = 2; i < 1000; i++);"", ""c""),"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,87,"new String[] {""var i;for (i = 0, _.c = 2; i < 1000; i++);"", ""_.c""});"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,88,test(createModules(
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,89,"""for (var i = 0, c = 2; i < 1000; i++);"", ""i""),"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,90,"new String[] {""var c;for (_.i = 0, c = 2; _.i < 1000; _.i++);"","
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,91,"""_.i""});"
+True,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,test/com/google/javascript/jscomp/RescopeGlobalSymbolsTest.java,94,public void testForLoops_acrossModules() {

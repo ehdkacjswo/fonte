@@ -1,0 +1,55 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,717,"ap<String, List<String>> resHeaders = conn.getHeaderFields();"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,717,"Map<String, List<String>> resHeaders = createHeaderMap(conn);"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,729,"private static LinkedHashMap<String, List<String>> createHeaderMap(HttpURLConnection conn) {"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,730,// the default sun impl of conn.getHeaderFields() returns header values out of order
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,731,"final LinkedHashMap<String, List<String>> headers = new LinkedHashMap<String, List<String>>();"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,732,int i = 0;
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,733,while (true) {
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,734,final String key = conn.getHeaderFieldKey(i);
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,735,final String val = conn.getHeaderField(i);
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,736,if (key == null && val == null)
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,737,break;
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,738,i++;
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,739,if (key == null || val == null)
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,740,continue; // skip http1.1 line
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,742,if (headers.containsKey(key))
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,743,headers.get(key).add(val);
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,744,else {
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,745,final ArrayList<String> vals = new ArrayList<String>();
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,746,vals.add(val);
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,747,"headers.put(key, vals);"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,750,return headers;
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,748, else { // only take the first instance of each header
+False,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,749,f (!values.isEmpty())
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,772,} else { // combine same header names with comma: http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,773,if (values.size() == 1)
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,775,else if (values.size() > 1) {
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,776,StringBuilder accum = new StringBuilder();
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,777,for (int i = 0; i < values.size(); i++) {
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,778,final String val = values.get(i);
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,779,if (i != 0)
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,780,"accum.append("", "");"
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,781,accum.append(val);
+True,src/main/java/org/jsoup/helper/HttpConnection.java,src/main/java/org/jsoup/helper/HttpConnection.java,783,"header(name, accum.toString());"
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,55,@Test public void sameHeadersCombineWithComma() {
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,56,"Map<String, List<String>> headers = new HashMap<String, List<String>>();"
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,57,List<String> values = new ArrayList<String>();
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,58,"values.add(""no-cache"");"
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,59,"values.add(""no-store"");"
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,60,"headers.put(""Cache-Control"", values);"
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,61,HttpConnection.Response res = new HttpConnection.Response();
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,62,res.processResponseHeaders(headers);
+True,src/test/java/org/jsoup/helper/HttpConnectionTest.java,src/test/java/org/jsoup/helper/HttpConnectionTest.java,63,"assertEquals(""no-cache, no-store"", res.header(""Cache-Control""));"
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,285,"ssertEquals(""uid=jhy; token=asdfg123"", ihVal(""HTTP_COOKIE"", doc)); // confirms that redirected hit saw cookie"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,285,"assertEquals(""token=asdfg123; uid=jhy"", ihVal(""HTTP_COOKIE"", doc)); // confirms that redirected hit saw cookie"
+False,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,312,"ssertEquals(""uid=jhy; token=asdfg123"", ihVal(""HTTP_COOKIE"", doc));"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,312,"assertEquals(""token=asdfg123; uid=jhy"", ihVal(""HTTP_COOKIE"", doc));"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,541,@Test
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,542,public void combinesSameHeadersWithComma() throws IOException {
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,543,// http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,544,"String url = ""http://direct.infohound.net/tools/q.pl"";"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,545,Connection con = Jsoup.connect(url);
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,546,con.get();
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,548,"assertEquals(""text/html"", con.response().header(""Content-Type""));"
+True,src/test/java/org/jsoup/integration/UrlConnectTest.java,src/test/java/org/jsoup/integration/UrlConnectTest.java,549,"assertEquals(""no-cache, no-store"", con.response().header(""Cache-Control""));"

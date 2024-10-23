@@ -1,0 +1,109 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,400, @param type The type of this.
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,400,* @param type The type of this if the info is missing.
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,404,"nferThisType(info, (Node) null);"
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,404,inferThisType(info);
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,419," @param owner The node for the object whose prototype ""owns"" this function."
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,420,"     For example, {@code A} in the expression {@code A.prototype.foo}. May"
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,421,     be null to indicate that this is not a prototype property.
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,423,"unctionTypeBuilder inferThisType(JSDocInfo info,"
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,424,Nullable Node owner) {
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,420,FunctionTypeBuilder inferThisType(JSDocInfo info) {
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,433, else if (owner != null &&
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,434,info == null || !info.hasType())) {
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,435,/ If the function is of the form:
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,436,/ x.prototype.y = function() {}
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,437,"/ then we can assume ""x"" is the @this type. On the other hand,"
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,438,/ if it's of the form:
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,439,/ /** @type {Function} */ x.prototype.y;
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,440,/ then we should not give it a @this type.
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,441,tring ownerTypeName = owner.getQualifiedName();
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,442,ar ownerVar = scope.getVar(ownerTypeName);
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,443,SType ownerType = ownerVar == null ? null : ownerVar.getType();
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,444,unctionType ownerFnType = JSType.toMaybeFunctionType(ownerType);
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,445,bjectType instType =
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,446,wnerFnType == null || ownerFnType.isOrdinaryFunction() ?
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,447,ull : ownerFnType.getInstanceType();
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,448,f (instType != null) {
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,449,hisType = instType;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3154,/** Get the owner of the given l-value node. */
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3155,static Node getBestLValueOwner(@Nullable Node lValue) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3156,if (lValue == null || lValue.getParent() == null) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3157,return null;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3159,"if (isObjectLitKey(lValue, lValue.getParent())) {"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3160,return getBestLValue(lValue.getParent());
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3161,} else if (isGet(lValue)) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3162,return lValue.getFirstChild();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3165,return null;
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,842,unctionType overriddenPropType = null;
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,843,f (lvalueNode != null &&
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,844,valueNode.getType() == Token.GETPROP &&
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,845,valueNode.isQualifiedName()) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,846,ar var = scope.getVar(
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,847,valueNode.getFirstChild().getQualifiedName());
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,848,f (var != null) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,849,bjectType ownerType = ObjectType.cast(var.getType());
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,850,f (ownerType != null) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,851,tring propName = lvalueNode.getLastChild().getString();
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,852,verriddenPropType =
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,853,"indOverriddenFunction(ownerType, propName);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,842,Node ownerNode = NodeUtil.getBestLValueOwner(lvalueNode);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,843,String ownerName = NodeUtil.getBestLValueName(ownerNode);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,844,Var ownerVar = null;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,845,String propName = null;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,846,ObjectType ownerType = null;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,847,if (ownerName != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,848,ownerVar = scope.getVar(ownerName);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,849,if (ownerVar != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,850,ownerType = ObjectType.cast(ownerVar.getType());
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,852,if (name != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,853,propName = name.substring(ownerName.length() + 1);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,857,FunctionType overriddenPropType = null;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,858,if (ownerType != null && propName != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,859,overriddenPropType =
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,860,"findOverriddenFunction(ownerType, propName);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,869,f (lvalueNode != null &&
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,870,valueNode.getType() == Token.GETPROP) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,871,ode objNode = lvalueNode.getFirstChild();
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,872,f (objNode.getType() == Token.GETPROP &&
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,873,"bjNode.getLastChild().getString().equals(""prototype"")) {"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,874,"uilder.inferThisType(info, objNode.getFirstChild());"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,875,earchedForThisType = true;
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,876, else if (objNode.getType() == Token.THIS) {
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,877,"uilder.inferThisType(info, objNode.getJSType());"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,878,earchedForThisType = true;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,875,if (ownerType != null && ownerType.isFunctionPrototypeType()) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,876,builder.inferThisType(
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,877,"info, ownerType.getOwnerFunction().getInstanceType());"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,878,searchedForThisType = true;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,879,} else if (ownerNode != null && ownerNode.getType() == Token.THIS) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,880,"builder.inferThisType(info, ownerNode.getJSType());"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,881,searchedForThisType = true;
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,883,"uilder.inferThisType(info, (Node) null);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,885,builder.inferThisType(info);
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4641,public void testThis12() throws Exception {
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4642,testTypes(
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4643,"""/** @param {number} x */ function f(x) {}"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4644,"""/** @constructor */ function Ctor() {}"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4645,"""Ctor.prototype['method'] = function() {"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4646,"""  f(this);"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4648,"""actual parameter 1 of f does not match formal parameter\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4649,"""found   : Ctor\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4650,"""required: number"");"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4653,public void testThis13() throws Exception {
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4654,testTypes(
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4655,"""/** @param {number} x */ function f(x) {}"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4656,"""/** @constructor */ function Ctor() {}"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4657,"""Ctor.prototype = {"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4658,"""  method: function() {"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4659,"""    f(this);"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4662,"""actual parameter 1 of f does not match formal parameter\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4663,"""found   : Ctor\n"" +"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4664,"""required: number"");"
+False,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,409,"ssertEquals(""function (?): undefined"","
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,409,"assertEquals(""function (this:Window, ?): undefined"","
+False,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,510,"/ should be: ""function (this:I): undefined"""
+False,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,511,"ssertEquals(""function (): undefined"","
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,510,"assertEquals(""function (this:I): undefined"","
+False,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,885,"function (number): ?"","
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,884,"""function (this:Foo, number): ?"","

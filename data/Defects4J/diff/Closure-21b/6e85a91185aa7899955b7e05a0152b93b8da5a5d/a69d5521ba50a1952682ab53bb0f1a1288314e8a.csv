@@ -1,0 +1,393 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,2,* Copyright 2008 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,19,import com.google.common.base.CaseFormat;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,20,import com.google.common.base.Charsets;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,21,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,22,import com.google.javascript.jscomp.JsMessage.IdGenerator;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,23,import com.google.javascript.jscomp.JsMessage.PlaceholderReference;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,25,import java.util.List;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,28,* An {@link IdGenerator} designed to play nicely with Google's Translation
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,29,"* systems. Each message is scoped to a project id, so that it does"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,30,* not conflict with other messages at Google.
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,31,* <p>
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,32,* Just as reminder what key type used in different formats:
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,33,* <ol>
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,34,* <li>XMB - id. We export using this format.
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,35,"* <li>XTB - id. Internal, result of translation."
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,36,"* <li>XLB - name. External, use it if we need to share translation with third"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,37,*     part.
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,38,* <li>PROPERTIES - name.
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,39,* </ol>
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,41,* @see http://cldr.unicode.org/development/development-process/design-proposals/xmb
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,43,public class GoogleJsMessageIdGenerator implements IdGenerator {
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,45,private final String projectId;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,48,* Creates an instance.
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,50,"* @param projectId A TC project name (e.g. ""MyProject"")"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,52,public GoogleJsMessageIdGenerator(String projectId) {
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,53,this.projectId = projectId;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,56,@Override
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,57,"public String generateId(String meaning, List<CharSequence> messageParts) {"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,58,Preconditions.checkState(meaning != null);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,60,StringBuilder sb = new StringBuilder();
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,61,for (CharSequence part : messageParts) {
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,62,if (part instanceof PlaceholderReference) {
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,63,sb.append(CaseFormat.LOWER_CAMEL.to(
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,64,"CaseFormat.UPPER_UNDERSCORE,"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,65,((PlaceholderReference) part).getName()));
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,66,} else {
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,67,sb.append(part);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,70,String tcValue = sb.toString();
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,72,String projectScopedMeaning =
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,73,"(projectId != null ? (projectId + "": "") : """") + meaning;"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,74,return String.valueOf(
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,75,"MessageId.GenerateId(tcValue, projectScopedMeaning));"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,80,* 64-bit fingerprint support.
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,82,* Forked from the guava-internal library.
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,84,private static final class FP {
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,85,private FP() {}
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,87,"/** Generate fingerprint of ""byte[start,limit-1]"". */"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,88,"private static long fingerprint(byte[] str, int start, int limit) {"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,89,"int hi = hash32(str, start, limit, 0);"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,90,"int lo = hash32(str, start, limit, 102072);"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,91,if ((hi == 0) && (lo == 0 || lo == 1)) {
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,92,// Turn 0/1 into another fingerprint
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,93,hi ^= 0x130f9bef;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,94,lo ^= 0x94a0a928;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,96,return (((long) hi) << 32) | (lo & 0xffffffffl);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,100,"* Generate fingerprint of ""str"". Equivalent to utf-encoding ""str"" into"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,101,* bytes and then fingerprinting those bytes.
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,103,private static long fingerprint(String str) {
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,104,byte[] tmp = str.getBytes(Charsets.UTF_8);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,105,"return FP.fingerprint(tmp, 0, tmp.length);"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,108,"@SuppressWarnings(""fallthrough"")"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,109,"private static int hash32(byte[] str, int start, int limit, int c) {"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,110,int a = 0x9e3779b9;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,111,int b = 0x9e3779b9;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,112,int i;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,113,for (i = start; i + 12 <= limit; i += 12) {
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,114,a += (((str[i + 0] & 0xff) << 0)
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,115,| ((str[i + 1] & 0xff) << 8)
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,116,| ((str[i + 2] & 0xff) << 16)
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,117,| ((str[i + 3] & 0xff) << 24));
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,118,b += (((str[i + 4] & 0xff) << 0)
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,119,| ((str[i + 5] & 0xff) << 8)
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,120,| ((str[i + 6] & 0xff) << 16)
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,121,| ((str[i + 7] & 0xff) << 24));
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,122,c += (((str[i + 8] & 0xff) << 0)
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,123,| ((str[i + 9] & 0xff) << 8) | ((str[i + 10] & 0xff) << 16)
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,124,| ((str[i + 11] & 0xff) << 24));
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,126,// Mix
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,127,a -= b;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,128,a -= c;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,129,a ^= (c >>> 13);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,130,b -= c;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,131,b -= a;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,132,b ^= (a << 8);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,133,c -= a;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,134,c -= b;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,135,c ^= (b >>> 13);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,136,a -= b;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,137,a -= c;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,138,a ^= (c >>> 12);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,139,b -= c;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,140,b -= a;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,141,b ^= (a << 16);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,142,c -= a;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,143,c -= b;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,144,c ^= (b >>> 5);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,145,a -= b;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,146,a -= c;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,147,a ^= (c >>> 3);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,148,b -= c;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,149,b -= a;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,150,b ^= (a << 10);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,151,c -= a;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,152,c -= b;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,153,c ^= (b >>> 15);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,156,c += limit - start;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,157,switch (limit - i) { // deal with rest. Cases fall through
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,158,case 11:
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,159,c += (str[i + 10] & 0xff) << 24;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,160,case 10:
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,161,c += (str[i + 9] & 0xff) << 16;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,162,case 9:
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,163,c += (str[i + 8] & 0xff) << 8;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,164,// the first byte of c is reserved for the length
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,165,case 8:
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,166,b += (str[i + 7] & 0xff) << 24;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,167,case 7:
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,168,b += (str[i + 6] & 0xff) << 16;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,169,case 6:
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,170,b += (str[i + 5] & 0xff) << 8;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,171,case 5:
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,172,b += (str[i + 4] & 0xff);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,173,case 4:
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,174,a += (str[i + 3] & 0xff) << 24;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,175,case 3:
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,176,a += (str[i + 2] & 0xff) << 16;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,177,case 2:
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,178,a += (str[i + 1] & 0xff) << 8;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,179,case 1:
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,180,a += (str[i + 0] & 0xff);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,181,// case 0 : nothing left to add
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,184,// Mix
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,185,a -= b;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,186,a -= c;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,187,a ^= (c >>> 13);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,188,b -= c;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,189,b -= a;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,190,b ^= (a << 8);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,191,c -= a;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,192,c -= b;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,193,c ^= (b >>> 13);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,194,a -= b;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,195,a -= c;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,196,a ^= (c >>> 12);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,197,b -= c;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,198,b -= a;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,199,b ^= (a << 16);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,200,c -= a;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,201,c -= b;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,202,c ^= (b >>> 5);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,203,a -= b;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,204,a -= c;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,205,a ^= (c >>> 3);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,206,b -= c;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,207,b -= a;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,208,b ^= (a << 10);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,209,c -= a;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,210,c -= b;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,211,c ^= (b >>> 15);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,212,return c;
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,217,* Generates fingerprint for an English message using the FP package.
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,218,* This supercedes the message id generation using C fingerprint
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,219,* functions and JNI.  This is slower than the C implementation (
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,220,* we're talking about microseconds here) but it avoids using JNI and
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,221,* shared libraries.<p>
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,223,* Forked from the i18n library.
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,225,private static class MessageId {
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,226,"private final static long GenerateId(String message, String meaning) {"
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,227,long fp = FP.fingerprint(message);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,228,if (null != meaning && meaning.length() > 0) {
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,229,// combine the fingerprints of message and meaning
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,230,long fp2 = FP.fingerprint(meaning);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,231,fp = fp2 + (fp << 1) + (fp < 0 ? 1 : 0);
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,233,// To avoid negative ids we strip the high-order bit
+True,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,src/com/google/javascript/jscomp/GoogleJsMessageIdGenerator.java,234,return fp & 0x7fffffffffffffffL;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,2,* Copyright 2006 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,19,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,20,import com.google.common.collect.Iterables;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,21,import com.google.common.collect.Maps;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,23,import com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,25,import org.xml.sax.Attributes;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,26,import org.xml.sax.ContentHandler;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,27,import org.xml.sax.EntityResolver;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,28,import org.xml.sax.InputSource;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,29,import org.xml.sax.Locator;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,30,import org.xml.sax.SAXException;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,31,import org.xml.sax.XMLReader;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,33,import java.io.*;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,34,import java.util.*;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,36,import javax.annotation.Nullable;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,37,import javax.xml.XMLConstants;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,38,import javax.xml.parsers.ParserConfigurationException;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,39,import javax.xml.parsers.SAXParser;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,40,import javax.xml.parsers.SAXParserFactory;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,43,* A MessageBundle that parses messages from an XML Translation Bundle (XTB)
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,44,* file.
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,47,"@SuppressWarnings(""sunapi"")"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,48,public class XtbMessageBundle implements MessageBundle {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,49,private static final SecureEntityResolver NOOP_RESOLVER
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,50,= new SecureEntityResolver();
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,52,private final String projectId;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,53,"private final Map<String, JsMessage> messages;"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,54,private final JsMessage.IdGenerator idGenerator;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,56,public XtbMessageBundle(
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,57,"InputStream xtb, @Nullable String projectId, boolean unused) {"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,58,"this(xtb, projectId);"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,62,* Creates an instance and initializes it with the messages in an XTB file.
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,64,* @param xtb  the XTB file as a byte stream
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,65,* @param projectId  the translation console project id (i.e. name)
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,67,"public XtbMessageBundle(InputStream xtb, @Nullable String projectId) {"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,68,"Preconditions.checkState(!"""".equals(projectId));"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,69,this.projectId = projectId;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,70,this.messages = Maps.newHashMap();
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,71,this.idGenerator = new GoogleJsMessageIdGenerator(projectId);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,73,try {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,74,// Use a SAX parser for speed and less memory usage.
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,75,SAXParser parser = createSAXParser();
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,76,XMLReader reader = parser.getXMLReader();
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,77,Handler contentHandler = new Handler();
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,78,reader.setContentHandler(contentHandler);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,79,reader.parse(new InputSource(xtb));
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,80,} catch (ParserConfigurationException e) {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,81,throw new RuntimeException(e);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,82,} catch (SAXException e) {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,83,throw new RuntimeException(e);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,84,} catch (IOException e) {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,85,throw new RuntimeException(e);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,89,// Inlined from guava-internal.
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,90,private SAXParser createSAXParser()
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,91,"throws ParserConfigurationException, SAXException {"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,92,SAXParserFactory factory = new SAXParserFactoryImpl();
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,93,factory.setValidating(false);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,94,factory.setXIncludeAware(false);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,95,factory.setFeature(
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,96,"""http://xml.org/sax/features/external-general-entities"", false);"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,97,factory.setFeature(
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,98,"""http://xml.org/sax/features/external-parameter-entities"",false);"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,99,factory.setFeature(
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,100,"""http://apache.org/xml/features/nonvalidating/load-external-dtd"","
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,101,false);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,102,"factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,104,SAXParser parser = factory.newSAXParser();
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,105,XMLReader xmlReader = parser.getXMLReader();
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,106,xmlReader.setEntityResolver(NOOP_RESOLVER);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,107,return parser;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,110,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,111,public JsMessage getMessage(String id) {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,112,return messages.get(id);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,115,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,116,public JsMessage.IdGenerator idGenerator() {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,117,return idGenerator;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,120,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,121,public Iterable<JsMessage> getAllMessages() {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,122,return Iterables.unmodifiableIterable(messages.values());
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,126,* A {@link ContentHandler} that creates a {@link JsMessage} for each message
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,127,* parsed from an XML Translation Bundle (XTB) file.
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,129,private class Handler implements ContentHandler {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,130,"private static final String BUNDLE_ELEM_NAME = ""translationbundle"";"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,131,"private static final String LANG_ATT_NAME = ""lang"";"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,133,"private static final String TRANSLATION_ELEM_NAME = ""translation"";"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,134,"private static final String MESSAGE_ID_ATT_NAME = ""id"";"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,136,"private static final String PLACEHOLDER_ELEM_NAME = ""ph"";"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,137,"private static final String PLACEHOLDER_NAME_ATT_NAME = ""name"";"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,139,String lang;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,140,JsMessage.Builder msgBuilder;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,142,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,143,public void setDocumentLocator(Locator locator) {}
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,145,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,146,public void startDocument() {}
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,148,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,149,public void endDocument() {}
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,151,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,152,"public void startPrefixMapping(String prefix, String uri) {}"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,154,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,155,public void endPrefixMapping(String prefix) {}
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,157,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,158,"public void startElement(String uri, String localName, String qName,"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,159,Attributes atts) {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,160,if (BUNDLE_ELEM_NAME.equals(qName)) {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,161,Preconditions.checkState(lang == null);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,162,lang = atts.getValue(LANG_ATT_NAME);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,163,Preconditions.checkState(lang != null && !lang.isEmpty());
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,164,} else if (TRANSLATION_ELEM_NAME.equals(qName)) {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,165,Preconditions.checkState(msgBuilder == null);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,166,String id = atts.getValue(MESSAGE_ID_ATT_NAME);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,167,Preconditions.checkState(id != null && !id.isEmpty());
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,168,msgBuilder = new JsMessage.Builder(id);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,169,} else if (PLACEHOLDER_ELEM_NAME.equals(qName)) {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,170,Preconditions.checkState(msgBuilder != null);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,171,String phRef = atts.getValue(PLACEHOLDER_NAME_ATT_NAME);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,172,phRef = JsMessageVisitor.toLowerCamelCaseWithNumericSuffixes(phRef);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,173,msgBuilder.appendPlaceholderReference(phRef);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,177,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,178,"public void endElement(String uri, String localName, String qName) {"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,179,if (TRANSLATION_ELEM_NAME.equals(qName)) {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,180,Preconditions.checkState(msgBuilder != null);
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,181,if (!msgBuilder.hasParts()) {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,182,"msgBuilder.appendStringPart("""");"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,184,String key = msgBuilder.getKey();
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,185,"messages.put(key, msgBuilder.build());"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,186,msgBuilder = null;
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,190,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,191,"public void characters(char ch[], int start, int length) {"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,192,if (msgBuilder != null) {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,193,// Append a string literal to the message.
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,194,"msgBuilder.appendStringPart(String.valueOf(ch, start, length));"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,198,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,199,"public void ignorableWhitespace(char ch[], int start, int length) {"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,200,if (msgBuilder != null) {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,201,// Preserve whitespace in messages.
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,202,"msgBuilder.appendStringPart(String.valueOf(ch, start, length));"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,206,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,207,"public void processingInstruction(String target, String data) {}"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,209,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,210,public void skippedEntity(String name) {}
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,214,* A secure EntityResolver that returns an empty string in response to
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,215,* any attempt to resolve an external entitity. The class is used by our
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,216,* secure version of the internal saxon SAX parser.
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,218,private static final class SecureEntityResolver implements EntityResolver {
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,220,@Override
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,221,"public InputSource resolveEntity(String publicId, String systemId) {"
+True,src/com/google/javascript/jscomp/XtbMessageBundle.java,src/com/google/javascript/jscomp/XtbMessageBundle.java,222,"return new InputSource(new StringReader(""""));"
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,2,* Copyright 2006 The Closure Compiler Authors.
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,17,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,19,import static com.google.common.base.Charsets.UTF_8;
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,21,import junit.framework.TestCase;
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,23,import java.io.ByteArrayInputStream;
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,24,import java.io.InputStream;
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,27,* Tests {@link XtbMessageBundle}.
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,30,public class XtbMessageBundleTest extends TestCase {
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,32,"private final static String PROJECT_ID = ""TestProject"";"
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,34,private static final String XTB =
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,35,"""<?xml version=\""1.0\"" encoding=\""UTF-8\""?>\n"""
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,36,"+ ""<!DOCTYPE translationbundle SYSTEM"""
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,37,"+ "" \""translationbundle.dtd\"">\n"""
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,38,"+ ""<translationbundle lang=\""zh-HK\"">\n"""
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,39,"+ ""<translation id=\""7639678437384034548\"">descargar</translation>\n"""
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,40,"+ ""<translation id=\""2398375912250604550\"">Se han\nignorado"""
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,41,"+ "" <ph name=\""NUM\""/> conversaciones.</translation>\n"""
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,42,"+ ""<translation id=\""6323937743550839320\""><ph name=\""P_START\""/>Si,"""
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,43,"+ "" puede <ph name=\""LINK_START_1_3\""/>hacer"""
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,44,"+ "" clic<ph name=\""LINK_END_1_3\""/>"""
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,45,"+ "" para utilizar.<ph name=\""P_END\""/><ph name=\""P_START\""/>Esperamos"""
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,46,"+ "" poder ampliar.<ph name=\""P_END\""/></translation>\n"""
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,47,"+ ""<translation id=\""3945720239421293834\""></translation>\n"""
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,48,"+ ""</translationbundle>"";"
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,50,public void test() {
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,51,InputStream stream = new ByteArrayInputStream(XTB.getBytes(UTF_8));
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,52,XtbMessageBundle bundle = new XtbMessageBundle(
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,53,"stream, PROJECT_ID);"
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,55,"JsMessage message = bundle.getMessage(""7639678437384034548"");"
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,56,"assertEquals(""descargar"", message.toString());"
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,58,"message = bundle.getMessage(""2398375912250604550"");"
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,59,"assertEquals(""Se han\nignorado {$num} conversaciones."","
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,60,message.toString());
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,62,"message = bundle.getMessage(""6323937743550839320"");"
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,63,"assertEquals(""{$pStart}Si, puede {$linkStart_1_3}hacer """
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,64,"+ ""clic{$linkEnd_1_3} para utilizar.{$pEnd}{$pStart}Esperamos """
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,65,"+ ""poder ampliar.{$pEnd}"","
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,66,message.toString());
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,68,"message = bundle.getMessage(""3945720239421293834"");"
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,69,"assertEquals("""", message.toString());"
+True,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,test/com/google/javascript/jscomp/XtbMessageBundleTest.java,70,assertFalse(message.parts().isEmpty());

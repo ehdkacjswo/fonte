@@ -1,0 +1,73 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,60,import org.apache.commons.lang.exception.NestableRuntimeException;
+False,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,76," @version $Id: StringUtils.java,v 1.27 2002/11/27 22:54:29 bayard Exp $"
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,77,"* @version $Id: StringUtils.java,v 1.28 2002/12/07 21:50:29 bayard Exp $"
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,961,"* Unescapes any Java literals found in the String. For example,"
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,962,"* it will turn a sequence of '\' and 'n' into a newline character,"
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,963,* unless the '\' is preceded by another '\'.
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,965,public static String unescape(String str) {
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,966,int sz = str.length();
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,967,StringBuffer buffer = new StringBuffer(sz);
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,968,StringBuffer unicode = new StringBuffer(4);
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,969,boolean hadSlash = false;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,970,boolean inUnicode = false;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,971,for (int i = 0; i < sz; i++) {
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,972,char ch = str.charAt(i);
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,973,if(inUnicode) {
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,974,"// if in unicode, then we're reading unicode"
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,975,// values in somehow
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,976,if(unicode.length() == 4) {
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,977,// unicode now contains the four hex digits
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,978,// which represents our unicode chacater
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,979,try {
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,980,"int value = Integer.parseInt(unicode.toString(), 16);"
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,981,buffer.append( (char)value );
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,982,unicode.setLength(0);
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,983,unicode.setLength(4);
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,984,inUnicode = false;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,985,hadSlash = false;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,986,} catch(NumberFormatException nfe) {
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,987,"throw new NestableRuntimeException(""Unable to parse unicode value: ""+unicode, nfe);"
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,989,} else {
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,990,unicode.append(ch);
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,991,continue;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,994,if(hadSlash) {
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,995,// handle an escaped value
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,996,hadSlash = false;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,997,switch(ch) {
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,998,case '\\': buffer.append('\\'); break;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,999,case '\'': buffer.append('\''); break;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1000,"case '\""': buffer.append('""'); break;"
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1001,case 'r':  buffer.append('\r'); break;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1002,case 'f':  buffer.append('\f'); break;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1003,case 't':  buffer.append('\t'); break;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1004,case 'n':  buffer.append('\n'); break;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1005,case 'b':  buffer.append('\b'); break;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1006,case 'u':  {
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1007,"// uh-oh, we're in unicode country...."
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1008,inUnicode=true;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1009,break;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1011,default :
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1012,buffer.append(ch);
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1013,break;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1015,continue;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1016,} else
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1017,if(ch == '\\') {
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1018,hadSlash = true;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1019,continue;
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1021,buffer.append(ch);
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1023,if(hadSlash) {
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1024,// then we're in the weird case of a \ at the end of the
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1025,"// string, let's output it anyway."
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1026,buffer.append('\\');
+True,src/java/org/apache/commons/lang/StringUtils.java,src/java/org/apache/commons/lang/StringUtils.java,1028,return buffer.toString();
+False,src/test/org/apache/commons/lang/StringUtilsTest.java,src/test/org/apache/commons/lang/StringUtilsTest.java,71," @version $Id: StringUtilsTest.java,v 1.10 2002/11/23 00:51:34 bayard Exp $"
+True,src/test/org/apache/commons/lang/StringUtilsTest.java,src/test/org/apache/commons/lang/StringUtilsTest.java,71,"* @version $Id: StringUtilsTest.java,v 1.11 2002/12/07 21:50:30 bayard Exp $"
+True,src/test/org/apache/commons/lang/StringUtilsTest.java,src/test/org/apache/commons/lang/StringUtilsTest.java,320,"assertEquals(""unescape(String) failed"","
+True,src/test/org/apache/commons/lang/StringUtilsTest.java,src/test/org/apache/commons/lang/StringUtilsTest.java,321,""""", StringUtils.unescape("""") );"
+True,src/test/org/apache/commons/lang/StringUtilsTest.java,src/test/org/apache/commons/lang/StringUtilsTest.java,322,"assertEquals(""unescape(String) failed"","
+True,src/test/org/apache/commons/lang/StringUtilsTest.java,src/test/org/apache/commons/lang/StringUtilsTest.java,323,"""test"", StringUtils.unescape(""test"") );"
+True,src/test/org/apache/commons/lang/StringUtilsTest.java,src/test/org/apache/commons/lang/StringUtilsTest.java,324,"assertEquals(""unescape(String) failed"","
+True,src/test/org/apache/commons/lang/StringUtilsTest.java,src/test/org/apache/commons/lang/StringUtilsTest.java,325,"""\ntest\b"", StringUtils.unescape(""\\ntest\\b"") );"
+True,src/test/org/apache/commons/lang/StringUtilsTest.java,src/test/org/apache/commons/lang/StringUtilsTest.java,326,"assertEquals(""unescape(String) failed"","
+True,src/test/org/apache/commons/lang/StringUtilsTest.java,src/test/org/apache/commons/lang/StringUtilsTest.java,327,"""\u123425foo\ntest\b"", StringUtils.unescape(""\\u123425foo\\ntest\\b"") );"

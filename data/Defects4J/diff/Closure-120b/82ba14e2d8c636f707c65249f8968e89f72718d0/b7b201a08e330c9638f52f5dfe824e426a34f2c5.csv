@@ -1,0 +1,83 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,79,f (nextSibling != null
+False,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,80,& nextSibling.getType() == Token.FOR
+False,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,81,& !NodeUtil.isForIn(nextSibling)
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,79,if (nextSibling == null) {
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,80,return;
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,81,} else if (NodeUtil.isForIn(nextSibling)) {
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,82,Node forNode = nextSibling;
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,83,Node forVar = forNode.getFirstChild();
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,84,if (NodeUtil.isName(forVar)
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,85,&& NodeUtil.isVar(n) && n.hasOneChild()) {
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,86,Node name = n.getFirstChild();
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,87,if (!name.hasChildren()
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,88,&& forVar.getString().equals(name.getString())) {
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,89,"// Ok, the names match, and the var declaration does not have an"
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,90,// initializer. Move it into the loop.
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,91,parent.removeChild(n);
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,92,"forNode.replaceChild(forVar, n);"
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,93,compiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/Denormalize.java,src/com/google/javascript/jscomp/Denormalize.java,96,} else if (nextSibling.getType() == Token.FOR
+False,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,443,f (!NodeUtil.isForIn(c)
+False,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,444,& c.getFirstChild().getType() != Token.EMPTY) {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,443,if (NodeUtil.isForIn(c)) {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,444,Node first = c.getFirstChild();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,445,if (first.getType() == Token.VAR) {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,446,// Transform:
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,447,//    for (var a in b) {}
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,448,// to:
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,449,//    var a; for (a in b) {};
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,450,Node newStatement = first.cloneTree();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,451,Node name = first.removeFirstChild();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,452,"first.getParent().replaceChild(first, name);"
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,453,"insertBeforeParent.addChildBefore(newStatement, insertBefore);"
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,454,"reportCodeChange(""FOR-IN var declaration"");"
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,456,} else if (c.getFirstChild().getType() != Token.EMPTY) {
+False,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,39,/ Verify assignments are extracted from the FOR init node.
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,39,// Verify assignments are moved into the FOR init node.
+False,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,42,/ Verify vars are extracted from the FOR init node.
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,42,// Verify vars are are moved into the FOR init node.
+False,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,46,/ We don't handle these.
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,46,// We don't handle labels yet.
+False,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,48,/ Verify vars are extracted from the FOR init before the labels node.
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,64,public void testForIn() {
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,65,"test(""var a; for(a in b) foo()"", ""for (var a in b) foo()"");"
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,66,"testSame(""a = 0; for(a in b) foo()"");"
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,67,"testSame(""var a = 0; for(a in b) foo()"");"
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,69,// We don't handle labels yet.
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,70,"testSame(""var a; a:for(a in b) foo()"");"
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,71,"testSame(""var a; a:b:for(a in b) foo()"");"
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,73,// Verify FOR inside IFs.
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,74,"test(""if(x){var a; for(a in b) foo()}"","
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,75,"""if(x){for(var a in b) foo()}"");"
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,77,// Any other expression.
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,78,"testSame(""init(); for(a in b) foo()"");"
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,80,// Other statements are left as is.
+True,test/com/google/javascript/jscomp/DenormalizeTest.java,test/com/google/javascript/jscomp/DenormalizeTest.java,81,"testSame(""function(){ return; for(a in b) foo() }"");"
+False,test/com/google/javascript/jscomp/FunctionInjectorTest.java,test/com/google/javascript/jscomp/FunctionInjectorTest.java,919,"function foo(a){for(var b in c)return a;}; "" +"
+True,test/com/google/javascript/jscomp/FunctionInjectorTest.java,test/com/google/javascript/jscomp/FunctionInjectorTest.java,919,"""function foo(a){var b;for(b in c)return a;}; "" +"
+False,test/com/google/javascript/jscomp/FunctionInjectorTest.java,test/com/google/javascript/jscomp/FunctionInjectorTest.java,921,"for(var b$$inline_3 in c){"" +"
+True,test/com/google/javascript/jscomp/FunctionInjectorTest.java,test/com/google/javascript/jscomp/FunctionInjectorTest.java,921,"""var b$$inline_3=void 0;for(b$$inline_3 in c){"" +"
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,124,public void testForIn() {
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,125,// Verify nothing happens with simple for-in
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,126,"testSame(""for(a in b) foo();"");"
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,128,// Verify vars are extracted from the FOR-IN node.
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,129,"test(""for(var a in b) foo()"","
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,130,"""var a; for(a in b) foo()"");"
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,132,// Verify vars are extracted from the FOR init before the label node.
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,133,"test(""a:for(var a in b) foo()"","
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,134,"""var a; a:for(a in b) foo()"");"
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,135,// Verify vars are extracted from the FOR init before the labels node.
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,136,"test(""a:b:for(var a in b) foo()"","
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,137,"""var a; a:b:for(a in b) foo()"");"
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,139,// Verify block are properly introduced for ifs.
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,140,"test(""if (x) for(var a in b) foo()"","
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,141,"""if (x) { var a; for(a in b) foo() }"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,305,"// This loop is normalized to ""var i;for(i in..."""
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,306,"for (var i in {}) {}"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,307,"// TODO(johnlenz): ""i = a"" should be removed here."
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,308,"""var a = 3; var i; for (i in {}) {i = a;}"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,312,"// This loop is normalized to ""var i;for(i in..."""
+False,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,311,"var a = 3; for (var i in {}) {} alert(a);"");"
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,314,"// TODO(johnlenz): ""i = a"" should be removed here."
+True,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,test/com/google/javascript/jscomp/RemoveUnusedVarsTest.java,315,"""var a = 3; var i; for (i in {}) {i = a} alert(a);"");"

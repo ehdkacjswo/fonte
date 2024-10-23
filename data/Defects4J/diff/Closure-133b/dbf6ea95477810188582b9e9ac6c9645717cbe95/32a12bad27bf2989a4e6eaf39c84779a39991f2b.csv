@@ -1,0 +1,73 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,98,/ Do not try to remove a block or an expr result. We already handle
+False,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,99,"/ these cases when we visit the child, and the peephole passes will"
+False,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,100,/ fix up the tree in more clever ways when these are removed.
+False,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,101,f (n.isExprResult() || n.isBlock()) {
+False,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,102,eturn;
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,98,int pt = parent.getType();
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,99,if (pt == Token.COMMA) {
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,100,Node gramps = parent.getParent();
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,101,if (gramps.isCall() &&
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,102,parent == gramps.getFirstChild()) {
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,103,"// Semantically, a direct call to eval is different from an indirect"
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,104,// call to an eval. See ECMA-262 S15.1.2.1. So it's OK for the first
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,105,// expression to a comma to be a no-op if it's used to indirect
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,106,// an eval.
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,107,if (n == parent.getFirstChild() &&
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,108,parent.getChildCount() == 2 &&
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,109,n.getNext().isName() &&
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,110,"""eval"".equals(n.getNext().getString())) {"
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,111,return;
+False,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,105,/ This no-op statement was there so that JSDoc information could
+False,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,106,/ be attached to the name. This check should not complain about it.
+False,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,107,f (n.isQualifiedName() && n.getJSDocInfo() != null) {
+False,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,108,eturn;
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,115,if (n == parent.getLastChild()) {
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,116,for (Node an : parent.getAncestors()) {
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,117,int ancestorType = an.getType();
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,118,if (ancestorType == Token.COMMA)
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,119,continue;
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,120,if (ancestorType != Token.EXPR_RESULT &&
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,121,ancestorType != Token.BLOCK)
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,122,return;
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,123,else
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,124,break;
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,127,} else if (pt != Token.EXPR_RESULT && pt != Token.BLOCK) {
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,128,if (pt == Token.FOR && parent.getChildCount() == 4 &&
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,129,(n == parent.getFirstChild() ||
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,130,n == parent.getFirstChild().getNext().getNext())) {
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,131,// Fall through and look for warnings for the 1st and 3rd child
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,132,// of a for.
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,133,} else {
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,134,return;  // it might be OK to not have a side-effect
+False,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,111,oolean isResultUsed = NodeUtil.isExpressionResultUsed(n);
+False,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,113,f (!isResultUsed &&
+False,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,114,"isSimpleOp || !NodeUtil.mayHaveSideEffects(n, t.getCompiler()))) {"
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,139,if (isSimpleOp ||
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,140,"!NodeUtil.mayHaveSideEffects(n, t.getCompiler())) {"
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,141,if (n.isQualifiedName() && n.getJSDocInfo() != null) {
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,142,// This no-op statement was there so that JSDoc information could
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,143,// be attached to the name. This check should not complain about it.
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,144,return;
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,145,} else if (n.isExprResult()) {
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,146,// we already reported the problem when we visited the child.
+True,src/com/google/javascript/jscomp/CheckSideEffects.java,src/com/google/javascript/jscomp/CheckSideEffects.java,147,return;
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3114,ase Token.BLOCK:
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3123,ode gramps = parent.getParent();
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3124,f (gramps.isCall() &&
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3125,arent == gramps.getFirstChild()) {
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3126,"/ Semantically, a direct call to eval is different from an indirect"
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3127,/ call to an eval. See ECMA-262 S15.1.2.1. So it's OK for the first
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3128,/ expression to a comma to be a no-op if it's used to indirect
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3129,"/ an eval. This we pretend that this is ""used""."
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3130,f (expr == parent.getFirstChild() &&
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3131,arent.getChildCount() == 2 &&
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3132,xpr.getNext().isName() &&
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3133,"eval"".equals(expr.getNext().getString())) {"
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,3134,eturn true;
+False,test/com/google/javascript/jscomp/CheckSideEffectsTest.java,test/com/google/javascript/jscomp/CheckSideEffectsTest.java,71,"est(""var a, b; a = (bar(), 6, 7)"","
+False,test/com/google/javascript/jscomp/CheckSideEffectsTest.java,test/com/google/javascript/jscomp/CheckSideEffectsTest.java,72,"var a, b; a = (bar(), JSCOMPILER_PRESERVE(6), 7)"", e);"
+False,test/com/google/javascript/jscomp/CheckSideEffectsTest.java,test/com/google/javascript/jscomp/CheckSideEffectsTest.java,73,"est(""var a, b; a = (bar(), bar(), 7, 8)"","
+False,test/com/google/javascript/jscomp/CheckSideEffectsTest.java,test/com/google/javascript/jscomp/CheckSideEffectsTest.java,74,"var a, b; a = (bar(), bar(), JSCOMPILER_PRESERVE(7), 8)"", e);"
+False,test/com/google/javascript/jscomp/CheckSideEffectsTest.java,test/com/google/javascript/jscomp/CheckSideEffectsTest.java,90,"est(""for(foo(); true; (1, bar())) { bar() }"","
+False,test/com/google/javascript/jscomp/CheckSideEffectsTest.java,test/com/google/javascript/jscomp/CheckSideEffectsTest.java,91,"for(foo(); true; (JSCOMPILER_PRESERVE(1), bar())) { bar() }"", e);"

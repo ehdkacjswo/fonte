@@ -1,0 +1,772 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,2, Copyright (c) 2007 Mockito contributors
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,3, This program is made available under the terms of the MIT License.
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,5,ackage org.mockito.internal;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,7,mport java.lang.reflect.Method;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,8,mport java.util.Arrays;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,9,mport java.util.List;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,11,mport net.sf.cglib.proxy.MethodProxy;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,13,mport org.mockito.internal.configuration.Configuration;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,14,mport org.mockito.internal.creation.ClassNameFinder;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,15,mport org.mockito.internal.creation.MockAwareInterceptor;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,16,mport org.mockito.internal.invocation.AllInvocationsFinder;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,17,mport org.mockito.internal.invocation.Invocation;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,18,mport org.mockito.internal.invocation.InvocationMatcher;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,19,mport org.mockito.internal.invocation.MatchersBinder;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,20,mport org.mockito.internal.progress.MockingProgress;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,21,mport org.mockito.internal.progress.OngoingStubbing;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,22,mport org.mockito.internal.progress.VerificationModeImpl;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,23,mport org.mockito.internal.stubbing.DontThrow;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,24,mport org.mockito.internal.stubbing.Stubber;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,25,mport org.mockito.internal.stubbing.VoidMethodStubbable;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,26,mport org.mockito.internal.verification.MissingInvocationInOrderVerifier;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,27,mport org.mockito.internal.verification.MissingInvocationVerifier;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,28,mport org.mockito.internal.verification.NoMoreInvocationsVerifier;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,29,mport org.mockito.internal.verification.NumberOfInvocationsInOrderVerifier;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,30,mport org.mockito.internal.verification.NumberOfInvocationsVerifier;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,31,mport org.mockito.internal.verification.Verifier;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,32,mport org.mockito.internal.verification.VerifyingRecorder;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,35, Invocation handler set on mock objects.
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,37, @param <T> type of mock object to handle
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,39,ublic class MockHandler<T> implements MockAwareInterceptor<T> {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,41,rivate final VerifyingRecorder verifyingRecorder;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,42,rivate final Stubber stubber;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,43,rivate final MatchersBinder matchersBinder;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,44,rivate final MockingProgress mockingProgress;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,45,rivate final String mockName;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,47,rivate T mock;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,49,"ublic MockHandler(String mockName, MockingProgress mockingProgress, MatchersBinder matchersBinder) {"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,50,his.mockName = mockName;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,51,his.mockingProgress = mockingProgress;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,52,his.matchersBinder = matchersBinder;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,53,tubber = new Stubber(mockingProgress);
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,55,erifyingRecorder = createRecorder();
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,58,"ublic Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,59,f (stubber.hasThrowableForVoidMethod()) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,60,"nvocation invocation = new Invocation(proxy, method, args, mockingProgress.nextSequenceNumber());"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,61,nvocationMatcher invocationMatcher = matchersBinder.bindMatchers(invocation);
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,62,tubber.addVoidMethodForThrowable(invocationMatcher);
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,63,eturn null;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,66,erificationModeImpl verificationMode = mockingProgress.pullVerificationMode();
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,67,ockingProgress.validateState();
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,69,"nvocation invocation = new Invocation(proxy, method, args, mockingProgress.nextSequenceNumber());"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,70,nvocationMatcher invocationMatcher = matchersBinder.bindMatchers(invocation);
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,72,f (verificationMode != null) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,73,"erifyingRecorder.verify(invocationMatcher, verificationMode);"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,74,eturn Configuration.instance().getReturnValues().valueFor(invocationMatcher.getInvocation());
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,77,tubber.setInvocationForPotentialStubbing(invocationMatcher);
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,78,erifyingRecorder.recordInvocation(invocationMatcher.getInvocation());
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,80,ockingProgress.reportOngoingStubbing(new OngoingStubbingImpl());
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,82,eturn stubber.resultFor(invocationMatcher.getInvocation());
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,85,ublic void verifyNoMoreInteractions() {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,86,erifyingRecorder.verify(VerificationModeImpl.noMoreInteractions());
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,89,ublic VoidMethodStubbable<T> voidMethodStubbable() {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,90,eturn new VoidMethodStubbableImpl();
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,93,ublic void setMock(T mock) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,94,his.mock = mock;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,97,ublic List<Invocation> getRegisteredInvocations() {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,98,eturn verifyingRecorder.getRegisteredInvocations();
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,101,ublic String getMockName() {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,102,f (mockName != null) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,103,eturn mockName;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,104, else {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,105,eturn toInstanceName(ClassNameFinder.classNameForMock(mock));
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,109,/lower case first letter
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,110,rivate String toInstanceName(String className) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,111,"eturn className.substring(0, 1).toLowerCase() + className.substring(1);"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,114,rivate VerifyingRecorder createRecorder() {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,115,ist<Verifier> verifiers = Arrays.asList(
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,116,"ew MissingInvocationInOrderVerifier(),"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,117,"ew NumberOfInvocationsInOrderVerifier(),"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,118,"ew MissingInvocationVerifier(),"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,119,"ew NumberOfInvocationsVerifier(),"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,120,ew NoMoreInvocationsVerifier());
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,121,"eturn new VerifyingRecorder(new AllInvocationsFinder(), verifiers);"
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,124,rivate final class VoidMethodStubbableImpl implements VoidMethodStubbable<T> {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,125,ublic VoidMethodStubbable<T> toThrow(Throwable throwable) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,126,tubber.addThrowableForVoidMethod(throwable);
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,127,eturn this;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,130,ublic VoidMethodStubbable<T> toReturn() {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,131,tubber.addThrowableForVoidMethod(DontThrow.DONT_THROW);
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,132,eturn this;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,135,ublic T on() {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,136,eturn mock;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,140,rivate class OngoingStubbingImpl implements OngoingStubbing<T> {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,141,ublic OngoingStubbing<T> toReturn(Object value) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,142,erifyingRecorder.eraseLastInvocation();
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,143,tubber.addReturnValue(value);
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,144,eturn new ConsecutiveStubbing();
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,147,ublic OngoingStubbing<T> toThrow(Throwable throwable) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,148,erifyingRecorder.eraseLastInvocation();
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,149,tubber.addThrowable(throwable);
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,150,eturn new ConsecutiveStubbing();
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,154,rivate class ConsecutiveStubbing implements OngoingStubbing<T> {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,155,ublic OngoingStubbing<T> toReturn(Object value) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,156,tubber.addConsecutiveReturnValue(value);
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,157,eturn this;
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,160,ublic OngoingStubbing<T> toThrow(Throwable throwable) {
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,161,tubber.addConsecutiveThrowable(throwable);
+False,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,162,eturn this;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,2,* Copyright (c) 2007 Mockito contributors
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,3,* This program is made available under the terms of the MIT License.
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,5,package org.mockito.internal;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,7,import java.lang.reflect.Method;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,8,import java.util.Arrays;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,9,import java.util.List;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,11,import net.sf.cglib.proxy.MethodProxy;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,13,import org.mockito.internal.configuration.Configuration;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,14,import org.mockito.internal.creation.ClassNameFinder;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,15,import org.mockito.internal.creation.MockAwareInterceptor;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,16,import org.mockito.internal.invocation.AllInvocationsFinder;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,17,import org.mockito.internal.invocation.Invocation;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,18,import org.mockito.internal.invocation.InvocationMatcher;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,19,import org.mockito.internal.invocation.MatchersBinder;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,20,import org.mockito.internal.progress.MockingProgress;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,21,import org.mockito.internal.progress.OngoingStubbing;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,22,import org.mockito.internal.progress.VerificationModeImpl;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,23,import org.mockito.internal.stubbing.Answer;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,24,import org.mockito.internal.stubbing.DontThrow;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,25,import org.mockito.internal.stubbing.Stubber;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,26,import org.mockito.internal.stubbing.VoidMethodStubbable;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,27,import org.mockito.internal.verification.MissingInvocationInOrderVerifier;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,28,import org.mockito.internal.verification.MissingInvocationVerifier;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,29,import org.mockito.internal.verification.NoMoreInvocationsVerifier;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,30,import org.mockito.internal.verification.NumberOfInvocationsInOrderVerifier;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,31,import org.mockito.internal.verification.NumberOfInvocationsVerifier;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,32,import org.mockito.internal.verification.Verifier;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,33,import org.mockito.internal.verification.VerifyingRecorder;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,36,* Invocation handler set on mock objects.
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,38,* @param <T> type of mock object to handle
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,40,public class MockHandler<T> implements MockAwareInterceptor<T> {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,42,private final VerifyingRecorder verifyingRecorder;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,43,private final Stubber stubber;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,44,private final MatchersBinder matchersBinder;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,45,private final MockingProgress mockingProgress;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,46,private final String mockName;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,48,private T mock;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,50,"public MockHandler(String mockName, MockingProgress mockingProgress, MatchersBinder matchersBinder) {"
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,51,this.mockName = mockName;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,52,this.mockingProgress = mockingProgress;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,53,this.matchersBinder = matchersBinder;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,54,stubber = new Stubber(mockingProgress);
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,56,verifyingRecorder = createRecorder();
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,59,"public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {"
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,60,if (stubber.hasThrowableForVoidMethod()) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,61,"Invocation invocation = new Invocation(proxy, method, args, mockingProgress.nextSequenceNumber());"
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,62,InvocationMatcher invocationMatcher = matchersBinder.bindMatchers(invocation);
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,63,stubber.addVoidMethodForThrowable(invocationMatcher);
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,64,return null;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,67,VerificationModeImpl verificationMode = mockingProgress.pullVerificationMode();
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,68,mockingProgress.validateState();
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,70,"Invocation invocation = new Invocation(proxy, method, args, mockingProgress.nextSequenceNumber());"
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,71,InvocationMatcher invocationMatcher = matchersBinder.bindMatchers(invocation);
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,73,if (verificationMode != null) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,74,"verifyingRecorder.verify(invocationMatcher, verificationMode);"
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,75,return Configuration.instance().getReturnValues().valueFor(invocationMatcher.getInvocation());
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,78,stubber.setInvocationForPotentialStubbing(invocationMatcher);
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,79,verifyingRecorder.recordInvocation(invocationMatcher.getInvocation());
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,81,mockingProgress.reportOngoingStubbing(new OngoingStubbingImpl());
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,83,return stubber.resultFor(invocationMatcher.getInvocation());
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,86,public void verifyNoMoreInteractions() {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,87,verifyingRecorder.verify(VerificationModeImpl.noMoreInteractions());
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,90,public VoidMethodStubbable<T> voidMethodStubbable() {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,91,return new VoidMethodStubbableImpl();
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,94,public void setMock(T mock) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,95,this.mock = mock;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,98,public List<Invocation> getRegisteredInvocations() {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,99,return verifyingRecorder.getRegisteredInvocations();
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,102,public String getMockName() {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,103,if (mockName != null) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,104,return mockName;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,105,} else {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,106,return toInstanceName(ClassNameFinder.classNameForMock(mock));
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,110,//lower case first letter
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,111,private String toInstanceName(String className) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,112,"return className.substring(0, 1).toLowerCase() + className.substring(1);"
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,115,private VerifyingRecorder createRecorder() {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,116,List<Verifier> verifiers = Arrays.asList(
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,117,"new MissingInvocationInOrderVerifier(),"
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,118,"new NumberOfInvocationsInOrderVerifier(),"
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,119,"new MissingInvocationVerifier(),"
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,120,"new NumberOfInvocationsVerifier(),"
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,121,new NoMoreInvocationsVerifier());
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,122,"return new VerifyingRecorder(new AllInvocationsFinder(), verifiers);"
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,125,private final class VoidMethodStubbableImpl implements VoidMethodStubbable<T> {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,126,public VoidMethodStubbable<T> toThrow(Throwable throwable) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,127,stubber.addThrowableForVoidMethod(throwable);
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,128,return this;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,131,public VoidMethodStubbable<T> toReturn() {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,132,stubber.addThrowableForVoidMethod(DontThrow.DONT_THROW);
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,133,return this;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,136,"@SuppressWarnings(""unchecked"")"
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,137,public VoidMethodStubbable<T> toAnswer(Answer answer) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,138,stubber.addThrowableForVoidMethod(new DontThrow(answer));
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,139,return this;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,142,public T on() {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,143,return mock;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,147,private class OngoingStubbingImpl implements OngoingStubbing<T> {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,148,public OngoingStubbing<T> toReturn(Object value) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,149,verifyingRecorder.eraseLastInvocation();
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,150,stubber.addReturnValue(value);
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,151,return new ConsecutiveStubbing();
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,154,public OngoingStubbing<T> toThrow(Throwable throwable) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,155,verifyingRecorder.eraseLastInvocation();
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,156,stubber.addThrowable(throwable);
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,157,return new ConsecutiveStubbing();
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,160,public OngoingStubbing<T> toAnswer(Answer<T> answer) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,161,verifyingRecorder.eraseLastInvocation();
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,162,stubber.addAnswer(answer);
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,163,return new ConsecutiveStubbing();
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,167,private class ConsecutiveStubbing implements OngoingStubbing<T> {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,168,public OngoingStubbing<T> toReturn(Object value) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,169,stubber.addConsecutiveReturnValue(value);
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,170,return this;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,173,public OngoingStubbing<T> toThrow(Throwable throwable) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,174,stubber.addConsecutiveThrowable(throwable);
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,175,return this;
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,178,public OngoingStubbing<T> toAnswer(Answer<T> answer) {
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,179,stubber.addConsecutiveAnswer(answer);
+True,src/org/mockito/internal/MockHandler.java,src/org/mockito/internal/MockHandler.java,180,return this;
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,2, Copyright (c) 2007 Mockito contributors
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,3, This program is made available under the terms of the MIT License.
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,5,ackage org.mockito.internal.progress;
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,7,mport org.mockito.Mockito;
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,10, Stubs with return value or exception. E.g:
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,12, <pre>
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,13, stub(mock.someMethod()).toReturn(10);
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,15," //you can use flexible argument matchers, e.g:"
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,16, stub(mock.someMethod(<b>anyString()</b>)).toReturn(10);
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,18, //setting exception to be thrown:
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,19," stub(mock.someMethod(""some arg"")).toThrow(new RuntimeException());"
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,21, //you can stub with different behavior for consecutive method calls.
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,22," //Last stubbing (e.g: toReturn(""foo"")) determines the behavior for further consecutive calls."
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,23," stub(mock.someMethod(""some arg""))"
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,24,  .toThrow(new RuntimeException())
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,25,"  .toReturn(""foo"");"
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,27, </pre>
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,29, See examples in javadoc for {@link Mockito#stub}
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,31,ublic interface OngoingStubbing<T> {
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,34, Stub mock object with given return value. E.g:
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,35, <pre>
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,36, stub(mock.someMethod()).toReturn(10);
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,37, </pre>
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,39, See examples in javadoc for {@link Mockito#stub}
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,41, @param value return value
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,42, @return ongoingStubbing object that allows stubbing consecutive calls
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,44,ngoingStubbing<T> toReturn(T value);
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,47, Stub mock object with throwable that will be thrown on method invocation. E.g:
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,48, <pre>
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,49, stub(mock.someMethod()).toThrow(new RuntimeException());
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,50, </pre>
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,52, If throwable is a checked exception then it has to
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,53, match one of the checked exceptions of method signature.
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,55, See examples in javadoc for {@link Mockito#stub}
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,57, @param throwable to be thrown on method invocation
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,58, @return ongoingStubbing object that allows stubbing consecutive calls
+False,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,60,ngoingStubbing<T> toThrow(Throwable throwable);
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,2,* Copyright (c) 2007 Mockito contributors
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,3,* This program is made available under the terms of the MIT License.
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,5,package org.mockito.internal.progress;
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,7,import org.mockito.Mockito;
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,8,import org.mockito.internal.stubbing.Answer;
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,11,* Stubs with return value or exception. E.g:
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,13,* <pre>
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,14,* stub(mock.someMethod()).toReturn(10);
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,16,"* //you can use flexible argument matchers, e.g:"
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,17,* stub(mock.someMethod(<b>anyString()</b>)).toReturn(10);
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,19,* //setting exception to be thrown:
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,20,"* stub(mock.someMethod(""some arg"")).toThrow(new RuntimeException());"
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,22,* //you can stub with different behavior for consecutive method calls.
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,23,"* //Last stubbing (e.g: toReturn(""foo"")) determines the behavior for further consecutive calls."
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,24,"* stub(mock.someMethod(""some arg""))"
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,25,*  .toThrow(new RuntimeException())
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,26,"*  .toReturn(""foo"");"
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,28,* </pre>
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,30,* See examples in javadoc for {@link Mockito#stub}
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,32,public interface OngoingStubbing<T> {
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,35,* Stub mock object with given return value. E.g:
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,36,* <pre>
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,37,* stub(mock.someMethod()).toReturn(10);
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,38,* </pre>
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,40,* See examples in javadoc for {@link Mockito#stub}
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,42,* @param value return value
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,44,* @return ongoingStubbing object that allows stubbing consecutive calls
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,46,OngoingStubbing<T> toReturn(T value);
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,49,* Stub mock object with throwable that will be thrown on method invocation. E.g:
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,50,* <pre>
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,51,* stub(mock.someMethod()).toThrow(new RuntimeException());
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,52,* </pre>
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,54,* If throwable is a checked exception then it has to
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,55,* match one of the checked exceptions of method signature.
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,57,* See examples in javadoc for {@link Mockito#stub}
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,59,* @param throwable to be thrown on method invocation
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,61,* @return ongoingStubbing object that allows stubbing consecutive calls
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,63,OngoingStubbing<T> toThrow(Throwable throwable);
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,66,* Stub mock object with a custom answer. E.g:
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,67,* <pre>
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,68,* stub(mock.someMethod(10)).toAnswer(new Answer&lt;Integer&gt;() {
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,69,*     public Integer answer(InvocationOnMock invocation) throws Throwable {
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,70,*         return (Integer) invocation.getArguments()[0];
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,73,* </pre>
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,75,* @param answer the custom answer to execute.
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,77,* @return ongoingStubbing object that allows stubbing consecutive calls
+True,src/org/mockito/internal/progress/OngoingStubbing.java,src/org/mockito/internal/progress/OngoingStubbing.java,79,OngoingStubbing<T> toAnswer(Answer<T> answer);
+False,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,2, Copyright (c) 2007 Mockito contributors
+False,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,3, This program is made available under the terms of the MIT License.
+False,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,5,ackage org.mockito.internal.stubbing;
+False,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,8, Used to answer expected calls.
+False,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,9, @param <T> the type to return.
+False,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,11,ublic interface Answer<T> {
+False,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,14, @return the value to be returned
+False,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,15, @throws Throwable the throwable to be thrown
+False,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,17, answer() throws Throwable;
+True,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,2,* Copyright (c) 2007 Mockito contributors
+True,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,3,* This program is made available under the terms of the MIT License.
+True,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,5,package org.mockito.internal.stubbing;
+True,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,7,import org.mockito.invocation.InvocationOnMock;
+True,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,10,* Used to answer expected calls.
+True,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,12,* @param <T> the type to return.
+True,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,14,public interface Answer<T> {
+True,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,17,* @param invocation the invocation on the mock.
+True,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,19,* @return the value to be returned
+True,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,21,* @throws Throwable the throwable to be thrown
+True,src/org/mockito/internal/stubbing/Answer.java,src/org/mockito/internal/stubbing/Answer.java,23,T answer(InvocationOnMock invocation) throws Throwable;
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,2, Copyright (c) 2007 Mockito contributors
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,3, This program is made available under the terms of the MIT License.
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,5,ackage org.mockito.internal.stubbing;
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,7,mport org.mockito.exceptions.Reporter;
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,8,mport org.mockito.exceptions.base.HasStackTraceThrowableWrapper;
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,9,mport org.mockito.exceptions.base.StackTraceFilter;
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,10,mport org.mockito.internal.invocation.Invocation;
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,12,"SuppressWarnings(""unchecked"")"
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,13,ublic class AnswerFactory {
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,15,rivate final StackTraceFilter filter;
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,16,rivate final Reporter reporter;
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,18,ublic AnswerFactory(StackTraceFilter filter) {
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,19,his.filter = filter;
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,20,his.reporter = new Reporter();
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,23,ublic Answer createReturningAnswer(final Object value) {
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,24,eturn new Answer<Object>() {
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,25,ublic Object answer() throws Throwable {
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,26,eturn value;
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,31,"ublic Answer createThrowingAnswer(final Throwable throwable, Invocation invocation) {"
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,32,"alidateThrowable(throwable, invocation);"
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,33,eturn new Answer<Object>() {
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,34,ublic Object answer() throws Throwable {
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,35,f (throwable == DontThrow.DONT_THROW) {
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,36,eturn null;
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,38,hrowable filtered = throwable.fillInStackTrace();
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,39,ilter.filterStackTrace(new HasStackTraceThrowableWrapper(filtered));
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,40,hrow filtered;
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,45,"rivate void validateThrowable(Throwable throwable, Invocation invocation) {"
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,46,f (throwable == null) {
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,47,eporter.cannotStubWithNullThrowable();
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,50,f (throwable instanceof RuntimeException || throwable instanceof Error) {
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,51,eturn;
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,54,f (!invocation.isValidException(throwable)) {
+False,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,55,eporter.checkedExceptionInvalid(throwable);
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,2,* Copyright (c) 2007 Mockito contributors
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,3,* This program is made available under the terms of the MIT License.
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,5,package org.mockito.internal.stubbing;
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,7,import org.mockito.exceptions.Reporter;
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,8,import org.mockito.exceptions.base.HasStackTraceThrowableWrapper;
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,9,import org.mockito.exceptions.base.StackTraceFilter;
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,10,import org.mockito.internal.invocation.Invocation;
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,11,import org.mockito.invocation.InvocationOnMock;
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,13,"@SuppressWarnings(""unchecked"")"
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,14,public class AnswerFactory {
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,16,private final StackTraceFilter filter;
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,17,private final Reporter reporter;
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,19,public AnswerFactory(StackTraceFilter filter) {
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,20,this.filter = filter;
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,21,this.reporter = new Reporter();
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,24,public Answer createReturningAnswer(final Object value) {
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,25,return new Answer<Object>() {
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,26,public Object answer(InvocationOnMock invocation) throws Throwable {
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,27,return value;
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,32,"public Answer createThrowingAnswer(final Throwable throwable, Invocation invocation) {"
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,33,"validateThrowable(throwable, invocation);"
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,34,return new Answer<Object>() {
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,35,public Object answer(InvocationOnMock invocation) throws Throwable {
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,36,if (throwable instanceof DontThrow) {
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,37,return ((DontThrow) throwable).getAnswer().answer(invocation);
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,39,Throwable filtered = throwable.fillInStackTrace();
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,40,filter.filterStackTrace(new HasStackTraceThrowableWrapper(filtered));
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,41,throw filtered;
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,46,"private void validateThrowable(Throwable throwable, Invocation invocation) {"
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,47,if (throwable == null) {
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,48,reporter.cannotStubWithNullThrowable();
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,51,if (throwable instanceof RuntimeException || throwable instanceof Error) {
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,52,return;
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,55,if (!invocation.isValidException(throwable)) {
+True,src/org/mockito/internal/stubbing/AnswerFactory.java,src/org/mockito/internal/stubbing/AnswerFactory.java,56,reporter.checkedExceptionInvalid(throwable);
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,7,import org.mockito.invocation.InvocationOnMock;
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,9,"@SuppressWarnings(""unchecked"")"
+False,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,9,ublic static final DontThrow DONT_THROW = new DontThrow();
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,12,public static final DontThrow DONT_THROW = new DontThrow(null);
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,13,private Answer answer;
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,15,public DontThrow(Answer answer) {
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,16,if (answer == null) {
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,17,answer = new Answer() {
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,18,public Object answer(InvocationOnMock invocation) throws Throwable {
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,19,return null;
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,24,this.answer = answer;
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,27,public Answer getAnswer() {
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,28,return answer;
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,31,public boolean hasAnswer() {
+True,src/org/mockito/internal/stubbing/DontThrow.java,src/org/mockito/internal/stubbing/DontThrow.java,32,return answer != null;
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,2, Copyright (c) 2007 Mockito contributors
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,3, This program is made available under the terms of the MIT License.
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,5,ackage org.mockito.internal.stubbing;
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,7,mport java.util.LinkedList;
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,9,mport org.mockito.internal.invocation.InvocationMatcher;
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,11,"SuppressWarnings(""unchecked"")"
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,12,ublic class StubbedInvocationMatcher extends InvocationMatcher {
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,14,rivate final LinkedList<Answer> answers = new LinkedList<Answer>();
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,16,"ublic StubbedInvocationMatcher(InvocationMatcher invocation, Answer answer) {"
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,17,"uper(invocation.getInvocation(), invocation.getMatchers());"
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,18,his.answers.add(answer);
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,21,ublic Object answer() throws Throwable {
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,22,eturn answers.size() == 1 ? answers.getFirst().answer() : answers.removeFirst().answer();
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,25,ublic void addAnswer(Answer answer) {
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,26,nswers.add(answer);
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,29,Override
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,30,ublic String toString() {
+False,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,31,"eturn super.toString() + "" stubbed with: "" + answers;"
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,2,* Copyright (c) 2007 Mockito contributors
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,3,* This program is made available under the terms of the MIT License.
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,5,package org.mockito.internal.stubbing;
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,7,import java.util.LinkedList;
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,9,import org.mockito.internal.invocation.Invocation;
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,10,import org.mockito.internal.invocation.InvocationMatcher;
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,12,"@SuppressWarnings(""unchecked"")"
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,13,public class StubbedInvocationMatcher extends InvocationMatcher {
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,15,private final LinkedList<Answer> answers = new LinkedList<Answer>();
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,17,"public StubbedInvocationMatcher(InvocationMatcher invocation, Answer answer) {"
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,18,"super(invocation.getInvocation(), invocation.getMatchers());"
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,19,this.answers.add(answer);
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,22,public Object answer(Invocation invocation) throws Throwable {
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,23,return answers.size() == 1 ? answers.getFirst().answer(invocation) : answers.removeFirst().answer(invocation);
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,26,public void addAnswer(Answer answer) {
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,27,answers.add(answer);
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,30,@Override
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,31,public String toString() {
+True,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,src/org/mockito/internal/stubbing/StubbedInvocationMatcher.java,32,"return super.toString() + "" stubbed with: "" + answers;"
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,2, Copyright (c) 2007 Mockito contributors
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,3, This program is made available under the terms of the MIT License.
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,5,ackage org.mockito.internal.stubbing;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,7,mport java.util.ArrayList;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,8,mport java.util.LinkedList;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,9,mport java.util.List;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,11,mport org.mockito.exceptions.base.StackTraceFilter;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,12,mport org.mockito.internal.configuration.Configuration;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,13,mport org.mockito.internal.invocation.Invocation;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,14,mport org.mockito.internal.invocation.InvocationMatcher;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,15,mport org.mockito.internal.progress.MockingProgress;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,17,"SuppressWarnings(""unchecked"")"
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,18,ublic class Stubber {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,20,rivate final LinkedList<StubbedInvocationMatcher> stubbed = new LinkedList<StubbedInvocationMatcher>();
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,21,rivate final MockingProgress mockingProgress;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,22,rivate final List<Throwable> throwablesForVoidMethod = new ArrayList<Throwable>();
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,23,rivate final AnswerFactory answerFactory = new AnswerFactory(new StackTraceFilter());
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,25,rivate InvocationMatcher invocationForStubbing;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,27,ublic Stubber(MockingProgress mockingProgress) {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,28,his.mockingProgress = mockingProgress;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,31,ublic void setInvocationForPotentialStubbing(InvocationMatcher invocation) {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,32,his.invocationForStubbing = invocation;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,35,ublic void addReturnValue(Object value) {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,36,ockingProgress.stubbingCompleted();
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,37,nswer answer = answerFactory.createReturningAnswer(value);
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,38,"tubbed.addFirst(new StubbedInvocationMatcher(invocationForStubbing, answer));"
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,41,ublic void addThrowable(Throwable throwable) {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,42,ockingProgress.stubbingCompleted();
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,43,"nswer answer = answerFactory.createThrowingAnswer(throwable, invocationForStubbing.getInvocation());"
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,44,"tubbed.addFirst(new StubbedInvocationMatcher(invocationForStubbing, answer));"
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,47,ublic void addConsecutiveReturnValue(Object value) {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,48,tubbed.getFirst().addAnswer(answerFactory.createReturningAnswer(value));
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,51,ublic void addConsecutiveThrowable(Throwable throwable) {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,52,"tubbed.getFirst().addAnswer(answerFactory.createThrowingAnswer(throwable, invocationForStubbing.getInvocation()));"
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,55,ublic Object resultFor(Invocation invocation) throws Throwable {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,56,or (StubbedInvocationMatcher s : stubbed) {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,57,f (s.matches(invocation)) {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,58,eturn s.answer();
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,61,eturn Configuration.instance().getReturnValues().valueFor(invocation);
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,64,ublic void addThrowableForVoidMethod(Throwable throwable) {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,65,hrowablesForVoidMethod.add(throwable);
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,68,ublic boolean hasThrowableForVoidMethod() {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,69,eturn !throwablesForVoidMethod.isEmpty();
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,72,ublic void addVoidMethodForThrowable(InvocationMatcher voidMethodInvocationMatcher) {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,73,nvocationForStubbing = voidMethodInvocationMatcher;
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,74,ssert hasThrowableForVoidMethod();
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,75,or (int i = 0; i < throwablesForVoidMethod.size(); i++) {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,76,hrowable throwable = throwablesForVoidMethod.get(i);
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,77,f (i == 0) {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,78,ddThrowable(throwable);
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,79, else {
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,80,ddConsecutiveThrowable(throwable);
+False,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,83,hrowablesForVoidMethod.clear();
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,2,* Copyright (c) 2007 Mockito contributors
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,3,* This program is made available under the terms of the MIT License.
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,5,package org.mockito.internal.stubbing;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,7,import java.util.ArrayList;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,8,import java.util.LinkedList;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,9,import java.util.List;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,11,import org.mockito.exceptions.base.StackTraceFilter;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,12,import org.mockito.internal.configuration.Configuration;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,13,import org.mockito.internal.invocation.Invocation;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,14,import org.mockito.internal.invocation.InvocationMatcher;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,15,import org.mockito.internal.progress.MockingProgress;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,17,"@SuppressWarnings(""unchecked"")"
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,18,public class Stubber {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,20,private final LinkedList<StubbedInvocationMatcher> stubbed = new LinkedList<StubbedInvocationMatcher>();
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,21,private final MockingProgress mockingProgress;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,22,private final List<Throwable> throwablesForVoidMethod = new ArrayList<Throwable>();
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,23,private final AnswerFactory answerFactory = new AnswerFactory(new StackTraceFilter());
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,25,private InvocationMatcher invocationForStubbing;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,27,public Stubber(MockingProgress mockingProgress) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,28,this.mockingProgress = mockingProgress;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,31,public void setInvocationForPotentialStubbing(InvocationMatcher invocation) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,32,this.invocationForStubbing = invocation;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,35,public void addReturnValue(Object value) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,36,mockingProgress.stubbingCompleted();
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,37,Answer answer = answerFactory.createReturningAnswer(value);
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,38,"stubbed.addFirst(new StubbedInvocationMatcher(invocationForStubbing, answer));"
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,41,public void addThrowable(Throwable throwable) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,42,mockingProgress.stubbingCompleted();
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,43,"Answer answer = answerFactory.createThrowingAnswer(throwable, invocationForStubbing.getInvocation());"
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,44,"stubbed.addFirst(new StubbedInvocationMatcher(invocationForStubbing, answer));"
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,47,public void addAnswer(Answer answer) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,48,mockingProgress.stubbingCompleted();
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,49,"stubbed.addFirst(new StubbedInvocationMatcher(invocationForStubbing, answer));"
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,52,public void addConsecutiveReturnValue(Object value) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,53,stubbed.getFirst().addAnswer(answerFactory.createReturningAnswer(value));
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,56,public void addConsecutiveThrowable(Throwable throwable) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,57,stubbed.getFirst()
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,58,".addAnswer(answerFactory.createThrowingAnswer(throwable, invocationForStubbing.getInvocation()));"
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,61,public void addConsecutiveAnswer(Answer answer) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,62,stubbed.getFirst().addAnswer(answer);
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,65,public Object resultFor(Invocation invocation) throws Throwable {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,66,for (StubbedInvocationMatcher s : stubbed) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,67,if (s.matches(invocation)) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,68,return s.answer(invocation);
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,71,return Configuration.instance().getReturnValues().valueFor(invocation);
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,74,public void addThrowableForVoidMethod(Throwable throwable) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,75,throwablesForVoidMethod.add(throwable);
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,78,public boolean hasThrowableForVoidMethod() {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,79,return !throwablesForVoidMethod.isEmpty();
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,82,public void addVoidMethodForThrowable(InvocationMatcher voidMethodInvocationMatcher) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,83,invocationForStubbing = voidMethodInvocationMatcher;
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,84,assert hasThrowableForVoidMethod();
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,85,for (int i = 0; i < throwablesForVoidMethod.size(); i++) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,86,Throwable throwable = throwablesForVoidMethod.get(i);
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,87,if (i == 0) {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,88,addThrowable(throwable);
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,89,} else {
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,90,addConsecutiveThrowable(throwable);
+True,src/org/mockito/internal/stubbing/Stubber.java,src/org/mockito/internal/stubbing/Stubber.java,93,throwablesForVoidMethod.clear();
+False,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,16, //Last stubbing (e.g: toReturn()) determines the behavior for further consecutive calls.
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,16,* //Last stubbing (e.g: toReturn()) determines the behavior for further consecutive calls.
+False,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,34, If throwable is a checked exception then it has to
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,34,* If throwable is a checked exception then it has to
+False,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,39, @param throwable
+False,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,40,            to be thrown on method invocation
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,39,* @param throwable to be thrown on method invocation
+False,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,58, <ul>
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,57,* <ul>
+False,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,62, </ul>
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,61,* </ul>
+False,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,66, @return VoidMethodStubbable - typically to choose void method and finish stubbing
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,65,* @return VoidMethodStubbable - typically to choose void method and finish stubbing
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,70,* Stubs void method to execute a custom answer.
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,71,* <p>
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,72,* For Example:
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,73,* <pre>
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,74,* stubVoid(mock)
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,75,*   .toAnswer(new Answer() {
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,76,*                 public Object answer(InvocationOnMOck invocation) {
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,77,*                     Visitor v = (Visitor) invocation.getArguments()[0];
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,78,*                     v.visitMock(invocation.getMock());
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,80,*                     return null;
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,83,*    .on().accept(any());
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,84,* </pre>
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,86,* @param answer the custom answer to execute.
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,88,* @return VoidMethodStubbable - typically to choose void method and finish stubbing
+True,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,src/org/mockito/internal/stubbing/VoidMethodStubbable.java,90,VoidMethodStubbable<T> toAnswer(Answer<T> answer);
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,2, Copyright (c) 2007 Mockito contributors
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,3, This program is made available under the terms of the MIT License.
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,5,ackage org.mockito.internal.stubbing;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,7,mport static org.mockito.util.ExtraMatchers.*;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,9,mport java.io.IOException;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,10,mport java.nio.charset.CharacterCodingException;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,11,mport java.util.Arrays;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,13,mport org.junit.Before;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,14,mport org.junit.Test;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,15,mport org.mockito.TestBase;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,16,mport org.mockito.exceptions.base.HasStackTrace;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,17,mport org.mockito.exceptions.base.MockitoException;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,18,mport org.mockito.exceptions.base.StackTraceFilter;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,19,mport org.mockito.internal.invocation.Invocation;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,20,mport org.mockito.internal.invocation.InvocationBuilder;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,22,"SuppressWarnings(""unchecked"")"
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,23,ublic class AnswerFactoryTest extends TestBase {
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,25,rivate StackTraceFilterStub filterStub;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,26,rivate AnswerFactory factory;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,28,Before
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,29,ublic void setup() {
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,30,his.filterStub = new StackTraceFilterStub();
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,31,his.factory = new AnswerFactory(filterStub);
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,34,Test
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,35,ublic void shouldCreateReturnResult() throws Throwable {
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,36,"nswer result = factory.createReturningAnswer(""lol"");"
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,37,"ssertEquals(""lol"", result.answer());"
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,40,Test(expected=RuntimeException.class)
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,41,ublic void shouldCreateThrowResult() throws Throwable {
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,42,"actory.createThrowingAnswer(new RuntimeException(), null).answer();"
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,45,Test
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,46,ublic void shouldFilterStackTraceWhenCreatingThrowResult() throws Throwable {
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,47,"nswer result = factory.createThrowingAnswer(new RuntimeException(), null);"
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,48,ry {
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,49,esult.answer();
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,50,ail();
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,51, catch (RuntimeException e) {
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,52,"ssertTrue(Arrays.equals(filterStub.hasStackTrace.getStackTrace(), e.getStackTrace()));"
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,53,"ssertThat(e, hasFirstMethodInStackTrace(""answer""));"
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,57,Test
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,58,ublic void shouldValidateNullThrowable() throws Throwable {
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,59,ry {
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,60,"actory.createThrowingAnswer(null, null);"
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,61,ail();
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,62, catch (MockitoException e) {}
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,65,Test
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,66,ublic void shouldAllowSettingProperCheckedException() throws Throwable {
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,67,"nvocation invocation = new InvocationBuilder().method(""canThrowException"").toInvocation();"
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,68,"actory.createThrowingAnswer(new CharacterCodingException(), invocation);"
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,71,Test(expected=MockitoException.class)
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,72,ublic void shouldValidateCheckedException() throws Throwable {
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,73,"nvocation invocation = new InvocationBuilder().method(""canThrowException"").toInvocation();"
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,74,"actory.createThrowingAnswer(new IOException(), invocation);"
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,77,lass StackTraceFilterStub extends StackTraceFilter {
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,78,asStackTrace hasStackTrace;
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,79,Override public void filterStackTrace(HasStackTrace hasStackTrace) {
+False,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,80,his.hasStackTrace = hasStackTrace;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,2,* Copyright (c) 2007 Mockito contributors
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,3,* This program is made available under the terms of the MIT License.
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,5,package org.mockito.internal.stubbing;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,7,import java.io.IOException;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,8,import java.nio.charset.CharacterCodingException;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,9,import java.util.Arrays;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,11,import org.junit.Before;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,12,import org.junit.Test;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,13,import org.mockito.TestBase;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,14,import org.mockito.exceptions.base.HasStackTrace;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,15,import org.mockito.exceptions.base.MockitoException;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,16,import org.mockito.exceptions.base.StackTraceFilter;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,17,import org.mockito.internal.invocation.Invocation;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,18,import org.mockito.internal.invocation.InvocationBuilder;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,19,import static org.mockito.util.ExtraMatchers.hasFirstMethodInStackTrace;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,21,"@SuppressWarnings(""unchecked"")"
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,22,public class AnswerFactoryTest extends TestBase {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,24,private StackTraceFilterStub filterStub;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,25,private AnswerFactory factory;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,27,@Before
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,28,public void setup() {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,29,this.filterStub = new StackTraceFilterStub();
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,30,this.factory = new AnswerFactory(filterStub);
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,33,@Test
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,34,public void shouldCreateReturnResult() throws Throwable {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,35,"Answer result = factory.createReturningAnswer(""lol"");"
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,36,"assertEquals(""lol"", result.answer(null));"
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,39,@Test(expected = RuntimeException.class)
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,40,public void shouldCreateThrowResult() throws Throwable {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,41,"factory.createThrowingAnswer(new RuntimeException(), null).answer(null);"
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,44,@Test
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,45,public void shouldFilterStackTraceWhenCreatingThrowResult() throws Throwable {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,46,"Answer result = factory.createThrowingAnswer(new RuntimeException(), null);"
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,47,try {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,48,result.answer(null);
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,49,fail();
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,50,} catch (RuntimeException e) {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,51,"assertTrue(Arrays.equals(filterStub.hasStackTrace.getStackTrace(), e.getStackTrace()));"
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,52,"assertThat(e, hasFirstMethodInStackTrace(""answer""));"
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,56,@Test
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,57,public void shouldValidateNullThrowable() throws Throwable {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,58,try {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,59,"factory.createThrowingAnswer(null, null);"
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,60,fail();
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,61,} catch (MockitoException e) {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,65,@Test
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,66,public void shouldAllowSettingProperCheckedException() throws Throwable {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,67,"Invocation invocation = new InvocationBuilder().method(""canThrowException"").toInvocation();"
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,68,"factory.createThrowingAnswer(new CharacterCodingException(), invocation);"
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,71,@Test(expected = MockitoException.class)
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,72,public void shouldValidateCheckedException() throws Throwable {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,73,"Invocation invocation = new InvocationBuilder().method(""canThrowException"").toInvocation();"
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,74,"factory.createThrowingAnswer(new IOException(), invocation);"
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,77,class StackTraceFilterStub extends StackTraceFilter {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,78,HasStackTrace hasStackTrace;
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,80,@Override
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,81,public void filterStackTrace(HasStackTrace hasStackTrace) {
+True,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,test/org/mockito/internal/stubbing/AnswerFactoryTest.java,82,this.hasStackTrace = hasStackTrace;
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,1,package org.mockitousage.stubbing;
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,3,import org.junit.Test;
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,4,import static org.mockito.Mockito.*;
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,5,import org.mockito.MockitoAnnotations.Mock;
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,6,import org.mockito.TestBase;
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,7,import org.mockito.internal.stubbing.Answer;
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,8,import org.mockito.invocation.InvocationOnMock;
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,9,import org.mockitousage.IMethods;
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,11,"@SuppressWarnings(""unchecked"")"
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,12,public class StubbingWithCustomAnswerTest extends TestBase {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,13,@Mock
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,14,private IMethods mock;
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,16,@Test
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,17,public void shouldAnswer() throws Exception {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,18,stub(mock.simpleMethod(anyString())).toAnswer(new Answer<String>() {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,19,public String answer(InvocationOnMock invocation) throws Throwable {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,20,String arg = (String) invocation.getArguments()[0];
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,22,"return invocation.getMethod().getName() + ""-"" + arg;"
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,26,"assertEquals(""simpleMethod-test"", mock.simpleMethod(""test""));"
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,29,@Test
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,30,public void shouldAnswerConsecutively() throws Exception {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,31,stub(mock.simpleMethod())
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,32,.toAnswer(new Answer<String>() {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,33,public String answer(InvocationOnMock invocation) throws Throwable {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,34,return invocation.getMethod().getName();
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,37,".toReturn(""Hello"")"
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,38,.toAnswer(new Answer<String>() {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,39,public String answer(InvocationOnMock invocation) throws Throwable {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,40,"return invocation.getMethod().getName() + ""-1"";"
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,44,"assertEquals(""simpleMethod"", mock.simpleMethod());"
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,45,"assertEquals(""Hello"", mock.simpleMethod());"
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,46,"assertEquals(""simpleMethod-1"", mock.simpleMethod());"
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,47,"assertEquals(""simpleMethod-1"", mock.simpleMethod());"
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,50,@Test
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,51,public void shoudAnswerVoidMethod() throws Exception {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,52,RecordCall recordCall = new RecordCall();
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,54,stubVoid(mock).toAnswer(recordCall).on().voidMethod();
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,56,mock.voidMethod();
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,57,assertTrue(recordCall.isCalled());
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,60,@Test
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,61,public void shouldAnswerVoidMethodConsecutively() throws Exception {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,62,RecordCall call1 = new RecordCall();
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,63,RecordCall call2 = new RecordCall();
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,65,stubVoid(mock).toAnswer(call1)
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,66,.toThrow(new UnsupportedOperationException())
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,67,.toAnswer(call2)
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,68,.on().voidMethod();
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,70,mock.voidMethod();
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,71,assertTrue(call1.isCalled());
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,72,assertFalse(call2.isCalled());
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,74,try {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,75,mock.voidMethod();
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,76,fail();
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,77,} catch (UnsupportedOperationException e) {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,80,mock.voidMethod();
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,81,assertTrue(call2.isCalled());
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,85,private static class RecordCall implements Answer {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,86,private boolean called = false;
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,88,public boolean isCalled() {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,89,return called;
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,92,public Object answer(InvocationOnMock invocation) throws Throwable {
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,93,called = true;
+True,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,test/org/mockitousage/stubbing/StubbingWithCustomAnswerTest.java,94,return null;

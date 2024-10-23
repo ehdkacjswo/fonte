@@ -1,0 +1,92 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,19,import com.google.common.collect.Maps;
+False,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,23,mport java.util.*;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,24,import java.util.Arrays;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,25,import java.util.Map;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,26,import java.util.Set;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,39,* Represents a char that can be used in renaming as well as how often
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,40,* that char appears in the generated code.
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,42,private final class CharPriority implements Comparable<CharPriority>{
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,43,final char name;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,44,int occurance;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,46,// This is a tie-breaker when two chars occurrence count is the same.
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,47,"// When that happens, the 'natural' order prevails."
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,48,final int order;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,49,"CharPriority(char name, int order) {"
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,50,this.name = name;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,51,this.order = order;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,52,this.occurance = 0;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,55,@Override
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,56,public int compareTo(CharPriority other) {
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,57,// Start out by putting the element with more occurance first.
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,58,int result = other.occurance - this.occurance;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,59,if (result != 0) {
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,60,return result;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,62,"// If there is a tie, follow the order of FIRST_CHAR and NONFIRST_CHAR."
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,63,result = this.order - other.order;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,64,return result;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,68,// TODO(user): Maybe we don't need a HashMap to look up.
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,69,// I started writing a skip-list like data-structure that would let us
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,70,// have O(1) favors() and O(1) restartNaming() but the code gotten very messy.
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,71,// Lets start with a logical implementation first until performance becomes
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,72,// a problem.
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,73,"private final Map<Character, CharPriority> priorityLookupMap;"
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,75,// It is important that the ordering of FIRST_CHAR is as close to NONFIRT_CHAR
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,76,// as possible. Using the ASCII ordering is not a good idea. The reason
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,77,// is that we cannot use numbers as FIRST_CHAR yet the ACSII value of numbers
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,78,"// is very small. If we picked numbers first in NONFIRST_CHAR, we would"
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,79,// end up balancing the huffman tree and result is bad compression.
+False,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,47,rivate final char[] firstChars;
+False,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,48,rivate final char[] nonFirstChars;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,93,private final CharPriority[] firstChars;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,94,private final CharPriority[] nonFirstChars;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,111,this.priorityLookupMap = Maps.newHashMapWithExpectedSize(
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,112,NONFIRST_CHAR.length);
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,114,int order = 0;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,115,for (char c : NONFIRST_CHAR) {
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,116,"priorityLookupMap.put(c, new CharPriority(c, order));"
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,117,order++;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,128,* Restart the name generation. Re-calculate how characters are prioritized
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,129,* based on how often the they appear in the final output.
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,131,public void restartNaming() {
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,132,Arrays.sort(firstChars);
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,133,Arrays.sort(nonFirstChars);
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,134,nameCount = 0;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,138,* Increase the prioritization of all the chars in a String. This information
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,139,* is not used until {@link #restartNaming()} is called. A compiler would be
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,140,* able to generate names while changing the prioritization of the name
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,141,* generator for the <b>next</b> pass.
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,143,public void favors(CharSequence sequence) {
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,144,for (int i = 0; i < sequence.length(); i++) {
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,145,priorityLookupMap.get(sequence.charAt(i)).occurance++;
+False,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,79,"tatic char[] reserveCharacters(char[] chars, char[] reservedCharacters) {"
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,156,"CharPriority[] reserveCharacters(char[] chars, char[] reservedCharacters) {"
+False,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,81,eturn chars;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,158,CharPriority[] result = new CharPriority[chars.length];
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,159,for (int i = 0; i < chars.length; i++) {
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,160,result[i] = priorityLookupMap.get(chars[i]);
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,162,return result;
+False,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,87,eturn Chars.toArray(charSet);
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,169,CharPriority[] result = new CharPriority[charSet.size()];
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,170,int index = 0;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,171,for (char c : charSet) {
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,172,result[index++] = priorityLookupMap.get(c);
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,174,return result;
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,182,char[] chars = new char[firstChars.length];
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,183,for (int i = 0; i < chars.length; i++) {
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,184,chars[i] = firstChars[i].name;
+False,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,96,rrays.toString(firstChars));
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,187,Arrays.toString(chars));
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,190,char[] chars = new char[nonFirstChars.length];
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,191,for (int i = 0; i < chars.length; i++) {
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,192,chars[i] = nonFirstChars[i].name;
+False,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,102,rrays.toString(nonFirstChars));
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,197,Arrays.toString(chars));
+False,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,108,"rivate boolean contains(char[] arr, char c) {"
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,203,"private static boolean contains(CharPriority[] arr, char c) {"
+False,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,110,f (arr[i] == c) {
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,205,if (arr[i].name == c) {
+False,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,128,ame += firstChars[pos];
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,223,name += firstChars[pos].name;
+False,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,135,ame += nonFirstChars[pos];
+True,src/com/google/javascript/jscomp/NameGenerator.java,src/com/google/javascript/jscomp/NameGenerator.java,230,name += nonFirstChars[pos].name;

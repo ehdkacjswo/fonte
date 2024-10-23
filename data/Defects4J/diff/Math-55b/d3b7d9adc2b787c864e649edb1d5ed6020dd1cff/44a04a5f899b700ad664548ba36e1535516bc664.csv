@@ -1,0 +1,26 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,716,* Scale a number by 2<sup>scaleFactor</sup>.
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,717,"* <p>If <code>d</code> is 0 or NaN or Infinite, it is returned unchanged.</p>"
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,719,* @param d base number
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,720,* @param scaleFactor power of two by which d sould be multiplied
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,721,* @return d &times; 2<sup>scaleFactor</sup>
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,722,* @since 2.0
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,724,"public static double scalb(final double d, final int scaleFactor) {"
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,726,// handling of some important special cases
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,727,if ((d == 0) || Double.isNaN(d) || Double.isInfinite(d)) {
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,728,return d;
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,731,// split the double in raw components
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,732,final long bits     = Double.doubleToLongBits(d);
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,733,final long exponent = bits & 0x7ff0000000000000L;
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,734,final long rest     = bits & 0x800fffffffffffffL;
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,736,// shift the exponent
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,737,final long newBits = rest | (exponent + (((long) scaleFactor) << 52));
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,738,return Double.longBitsToDouble(newBits);
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,524,public void testScalb() {
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,525,"assertEquals( 0.0, MathUtils.scalb(0.0, 5), 1.0e-15);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,526,"assertEquals(32.0, MathUtils.scalb(1.0, 5), 1.0e-15);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,527,"assertEquals(1.0 / 32.0, MathUtils.scalb(1.0,  -5), 1.0e-15);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,528,"assertEquals(Math.PI, MathUtils.scalb(Math.PI, 0), 1.0e-15);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,529,"assertTrue(Double.isInfinite(MathUtils.scalb(Double.POSITIVE_INFINITY, 1)));"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,530,"assertTrue(Double.isInfinite(MathUtils.scalb(Double.NEGATIVE_INFINITY, 1)));"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,531,"assertTrue(Double.isNaN(MathUtils.scalb(Double.NaN, 1)));"

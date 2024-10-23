@@ -1,0 +1,101 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,24,import com.google.javascript.rhino.Token;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,63,static final DiagnosticType GOOG_CLASS_UNEXPECTED_PARAMS = DiagnosticType.error(
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,64,"""JSC_GOOG_CLASS_UNEXPECTED_PARAMS"","
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,65,"""The call to goog.defineClass has too many arguments."");"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,86,if (n.isCall() && isGoogDefineClass(n)) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,87,if (!validateUsage(n)) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,88,"compiler.report(JSError.make(n, GOOG_CLASS_TARGET_INVALID));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,91,maybeRewriteClassDefinition(n);
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,94,private boolean validateUsage(Node n) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,95,// There are only three valid usage patterns for of goog.defineClass
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,96,//   var x = googDefineClass
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,97,//   ... = googDefineClass
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,98,"//   and within an objectlit, used by the goog.defineClass."
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,99,Node parent = n.getParent();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,100,switch (parent.getType()) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,101,case Token.NAME:
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,102,return true;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,103,case Token.ASSIGN:
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,104,return n == parent.getLastChild() && parent.getParent().isExprResult();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,105,case Token.STRING_KEY:
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,106,return isContainedInGoogDefineClass(parent);
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,108,return false;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,111,private boolean isContainedInGoogDefineClass(Node n) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,112,while (n != null) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,113,n = n.getParent();
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,114,if (n.isCall()) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,115,if (isGoogDefineClass(n)) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,116,return true;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,118,} else if (!n.isObjectLit() && !n.isStringKey()) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,119,break;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,122,return false;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,125,private void maybeRewriteClassDefinition(Node n) {
+False,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,84,"aybeRewriteClassDefinition(t, n, target, value);"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,129,"maybeRewriteClassDefinition(n, target, value);"
+False,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,89,"aybeRewriteClassDefinition(t, n, target, value);"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,134,"maybeRewriteClassDefinition(n, target, value);"
+False,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,94,"odeTraversal t, Node n, Node target, Node value) {"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,139,"Node n, Node target, Node value) {"
+False,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,97,"ompiler.report(t.makeError(n, GOOG_CLASS_TARGET_INVALID));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,142,"compiler.report(JSError.make(n, GOOG_CLASS_TARGET_INVALID));"
+False,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,99,"lassDefinition def = extractClassDefinition(t, target, value);"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,144,"ClassDefinition def = extractClassDefinition(target, value);"
+False,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,149,"odeTraversal t, Node targetName, Node callNode) {"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,194,"Node targetName, Node callNode) {"
+False,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,154,"ompiler.report(t.makeError(callNode, GOOG_CLASS_SUPER_CLASS_NOT_VALID));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,200,"compiler.report(JSError.make(callNode, GOOG_CLASS_SUPER_CLASS_NOT_VALID));"
+False,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,166,"ompiler.report(t.makeError(callNode, GOOG_CLASS_DESCRIPTOR_NOT_VALID));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,212,"compiler.report(JSError.make(callNode, GOOG_CLASS_DESCRIPTOR_NOT_VALID));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,213,return null;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,216,int paramCount = callNode.getChildCount() -1;
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,217,if (paramCount > 3) {
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,218,"compiler.report(JSError.make(callNode, GOOG_CLASS_UNEXPECTED_PARAMS));"
+False,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,173,"ompiler.report(t.makeError(description, GOOG_CLASS_CONSTRUCTOR_MISING));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,225,"compiler.report(JSError.make(description, GOOG_CLASS_CONSTRUCTOR_MISING));"
+False,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,181,"ompiler.report(t.makeError(statics, GOOG_CLASS_STATICS_NOT_VALID));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,233,"compiler.report(JSError.make(statics, GOOG_CLASS_STATICS_NOT_VALID));"
+False,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,190,"ompiler.report(t.makeError(modifiers, GOOG_CLASS_MODIFIERS_NOT_VALID));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,242,"compiler.report(JSError.make(modifiers, GOOG_CLASS_MODIFIERS_NOT_VALID));"
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,359,// Handle inner class definitions.
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,360,maybeRewriteClassDefinition(block.getLastChild());
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,374,// Handle inner class definitions.
+True,src/com/google/javascript/jscomp/ClosureRewriteClass.java,src/com/google/javascript/jscomp/ClosureRewriteClass.java,375,maybeRewriteClassDefinition(block.getLastChild());
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,23,import static com.google.javascript.jscomp.ClosureRewriteClass.GOOG_CLASS_TARGET_INVALID;
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,24,import static com.google.javascript.jscomp.ClosureRewriteClass.GOOG_CLASS_UNEXPECTED_PARAMS;
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,44,@Override
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,45,protected int getNumRepetitions() {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,46,return 1;
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,69,public void testInnerClass1() {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,70,test(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,71,"""var x = goog.defineClass(some.Super, {\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,72,"""  constructor: function(){\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,73,"""    this.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,74,"""  },\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,75,"""  statics: {\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,76,"""    inner: goog.defineClass(x,{\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,77,"""      constructor: function(){\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,78,"""        this.bar = 1;\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,79,"""      }\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,80,"""    })\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,81,"""  }\n"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,85,"""var x=function(){this.foo=1};"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,86,"""goog.inherits(x,some.Super);"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,88,"""x.inner=function(){this.bar=1};"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,89,"""goog.inherits(x.inner,x);"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,235,public void testInvalid6() {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,236,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,237,"""var x = goog.defineClass(null, {"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,238,"""  constructor: function(){}"" +"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,239,"""}, [], null);"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,240,"GOOG_CLASS_UNEXPECTED_PARAMS, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,243,public void testInvalid7() {
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,244,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,245,"""goog.defineClass();"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,246,"GOOG_CLASS_TARGET_INVALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,248,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,249,"""var x = goog.defineClass() || null;"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,250,"GOOG_CLASS_TARGET_INVALID, true);"
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,252,testSame(
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,253,"""({foo: goog.defineClass()});"","
+True,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,test/com/google/javascript/jscomp/ClosureRewriteClassTest.java,254,"GOOG_CLASS_TARGET_INVALID, true);"

@@ -1,0 +1,255 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,2,* Copyright 2012 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,19,import com.google.common.collect.ImmutableList;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,20,import com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,21,import com.google.javascript.jscomp.DefaultPassConfig.HotSwapPassFactory;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,22,import com.google.javascript.jscomp.GlobalVarReferenceMap.GlobalVarRefCleanupPass;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,23,import com.google.javascript.jscomp.Scope.Var;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,24,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,25,import com.google.javascript.rhino.jstype.FunctionType;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,26,import com.google.javascript.rhino.jstype.JSType;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,28,import java.util.List;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,32,* Provides passes that should be run before hot-swap/incremental builds.
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,34,* @author tylerg@google.com (Tyler Goodwin)
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,36,class CleanupPasses extends PassConfig {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,38,private State state;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,40,public CleanupPasses(CompilerOptions options) {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,41,super(options);
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,44,@Override
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,45,protected List<PassFactory> getChecks() {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,46,List<PassFactory> checks = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,47,checks.add(fieldCleanupPassFactory);
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,48,checks.add(scopeCleanupPassFactory);
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,49,checks.add(globalVarRefCleanupPassFactory);
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,50,return checks;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,53,@Override
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,54,State getIntermediateState() {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,55,return state;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,58,@Override
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,59,protected List<PassFactory> getOptimizations() {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,60,return ImmutableList.of();
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,63,@Override
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,64,void setIntermediateState(State state) {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,65,this.state = state;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,68,final PassFactory fieldCleanupPassFactory =
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,69,"new HotSwapPassFactory(""FieldCleaupPassFactory"", false) {"
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,70,@Override
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,71,protected HotSwapCompilerPass createInternal(
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,72,AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,73,return new FieldCleanupPass(compiler);
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,77,final PassFactory scopeCleanupPassFactory =
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,78,"new HotSwapPassFactory(""ScopeCleanupPassFactory"", false) {"
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,79,@Override
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,80,protected HotSwapCompilerPass createInternal(
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,81,AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,82,return new MemoizedScopeCleanupPass(compiler);
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,86,final PassFactory globalVarRefCleanupPassFactory =
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,87,"new HotSwapPassFactory(""GlobalVarRefCleanupPassFactory"", false) {"
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,88,@Override
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,89,protected HotSwapCompilerPass createInternal(
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,90,AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,91,return new GlobalVarRefCleanupPass(compiler);
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,96,* A CleanupPass implementation that will remove stored scopes from the
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,97,* MemoizedScopeCreator of the compiler instance for a the hot swapped script.
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,98,* <p>
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,99,* This pass will also clear out Source Nodes of Function Types declared on
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,100,* Vars tracked by MemoizedScopeCreator
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,102,static class MemoizedScopeCleanupPass implements HotSwapCompilerPass {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,104,private final AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,106,public MemoizedScopeCleanupPass(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,107,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,110,@Override
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,111,"public void hotSwapScript(Node scriptRoot, Node originalRoot) {"
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,112,ScopeCreator creator = compiler.getTypedScopeCreator();
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,113,if (creator instanceof MemoizedScopeCreator) {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,114,MemoizedScopeCreator scopeCreator = (MemoizedScopeCreator) creator;
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,115,String newSrc = scriptRoot.getSourceFileName();
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,116,for (Var var : scopeCreator.getAllSymbols()) {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,117,JSType type = var.getType();
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,118,if (type != null) {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,119,FunctionType fnType = type.toMaybeFunctionType();
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,120,if (fnType != null
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,121,&& newSrc.equals(NodeUtil.getSourceName(fnType.getSource()))) {
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,122,fnType.setSource(null);
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,126,scopeCreator.removeScopesForScript(originalRoot.getSourceFileName());
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,130,@Override
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,131,"public void process(Node externs, Node root) {"
+True,src/com/google/javascript/jscomp/CleanupPasses.java,src/com/google/javascript/jscomp/CleanupPasses.java,132,// MemoizedScopeCleanupPass should not do work during process.
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,38,import com.google.javascript.rhino.Token;
+False,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1129,emoizedScopeCreator getTypedScopeCreator() {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1130,public MemoizedScopeCreator getTypedScopeCreator() {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2278,* Replaces one file in a hot-swap mode. The given JsAst should be made
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2279,* from a new version of a file that already was present in the last compile
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2280,"* call. If the file is new, this will silently ignored."
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2282,* @param ast the ast of the file that is being replaced
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2284,public void replaceScript(JsAst ast) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2285,CompilerInput input = this.getInput(ast.getInputId());
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2286,if (!replaceIncrementalSourceAst(ast)) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2287,return;
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2289,Node originalRoot = input.getAstRoot(this);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2291,"processNewScript(ast, originalRoot);"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2295,* Adds a new Script AST to the compile state. If a script for the same file
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2296,"* already exists the script will not be added, instead a call to"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2297,* #replaceScript should be used.
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2299,* @param ast the ast of the new file
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2301,public void addNewScript(JsAst ast) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2302,if (!addNewSourceAst(ast)) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2303,return;
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2305,Node emptyScript = new Node(Token.SCRIPT);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2306,InputId inputId = ast.getInputId();
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2307,emptyScript.setInputId(inputId);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2308,emptyScript.setStaticSourceFile(
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2309,"JSSourceFile.fromCode(inputId.getIdName(), """"));"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2311,"processNewScript(ast, emptyScript);"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2314,"private void processNewScript(JsAst ast, Node originalRoot) {"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2315,Node js = ast.getAstRoot(this);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2316,Preconditions.checkNotNull(js);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2318,"runHotSwap(originalRoot, js, this.getCleanupPassConfig());"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2319,"// NOTE: If hot swap passes that use GlobalNamespace are added, we will need"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2320,// to revisit this approach to clearing GlobalNamespaces
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2321,"runHotSwapPass(null, null, ensureDefaultPassConfig().garbageCollectChecks);"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2323,this.getTypeRegistry().clearNamedTypes();
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2324,this.removeSyntheticVarsInput();
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2326,"runHotSwap(originalRoot, js, this.ensureDefaultPassConfig());"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2330,* Execute the passes from a PassConfig instance over a single replaced file.
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2332,private void runHotSwap(
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2333,"Node originalRoot, Node js, PassConfig passConfig) {"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2334,for (PassFactory passFactory : passConfig.getChecks()) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2335,"runHotSwapPass(originalRoot, js, passFactory);"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2339,private void runHotSwapPass(
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2340,"Node originalRoot, Node js, PassFactory passFactory) {"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2341,HotSwapCompilerPass pass = passFactory.getHotSwapPass(this);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2342,if (pass != null) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2343,"logger.info(""Performing HotSwap for pass "" + passFactory.getName());"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2344,"pass.hotSwapScript(js, originalRoot);"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2348,private PassConfig getCleanupPassConfig() {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2349,return new CleanupPasses(getOptions());
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2352,private void removeSyntheticVarsInput() {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2353,String sourceName = Compiler.SYNTHETIC_EXTERNS;
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2354,removeExternInput(new InputId(sourceName));
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,2,* Copyright 2011 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,19,import com.google.common.base.Charsets;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,20,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,21,import com.google.common.io.CharStreams;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,22,import com.google.common.io.Files;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,23,import com.google.common.io.InputSupplier;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,25,import java.io.File;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,26,import java.io.IOException;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,27,import java.io.InputStreamReader;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,28,import java.util.HashSet;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,29,import java.util.Set;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,30,import java.util.regex.Pattern;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,33,* An extension of {@code WarningsGuard} that provides functionality to maintain
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,34,* a list of warnings (white-list). It is subclasses' responsibility to decide
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,35,* what to do with the white-list by implementing the {@code level} function.
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,36,* Warnings are defined by the name of the js file and the first line of
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,37,* warnings description.
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,39,* @author anatol@google.com (Anatol Pomazau)
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,40,* @author bashir@google.com (Bashir Sadjad)
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,42,public abstract class WhitelistWarningsGuard extends WarningsGuard {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,43,"/** The set of white-listed warnings, same format as {@code formatWarning}. */"
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,44,private final Set<String> whiteList;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,46,/** Pattern to match line number in error descriptions. */
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,47,"private static final Pattern LINE_NUMBER = Pattern.compile("":\\d+"");"
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,50,* This class depends on an input set that contains the white-list. The format
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,51,* of each white-list string is:
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,52,* <file-name>:  <warning-description>
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,54,* @param whiteList The set of js-warnings that are white-listed. This is
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,55,*     expected to have similar format as {@code formatWarning(JSError)}.
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,57,public WhitelistWarningsGuard(Set<String> whiteList) {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,58,this.whiteList = whiteList;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,62,* Determines whether a given warning is included in the white-list.
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,64,* @param formattedWarning the warning formatted by {@code formatWarning}
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,65,* @return whether the given warning is white-listed or not.
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,67,protected boolean containWarning(String formattedWarning) {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,68,return whiteList.contains(formattedWarning);
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,71,@Override
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,72,public int getPriority() {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,73,return WarningsGuard.Priority.SUPPRESS_BY_WHITELIST.getValue();
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,77,* Loads legacy warnings list from the file. As during development line
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,78,* numbers are changed very often - we just cut it and compare without ones.
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,80,* @return known legacy warnings without line numbers.
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,82,public static Set<String> loadWhitelistedJsWarnings(File file) {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,83,return loadWhitelistedJsWarnings(
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,84,"Files.newReaderSupplier(file, Charsets.UTF_8));"
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,88,* Loads legacy warnings list from the file. As during development line
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,89,* numbers are changed very often - we just cut it and compare without ones.
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,91,* @return known legacy warnings without line numbers.
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,93,protected static Set<String> loadWhitelistedJsWarnings(
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,94,InputSupplier<InputStreamReader> supplier) {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,95,Preconditions.checkNotNull(supplier);
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,97,Set<String> result = new HashSet<String>();
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,99,try {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,100,for (String line : CharStreams.readLines(supplier)) {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,101,line = line.trim();
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,102,if (line.isEmpty() || line.charAt(0) == '#') {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,103,continue;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,106,result.add(line);
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,108,} catch (IOException e) {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,109,throw new RuntimeException(e);
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,112,return result;
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,115,public static String formatWarning(JSError error) {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,116,"return formatWarning(error, false);"
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,119,"public static String formatWarning(JSError error, boolean withLineNumber) {"
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,120,StringBuilder sb = new StringBuilder();
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,121,"sb.append(error.sourceName).append("":"");"
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,122,if (withLineNumber) {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,123,sb.append(error.lineNumber);
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,125,String descriptionFirstLine = getFirstLine(error.description);
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,126,if (!withLineNumber) {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,127,descriptionFirstLine =
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,128,"LINE_NUMBER.matcher(descriptionFirstLine).replaceAll("":"");"
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,130,"sb.append(""  "").append(descriptionFirstLine);"
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,132,return sb.toString();
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,135,public static String getFirstLine(String warning) {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,136,int lineLength = warning.indexOf('\n');
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,137,if (lineLength > 0) {
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,138,"warning = warning.substring(0, lineLength);"
+True,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,src/com/google/javascript/jscomp/WhitelistWarningsGuard.java,140,return warning;
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,2,* Copyright 2012 The Closure Compiler Authors.
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,17,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,19,import junit.framework.TestCase;
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,21,import java.util.List;
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,24,* @author tylerg@google.com (Tyler Goodwin)
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,26,public class CleanupPassesTest extends TestCase {
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,28,private final AbstractCompiler compiler = new Compiler();
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,29,private final CompilerOptions options = new CompilerOptions();
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,31,public void testCleanupPassOrder() {
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,33,CleanupPasses config = new CleanupPasses(options);
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,35,List<PassFactory> checks = config.getChecks();
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,37,"assertTrue(""Pass 0 should be a FieldCleanupPass"","
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,38,checks.get(0).create(compiler) instanceof FieldCleanupPass);
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,41,public void testNoOptimizations() {
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,42,CompilerOptions options = new CompilerOptions();
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,43,CleanupPasses config = new CleanupPasses(options);
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,44,"assertTrue(""Cleanup Passes unexpectedly contain optimization passes"","
+True,test/com/google/javascript/jscomp/CleanupPassesTest.java,test/com/google/javascript/jscomp/CleanupPassesTest.java,45,config.getOptimizations().isEmpty());

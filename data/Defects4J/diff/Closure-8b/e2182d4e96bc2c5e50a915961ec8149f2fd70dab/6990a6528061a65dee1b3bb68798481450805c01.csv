@@ -1,0 +1,43 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,41,import java.util.Iterator;
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,43,import java.util.Map;
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,44,import java.util.Set;
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,67,private boolean replaceProperties;
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,68,private String replacePropertiesPrefix;
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,83,this.replaceProperties = false;
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,84,"this.replacePropertiesPrefix = ""closure.define."";"
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,152,* Set the replacement property prefix.
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,154,public void setReplacePropertiesPrefix(String value) {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,155,this.replacePropertiesPrefix = value;
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,159,* Whether to replace @define lines with properties
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,161,public void setReplaceProperties(boolean value) {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,162,this.replaceProperties = value;
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,264,if (replaceProperties) {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,265,convertPropertiesMap(options);
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,271,private void convertPropertiesMap(CompilerOptions options) {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,272,"Map<String, Object> props = getProject().getProperties();"
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,273,"for (Map.Entry<String, Object> entry : props.entrySet()) {"
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,274,String key = entry.getKey();
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,275,Object value = entry.getValue();
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,277,if (key.startsWith(replacePropertiesPrefix)) {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,278,key = key.substring(replacePropertiesPrefix.length());
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,280,if (value instanceof String) {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,281,"final boolean isTrue = ""true"".equals(value);"
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,282,"final boolean isFalse = ""false"".equals(value);"
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,284,if (isTrue || isFalse) {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,285,"options.setDefineToBooleanLiteral(key, isTrue);"
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,286,} else {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,287,try {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,288,double dblTemp = Double.parseDouble((String) value);
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,289,"options.setDefineToDoubleLiteral(key, dblTemp);"
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,290,} catch (NumberFormatException nfe) {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,291,"// Not a number, assume string"
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,292,"options.setDefineToStringLiteral(key, (String) value);"
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,295,} else if (value instanceof Boolean) {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,296,"options.setDefineToBooleanLiteral(key, (Boolean) value);"
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,297,} else if (value instanceof Integer) {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,298,"options.setDefineToNumberLiteral(key, (Integer) value);"
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,299,} else if (value instanceof Double) {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,300,"options.setDefineToDoubleLiteral(key, (Double) value);"
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,301,} else {
+True,src/com/google/javascript/jscomp/ant/CompileTask.java,src/com/google/javascript/jscomp/ant/CompileTask.java,302,"log(""Unexpected property value for key="" + key + ""; value="" + value);"

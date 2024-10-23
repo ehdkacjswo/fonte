@@ -1,0 +1,34 @@
+VersionUtil: Improve Android memory usage
+
+The Android runtime implements Class.getResourceAsStream() with a very
+memory-intensive cache, which holds the entire contents of the class's
+.jar in memory.
+
+A large Android app that uses Jackson will consume double the memory
+today. Since memory is very tight on most Android devices, this diff
+adds an alternative method to get version info for a package.
+
+In specific, we now generate a class
+com.fasterxml.jackson.core.json.PackageVersion at compile time.  At
+run time, VersionUtil now checks the class's package to see if there's
+a class named 'PackageVersion', and if so, reads its 'VERSION' static
+field for the Version data for the package.  (If not, we still use
+the existing VERSION.txt resource code as a fallback.)
+
+I have separate patches for jackson-databind and
+jackson-datatype-guava; it's easy to apply to other packages as well.
+
+This is a nice performance improvement as well; we no longer incur all
+the overhead of causing the runtime to open and cache the .jar
+(unzipping it, etc.) just to read the VERSION.txt resource.
+
+If the PackageVersion class doesn't exist, we'll of course fall back to the
+existing test to get version info.
+
+I confirmed using the Eclipse Memory Analyzer[1] that memory usage for
+a large app I work on was reduced by about 5 MB with this fix (as well
+as the jackson-databind and jackson-datatype-guava fixes).
+
+Unit tests included.
+
+[1] http://www.eclipse.org/mat/

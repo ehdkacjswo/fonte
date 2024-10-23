@@ -1,0 +1,264 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,487,/ Create symbols for their properties.
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,488,"or (Symbol s : Iterables.concat(types, instances)) {"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,487,"// Create a property scope for each symbol, and populate"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,488,// it with that symbol's properties.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,490,// The order of operations here is significant.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,492,"// When we add properties to Foo, we'll remove Foo.prototype from"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,493,// the symbol table and replace it with a fresh symbol in Foo's
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,494,// property scope. So the symbol for Foo.prototype in
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,495,// {@code instances} will be stale.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,497,"// To prevent this, we always populate {@code instances} before"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,498,// their constructors.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,499,for (Symbol s : instances) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,500,createPropertyScopeFor(s);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,503,for (Symbol s : types) {
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,519,nstanceType =
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,520,(ObjectType) instanceType)
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,521,getOwnerFunction().getInstanceType();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,534,instanceType = instanceType.getOwnerFunction().getInstanceType();
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,545,"opySymbolTo(newProp, s.propertyScope);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,558,"Symbol newSym = copySymbolTo(newProp, s.propertyScope);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,559,if (oldProp != null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,560,newSym.propertyScope = oldProp.propertyScope;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,561,for (Reference ref : oldProp.references.values()) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,562,newSym.defineReferenceAt(ref.getNode());
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,698,eturn parent == null ? null : parent.getSlot(name);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,717,Symbol ancestor = parent == null ? null : parent.getSlot(name);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,718,if (ancestor != null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,719,return ancestor;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,722,int dot = name.lastIndexOf('.');
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,723,if (dot != -1) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,724,"Symbol owner = getSlot(name.substring(0, dot));"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,725,if (owner != null && owner.getPropertyScope() != null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,726,return owner.getPropertyScope().getSlot(name.substring(dot + 1));
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,729,return null;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,72,import com.google.javascript.rhino.jstype.StaticSlot;
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1104,"copeToDeclareIn.declare(variableName + "".prototype"", n,"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1105,"nType.getPrototype(), input,"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1105,"StaticSlot<JSType> prototypeSlot = fnType.getSlot(""prototype"");"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1107,// It's not really important what node we declare the prototype
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1108,// at. It's more important that the Var node is consistent with
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1109,// the node that the type system uses internally.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1110,Node prototypeNode = n;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1111,if (prototypeSlot.getDeclaration() != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1112,prototypeNode = prototypeSlot.getDeclaration().getNode();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1115,"scopeToDeclareIn.declare(variableName + "".prototype"","
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1116,"prototypeNode, prototypeSlot.getType(), input,"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,44,import static com.google.javascript.rhino.jstype.ObjectType.Property;
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,88,"* If non-null, the type must be a PrototypeObjectType."
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,87,rivate PrototypeObjectType prototype;
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,89,rivate SimpleSlot prototypeSlot;
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,90,private Property prototypeSlot;
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,291,f (prototype == null) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,292,if (prototypeSlot == null) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,306,f (prototype == null) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,307,if (prototypeSlot == null) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,312,sNativeObjectType()));
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,313,"isNativeObjectType()),"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,314,null);
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,314,eturn prototype;
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,316,return (ObjectType) prototypeSlot.getType();
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,325,"setPrototypeBasedOn(baseType, null);"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,328,"void setPrototypeBasedOn(ObjectType baseType, Node propertyNode) {"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,348,etPrototype((PrototypeObjectType) baseType);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,354,"setPrototype((PrototypeObjectType) baseType, propertyNode);"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,356,ublic boolean setPrototype(PrototypeObjectType prototype) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,362,"boolean setPrototype(PrototypeObjectType prototype, Node propertyNode) {"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,365,rototypeObjectType oldPrototype = this.prototype;
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,371,PrototypeObjectType oldPrototype = prototypeSlot == null
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,372,? null : (PrototypeObjectType) prototypeSlot.getType();
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,368,his.prototype = prototype;
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,369,"his.prototypeSlot = new SimpleSlot(""prototype"", prototype, true);"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,370,his.prototype.setOwnerFunction(this);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,375,"this.prototypeSlot = new Property(""prototype"", prototype, true,"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,376,propertyNode == null ? source : propertyNode);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,377,prototype.setOwnerFunction(this);
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,558,f (objType.isEquivalentTo(prototype)) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,565,if (prototypeSlot != null &&
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,566,objType.isEquivalentTo(prototypeSlot.getType())) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,561,his.setPrototypeBasedOn(objType);
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,569,"this.setPrototypeBasedOn(objType, propertyNode);"
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,988,f (prototype != null) {
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,989,rototype.clearCachedValues();
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,996,if (prototypeSlot != null) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,997,((PrototypeObjectType) prototypeSlot.getType()).clearCachedValues();
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,1005,eturn prototype != null || super.hasCachedValues();
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,1013,return prototypeSlot != null || super.hasCachedValues();
+False,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,1020,"rototype = (PrototypeObjectType) safeResolve(prototype, t, scope);"
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,1028,if (prototypeSlot != null) {
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,1029,prototypeSlot.setType(
+True,src/com/google/javascript/rhino/jstype/FunctionType.java,src/com/google/javascript/rhino/jstype/FunctionType.java,1030,"(PrototypeObjectType) safeResolve(prototypeSlot.getType(), t, scope));"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,284,BJECT_FUNCTION_TYPE.setPrototype(TOP_LEVEL_PROTOTYPE);
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,284,"OBJECT_FUNCTION_TYPE.setPrototype(TOP_LEVEL_PROTOTYPE, null);"
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,49,import com.google.javascript.rhino.jstype.StaticReference;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,50,import com.google.javascript.rhino.jstype.StaticSlot;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,52,import java.io.Serializable;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,571,static final class Property
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,572,"implements Serializable, StaticSlot<JSType>, StaticReference<JSType> {"
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,573,private static final long serialVersionUID = 1L;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,576,* Property's name.
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,578,private final String name;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,581,* Property's type.
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,583,private JSType type;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,586,* Whether the property's type is inferred.
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,588,private final boolean inferred;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,591,"* The node corresponding to this property, e.g., a GETPROP node that"
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,592,* declares this property.
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,594,private final Node propertyNode;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,596,/**  The JSDocInfo for this property. */
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,597,private JSDocInfo docInfo = null;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,599,"Property(String name, JSType type, boolean inferred,"
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,600,Node propertyNode) {
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,601,this.name = name;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,602,this.type = type;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,603,this.inferred = inferred;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,604,this.propertyNode = propertyNode;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,607,@Override
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,608,public String getName() {
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,609,return name;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,612,@Override
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,613,public Node getNode() {
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,614,return propertyNode;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,617,@Override
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,618,public StaticSourceFile getSourceFile() {
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,619,return propertyNode == null ? null : propertyNode.getStaticSourceFile();
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,622,@Override
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,623,public Property getSymbol() {
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,624,return this;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,627,@Override
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,628,public Property getDeclaration() {
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,629,return propertyNode == null ? null : this;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,632,@Override
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,633,public JSType getType() {
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,634,return type;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,637,@Override
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,638,public boolean isTypeInferred() {
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,639,return inferred;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,642,boolean isFromExterns() {
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,643,return propertyNode == null ? false : propertyNode.isFromExterns();
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,646,void setType(JSType type) {
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,647,this.type = type;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,650,JSDocInfo getJSDocInfo() {
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,651,return this.docInfo;
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,654,void setJSDocInfo(JSDocInfo info) {
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,655,this.docInfo = info;
+True,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,43,import static com.google.javascript.rhino.jstype.ObjectType.Property;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,52,mport java.io.Serializable;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,247,ewProp.docInfo = oldProp.docInfo;
+True,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,247,newProp.setJSDocInfo(oldProp.getJSDocInfo());
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,262,eturn p.propertyNode;
+True,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,262,return p.getNode();
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,275,eturn p.docInfo;
+True,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,275,return p.getJSDocInfo();
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,295,roperty.docInfo = info;
+True,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,295,property.setJSDocInfo(info);
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,502,rivate static final class Property
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,503,"mplements Serializable, StaticSlot<JSType>, StaticReference<JSType> {"
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,504,rivate static final long serialVersionUID = 1L;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,507, Property's name.
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,509,rivate String name;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,512, Property's type.
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,514,rivate JSType type;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,517, Whether the property's type is inferred.
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,519,rivate final boolean inferred;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,522," The node corresponding to this property, e.g., a GETPROP node that"
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,523, declares this property.
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,525,rivate final Node propertyNode;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,527,**  The JSDocInfo for this property. */
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,528,rivate JSDocInfo docInfo = null;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,530,"rivate Property(String name, JSType type, boolean inferred,"
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,531,ode propertyNode) {
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,532,his.name = name;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,533,his.type = type;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,534,his.inferred = inferred;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,535,his.propertyNode = propertyNode;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,538,Override
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,539,ublic String getName() {
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,540,eturn name;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,543,Override
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,544,ublic Node getNode() {
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,545,eturn propertyNode;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,548,Override
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,549,ublic StaticSourceFile getSourceFile() {
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,550,eturn propertyNode == null ? null : propertyNode.getStaticSourceFile();
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,553,Override
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,554,ublic Property getSymbol() {
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,555,eturn this;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,558,Override
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,559,ublic Property getDeclaration() {
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,560,eturn propertyNode == null ? null : this;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,563,Override
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,564,ublic JSType getType() {
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,565,eturn type;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,568,Override
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,569,ublic boolean isTypeInferred() {
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,570,eturn inferred;
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,573,oolean isFromExterns() {
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,574,eturn propertyNode == null ? false : propertyNode.isFromExterns();
+False,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,623,"rop.type = safeResolve(prop.type, t, scope);"
+True,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,src/com/google/javascript/rhino/jstype/PrototypeObjectType.java,547,"prop.setType(safeResolve(prop.getType(), t, scope));"
+True,src/com/google/javascript/rhino/jstype/SimpleSlot.java,src/com/google/javascript/rhino/jstype/SimpleSlot.java,50,private static final long serialVersionUID = 1L;
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,137,ssertNull(domHelperNamespacedMethod);
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,137,"assertEquals(""method"", domHelperNamespacedMethod.getName());"
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,197,ublic void testPrototypeSymbol() throws Exception {
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,198,ymbolTable table = createSymbolTable(
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,199,"/** @constructor */ function Foo() {}"");"
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,200,"ymbol fooPrototype = getGlobalVar(table, ""Foo.prototype"");"
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,201,ssertNotNull(fooPrototype);
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,202,"ssertEquals(1, Iterables.size(table.getReferences(fooPrototype)));"
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,250,"etGlobalVar(table, ""DomHelper.prototype"")"
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,251,"getPropertyScope().getSlot(""method"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,242,"getGlobalVar(table, ""DomHelper.prototype.method"");"
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,264,ymbol field =
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,265,"etGlobalVar(table, ""DomHelper.prototype"")"
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,266,"getPropertyScope().getSlot(""field"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,255,"Symbol field = getGlobalVar(table, ""DomHelper.prototype.field"");"
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,281,ymbol field =
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,282,"etGlobalVar(table, ""DomHelper.prototype"")"
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,283,"getPropertyScope().getSlot(""field"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,270,"Symbol field = getGlobalVar(table, ""DomHelper.prototype.field"");"
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,298,"ssertEquals(2, refs.size());"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,285,"assertEquals(refs.toString(), 2, refs.size());"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,298,"assertEquals(2, refs.size());"
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,312,/ TODO(nicksantos): This is a bug and should be fixed.
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,313,/ It has to do with some weirdness with how prototypes are handled
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,314,/ in our type system.
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,301,public void testPrototypeReferences3() throws Exception {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,302,SymbolTable table = createSymbolTable(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,303,"""/** @constructor */ function Foo() {}"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,304,"Symbol fooPrototype = getGlobalVar(table, ""Foo.prototype"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,305,assertNotNull(fooPrototype);
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,307,List<Reference> refs = Lists.newArrayList(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,308,table.getReferences(fooPrototype));
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,310,"assertEquals(Token.FUNCTION, refs.get(0).getNode().getType());"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,313,public void testPrototypeReferences4() throws Exception {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,314,SymbolTable table = createSymbolTable(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,315,"""/** @constructor */ function Foo() {}"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,316,"""Foo.prototype = {bar: 3}"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,317,"Symbol fooPrototype = getGlobalVar(table, ""Foo.prototype"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,318,assertNotNull(fooPrototype);
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,320,List<Reference> refs = Lists.newArrayList(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,321,table.getReferences(fooPrototype));
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,322,"assertEquals(1, refs.size());"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,323,"assertEquals(Token.GETPROP, refs.get(0).getNode().getType());"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,324,"assertEquals(""Foo.prototype"", refs.get(0).getNode().getQualifiedName());"
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,319,or (Symbol symbol : table.getAllSymbols()) {
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,320,f (symbol.getName().equals(name) &&
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,321,able.getScope(symbol).getParentScope() == null) {
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,322,eturn symbol;
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,325,eturn null;
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,328,return table.getGlobalScope().getSlot(name);
+False,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,363,eturn compiler.buildKnownSymbolTable();
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,366,return assertSymbolTableValid(compiler.buildKnownSymbolTable());
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,370,* Asserts that the symbol table meets some invariants.
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,371,* Returns the same table for easy chaining.
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,373,private SymbolTable assertSymbolTableValid(SymbolTable table) {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,374,for (Symbol sym : table.getAllSymbols()) {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,375,// Make sure that grabbing the symbol's scope and looking it up
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,376,// again produces the same symbol.
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,377,"assertEquals(sym, table.getScope(sym).getSlot(sym.getName()));"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,379,for (Reference ref : table.getReferences(sym)) {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,380,// Make sure that the symbol and reference are mutually linked.
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,381,"assertEquals(sym, ref.getSymbol());"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,385,return table;

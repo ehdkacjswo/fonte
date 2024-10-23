@@ -1,0 +1,31 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,542,"public void cannotInitializeForInjectMocksAnnotation(String fieldName, Exception details) {"
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,543,"throw new MockitoException(join(""Cannot instianate @InjectMocks field named '"" + fieldName + ""'."","
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,544,"""You haven't provided the instance for spying at field declaration so I tried to construct the instance."","
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,545,"""However, I failed because: "" + details.getMessage(),"
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,546,"""Examples of correct usage of @InjectMocks:"","
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,547,"""   @InjectMocks Service service = new Service();"","
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,548,"""   @InjectMocks Service service; //only if Service has parameterless constructor"","
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,549,"""   //also, don't forget about MockitoAnnotations.initMocks();"","
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,550,"""   //and... don't forget about some @Mocks for injection :)"","
+True,src/org/mockito/exceptions/Reporter.java,src/org/mockito/exceptions/Reporter.java,551,"""""), details);"
+True,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,7,import org.mockito.exceptions.Reporter;
+False,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,35,"bject fieldInstance = new FieldInitializer(testClass, field).initialize();"
+True,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,36,Object fieldInstance = null;
+True,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,37,try {
+True,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,38,"fieldInstance = new FieldInitializer(testClass, field).initialize();"
+True,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,39,} catch (MockitoException e) {
+True,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,src/org/mockito/internal/configuration/DefaultInjectionEngine.java,40,"new Reporter().cannotInitializeForInjectMocksAnnotation(field.getName(), e);"
+True,test/org/mockitousage/annotation/MockInjectionTest.java,test/org/mockitousage/annotation/MockInjectionTest.java,13,import org.mockito.exceptions.base.MockitoException;
+True,test/org/mockitousage/annotation/MockInjectionTest.java,test/org/mockitousage/annotation/MockInjectionTest.java,111,@Test
+True,test/org/mockitousage/annotation/MockInjectionTest.java,test/org/mockitousage/annotation/MockInjectionTest.java,112,public void shouldReportNicely() throws Exception {
+True,test/org/mockitousage/annotation/MockInjectionTest.java,test/org/mockitousage/annotation/MockInjectionTest.java,113,Object failing = new Object() {
+True,test/org/mockitousage/annotation/MockInjectionTest.java,test/org/mockitousage/annotation/MockInjectionTest.java,114,@InjectMocks
+True,test/org/mockitousage/annotation/MockInjectionTest.java,test/org/mockitousage/annotation/MockInjectionTest.java,115,ThrowingConstructor c;
+True,test/org/mockitousage/annotation/MockInjectionTest.java,test/org/mockitousage/annotation/MockInjectionTest.java,117,try {
+True,test/org/mockitousage/annotation/MockInjectionTest.java,test/org/mockitousage/annotation/MockInjectionTest.java,118,MockitoAnnotations.initMocks(failing);
+True,test/org/mockitousage/annotation/MockInjectionTest.java,test/org/mockitousage/annotation/MockInjectionTest.java,119,fail();
+True,test/org/mockitousage/annotation/MockInjectionTest.java,test/org/mockitousage/annotation/MockInjectionTest.java,120,} catch (MockitoException e) {
+True,test/org/mockitousage/annotation/MockInjectionTest.java,test/org/mockitousage/annotation/MockInjectionTest.java,121,"assertContains(""correct usage of @InjectMocks"", e.getMessage());"
+True,test/org/mockitousage/annotation/MockInjectionTest.java,test/org/mockitousage/annotation/MockInjectionTest.java,125,static class ThrowingConstructor {
+True,test/org/mockitousage/annotation/MockInjectionTest.java,test/org/mockitousage/annotation/MockInjectionTest.java,126,"ThrowingConstructor() { throw new RuntimeException(""aha"");};"

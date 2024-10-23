@@ -1,0 +1,257 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,2,* Copyright 2004 Google Inc.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,19,import com.google.common.collect.ImmutableList;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,20,import com.google.common.collect.Iterables;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,21,import com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,22,import com.google.common.collect.Sets;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,23,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,25,import java.io.IOException;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,26,import java.util.Collection;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,27,import java.util.List;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,31,"* Extracts messages and message comments from JS code, and writes them to a"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,32,"* properties file, an XMB file, or an XLB, to facilitate translation."
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,34,* <p> Uses a special prefix (e.g. {@code MSG_}) to determine which variables
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,35,* are messages. Here are the recognized formats:
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,37,*   <code>
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,38,"*   var MSG_FOO = ""foo"";"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,39,"*   var MSG_FOO_HELP = ""this message is used for foo"";"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,40,*   </code>
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,42,*   <code>
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,43,"*   var MSG_BAR = function(a, b) {"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,44,"*     return a + "" bar "" + b;"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,46,"*   var MSG_BAR_HELP = ""the bar message"";"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,47,*   </code>
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,49,* <p>This class enforces the policy that message variable names must be unique
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,50,* across all JS files.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,55,public class JsMessageExtractor {
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,57,private final JsMessage.Style style;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,58,private final JsMessage.IdGenerator idGenerator;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,60,"public JsMessageExtractor(JsMessage.IdGenerator idGenerator,"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,61,JsMessage.Style style) {
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,62,this.idGenerator = idGenerator;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,63,this.style = style;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,67,* Visitor that collects messages.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,69,private class ExtractMessagesVisitor extends JsMessageVisitor {
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,70,// We use List here as we want to preserve insertion-order for found
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,71,// messages.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,72,// Take into account that messages with the same id could be present in the
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,73,// result list. Message could have the same id only in case if they are
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,74,// unnamed and have the same text but located in different source files.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,75,private final List<JsMessage> messages = Lists.newLinkedList();
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,77,private ExtractMessagesVisitor(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,78,"super(compiler, true, style, idGenerator);"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,81,@Override
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,82,"protected void processJsMessage(JsMessage message,"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,83,JsMessageDefinition definition) {
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,84,if (!message.isExternal()) {
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,85,messages.add(message);
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,90,* Returns extracted messages.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,92,* @return collection of JsMessage objects that was found in js sources.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,94,public Collection<JsMessage> getMessages() {
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,95,return messages;
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,100,* Extracts js messages from javascript code.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,102,public Collection<JsMessage> extractMessages(JSSourceFile... inputs)
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,103,throws IOException {
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,104,return extractMessages(ImmutableList.copyOf(inputs));
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,109,* Extracts js messages from javascript code.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,111,* @param inputs  the javascript source code inputs
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,112,* @return the extracted messages collection
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,113,* @throws IOException if there is a problem reading the js code
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,114,* @throws RuntimeException if there are problems parsing the js code or the
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,115,"*     js messages, or if two messages have the same key"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,117,public Collection<JsMessage> extractMessages(
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,118,Iterable<JSSourceFile> inputs) throws IOException {
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,120,Compiler compiler = new Compiler();
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,121,compiler.init(
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,122,"new JSSourceFile[] {},"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,123,"Iterables.toArray(inputs, JSSourceFile.class),"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,124,new CompilerOptions());
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,126,ExtractMessagesVisitor extractCompilerPass =
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,127,new ExtractMessagesVisitor(compiler);
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,128,for (JSSourceFile input : inputs) {
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,129,"// Parse the js files individually, to prevent out-of-memory"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,130,// problems.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,131,Node root = new JsAst(input).getAstRoot(compiler);
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,133,// Traverse the returned nodes and extract messages.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,134,"extractCompilerPass.process(null, root);"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,137,JSError[] errors = compiler.getErrors();
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,138,// Check for errors.
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,139,if (errors.length > 0) {
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,140,"StringBuilder msg = new StringBuilder(""JSCompiler errors\n"");"
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,141,MessageFormatter formatter = new LightweightMessageFormatter(compiler);
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,142,for (JSError e : errors) {
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,143,msg.append(formatter.formatError(e));
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,145,throw new RuntimeException(msg.toString());
+True,src/com/google/javascript/jscomp/JsMessageExtractor.java,src/com/google/javascript/jscomp/JsMessageExtractor.java,148,return extractCompilerPass.getMessages();
+False,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,527,/ TODO(user) Mark line number of paren correctly.
+True,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,527,// TODO(bowdidge) Mark line number of paren correctly.
+False,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,542,/ TODO(user): Mark line number of paren correctly.
+True,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,542,// TODO(bowdidge): Mark line number of paren correctly.
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,2,* Copyright 2004 Google Inc.
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,17,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,19,import static com.google.javascript.jscomp.JsMessage.Style.RELAX;
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,21,import com.google.common.base.Joiner;
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,23,import junit.framework.TestCase;
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,25,import java.io.IOException;
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,26,import java.util.Collection;
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,27,import java.util.Iterator;
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,30,* Unit test for {@link JsMessageExtractor}.
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,34,public class JsMessageExtractorTest extends TestCase {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,36,private Collection<JsMessage> extractMessages(String... js) {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,37,try {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,38,"String sourceCode = Joiner.on(""\n"").join(js);"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,39,"return new JsMessageExtractor(null, RELAX)"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,40,".extractMessages(JSSourceFile.fromCode(""testcode"", sourceCode));"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,41,} catch (IOException e) {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,42,fail(e.getMessage());
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,43,return null;
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,47,private JsMessage extractMessage(String... js) {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,48,Collection<JsMessage> messages = extractMessages(js);
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,49,"assertEquals(1, messages.size());"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,50,return messages.iterator().next();
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,53,public void testSyntaxError1() {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,54,try {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,55,"extractMessage(""if (true) {}}"");"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,56,"fail(""Expected exception"");"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,57,} catch (RuntimeException e) {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,58,"assertEquals(""JSCompiler errors\n"" +"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,59,"""testcode:1: ERROR - Parse error. syntax error\n"", e.getMessage());"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,63,public void testSyntaxError2() {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,64,try {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,65,"extractMessage("""", ""if (true) {}}"");"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,66,"fail(""Expected exception"");"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,67,} catch (RuntimeException e) {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,68,"assertEquals(""JSCompiler errors\n"" +"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,69,"""testcode:2: ERROR - Parse error. syntax error\n"", e.getMessage());"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,73,public void testExtractNewStyleMessage1() {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,74,// A simple message with no description.
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,75,assertEquals(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,76,"new JsMessage.Builder(""MSG_SILLY"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,77,".appendStringPart(""silly test message"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,78,".build(),"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,79,"extractMessage(""var MSG_SILLY = goog.getMsg('silly test message');""));"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,82,public void testExtractNewStyleMessage2() {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,83,// A message with placeholders and meta data.
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,84,assertEquals(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,85,"new JsMessage.Builder(""MSG_WELCOME"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,86,".appendStringPart(""Hi "")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,87,".appendPlaceholderReference(""userName"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,88,".appendStringPart(""! Welcome to "")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,89,".appendPlaceholderReference(""product"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,90,".appendStringPart(""."")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,91,".setDesc(""The welcome message."")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,92,.setIsHidden(true)
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,93,".build(),"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,94,extractMessage(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,96,""" * @desc The welcome"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,97,""" *   message."","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,99,""" * @hidden"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,101,"""var MSG_WELCOME = goog.getMsg("","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,102,"""    'Hi {$userName}! Welcome to {$product}.',"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,103,"""    {userName: someUserName, product: getProductName()});""));"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,106,public void testExtractOldStyleMessage1() {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,107,// Description before the message.
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,108,assertEquals(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,109,"new JsMessage.Builder(""MSG_SILLY"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,110,".appendStringPart(""silly test message"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,111,".setDesc(""Description."")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,112,".build(),"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,113,extractMessage(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,114,"""var MSG_SILLY_HELP = 'Description.';"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,115,"""var MSG_SILLY = 'silly test message';""));"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,118,public void testExtractOldStyleMessage2() {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,119,"// Description after the message, broken into parts."
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,120,assertEquals(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,121,"new JsMessage.Builder(""MSG_SILLY"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,122,".appendStringPart(""silly test message"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,123,".setDesc(""Description."")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,124,".build(),"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,125,extractMessage(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,126,"""var MSG_SILLY = 'silly test message';"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,127,"""var MSG_SILLY_HELP = 'Descrip' + 'tion.';""));"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,130,public void testExtractOldStyleMessage3() {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,131,// Function-style message with two placeholders and no description.
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,132,assertEquals(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,133,"new JsMessage.Builder(""MSG_SILLY"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,134,".appendPlaceholderReference(""one"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,135,".appendStringPart("", "")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,136,".appendPlaceholderReference(""two"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,137,".appendStringPart("", buckle my shoe"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,138,".build(),"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,139,extractMessage(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,140,"""var MSG_SILLY = function(one, two) {"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,141,"""  return one + ', ' + two + ', buckle my shoe';"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,145,public void testExtractMixedMessages() {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,146,"// Several mixed-style messages in succession, one containing newlines."
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,147,Iterator<JsMessage> msgs = extractMessages(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,148,"""var MSG_MONEY = function(amount) {"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,149,"""  return 'You owe $' + amount +"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,150,"""         ' to the credit card company.';"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,152,"""var MSG_TIME = goog.getMsg('You need to finish your work in ' +"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,153,"""                           '{$duration} hours.', {'duration': d});"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,154,"""var MSG_NAG = 'Clean your room.\\n\\nWash your clothes.';"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,155,"""var MSG_NAG_HELP = 'Just some ' +"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,156,"""                   'nags.';"").iterator();"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,158,assertEquals(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,159,"new JsMessage.Builder(""MSG_MONEY"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,160,".appendStringPart(""You owe $"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,161,".appendPlaceholderReference(""amount"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,162,".appendStringPart("" to the credit card company."")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,163,".build(),"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,164,msgs.next());
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,165,assertEquals(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,166,"new JsMessage.Builder(""MSG_TIME"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,167,".appendStringPart(""You need to finish your work in "")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,168,".appendPlaceholderReference(""duration"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,169,".appendStringPart("" hours."")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,170,".build(),"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,171,msgs.next());
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,172,assertEquals(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,173,"new JsMessage.Builder(""MSG_NAG"")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,174,".appendStringPart(""Clean your room.\n\nWash your clothes."")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,175,".setDesc(""Just some nags."")"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,176,".build(),"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,177,msgs.next());
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,180,public void testDuplicateUnnamedVariables() {
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,181,// Make sure that duplicate unnamed variables don't get swallowed when using
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,182,// a Google-specific ID generator.
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,183,Collection<JsMessage> msgs = extractMessages(
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,184,"""function a() {"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,185,"""  var MSG_UNNAMED_2 = goog.getMsg('foo');"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,187,"""function b() {"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,188,"""  var MSG_UNNAMED_2 = goog.getMsg('bar');"","
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,191,"assertEquals(2, msgs.size());"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,192,final Iterator<JsMessage> iter = msgs.iterator();
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,193,"assertEquals(""foo"", iter.next().toString());"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,194,"assertEquals(""bar"", iter.next().toString());"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,197,"private void assertEquals(JsMessage expected, JsMessage actual) {"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,198,"assertEquals(expected.getKey(), actual.getKey());"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,199,"assertEquals(expected.parts(), actual.parts());"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,200,"assertEquals(expected.placeholders(), actual.placeholders());"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,201,"assertEquals(expected.getDesc(), actual.getDesc());"
+True,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,test/com/google/javascript/jscomp/JsMessageExtractorTest.java,202,"assertEquals(expected.isHidden(), actual.isHidden());"
+False,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,491,/ TODO(user) Incorrectly gets charno position when EmptyExpression
+True,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,491,// TODO(bowdidge) Incorrectly gets charno position when EmptyExpression
+False,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,930,/ TODO(user) New Rhino doesn't keep the position of the dot handy.
+True,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,930,// TODO(bowdidge) New Rhino doesn't keep the position of the dot handy.
+False,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,952,/ TODO(user) New Rhino doesn't keep track of the position of the dot.
+True,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,952,// TODO(bowdidge) New Rhino doesn't keep track of the position of the dot.

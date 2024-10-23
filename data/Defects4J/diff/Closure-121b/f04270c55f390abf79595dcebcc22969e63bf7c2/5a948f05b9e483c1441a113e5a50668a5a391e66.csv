@@ -1,0 +1,443 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,2,* Copyright 2008 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,17,package com.google.javascript.jscomp.deps;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,19,import com.google.common.base.Function;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,20,import com.google.common.base.Joiner;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,21,import com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,22,import com.google.common.collect.Maps;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,23,import com.google.common.collect.Multimap;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,24,import com.google.common.collect.Multimaps;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,25,import com.google.common.collect.Sets;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,26,import com.google.javascript.jscomp.CheckLevel;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,27,import com.google.javascript.jscomp.DiagnosticType;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,28,import com.google.javascript.jscomp.ErrorManager;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,29,import com.google.javascript.jscomp.JSError;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,30,import com.google.javascript.jscomp.SourceFile;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,32,import java.io.ByteArrayOutputStream;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,33,import java.io.File;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,34,import java.io.IOException;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,35,import java.io.PrintStream;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,36,import java.util.Arrays;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,37,import java.util.Collection;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,38,import java.util.List;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,39,import java.util.Map;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,40,import java.util.Set;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,41,import java.util.logging.Logger;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,44,* Generates deps.js files by scanning javascript files for
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,45,"* calls to goog.provide(), goog.require() and goog.addDependency()."
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,47,* @author agrieve@google.com (Andrew Grieve)
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,49,public class DepsGenerator {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,51,enum InclusionStrategy {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,52,"ALWAYS,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,53,"WHEN_IN_SRCS,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,54,DO_NOT_DUPLICATE
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,57,private static Logger logger =
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,58,Logger.getLogger(DepsGenerator.class.getName());
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,60,// See the Flags in MakeJsDeps for descriptions of these.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,61,private final Collection<SourceFile> srcs;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,62,private final Collection<SourceFile> deps;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,63,private final String closurePathAbs;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,64,private final InclusionStrategy mergeStrategy;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,65,final ErrorManager errorManager;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,67,static final DiagnosticType SAME_FILE_WARNING = DiagnosticType.warning(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,68,"""DEPS_SAME_FILE"","
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,69,"""Namespace \""{0}\"" is both required and provided in the same file."");"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,71,static final DiagnosticType NEVER_PROVIDED_ERROR = DiagnosticType.error(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,72,"""DEPS_NEVER_PROVIDED"","
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,73,"""Namespace \""{0}\"" is required but never provided."");"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,75,static final DiagnosticType DUPE_PROVIDES_WARNING = DiagnosticType.warning(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,76,"""DEPS_DUPE_PROVIDES"","
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,77,"""Multiple calls to goog.provide(\""{0}\"")"");"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,79,static final DiagnosticType MULTIPLE_PROVIDES_ERROR = DiagnosticType.error(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,80,"""DEPS_DUPE_PROVIDES"","
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,81,"""Namespace \""{0}\"" is already provided in other file {1}"");"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,83,static final DiagnosticType DUPE_REQUIRE_WARNING = DiagnosticType.warning(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,84,"""DEPS_DUPE_REQUIRES"","
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,85,"""Namespace \""{0}\"" is required multiple times"");"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,87,static final DiagnosticType NO_DEPS_WARNING = DiagnosticType.warning(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,88,"""DEPS_NO_DEPS"","
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,89,"""No dependencies found in file"");"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,92,* Creates a new DepsGenerator.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,94,public DepsGenerator(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,95,"Collection<SourceFile> deps,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,96,"Collection<SourceFile> srcs,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,97,"InclusionStrategy mergeStrategy,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,98,"String closurePathAbs,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,99,ErrorManager errorManager) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,100,this.deps = deps;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,101,this.srcs = srcs;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,102,this.mergeStrategy = mergeStrategy;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,103,this.closurePathAbs = closurePathAbs;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,104,this.errorManager = errorManager;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,108,* Performs the parsing inputs and writing of outputs.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,109,* @throws IOException Occurs upon an IO error.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,110,* @return Returns a String of goog.addDependency calls that will build
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,111,*     the dependency graph. Returns null if there was an error.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,113,public String computeDependencyCalls() throws IOException {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,114,// Build a map of closure-relative path -> DepInfo.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,115,"Map<String, DependencyInfo> depsFiles = parseDepsFiles();"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,116,"logger.fine(""preparsedFiles: "" + depsFiles);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,118,// Find all goog.provides & goog.requires in src files
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,119,"Map<String, DependencyInfo> jsFiles = parseSources(depsFiles.keySet());"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,121,// Check if there were any parse errors.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,122,if (errorManager.getErrorCount() > 0) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,123,return null;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,126,"cleanUpDuplicatedFiles(depsFiles, jsFiles);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,128,// Check for missing provides or other semantic inconsistencies.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,129,"validateDependencies(depsFiles.values(), jsFiles.values());"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,131,if (errorManager.getErrorCount() > 0) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,132,return null;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,135,ByteArrayOutputStream output = new ByteArrayOutputStream();
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,136,"writeDepsContent(depsFiles, jsFiles, new PrintStream(output));"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,137,return new String(output.toByteArray());
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,141,* Removes duplicated depsInfo from jsFiles if this info already present in
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,142,* some of the parsed deps.js
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,144,* @param depsFiles DepsInfo from deps.js dependencies
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,145,* @param jsFiles DepsInfo from some of jsSources
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,147,"protected void cleanUpDuplicatedFiles(Map<String, DependencyInfo> depsFiles,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,148,"Map<String, DependencyInfo> jsFiles) {"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,149,Set<String> depsPathsCopy = Sets.newHashSet(depsFiles.keySet());
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,150,for (String path : depsPathsCopy) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,151,if (mergeStrategy != InclusionStrategy.WHEN_IN_SRCS) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,152,jsFiles.remove(path);
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,156,for (String path : jsFiles.keySet()) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,157,"// If a generated file appears in both the jsFiles and in depsFiles, then"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,158,// remove it from depsFiles in order to get the full path the generated
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,159,// file.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,160,depsFiles.remove(path);
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,165,* Reports if there are any dependency problems with the given dependency
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,166,* information. Reported problems include:
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,167,*     - A namespace being provided more than once
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,168,*     - A namespace being required multiple times from within one file
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,169,*     - A namespace being provided and required in the same file
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,170,*     - A namespace being required that is never provided
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,171,* @param preparsedFileDepedencies Dependency information from existing
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,172,*     deps.js files.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,173,* @param parsedFileDependencies Dependency information from parsed .js files.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,175,"private void validateDependencies(Iterable<DependencyInfo> preparsedFileDepedencies,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,176,Iterable<DependencyInfo> parsedFileDependencies) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,177,// Create a map of namespace -> file providing it.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,178,// Also report any duplicate provides.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,179,"Map<String, DependencyInfo> providesMap = Maps.newHashMap();"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,180,"addToProvideMap(preparsedFileDepedencies, providesMap);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,181,"addToProvideMap(parsedFileDependencies, providesMap);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,182,// For each require in the parsed sources:
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,183,for (DependencyInfo depInfo : parsedFileDependencies) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,184,List<String> requires = Lists.newArrayList(depInfo.getRequires());
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,185,"for (int i = 0, l = requires.size(); i < l; ++i) {"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,186,String namespace = requires.get(i);
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,187,// Check for multiple requires.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,188,"if (requires.subList(i + 1, l).contains(namespace)) {"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,189,"reportDuplicateRequire(namespace, depInfo);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,191,// Check for missing provides.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,192,DependencyInfo provider = providesMap.get(namespace);
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,193,if (provider == null) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,194,"reportUndefinedNamespace(namespace, depInfo);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,195,} else if (provider == depInfo) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,196,"reportSameFile(namespace, depInfo);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,202,"private void reportSameFile(String namespace, DependencyInfo depInfo) {"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,203,"errorManager.report(CheckLevel.WARNING,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,204,"JSError.make(depInfo.getName(), -1, -1,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,205,"SAME_FILE_WARNING, namespace));"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,208,private void reportUndefinedNamespace(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,209,"String namespace, DependencyInfo depInfo) {"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,210,"errorManager.report(CheckLevel.ERROR,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,211,"JSError.make(depInfo.getName(), -1, -1,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,212,"NEVER_PROVIDED_ERROR, namespace));"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,215,"private void reportDuplicateProvide(String namespace, DependencyInfo firstDep,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,216,DependencyInfo secondDep) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,217,if (firstDep == secondDep) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,218,"errorManager.report(CheckLevel.WARNING,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,219,"JSError.make(firstDep.getName(), -1, -1,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,220,"DUPE_PROVIDES_WARNING, namespace));"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,221,} else {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,222,"errorManager.report(CheckLevel.ERROR,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,223,"JSError.make(secondDep.getName(), -1, -1,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,224,"MULTIPLE_PROVIDES_ERROR, namespace, firstDep.getName()));"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,228,private void reportDuplicateRequire(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,229,"String namespace, DependencyInfo depInfo) {"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,230,"errorManager.report(CheckLevel.WARNING,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,231,"JSError.make(depInfo.getName(), -1, -1,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,232,"DUPE_REQUIRE_WARNING, namespace));"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,235,private void reportNoDepsInDepsFile(String filePath) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,236,"errorManager.report(CheckLevel.WARNING,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,237,"JSError.make(filePath, -1, -1, NO_DEPS_WARNING));"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,241,* Adds the given DependencyInfos to the given providesMap. Also checks for
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,242,* and reports duplicate provides.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,244,"private void addToProvideMap(Iterable<DependencyInfo> depInfos,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,245,"Map<String, DependencyInfo> providesMap) {"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,246,for (DependencyInfo depInfo : depInfos) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,247,for (String provide : depInfo.getProvides()) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,248,"DependencyInfo prevValue = providesMap.put(provide, depInfo);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,249,// Check for duplicate provides.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,250,if (prevValue != null) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,251,"reportDuplicateProvide(provide, prevValue, depInfo);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,257,protected DepsFileParser createDepsFileParser() {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,258,DepsFileParser depsParser = new DepsFileParser(errorManager);
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,259,depsParser.setShortcutMode(true);
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,260,return depsParser;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,264,* Returns whether we should ignore dependency info in the given deps file.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,266,protected boolean shouldSkipDepsFile(SourceFile file) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,267,return false;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,271,* Parses all deps.js files in the deps list and creates a map of
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,272,* closure-relative path -> DependencyInfo.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,274,"private Map<String, DependencyInfo> parseDepsFiles() throws IOException {"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,275,DepsFileParser depsParser = createDepsFileParser();
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,276,"Map<String, DependencyInfo> depsFiles = Maps.newHashMap();"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,277,for (SourceFile file : deps) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,278,if (!shouldSkipDepsFile(file)) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,279,List<DependencyInfo>
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,280,depInfos = depsParser.parseFileReader(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,281,"file.getName(), file.getCodeReader());"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,282,if (depInfos.isEmpty()) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,283,reportNoDepsInDepsFile(file.getName());
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,284,} else {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,285,for (DependencyInfo info : depInfos) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,286,"depsFiles.put(info.getPathRelativeToClosureBase(), info);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,292,"// If a deps file also appears in srcs, our build tools will move it"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,293,// into srcs.  So we need to scan all the src files for addDependency
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,294,// calls as well.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,295,for (SourceFile src : srcs) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,296,if ((new File(src.getName())).exists() &&
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,297,!shouldSkipDepsFile(src)) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,298,List<DependencyInfo> srcInfos =
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,299,"depsParser.parseFileReader(src.getName(), src.getCodeReader());"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,300,for (DependencyInfo info : srcInfos) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,301,"depsFiles.put(info.getPathRelativeToClosureBase(), info);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,306,return depsFiles;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,310,* Parses all source files for dependency information.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,311,* @param preparsedFiles A set of closure-relative paths.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,312,*     Files in this set are not parsed if they are encountered in srcs.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,313,* @return Returns a map of closure-relative paths -> DependencyInfo for the
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,314,*     newly parsed files.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,315,* @throws IOException Occurs upon an IO error.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,317,"private Map<String, DependencyInfo> parseSources("
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,318,Set<String> preparsedFiles) throws IOException {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,319,"Map<String, DependencyInfo> parsedFiles = Maps.newHashMap();"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,320,JsFileParser jsParser = new JsFileParser(errorManager);
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,322,for (SourceFile file : srcs) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,323,String closureRelativePath =
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,324,PathUtil.makeRelative(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,325,"closurePathAbs, PathUtil.makeAbsolute(file.getName()));"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,326,"logger.fine(""Closure-relative path: "" + closureRelativePath);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,328,if (InclusionStrategy.WHEN_IN_SRCS == mergeStrategy ||
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,329,!preparsedFiles.contains(closureRelativePath)) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,330,DependencyInfo depInfo =
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,331,jsParser.parseFile(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,332,"file.getName(), closureRelativePath,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,333,file.getCode());
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,335,// Kick the source out of memory.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,336,file.clearCachedSource();
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,337,"parsedFiles.put(closureRelativePath, depInfo);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,341,return parsedFiles;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,345,* Creates the content to put into the output deps.js file. If mergeDeps is
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,346,"* true, then all of the dependency information in the providedDeps will be"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,347,* included in the output.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,348,* @throws IOException Occurs upon an IO error.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,350,"private void writeDepsContent(Map<String, DependencyInfo> depsFiles,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,351,"Map<String, DependencyInfo> jsFiles, PrintStream out)"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,352,throws IOException {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,353,// Print all dependencies extracted from srcs.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,354,"writeDepInfos(out, jsFiles.values());"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,356,// Print all dependencies extracted from deps.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,357,if (mergeStrategy == InclusionStrategy.ALWAYS) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,358,// This multimap is just for splitting DepsInfo objects by
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,359,// it's definition deps.js file
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,360,"Multimap<String, DependencyInfo> infosIndex = Multimaps.index("
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,361,"depsFiles.values(),"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,362,"new Function<DependencyInfo, String>() {"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,363,@Override
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,364,public String apply(DependencyInfo from) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,365,return from.getName();
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,369,for (String depsPath : infosIndex.keySet()) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,370,String path = formatPathToDepsFile(depsPath);
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,371,"out.println(""\n// Included from: "" + path);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,372,"writeDepInfos(out, infosIndex.get(depsPath));"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,378,* Format the deps file path so that it can be included in the output file.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,380,protected String formatPathToDepsFile(String path) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,381,return path;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,385,* Writes goog.addDependency() lines for each DependencyInfo in depInfos.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,386,* @throws IOException Occurs upon an IO error.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,388,"private void writeDepInfos(PrintStream out,"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,389,Collection<DependencyInfo> depInfos
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,390,) throws IOException {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,391,// Print dependencies.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,392,// Lines look like this:
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,393,"// goog.addDependency('../../path/to/file.js', ['goog.Delay'],"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,394,"//     ['goog.Disposable', 'goog.Timer']);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,395,for (DependencyInfo depInfo : depInfos) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,396,Collection<String> provides = depInfo.getProvides();
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,397,Collection<String> requires = depInfo.getRequires();
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,399,"out.print(""goog.addDependency('"" +"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,400,"depInfo.getPathRelativeToClosureBase() + ""', "");"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,401,"writeJsArray(out, provides);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,402,"out.print("", "");"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,403,"writeJsArray(out, requires);"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,404,"out.println("");"");"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,409,* Prints a list of strings formatted as a Javascript array of string
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,410,* literals.
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,412,"private static void writeJsArray(PrintStream out, Collection<String> values) {"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,413,if (values.isEmpty()) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,414,"out.print(""[]"");"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,415,} else {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,416,"out.print(""['"");"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,417,"out.print(Joiner.on(""', '"").join(values));"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,418,"out.print(""']"");"
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,422,static List<SourceFile> createSourceFilesFromPaths(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,423,Collection<String> paths) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,424,List<SourceFile> files = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,425,for (String path : paths) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,426,files.add(SourceFile.fromFile(path));
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,428,return files;
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,431,static List<SourceFile> createSourceFilesFromPaths(
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,432,String ... paths) {
+True,src/com/google/javascript/jscomp/deps/DepsGenerator.java,src/com/google/javascript/jscomp/deps/DepsGenerator.java,433,return createSourceFilesFromPaths(Arrays.asList(paths));
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,2,* Copyright 2008 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,17,package com.google.javascript.jscomp.deps;
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,19,import com.google.common.base.CharMatcher;
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,20,import com.google.common.base.Joiner;
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,21,import com.google.common.base.Strings;
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,22,import com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,24,import java.util.Arrays;
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,25,import java.util.List;
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,28,* Utility methods for manipulation of UNIX-like paths.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,29,"* NOTE: According to kevinb, equivalent methods will be in the standard library once"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,30,* jsr203 is ready.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,33,public final class PathUtil {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,35,private static final CharMatcher SLASH_MATCHER = CharMatcher.is('/');
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,36,private static final CharMatcher NON_SLASH_MATCHER = CharMatcher.isNot('/');
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,38,private PathUtil() {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,42,* Removes all ../ and ./ entries from within the given path. If there are extra ..s that move
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,43,"* beyond the first directory given, they are removed."
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,45,* Examples:
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,46,"*   ""a/b/../c"" results in ""a/c"""
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,47,"*   ""./foo/./../bar"" results in ""bar"""
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,48,"*   ""a/.."" results in """""
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,49,"*   ""a/../../foo"" results in ""foo"""
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,51,* @param path The path to remove dots from.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,52,* @return The path with all dots collapsed.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,54,public static String collapseDots(String path) {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,55,path = removeExtraneousSlashes(path);
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,56,// Optimization: Most paths don't contain dots.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,57,"if (!path.contains(""."")) {"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,58,return path;
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,61,"String[] srcFragments = path.split(""/"");"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,62,List<String> dstFragments = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,63,for (String fragment : srcFragments) {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,64,"if (fragment.equals("".."")) {"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,65,if (!dstFragments.isEmpty()) {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,66,dstFragments.remove(dstFragments.size() - 1);
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,68,"} else if (!fragment.equals(""."")) {"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,69,dstFragments.add(fragment);
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,73,"// Special case for Join.join([""""]); -> ""/"""
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,74,if (dstFragments.size() == 1 && dstFragments.get(0).isEmpty()) {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,75,"return ""/"";"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,77,"return Joiner.on(""/"").join(dstFragments);"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,81,"* Determines if a path is absolute or not by testing for the presence of ""/"""
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,82,* at the front of the string.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,84,* @param path The path to test
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,85,"* @return true if the path starts with DELIMITER, false otherwise."
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,87,static boolean isAbsolute(String path) {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,88,"return path.startsWith(""/"");"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,92,"* Removes extra slashes from a path.  Leading slash is preserved, trailing"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,93,"* slash is stripped, and any runs of more than one slash in the middle is"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,94,* replaced by a single slash.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,96,static String removeExtraneousSlashes(String s) {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,97,int lastNonSlash = NON_SLASH_MATCHER.lastIndexIn(s);
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,98,if (lastNonSlash != -1) {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,99,"s = s.substring(0, lastNonSlash + 1);"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,102,"return SLASH_MATCHER.collapseFrom(s, '/');"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,107,* Converts the given path into an absolute one. This prepends the current
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,108,* working directory and removes all .'s from the path. If an absolute path
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,109,"* is given, it will not be prefixed."
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,111,"* <p>Unlike File.getAbsolutePath(), this function does remove .'s from the"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,112,"* path and unlike File.getCanonicalPath(), this function does not resolve"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,113,* symlinks and does not use filesystem calls.</p>
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,115,* @param path The path to make absolute.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,116,* @return The path made absolute.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,118,public static String makeAbsolute(String path) {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,119,"return makeAbsolute(path, System.getProperty(""user.dir""));"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,123,* Converts the given path into an absolute one. This prepends the given
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,124,"* rootPath and removes all .'s from the path. If an absolute path is given,"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,125,* it will not be prefixed.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,127,"* <p>Unlike File.getAbsolutePath(), this function does remove .'s from the"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,128,"* path and unlike File.getCanonicalPath(), this function does not resolve"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,129,* symlinks and does not use filesystem calls.</p>
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,131,* @param rootPath The path to prefix to path if path is not already absolute.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,132,* @param path The path to make absolute.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,133,* @return The path made absolute.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,135,"public static String makeAbsolute(String path, String rootPath) {"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,136,if (!isAbsolute(path)) {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,137,"path = rootPath + ""/"" + path;"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,139,return collapseDots(path);
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,143,* Returns targetPath relative to basePath.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,145,"* <p>basePath and targetPath must either both be relative, or both be"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,146,* absolute paths.</p>
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,148,* <p>This function is different from makeRelative
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,149,* in that it is able to add in ../ components and collapse existing ones as well.</p>
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,151,* Examples:
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,152,"*   base=""some/relative/path"" target=""some/relative/path/foo"" return=""foo"""
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,153,"*   base=""some/relative/path"" target=""some/relative"" return="".."""
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,154,"*   base=""some/relative/path"" target=""foo/bar"" return=""../../../foo/bar"""
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,155,"*   base=""/some/abs/path"" target=""/foo/bar"" return=""../../../foo/bar"""
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,157,* @param basePath The path to make targetPath relative to.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,158,* @param targetPath The path to make relative.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,159,* @return A path relative to targetPath. The returned value will never start
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,160,*     with a slash.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,162,"public static String makeRelative(String basePath, String targetPath) {"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,163,// Ensure the paths are both absolute or both relative.
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,164,if (isAbsolute(basePath) !=
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,165,isAbsolute(targetPath)) {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,166,throw new IllegalArgumentException(
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,167,"""Paths must both be relative or both absolute.\n"" +"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,168,"""  basePath: "" + basePath + ""\n"" +"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,169,"""  targetPath: "" + targetPath);"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,172,basePath = collapseDots(basePath);
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,173,targetPath = collapseDots(targetPath);
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,174,"String[] baseFragments = basePath.split(""/"");"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,175,"String[] targetFragments = targetPath.split(""/"");"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,177,int i = -1;
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,178,do {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,179,i += 1;
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,180,if (i == baseFragments.length && i == targetFragments.length) {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,181,// Eg) base: /java/com/google
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,182,//   target: /java/com/google
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,183,"//   result: .  <-- . is better than """" since """" + ""/path"" = ""/path"""
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,184,"return ""."";"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,185,} else if (i == baseFragments.length) {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,186,// Eg) base: /java/com/google
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,187,//   target: /java/com/google/c/ui
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,188,//   result: c/ui
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,189,"return Joiner.on(""/"").join("
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,190,Lists.newArrayList(
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,191,Arrays.asList(targetFragments).listIterator(i)));
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,192,} else if (i == targetFragments.length) {
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,193,// Eg) base: /java/com/google/c/ui
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,194,//   target: /java/com/google
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,195,//   result: ../..
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,196,"return Strings.repeat(""../"", baseFragments.length - i - 1) + "".."";"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,199,} while (baseFragments[i].equals(targetFragments[i]));
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,201,// Eg) base: /java/com/google/c
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,202,//   target: /java/com/google/common/base
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,203,//   result: ../common/base
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,204,"return Strings.repeat(""../"", baseFragments.length - i) +"
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,205,"Joiner.on(""/"").join("
+True,src/com/google/javascript/jscomp/deps/PathUtil.java,src/com/google/javascript/jscomp/deps/PathUtil.java,206,Lists.newArrayList(Arrays.asList(targetFragments).listIterator(i)));

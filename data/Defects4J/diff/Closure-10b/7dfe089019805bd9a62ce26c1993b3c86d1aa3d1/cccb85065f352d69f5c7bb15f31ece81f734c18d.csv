@@ -1,0 +1,594 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,2,* Copyright 2011 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,19,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,20,import com.google.javascript.rhino.Token;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,23,* This class walks the AST and validates that the structure is correct.
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,25,* @author johnlenz@google.com (John Lenz)
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,27,public class AstValidator implements CompilerPass {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,29,// Possible enhancements:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,30,"// * verify NAME, LABEL_NAME, GETPROP property name and unquoted"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,31,// object-literal keys are valid javascript identifiers.
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,32,// * optionally verify every node has source location information.
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,33,// * optionally verify every node has an assigned JSType
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,36,interface ViolationHandler {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,37,"void handleViolation(String message, Node n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,40,private final ViolationHandler violationHandler;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,42,AstValidator(ViolationHandler handler) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,43,this.violationHandler = handler;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,46,AstValidator() {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,47,this.violationHandler = new ViolationHandler() {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,48,@Override
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,49,"public void handleViolation(String message, Node n) {"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,50,throw new IllegalStateException(
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,51,"message + "" Reference node "" + n.toString());"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,56,@Override
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,57,"public void process(Node externs, Node root) {"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,58,if (externs != null) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,59,validateCodeRoot(externs);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,61,if (root != null) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,62,validateCodeRoot(root);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,66,public void validateRoot(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,67,"validateNodeType(Token.BLOCK, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,68,validateIsSynthetic(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,69,"validateChildCount(n, 2);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,70,validateCodeRoot(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,71,validateCodeRoot(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,74,public void validateCodeRoot(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,75,"validateNodeType(Token.BLOCK, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,76,validateIsSynthetic(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,77,for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,78,validateScript(c);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,82,public void validateScript(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,83,"validateNodeType(Token.SCRIPT, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,84,validateIsSynthetic(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,85,for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,86,validateStatement(c);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,90,public void validateStatement(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,91,switch (n.getType()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,92,case Token.LABEL:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,93,validateLabel(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,94,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,95,case Token.BLOCK:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,96,validateBlock(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,97,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,98,case Token.FUNCTION:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,99,validateFunctionStatement(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,100,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,101,case Token.WITH:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,102,validateWith(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,103,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,104,case Token.FOR:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,105,validateFor(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,106,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,107,case Token.WHILE:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,108,validateWhile(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,109,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,110,case Token.DO:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,111,validateDo(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,112,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,113,case Token.SWITCH:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,114,validateSwitch(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,115,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,116,case Token.IF:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,117,validateIf(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,118,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,119,case Token.VAR:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,120,validateVar(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,121,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,122,case Token.EXPR_RESULT:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,123,validateExprStmt(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,124,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,125,case Token.RETURN:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,126,validateReturn(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,127,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,128,case Token.THROW:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,129,validateThrow(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,130,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,131,case Token.TRY:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,132,validateTry(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,133,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,134,case Token.BREAK:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,135,validateBreak(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,136,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,137,case Token.CONTINUE:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,138,validateContinue(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,139,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,140,case Token.EMPTY:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,141,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,142,default:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,143,"violation(""Expected statement but was """
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,144,"+ Node.tokenToName(n.getType()) + ""."", n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,148,public void validateExpression(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,149,switch (n.getType()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,150,// Childless expressions
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,151,case Token.FALSE:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,152,case Token.NULL:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,153,case Token.THIS:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,154,case Token.TRUE:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,155,validateChildless(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,156,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,158,// General uniary ops
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,159,case Token.DELPROP:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,160,case Token.POS:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,161,case Token.NEG:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,162,case Token.NOT:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,163,case Token.INC:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,164,case Token.DEC:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,165,case Token.TYPEOF:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,166,case Token.VOID:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,167,case Token.BITNOT:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,168,validateUnaryOp(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,169,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,171,// General binary ops
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,172,case Token.COMMA:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,173,case Token.OR:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,174,case Token.AND:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,175,case Token.BITOR:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,176,case Token.BITXOR:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,177,case Token.BITAND:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,178,case Token.EQ:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,179,case Token.NE:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,180,case Token.SHEQ:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,181,case Token.SHNE:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,182,case Token.LT:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,183,case Token.GT:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,184,case Token.LE:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,185,case Token.GE:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,186,case Token.INSTANCEOF:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,187,case Token.IN:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,188,case Token.LSH:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,189,case Token.RSH:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,190,case Token.URSH:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,191,case Token.SUB:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,192,case Token.ADD:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,193,case Token.MUL:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,194,case Token.MOD:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,195,case Token.DIV:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,196,validateBinaryOp(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,197,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,199,// Assignments
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,200,case Token.ASSIGN:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,201,case Token.ASSIGN_BITOR:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,202,case Token.ASSIGN_BITXOR:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,203,case Token.ASSIGN_BITAND:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,204,case Token.ASSIGN_LSH:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,205,case Token.ASSIGN_RSH:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,206,case Token.ASSIGN_URSH:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,207,case Token.ASSIGN_ADD:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,208,case Token.ASSIGN_SUB:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,209,case Token.ASSIGN_MUL:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,210,case Token.ASSIGN_DIV:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,211,case Token.ASSIGN_MOD:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,212,validateAssignmentExpression(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,213,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,215,case Token.HOOK:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,216,validateTrinaryOp(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,217,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,219,// Node types that require special handling
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,220,case Token.STRING:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,221,validateString(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,222,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,224,case Token.NUMBER:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,225,validateNumber(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,226,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,228,case Token.NAME:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,229,validateName(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,230,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,232,case Token.GETELEM:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,233,validateBinaryOp(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,234,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,236,case Token.GETPROP:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,237,validateGetProp(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,238,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,240,case Token.ARRAYLIT:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,241,validateArrayLit(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,242,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,244,case Token.OBJECTLIT:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,245,validateObjectLit(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,246,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,248,case Token.REGEXP:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,249,validateRegExpLit(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,250,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,252,case Token.CALL:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,253,validateCall(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,254,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,256,case Token.NEW:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,257,validateNew(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,258,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,260,case Token.FUNCTION:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,261,validateFunctionExpression(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,262,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,264,default:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,265,"violation(""Expected expression but was """
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,266,"+ Node.tokenToName(n.getType()), n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,270,private void validateBlock(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,271,"validateNodeType(Token.BLOCK, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,272,for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,273,validateStatement(c);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,277,private void validateSyntheticBlock(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,278,"validateNodeType(Token.BLOCK, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,279,validateIsSynthetic(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,280,for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,281,validateStatement(c);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,285,private void validateIsSynthetic(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,286,if (!n.getBooleanProp(Node.SYNTHETIC_BLOCK_PROP)) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,287,"violation(""Missing 'synthetic block' annotation."", n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,291,private void validateLabel(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,292,"validateNodeType(Token.LABEL, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,293,"validateChildCount(n, 2);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,294,validateLabelName(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,295,validateStatement(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,298,private void validateLabelName(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,299,"validateNodeType(Token.LABEL_NAME, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,300,validateNonEmptyString(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,301,"validateChildCount(n, 0);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,304,private void validateNonEmptyString(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,305,validateNonNullString(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,306,if (n.getString().isEmpty()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,307,"violation(""Expected non-empty string."", n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,311,private void validateNonNullString(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,312,if (n.getString() == null) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,313,"violation(""Expected non-null string."", n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,317,private void validateName(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,318,"validateNodeType(Token.NAME, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,319,validateNonEmptyString(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,320,"validateChildCount(n, 0);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,323,private void validateOptionalName(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,324,"validateNodeType(Token.NAME, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,325,validateNonNullString(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,326,"validateChildCount(n, 0);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,329,private void validateFunctionStatement(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,330,"validateNodeType(Token.FUNCTION, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,331,"validateChildCount(n, 3);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,332,validateName(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,333,validateParameters(n.getChildAtIndex(1));
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,334,validateBlock(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,337,private void validateFunctionExpression(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,338,"validateNodeType(Token.FUNCTION, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,339,"validateChildCount(n, 3);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,340,validateOptionalName(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,341,validateParameters(n.getChildAtIndex(1));
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,342,validateBlock(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,345,private void validateParameters(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,346,"validateNodeType(Token.LP, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,347,for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,348,validateName(c);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,352,private void validateCall(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,353,"validateNodeType(Token.CALL, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,354,"validateMinimumChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,355,for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,356,validateExpression(c);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,360,private void validateNew(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,361,"validateNodeType(Token.NEW, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,362,"validateMinimumChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,363,for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,364,validateExpression(c);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,368,private void validateVar(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,369,"validateNodeType(Token.VAR, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,370,"this.validateMinimumChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,371,for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,372,// Don't use the validateName here as the NAME is allowed to have
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,373,// a child.
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,374,"validateNodeType(Token.NAME, c);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,375,validateNonEmptyString(c);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,376,"validateMaximumChildCount(c, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,377,if (c.hasChildren()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,378,validateExpression(c.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,383,private void validateFor(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,384,"validateNodeType(Token.FOR, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,385,"validateMinimumChildCount(n, 3);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,386,"validateMaximumChildCount(n, 4);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,387,if (NodeUtil.isForIn(n)) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,388,// FOR-IN
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,389,"validateChildCount(n, 3);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,390,validateVarOrAssignmentTarget(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,391,validateExpression(n.getChildAtIndex(1));
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,392,} else {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,393,// FOR
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,394,"validateChildCount(n, 4);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,395,validateVarOrOptionalExpression(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,396,validateOptionalExpression(n.getChildAtIndex(1));
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,397,validateOptionalExpression(n.getChildAtIndex(2));
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,399,validateBlock(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,402,private void validateVarOrOptionalExpression(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,403,if (n.getType() == Token.VAR) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,404,validateVar(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,405,} else {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,406,validateOptionalExpression(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,410,private void validateVarOrAssignmentTarget(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,411,if (n.getType() == Token.VAR) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,412,// Only one NAME can be declared for FOR-IN expressions.
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,413,"this.validateChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,414,validateVar(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,415,} else {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,416,validateAssignmentTarget(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,420,private void validateWith(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,421,"validateNodeType(Token.WITH, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,422,"validateChildCount(n, 2);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,423,validateExpression(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,424,validateBlock(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,427,private void validateWhile(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,428,"validateNodeType(Token.WHILE, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,429,"validateChildCount(n, 2);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,430,validateExpression(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,431,validateBlock(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,434,private void validateDo(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,435,"validateNodeType(Token.DO, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,436,"validateChildCount(n, 2);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,437,validateBlock(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,438,validateExpression(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,441,private void validateIf(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,442,"validateNodeType(Token.IF, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,443,"validateMinimumChildCount(n, 2);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,444,"validateMaximumChildCount(n, 3);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,445,validateExpression(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,446,validateBlock(n.getChildAtIndex(1));
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,447,if (n.getChildCount() == 3) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,448,validateBlock(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,452,private void validateExprStmt(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,453,"validateNodeType(Token.EXPR_RESULT, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,454,"validateChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,455,validateExpression(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,458,private void validateReturn(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,459,"validateNodeType(Token.RETURN, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,460,"validateMaximumChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,461,if (n.hasChildren()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,462,validateExpression(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,466,private void validateThrow(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,467,"validateNodeType(Token.THROW, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,468,"validateChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,469,validateExpression(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,472,private void validateBreak(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,473,"validateNodeType(Token.BREAK, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,474,"validateMaximumChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,475,if (n.hasChildren()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,476,validateLabelName(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,480,private void validateContinue(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,481,"validateNodeType(Token.CONTINUE, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,482,"validateMaximumChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,483,if (n.hasChildren()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,484,validateLabelName(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,488,private void validateTry(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,489,"validateNodeType(Token.TRY, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,490,"validateMinimumChildCount(n, 2);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,491,"validateMaximumChildCount(n, 3);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,492,validateBlock(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,494,boolean seenCatchOrFinally = false;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,496,// Validate catch
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,497,Node catches = n.getChildAtIndex(1);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,498,"validateNodeType(Token.BLOCK, catches);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,499,"validateMaximumChildCount(catches, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,500,if (catches.hasChildren()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,501,validateCatch(catches.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,502,seenCatchOrFinally = true;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,505,// Validate finally
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,506,if (n.getChildCount() == 3) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,507,validateBlock(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,508,seenCatchOrFinally = true;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,511,if (!seenCatchOrFinally) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,512,"violation(""Missing catch or finally for try statement."", n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,516,private void validateCatch(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,517,"validateNodeType(Token.CATCH, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,518,"validateChildCount(n, 2);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,519,validateName(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,520,validateBlock(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,523,private void validateSwitch(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,524,"validateNodeType(Token.SWITCH, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,525,"validateMinimumChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,526,validateExpression(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,527,int defaults = 0;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,528,for (Node c = n.getFirstChild().getNext(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,529,validateSwitchMember(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,530,if (c.getType() == Token.DEFAULT) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,531,defaults++;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,534,if (defaults > 1) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,535,"violation(""Expected at most 1 'default' in switch but was """
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,536,"+ defaults, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,540,private void validateSwitchMember(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,541,switch (n.getType()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,542,case Token.CASE:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,543,validateCase(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,544,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,545,case Token.DEFAULT:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,546,validateDefault(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,547,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,548,default:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,549,"violation(""Expected switch member but was """
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,550,"+ Node.tokenToName(n.getType()), n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,554,private void validateDefault(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,555,"validateNodeType(Token.DEFAULT, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,556,"validateChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,557,validateSyntheticBlock(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,560,private void validateCase(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,561,"validateNodeType(Token.CASE, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,562,"validateChildCount(n, 2);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,563,validateExpression(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,564,validateSyntheticBlock(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,567,private void validateOptionalExpression(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,568,if (n.getType() == Token.EMPTY) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,569,validateChildless(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,570,} else {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,571,validateExpression(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,575,private void validateChildless(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,576,"validateChildCount(n, 0);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,579,private void validateAssignmentExpression(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,580,"validateChildCount(n, 2);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,581,validateAssignmentTarget(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,582,validateExpression(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,585,private void validateAssignmentTarget(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,586,switch (n.getType()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,587,case Token.NAME:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,588,case Token.GETELEM:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,589,case Token.GETPROP:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,590,validateExpression(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,591,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,592,default:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,593,"violation(""Expected assignment target expression but was """
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,594,"+ Node.tokenToName(n.getType()), n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,598,private void validateGetProp(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,599,"validateNodeType(Token.GETPROP, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,600,"validateChildCount(n, 2);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,601,validateExpression(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,602,Node prop = n.getLastChild();
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,603,"validateNodeType(Token.STRING, prop);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,604,validateNonEmptyString(prop);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,607,private void validateRegExpLit(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,608,"validateNodeType(Token.REGEXP, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,609,"validateMinimumChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,610,"validateMaximumChildCount(n, 2);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,611,for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,612,validateString(c);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,616,private void validateString(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,617,"validateNodeType(Token.STRING, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,618,"validateChildCount(n, 0);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,619,try {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,620,// Validate that getString doesn't throw
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,621,n.getString();
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,622,} catch (UnsupportedOperationException e) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,623,"violation(""Invalid STRING node."", n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,627,private void validateNumber(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,628,"validateNodeType(Token.NUMBER, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,629,"validateChildCount(n, 0);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,630,try {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,631,// Validate that getDouble doesn't throw
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,632,n.getDouble();
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,633,} catch (UnsupportedOperationException e) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,634,"violation(""Invalid NUMBER node."", n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,638,private void validateArrayLit(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,639,"validateNodeType(Token.ARRAYLIT, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,640,for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,641,// EMPTY is allowed to represent empty slots.
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,642,validateOptionalExpression(c);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,646,private void validateObjectLit(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,647,"validateNodeType(Token.OBJECTLIT, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,648,for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,649,validateObjectLitKey(c);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,653,private void validateObjectLitKey(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,654,switch (n.getType()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,655,case Token.GET:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,656,validateObjectLitGetKey(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,657,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,658,case Token.SET:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,659,validateObjectLitSetKey(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,660,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,661,case Token.STRING:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,662,validateObjectLitStringKey(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,663,return;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,664,default:
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,665,"violation(""Expected object literal key expression but was """
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,666,"+ Node.tokenToName(n.getType()), n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,670,private void validateObjectLitGetKey(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,671,"validateNodeType(Token.GET, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,672,"validateChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,673,validateObjectLiteralKeyName(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,674,Node function = n.getFirstChild();
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,675,validateFunctionExpression(function);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,676,"// objlit get functions must be nameless, and must have zero parameters."
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,677,if (!function.getFirstChild().getString().isEmpty()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,678,"violation(""Expected unnamed function expression."", n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,680,Node functionParams = function.getChildAtIndex(1);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,681,if (functionParams.hasChildren()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,682,"violation(""get methods must not have parameters."", n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,686,private void validateObjectLitSetKey(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,687,"validateNodeType(Token.SET, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,688,"validateChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,689,validateObjectLiteralKeyName(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,690,Node function = n.getFirstChild();
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,691,validateFunctionExpression(function);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,692,"// objlit set functions must be nameless, and must have 1 parameter."
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,693,if (!function.getFirstChild().getString().isEmpty()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,694,"violation(""Expected unnamed function expression."", n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,696,Node functionParams = function.getChildAtIndex(1);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,697,if (!functionParams.hasOneChild()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,698,"violation(""set methods must have exactly one parameter."", n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,702,private void validateObjectLitStringKey(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,703,"validateNodeType(Token.STRING, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,704,"validateChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,705,validateObjectLiteralKeyName(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,706,validateExpression(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,709,private void validateObjectLiteralKeyName(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,710,if (n.isQuotedString()) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,711,try {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,712,// Validate that getString doesn't throw
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,713,n.getString();
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,714,} catch (UnsupportedOperationException e) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,715,"violation(""getString failed for"" + Node.tokenToName(n.getType()), n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,717,} else {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,718,validateNonEmptyString(n);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,722,private void validateUnaryOp(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,723,"validateChildCount(n, 1);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,724,validateExpression(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,727,private void validateBinaryOp(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,728,"validateChildCount(n, 2);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,729,validateExpression(n.getFirstChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,730,validateExpression(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,733,private void validateTrinaryOp(Node n) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,734,"validateChildCount(n, 3);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,735,Node first = n.getFirstChild();
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,736,validateExpression(first);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,737,validateExpression(first.getNext());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,738,validateExpression(n.getLastChild());
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,741,"private void violation(String message, Node n) {"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,742,"violationHandler.handleViolation(message, n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,745,"private void validateNodeType(int type, Node n) {"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,746,if (n.getType() != type) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,747,violation(
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,748,"""Expected "" + Node.tokenToName(type) + "" but was """
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,749,"+ Node.tokenToName(n.getType()), n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,753,"private void validateChildCount(Node n, int i) {"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,754,boolean valid = false;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,755,if (i == 0) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,756,valid = !n.hasChildren();
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,757,} else if (i == 1) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,758,valid = n.hasOneChild();
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,759,} else {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,760,valid = (n.getChildCount() == i);
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,762,if (!valid) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,763,violation(
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,764,"""Expected "" + i + "" children, but was """
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,765,"+ n.getChildCount(), n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,769,"private void validateMinimumChildCount(Node n, int i) {"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,770,boolean valid = false;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,771,if (i == 1) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,772,valid = n.hasChildren();
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,773,} else if (i == 2) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,774,valid = n.hasMoreThanOneChild();
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,775,} else {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,776,valid = n.getChildCount() >= i;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,779,if (!valid) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,780,violation(
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,781,"""Expected at least "" + i + "" children, but was """
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,782,"+ n.getChildCount(), n);"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,786,"private void validateMaximumChildCount(Node n, int i) {"
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,787,boolean valid = false;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,788,if (i == 1) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,789,valid = !n.hasMoreThanOneChild();
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,790,} else {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,791,valid = n.getChildCount() <= i;
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,793,if (!valid) {
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,794,violation(
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,795,"""Expected no more than "" + i + "" children, but was """
+True,src/com/google/javascript/jscomp/AstValidator.java,src/com/google/javascript/jscomp/AstValidator.java,796,"+ n.getChildCount(), n);"
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,97,* Whether the AST should be validated.
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,99,private boolean astValidationEnabled = true;
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,281,* Whether to allow Validate the AST after each run of the pass.
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,283,protected void enableAstValidation(boolean validate) {
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,284,astValidationEnabled = validate;
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,720,if (astValidationEnabled) {
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,721,(new AstValidator()).validateRoot(root);
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,766,if (astValidationEnabled) {
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,767,(new AstValidator()).validateRoot(root);
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,42,// Setup value set by individual tests to the appropriate defaults.
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,44,super.enableAstValidation(true);
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,170,// This test deliberately sets up an invalid AST.
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,171,super.enableAstValidation(false);

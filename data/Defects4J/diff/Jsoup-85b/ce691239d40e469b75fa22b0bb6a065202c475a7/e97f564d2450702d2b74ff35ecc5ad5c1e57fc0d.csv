@@ -1,0 +1,44 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,1,package org.jsoup.nodes;
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,3,import org.apache.commons.lang.StringEscapeUtils;
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,6,"A data node, for contents of style, script tags etc, where contents should not show in text()."
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,8,"@author Jonathan Hedley, jonathan@hedley.net */"
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,9,public class DataNode extends Node{
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,10,"private static final String DATA_KEY = ""data"";"
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,12,public DataNode(String data) {
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,13,super();
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,14,"attributes.put(DATA_KEY, data);"
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,17,public String nodeName() {
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,18,"return ""#data"";"
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,21,public String getWholeData() {
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,22,return attributes.get(DATA_KEY);
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,25,public String outerHtml() {
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,26,return StringEscapeUtils.escapeHtml(getWholeData());
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,29,public String toString() {
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,30,return outerHtml();
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,33,public static DataNode createFromEncoded(String encodedData) {
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,34,String data = StringEscapeUtils.unescapeHtml(encodedData);
+True,src/main/java/org/jsoup/nodes/DataNode.java,src/main/java/org/jsoup/nodes/DataNode.java,35,return new DataNode(data);
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,189,public String data() {
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,190,StringBuilder sb = new StringBuilder();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,192,for (Node childNode : childNodes) {
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,193,if (childNode instanceof DataNode) {
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,194,DataNode data = (DataNode) childNode;
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,195,sb.append(data.getWholeData());
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,196,} else if (childNode instanceof Element) {
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,197,Element element = (Element) childNode;
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,198,String elementData = element.data();
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,199,sb.append(elementData);
+True,src/main/java/org/jsoup/nodes/Element.java,src/main/java/org/jsoup/nodes/Element.java,202,return sb.toString();
+False,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,110,extNode textNode = TextNode.createFromEncoded(data); // TODO: maybe have this be another data type? So doesn't come back in text()?
+False,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,111,hild.addChild(textNode);
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,110,DataNode dataNode = DataNode.createFromEncoded(data);
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,111,child.addChild(dataNode);
+False,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,114,oc.setTitle(child.text());
+True,src/main/java/org/jsoup/parser/Parser.java,src/main/java/org/jsoup/parser/Parser.java,114,doc.setTitle(child.data());
+False,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,116,"ssertEquals(""<p>Foo</p>\n<p>Bar</p>"", tels.get(0).text());"
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,116,"assertEquals(""<p>Foo</p>\n<p>Bar</p>"", tels.get(0).data());"
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,118,"String s = ""<p>Hello</p><script>Nope</script><p>There</p>"";"
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,119,Document doc = Jsoup.parse(s);
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,120,"assertEquals(""Hello There"", doc.text());"
+True,src/test/java/org/jsoup/parser/ParserTest.java,src/test/java/org/jsoup/parser/ParserTest.java,121,"assertEquals(""Nope"", doc.data());"

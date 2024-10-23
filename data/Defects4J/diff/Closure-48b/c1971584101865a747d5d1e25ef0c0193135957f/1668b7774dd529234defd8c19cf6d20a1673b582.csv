@@ -1,0 +1,143 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1373,/** Whether the node is a CATCH container BLOCK. */
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1374,static boolean isTryCatchNodeContainer(Node n) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1375,Node parent = n.getParent();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1376,return parent.getType() == Token.TRY
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1377,&& parent.getFirstChild().getNext() == n;
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1375,"f (isTryFinallyNode(parent, node)) { // A BLOCK node used as a ""finally"""
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1376,/ A finally node can simply be removed.
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1377,arent.removeChild(node);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1382,"if (isTryFinallyNode(parent, node)) {"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1383,if (NodeUtil.hasCatchHandler(getCatchBlock(parent))) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1384,// A finally can only be removed if there is a catch.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1385,parent.removeChild(node);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1386,} else {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1387,// Otherwise only its children can be removed.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1388,node.detachChildren();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1390,} else if (node.getType() == Token.CATCH) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1391,// The CATCH can can only be removed if there is a finally clause.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1392,Node tryNode = node.getParent().getParent();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1393,Preconditions.checkState(NodeUtil.hasFinally(tryNode));
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1394,node.detachFromParent();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1395,} else if (isTryCatchNodeContainer(node)) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1396,"// The container node itself can't be removed, but the contained CATCH"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1397,// can if there is a 'finally' clause
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1398,Node tryNode = node.getParent();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1399,Preconditions.checkState(NodeUtil.hasFinally(tryNode));
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1400,node.detachChildren();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1437,* Add a finally block if one does not exist.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1439,static void maybeAddFinally(Node tryNode) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1440,Preconditions.checkState(tryNode.getType() == Token.TRY);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1441,if (!NodeUtil.hasFinally(tryNode)) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1442,tryNode.addChildrenToBack(new Node(Token.BLOCK)
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1443,.copyInformationFrom(tryNode));
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,98,/ Removes TRYs that had its CATCH removed and/or empty FINALLY.
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,99,/ TODO(dcc): Move the parts of this that don't require a control flow
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,100,/ graph to PeepholeRemoveDeadCode
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,101,f (n.getType() == Token.TRY) {
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,102,ode body = n.getFirstChild();
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,103,ode catchOrFinallyBlock = body.getNext();
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,104,ode finallyBlock = catchOrFinallyBlock.getNext();
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,106,f (!catchOrFinallyBlock.hasChildren() &&
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,107,finallyBlock == null || !finallyBlock.hasChildren())) {
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,108,.removeChild(body);
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,109,"arent.replaceChild(n, body);"
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,110,ompiler.reportCodeChange();
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,111, = body;
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,203,Node parent = n.getParent();
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,224,/ Removing an unreachable DO node is messy because it means we still have
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,225,"/ to execute one iteration. If the DO's body has breaks in the middle, it"
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,226,/ can get even more trickier and code size might actually increase.
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,211,// Removing an unreachable DO node is messy because it means we still have
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,212,"// to execute one iteration. If the DO's body has breaks in the middle, it"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,213,// can get even more trickier and code size might actually increase.
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,229,ase Token.TRY:
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,230,ase Token.CATCH:
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,231,ase Token.FINALLY:
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,217,case Token.BLOCK:
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,218,// BLOCKs are used in several ways including wrapping CATCH blocks in TRYs
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,219,if (parent.getType() == Token.TRY) {
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,220,if (NodeUtil.isTryCatchNodeContainer(n)) {
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,221,return;
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,224,break;
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,226,case Token.CATCH:
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,227,Node tryNode = parent.getParent();
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,228,NodeUtil.maybeAddFinally(tryNode);
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,229,break;
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,687,ompiler compiler = new Compiler();
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,702,ompiler compiler = new Compiler();
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,713,ompiler compiler = new Compiler();
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,722,ompiler compiler = new Compiler();
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,724,"ode root = parse(""{{x()}}"");"
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,727,ode actual = root.cloneTree();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,717,"Node actual = parse(""{{x()}}"");"
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,741,ublic void testRemoveTryChild() {
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,742,ompiler compiler = new Compiler();
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,744,"ode root = parse(""try {foo()} catch(e) {} finally {}"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,731,public void testRemoveTryChild1() {
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,747,ode actual = root.cloneTree();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,733,"Node actual = parse(""try {foo()} catch(e) {} finally {}"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,748,public void testRemoveTryChild2() {
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,762,ctual = root.cloneTree();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,750,"Node actual = parse(""try {foo()} catch(e) {} finally {}"");"
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,764,ryNode = actual.getFirstChild();
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,765,ryBlock = tryNode.getFirstChild();
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,766,atchBlocks = tryNode.getFirstChild().getNext();
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,767,inallyBlock = tryNode.getLastChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,752,Node tryNode = actual.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,753,Node tryBlock = tryNode.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,754,Node catchBlocks = tryNode.getFirstChild().getNext();
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,770,"xpected = ""try {} catch(e) {} finally {}"";"
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,771,ifference = parse(expected).checkTreeEquals(actual);
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,757,"String expected = ""try {} catch(e) {} finally {}"";"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,758,String difference = parse(expected).checkTreeEquals(actual);
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,764,public void testRemoveTryChild3() {
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,777,ctual = root.cloneTree();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,766,"Node actual = parse(""try {foo()} catch(e) {} finally {}"");"
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,779,ryNode = actual.getFirstChild();
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,780,ryBlock = tryNode.getFirstChild();
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,781,atchBlocks = tryNode.getFirstChild().getNext();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,768,Node tryNode = actual.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,769,Node tryBlock = tryNode.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,770,Node catchBlocks = tryNode.getFirstChild().getNext();
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,783,inallyBlock = tryNode.getLastChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,772,Node finallyBlock = tryNode.getLastChild();
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,786,"xpected = ""try {foo()} finally {}"";"
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,787,ifference = parse(expected).checkTreeEquals(actual);
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,775,"String expected = ""try {foo()} finally {}"";"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,776,String difference = parse(expected).checkTreeEquals(actual);
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,777,if (difference != null) {
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,778,"assertTrue(""Nodes do not match:\n"" + difference, false);"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,782,public void testRemoveTryChild4() {
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,783,// Test removing the catch clause without a finally.
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,784,"Node actual = parse(""try {foo()} catch(e) {} finally {}"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,786,Node tryNode = actual.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,787,Node tryBlock = tryNode.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,788,Node catchBlocks = tryNode.getFirstChild().getNext();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,789,Node catchBlock = catchBlocks.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,790,Node finallyBlock = tryNode.getLastChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,792,"NodeUtil.removeChild(tryNode, catchBlocks);"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,793,"String expected = ""try {foo()} finally {}"";"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,794,String difference = parse(expected).checkTreeEquals(actual);
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,795,if (difference != null) {
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,796,"assertTrue(""Nodes do not match:\n"" + difference, false);"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,800,public void testRemoveTryChild5() {
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,801,"Node actual = parse(""try {foo()} catch(e) {} finally {}"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,803,Node tryNode = actual.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,804,Node tryBlock = tryNode.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,805,Node catchBlocks = tryNode.getFirstChild().getNext();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,806,Node catchBlock = catchBlocks.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,807,Node finallyBlock = tryNode.getLastChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,809,"NodeUtil.removeChild(catchBlocks, catchBlock);"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,810,"String expected = ""try {foo()} finally {}"";"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,811,String difference = parse(expected).checkTreeEquals(actual);
+False,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,151,"est(""try {var x = 1} catch (e) {e()}"", ""{var x = 1}"");"
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,151,"test(""try {var x = 1} catch (e) {e()}"", ""try {var x = 1} finally {}"");"
+False,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,155,"     {var x = 1}"");"
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,155,"""try {var x = 1} finally {}"");"
+False,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,157,"est(""try {var x = 1} finally {}"", ""{var x = 1}"");"
+False,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,158,"est(""function f() { return; try{var x = 1}catch(e){} }"","
+False,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,159,"function f() { var x; return; {}}"");"
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,157,"testSame(""try {var x = 1} finally {}"");"
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,158,"test(""function f() {return; try{var x = 1}catch(e){} }"","
+True,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java,159,"""function f() {var x;}"");"

@@ -1,0 +1,26 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,4,import org.jsoup.helper.Validate;
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,73,"* Split this text node into two nodes at the specified string offset. After splitting, this node will contain the"
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,74,"* original text up to the offset, and will have a new text node sibling containing the text after the offset."
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,75,* @param offset string offset point to split node at.
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,76,* @return the newly created text node containing the text after the offset.
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,78,public TextNode splitText(int offset) {
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,79,"Validate.isTrue(offset >= 0, ""Split offset must be not be negative"");"
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,80,"Validate.isTrue(offset < text.length(), ""Split offset must not be greater than current text length"");"
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,82,"String head = getWholeText().substring(0, offset);"
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,83,String tail = getWholeText().substring(offset);
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,84,text(head);
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,85,"TextNode tailNode = new TextNode(tail, this.baseUri());"
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,86,if (parent() != null)
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,87,"parent().addChildren(siblingIndex()+1, tailNode);"
+True,src/main/java/org/jsoup/nodes/TextNode.java,src/main/java/org/jsoup/nodes/TextNode.java,89,return tailNode;
+True,src/test/java/org/jsoup/nodes/TextNodeTest.java,src/test/java/org/jsoup/nodes/TextNodeTest.java,48,@Test public void testSplitText() {
+True,src/test/java/org/jsoup/nodes/TextNodeTest.java,src/test/java/org/jsoup/nodes/TextNodeTest.java,49,"Document doc = Jsoup.parse(""<div>Hello there</div>"");"
+True,src/test/java/org/jsoup/nodes/TextNodeTest.java,src/test/java/org/jsoup/nodes/TextNodeTest.java,50,"Element div = doc.select(""div"").first();"
+True,src/test/java/org/jsoup/nodes/TextNodeTest.java,src/test/java/org/jsoup/nodes/TextNodeTest.java,51,TextNode tn = (TextNode) div.childNode(0);
+True,src/test/java/org/jsoup/nodes/TextNodeTest.java,src/test/java/org/jsoup/nodes/TextNodeTest.java,52,TextNode tail = tn.splitText(6);
+True,src/test/java/org/jsoup/nodes/TextNodeTest.java,src/test/java/org/jsoup/nodes/TextNodeTest.java,53,"assertEquals(""Hello "", tn.getWholeText());"
+True,src/test/java/org/jsoup/nodes/TextNodeTest.java,src/test/java/org/jsoup/nodes/TextNodeTest.java,54,"assertEquals(""there"", tail.getWholeText());"
+True,src/test/java/org/jsoup/nodes/TextNodeTest.java,src/test/java/org/jsoup/nodes/TextNodeTest.java,55,"tail.text(""there!"");"
+True,src/test/java/org/jsoup/nodes/TextNodeTest.java,src/test/java/org/jsoup/nodes/TextNodeTest.java,56,"assertEquals(""Hello there!"", div.text());"
+True,src/test/java/org/jsoup/nodes/TextNodeTest.java,src/test/java/org/jsoup/nodes/TextNodeTest.java,57,assertTrue(tn.parent() == tail.parent());

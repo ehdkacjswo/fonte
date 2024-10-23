@@ -1,0 +1,302 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,102,// NodeUtil's mayEffectMutableState and mayHaveSideEffects need access to the
+True,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,103,"// compiler object, route them through here to give them access."
+True,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,106,"* @return Whether the node may create new mutable state, or change existing"
+True,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,107,* state.
+True,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,109,boolean mayEffectMutableState(Node n) {
+True,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,110,"return NodeUtil.mayEffectMutableState(n, currentTraversal.getCompiler());"
+True,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,114,* @return Whether the node may have side effects when executed.
+True,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,116,boolean mayHaveSideEffects(Node n) {
+True,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,117,"return NodeUtil.mayHaveSideEffects(n, currentTraversal.getCompiler());"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,65,* Gets the boolean value of a node that represents a expression. This method
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,66,* effectively emulates the <code>Boolean()</code> JavaScript cast function.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,67,* Note: unlike getBooleanValue this function does not return UNKNOWN
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,68,* for expressions with side-effects.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,70,static TernaryValue getExpressionBooleanValue(Node n) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,71,switch (n.getType()) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,72,case Token.ASSIGN:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,73,case Token.COMMA:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,74,// For ASSIGN and COMMA the value is the value of the RHS.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,75,return getExpressionBooleanValue(n.getLastChild());
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,76,case Token.NOT:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,77,TernaryValue value = getExpressionBooleanValue(n.getLastChild());
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,78,return value.not();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,79,case Token.AND: {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,80,TernaryValue lhs = getExpressionBooleanValue(n.getFirstChild());
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,81,TernaryValue rhs = getExpressionBooleanValue(n.getLastChild());
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,82,return lhs.and(rhs);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,84,case Token.OR:  {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,85,TernaryValue lhs = getExpressionBooleanValue(n.getFirstChild());
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,86,TernaryValue rhs = getExpressionBooleanValue(n.getLastChild());
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,87,return lhs.or(rhs);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,89,case Token.HOOK:  {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,90,TernaryValue trueValue = getExpressionBooleanValue(
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,91,n.getFirstChild().getNext());
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,92,TernaryValue falseValue = getExpressionBooleanValue(n.getLastChild());
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,93,if (trueValue.equals(falseValue)) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,94,return trueValue;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,95,} else {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,96,return TernaryValue.UNKNOWN;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,99,default:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,100,return getBooleanValue(n);
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,68, @throws IllegalArgumentException If {@code n} is not a literal value
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1256, @param n a node
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1294,* @param node a node
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2094,"* A new CALL node with the ""FREE_CALL"" set based on call target."
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2096,"static Node newCallNode(Node callTarget, Node... parameters) {"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2097,boolean isFreeCall = isName(callTarget);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2098,"Node call = new Node(Token.CALL, callTarget);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2099,"call.putBooleanProp(Node.FREE_CALL, isFreeCall);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2100,for (Node parameter : parameters) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2101,call.addChildToBack(parameter);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2103,return call;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,44,case Token.SCRIPT:
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,45,eturn tryFoldBlock(subtree);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,46,return tryOptimizeBlock(subtree);
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,72,f (!NodeUtil.mayHaveSideEffects(left)) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,73,if (!mayHaveSideEffects(left)) {
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,102,ode tryFoldBlock(Node n) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,103,Node tryOptimizeBlock(Node n) {
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,108,f (!NodeUtil.mayHaveSideEffects(c)) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,109,if (!mayHaveSideEffects(c)) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,112,} else {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,113,tryOptimizeConditionalAfterAssign(c);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,131,// TODO(johnlenz): Consider moving this to a separate peephole pass.
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,133,* Attempt to replace the condition of if or hook immediately that is a
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,134,* reference to a name that is assigned immediately before.
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,136,private void tryOptimizeConditionalAfterAssign(Node n) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,137,Node next = n.getNext();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,139,// Look for patterns like the following and replace the if-condition with
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,140,// a constant value so it can later be folded:
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,141,//   var a = /a/;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,142,//   if (a) {foo(a)}
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,143,// or
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,144,//   a = 0;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,145,//   a ? foo(a) : c;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,146,// or
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,147,//   a = 0;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,148,//   a || foo(a);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,149,// or
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,150,//   a = 0;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,151,//   a && foo(a)
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,153,// TODO(johnlenz): This would be better handled by control-flow sensitive
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,154,// constant propagation. As the other case that I want to handle is:
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,155,//   i=0; for(;i<0;i++){}
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,156,// as right now nothing facilitates removing a loop like that.
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,157,// This is here simply to remove the cruft left behind goog.userAgent and
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,158,// similar cases.
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,160,if (isSimpleAssignment(n) && isConditionalStatement(next)) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,161,Node lhsAssign = getSimpleAssignmentName(n);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,163,Node condition = getConditionalStatementCondition(next);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,164,if (NodeUtil.isName(lhsAssign) && NodeUtil.isName(condition)
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,165,&& lhsAssign.getString().equals(condition.getString())) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,166,Node rhsAssign = getSimpleAssignmentValue(n);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,167,TernaryValue value = NodeUtil.getExpressionBooleanValue(rhsAssign);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,168,if (value != TernaryValue.UNKNOWN) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,169,int replacementConditionNodeType =
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,170,(value.toBoolean(true)) ? Token.TRUE : Token.FALSE;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,171,"condition.getParent().replaceChild(condition,"
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,172,new Node(replacementConditionNodeType));
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,173,reportCodeChange();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,180,"* @return whether the node is a assignment to a simple name, or simple var"
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,181,* declaration with initialization.
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,183,private boolean isSimpleAssignment(Node n) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,184,// For our purposes we define a simple assignment to be a assignment
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,185,"// to a NAME node, or a VAR declaration with one child and a initializer."
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,186,if (NodeUtil.isExprAssign(n)
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,187,&& NodeUtil.isName(n.getFirstChild().getFirstChild())) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,188,return true;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,189,} else if (n.getType() == Token.VAR && n.hasOneChild() &&
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,190,n.getFirstChild().getFirstChild() != null) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,191,return true;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,194,return false;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,198,* @return The name being assigned to.
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,200,private Node getSimpleAssignmentName(Node n) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,201,Preconditions.checkState(isSimpleAssignment(n));
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,202,if (NodeUtil.isExprAssign(n)) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,203,return n.getFirstChild().getFirstChild();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,204,} else {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,205,// A var declaration.
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,206,return n.getFirstChild();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,211,* @return The value assigned in the simple assignment
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,213,private Node getSimpleAssignmentValue(Node n) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,214,Preconditions.checkState(isSimpleAssignment(n));
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,215,return n.getFirstChild().getLastChild();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,219,* @return Whether the node is a conditional statement.
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,221,private boolean isConditionalStatement(Node n) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,222,// We defined a conditional statement to be a IF or EXPR_RESULT rooted with
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,223,"// a HOOK, AND, or OR node."
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,224,return n != null && (n.getType() == Token.IF || isExprConditional(n));
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,228,"* @return Whether the node is a rooted with a HOOK, AND, or OR node."
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,230,private boolean isExprConditional(Node n) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,231,if (n.getType() == Token.EXPR_RESULT) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,232,switch (n.getFirstChild().getType()) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,233,case Token.HOOK:
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,234,case Token.AND:
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,235,case Token.OR:
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,236,return true;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,239,return false;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,243,* @return The condition of a conditional statement.
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,245,private Node getConditionalStatementCondition(Node n) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,246,if (n.getType() == Token.IF) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,247,return NodeUtil.getConditionExpression(n);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,248,} else {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,249,Preconditions.checkState(isExprConditional(n));
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,250,return n.getFirstChild().getFirstChild();
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,143,f (elseBody != null && !NodeUtil.mayHaveSideEffects(elseBody)) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,269,if (elseBody != null && !mayHaveSideEffects(elseBody)) {
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,151,f (!NodeUtil.mayHaveSideEffects(thenBody) && elseBody != null) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,277,if (!mayHaveSideEffects(thenBody) && elseBody != null) {
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,165,f (!NodeUtil.mayHaveSideEffects(thenBody) && elseBody == null) {
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,166,f (NodeUtil.mayHaveSideEffects(cond)) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,291,if (!mayHaveSideEffects(thenBody) && elseBody == null) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,292,if (mayHaveSideEffects(cond)) {
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,184,f (!NodeUtil.mayHaveSideEffects(thenBody)) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,310,if (!mayHaveSideEffects(thenBody)) {
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,208, else if (!NodeUtil.mayHaveSideEffects(elseBody)) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,334,} else if (!mayHaveSideEffects(elseBody)) {
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,229,"f (!NodeUtil.isLiteralValue(cond, true)) {"
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,355,TernaryValue condValue = NodeUtil.getExpressionBooleanValue(cond);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,356,if (condValue == TernaryValue.UNKNOWN) {
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,233,ernaryValue condValue = NodeUtil.getBooleanValue(cond);
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,234,f (condValue == TernaryValue.UNKNOWN) {
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,235,eturn n;  // We can't remove branches otherwise!
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,360,"// Transform ""if (a = 2) {x =2}"" into ""a=2;x=2"""
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,361,if (mayHaveSideEffects(cond)) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,362,if (n.getType() == Token.HOOK) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,363,// Transform HOOK to BLOCK with the condition
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,364,Node replacement = new Node(Token.BLOCK).copyInformationFrom(n);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,365,n.detachChildren();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,366,replacement.addChildToFront(
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,367,"new Node(Token.EXPR_RESULT, cond).copyInformationFrom(cond));"
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,368,Node branchToKeep = condValue.toBoolean(true) ? thenBody : elseBody;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,369,replacement.addChildToBack(
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,370,NodeUtil.newExpr(branchToKeep)
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,371,.copyInformationFrom(branchToKeep));
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,372,"// This modifies outside the subtree, which is not"
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,373,// desirable in a peephole optimization.
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,374,"parent.getParent().replaceChild(parent, replacement);"
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,375,reportCodeChange();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,376,return replacement;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,379,Preconditions.checkState(n.getType() == Token.IF);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,380,boolean newConditionValue = condValue == TernaryValue.TRUE;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,381,// Add an elseBody if it is needed.
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,382,if (!newConditionValue && elseBody == null) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,383,elseBody = new Node(Token.BLOCK).copyInformationFrom(n);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,384,n.addChildToBack(elseBody);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,386,Node newCond = new Node(newConditionValue ? Token.TRUE : Token.FALSE);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,387,"n.replaceChild(cond, newCond);"
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,388,Node branchToKeep = newConditionValue ? thenBody : elseBody;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,389,branchToKeep.addChildToFront(
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,390,"new Node(Token.EXPR_RESULT, cond).copyInformationFrom(cond));"
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,391,reportCodeChange();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,392,cond = newCond;
+False,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,250,"/ Replace ""if (false) { X }"" with empty node."
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,407,"// Remove ""if (false) { X }"" completely."
+False,src/com/google/javascript/jscomp/SanityCheck.java,src/com/google/javascript/jscomp/SanityCheck.java,19,mport com.google.common.base.Preconditions;
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,116,public void testGetExpressionBooleanValue() {
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,117,"assertExpressionBooleanTrue(""a=true"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,118,"assertExpressionBooleanFalse(""a=false"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,120,"assertExpressionBooleanTrue(""a=(false,true)"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,121,"assertExpressionBooleanFalse(""a=(true,false)"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,123,"assertExpressionBooleanTrue(""a=(false || true)"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,124,"assertExpressionBooleanFalse(""a=(true && false)"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,126,"assertExpressionBooleanTrue(""a=!(true && false)"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,128,"assertExpressionBooleanTrue(""a,true"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,129,"assertExpressionBooleanFalse(""a,false"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,131,"assertExpressionBooleanTrue(""true||false"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,132,"assertExpressionBooleanFalse(""false||false"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,134,"assertExpressionBooleanTrue(""true&&true"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,135,"assertExpressionBooleanFalse(""true&&false"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,137,"assertExpressionBooleanFalse(""!true"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,138,"assertExpressionBooleanTrue(""!false"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,139,"assertExpressionBooleanTrue(""!''"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,141,// Assignment ops other than ASSIGN are unknown.
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,142,"assertExpressionBooleanUnknown(""a *= 2"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,144,"// Complex expressions that contain anything other then ""="", "","", or ""!"" are"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,145,// unknown.
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,146,"assertExpressionBooleanUnknown(""2 + 2"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,148,"assertExpressionBooleanTrue(""a=1"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,149,"assertExpressionBooleanTrue(""a=/a/"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,150,"assertExpressionBooleanTrue(""a={}"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,152,"assertExpressionBooleanTrue(""true"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,153,"assertExpressionBooleanTrue(""10"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,154,"assertExpressionBooleanTrue(""'0'"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,155,"assertExpressionBooleanTrue(""/a/"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,156,"assertExpressionBooleanTrue(""{}"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,157,"assertExpressionBooleanTrue(""[]"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,158,"assertExpressionBooleanFalse(""false"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,159,"assertExpressionBooleanFalse(""null"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,160,"assertExpressionBooleanFalse(""0"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,161,"assertExpressionBooleanFalse(""''"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,162,"assertExpressionBooleanFalse(""undefined"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,163,"assertExpressionBooleanFalse(""void 0"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,164,"assertExpressionBooleanFalse(""void foo()"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,166,"assertExpressionBooleanTrue(""a?true:true"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,167,"assertExpressionBooleanFalse(""a?false:false"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,168,"assertExpressionBooleanUnknown(""a?true:false"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,169,"assertExpressionBooleanUnknown(""a?true:foo()"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,171,"assertExpressionBooleanUnknown(""b"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,172,"assertExpressionBooleanUnknown(""-'0.0'"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,175,private void assertExpressionBooleanTrue(String val) {
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,176,"assertEquals(TernaryValue.TRUE,"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,177,NodeUtil.getExpressionBooleanValue(getNode(val)));
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,180,private void assertExpressionBooleanFalse(String val) {
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,181,"assertEquals(TernaryValue.FALSE,"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,182,NodeUtil.getExpressionBooleanValue(getNode(val)));
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,185,private void assertExpressionBooleanUnknown(String val) {
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,186,"assertEquals(TernaryValue.UNKNOWN,"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,187,NodeUtil.getExpressionBooleanValue(getNode(val)));
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,183,"old(""if(y() || x || 3) z()"", ""if(y()||x||1)z()"");"
+True,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,183,"fold(""if(y() || x || 3) z()"", ""y()||x||1;z()"");"
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,187,"ssertResultString(""-1 | 0"", ""1"");"
+True,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,187,"assertResultString(""while(-1 | 0){}"", ""while(1);"");"
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,246,* This test is surprising.
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,248, What is happening is this:
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,249, First PeepholeFoldConstants.tryFoldUnaryOperator is folding
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,250," the inner ""!true"" to ""false"", so the whole expression  becomes"
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,251, !false.
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,252," Then, on the next iteration, tryFoldUnaryOperator sees the parent of"
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,253," !false is a Token.EXPR_RESULT and is therefore not used,"
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,254," so it drops the NOT, leaving false, which is then converted to 0."
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,256,"est(""!!true"", ""0"");"
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,258,"old(""!!x"", ""x"");"
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,259,"est(""!(!x&&!y)"", ""!x&&!y"");"
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,260,"old(""x||!!y"", ""x||y"");"
+True,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,246,"test(""!!true"", """");"
+True,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,248,"fold(""!!x()"", ""x()"");"
+True,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,249,"test(""!(!x()&&!y())"", ""!x()&&!y()"");"
+True,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,250,"fold(""x()||!!y()"", ""x()||y()"");"
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,263,"old(""!(!!x&&y)"", ""x&&y"");"
+True,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,253,"fold(""!(!!x()&&y())"", ""x()&&y()"");"
+False,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,292,"old(""(-3);"", ""1;"");"
+True,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,test/com/google/javascript/jscomp/PeepholeIntegrationTest.java,282,"fold(""while(-3){};"", ""while(1);"");"
+False,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,49,rivate void foldSame(String js) {
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,49,private void foldSame(String js) {
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,114,public void testConstantConditionWithSideEffect1() {
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,115,"fold(""if (b=true) x=1;"", ""b=true;x=1"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,116,"fold(""if (b=/ab/) x=1;"", ""b=/ab/;x=1"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,117,"fold(""if (b=/ab/){ x=1; } else { x=2; }"", ""b=/ab/;x=1"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,118,"fold(""var b;b=/ab/;if(b)x=1;"", ""var b;b=/ab/;x=1"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,119,"foldSame(""var b;b=f();if(b)x=1;"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,120,"fold(""var b=/ab/;if(b)x=1;"", ""var b=/ab/;x=1"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,121,"foldSame(""var b=f();if(b)x=1;"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,122,"foldSame(""b=b++;if(b)x=b;"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,123,"fold(""(b=0,b=1);if(b)x=b;"", ""b=0;b=1;x=b;"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,124,"fold(""b=1;if(foo,b)x=b;"",""b=1;x=b;"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,125,"foldSame(""b=1;if(foo=1,b)x=b;"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,128,public void testConstantConditionWithSideEffect2() {
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,129,"fold(""(b=true)?x=1:x=2;"", ""b=true;x=1"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,130,"fold(""(b=false)?x=1:x=2;"", ""b=false;x=2"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,131,"fold(""if (b=/ab/) x=1;"", ""b=/ab/;x=1"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,132,"fold(""var b;b=/ab/;(b)?x=1:x=2;"", ""var b;b=/ab/;x=1"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,133,"foldSame(""var b;b=f();(b)?x=1:x=2;"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,134,"fold(""var b=/ab/;(b)?x=1:x=2;"", ""var b=/ab/;x=1"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,135,"foldSame(""var b=f();(b)?x=1:x=2;"");"
+False,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,180,"oldSame(""if (foo(), true) boo()"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,204,"foldSame(""while (foo(), true) boo()"");"
+False,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,187,/ TODO(johnlenz): interestingly we don't remove side-effect free expression
+False,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,188,"/ in a script block (as it is currently part of block folding), so ""1;"""
+False,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,189,/ is left.
+False,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,190,"old(""foo(), true"", ""foo();true"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,211,"fold(""foo(), true"", ""foo();"");"

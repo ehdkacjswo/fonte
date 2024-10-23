@@ -1,0 +1,59 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,2,  Copyright 2001-2011 Stephen Colebourne
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,2,*  Copyright 2001-2012 Stephen Colebourne
+False,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1164,ong before = convertUTCToLocal(instant - 3 * DateTimeConstants.MILLIS_PER_HOUR);
+False,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1165,ong after = convertUTCToLocal(instant + 3 * DateTimeConstants.MILLIS_PER_HOUR);
+False,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1166,f (before == after) {
+False,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1167,eturn instant;
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1164,"// a bit messy, but will work in all non-pathological cases"
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1166,// evaluate 3 hours before and after to work out if anything is happening
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1167,long instantBefore = instant - 3 * DateTimeConstants.MILLIS_PER_HOUR;
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1168,long instantAfter = instant + 3 * DateTimeConstants.MILLIS_PER_HOUR;
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1169,long offsetBefore = getOffset(instantBefore);
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1170,long offsetAfter = getOffset(instantAfter);
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1171,if (offsetBefore <= offsetAfter) {
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1172,"return instant;  // not an overlap (less than is a gap, equal is normal case)"
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1175,// work out range of instants that have duplicate local times
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1176,long diff = offsetBefore - offsetAfter;
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1177,long transition = nextTransition(instantBefore);
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1178,long overlapStart = transition - diff;
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1179,long overlapEnd = transition + diff;
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1180,if (instant < overlapStart || instant >= overlapEnd) {
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1181,return instant;  // not an overlap
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1184,// calculate result
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1185,long afterStart = instant - overlapStart;
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1186,if (afterStart >= diff) {
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1187,// currently in later offset
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1188,return earlierOrLater ? instant : instant - diff;
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1189,} else {
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1190,// currently in earlier offset
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1191,return earlierOrLater ? instant + diff : instant;
+False,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1169,ong local = convertUTCToLocal(instant);
+False,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1170,"eturn convertLocalToUTC(local, false, earlierOrLater ? after : before);"
+True,src/main/java/org/joda/time/DateTimeZone.java,src/main/java/org/joda/time/DateTimeZone.java,1194,"//    System.out.println(new DateTime(transitionStart, DateTimeZone.UTC) + "" "" + new DateTime(transitionStart, this));"
+False,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,2,  Copyright 2001-2007 Stephen Colebourne
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,2,*  Copyright 2001-2012 Stephen Colebourne
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1243,"assertEquals(baseAfter, baseBefore.withLaterOffsetAtOverlap());"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1246,"assertEquals(baseBefore, baseAfter.withEarlierOffsetAtOverlap());"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1249,public void testBug3476684_adjustOffset() {
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1250,"final DateTimeZone zone = DateTimeZone.forID(""America/Sao_Paulo"");"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1251,"DateTime base = new DateTime(2012, 2, 25, 22, 15, zone);"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1252,DateTime baseBefore = base.plusHours(1);  // 23:15 (first)
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1253,DateTime baseAfter = base.plusHours(2);  // 23:15 (second)
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1255,"assertSame(base, base.withEarlierOffsetAtOverlap());"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1256,"assertSame(base, base.withLaterOffsetAtOverlap());"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1258,"assertSame(baseBefore, baseBefore.withEarlierOffsetAtOverlap());"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1259,"assertEquals(baseAfter, baseBefore.withLaterOffsetAtOverlap());"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1261,"assertSame(baseAfter, baseAfter.withLaterOffsetAtOverlap());"
+False,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1244,"ssertEquals(baseAfter, baseAfter.withLaterOffsetAtOverlap());"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1265,public void testBug3476684_adjustOffset_springGap() {
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1266,"final DateTimeZone zone = DateTimeZone.forID(""America/Sao_Paulo"");"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1267,"DateTime base = new DateTime(2011, 10, 15, 22, 15, zone);"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1268,DateTime baseBefore = base.plusHours(1);  // 23:15
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1269,DateTime baseAfter = base.plusHours(2);  // 01:15
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1271,"assertSame(base, base.withEarlierOffsetAtOverlap());"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1272,"assertSame(base, base.withLaterOffsetAtOverlap());"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1274,"assertSame(baseBefore, baseBefore.withEarlierOffsetAtOverlap());"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1275,"assertEquals(baseBefore, baseBefore.withLaterOffsetAtOverlap());"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1277,"assertSame(baseAfter, baseAfter.withLaterOffsetAtOverlap());"
+True,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,src/test/java/org/joda/time/TestDateTimeZoneCutover.java,1278,"assertEquals(baseAfter, baseAfter.withEarlierOffsetAtOverlap());"

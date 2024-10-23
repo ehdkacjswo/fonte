@@ -1,0 +1,34 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,5,import org.jsoup.select.Elements;
+False,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,109,ormalise(head());
+False,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,110,ormalise(htmlEl);
+False,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,111,ormalise(this);
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,110,normaliseTextNodes(head());
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,111,normaliseTextNodes(htmlEl);
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,112,normaliseTextNodes(this);
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,114,"normaliseStructure(""head"", htmlEl);"
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,115,"normaliseStructure(""body"", htmlEl);"
+False,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,117,rivate void normalise(Element element) {
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,121,private void normaliseTextNodes(Element element) {
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,139,"// merge multiple <head> or <body> contents into one, delete the remainder, and ensure they are owned by <html>"
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,140,"private void normaliseStructure(String tag, Element htmlEl) {"
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,141,Elements elements = this.getElementsByTag(tag);
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,142,Element master = elements.first(); // will always be available as created above if not existent
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,143,"if (elements.size() > 1) { // dupes, move contents to master"
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,144,List<Node> toMove = new ArrayList<Node>();
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,145,for (int i = 1; i < elements.size(); i++) {
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,146,Node dupe = elements.get(i);
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,147,for (Node node : dupe.childNodes)
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,148,toMove.add(node);
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,149,dupe.remove();
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,152,for (Node dupe : toMove)
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,153,master.appendChild(dupe);
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,155,// ensure parented by <html>
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,156,if (!master.parent().equals(htmlEl)) {
+True,src/main/java/org/jsoup/nodes/Document.java,src/main/java/org/jsoup/nodes/Document.java,157,htmlEl.appendChild(master); // includes remove()
+False,src/main/java/org/jsoup/parser/Tag.java,src/main/java/org/jsoup/parser/Tag.java,299,"reateInline(""IMG"").setEmpty();"
+True,src/main/java/org/jsoup/parser/Tag.java,src/main/java/org/jsoup/parser/Tag.java,299,"createInline(""IMG"").setEmpty().setAncestor(""BODY"", ""NOSCRIPT""); // noscript so an image can be in html->head->noscript"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,4,import org.jsoup.TextUtil;
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,57,@Test public void testNormalisesStructure() {
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,58,"Document doc = Jsoup.parse(""<html><head><script>one</script><noscript><p>two</p></noscript></head><body><p>three</p></body></html>"");"
+True,src/test/java/org/jsoup/nodes/DocumentTest.java,src/test/java/org/jsoup/nodes/DocumentTest.java,59,"assertEquals(""<html><head><script>one</script><noscript></noscript></head><body><p>two</p><p>three</p></body></html>"", TextUtil.stripNewlines(doc.html()));"

@@ -1,0 +1,22 @@
+The following changes were made to the Univariate implementation.  The public
+interface of Univariate was extracted in an interface of the same name.
+Univariate, an interface, is now implemented by UnivariateImpl which contains
+all code originally present in the original Univariate implementation.
+
+* StoredUnivariate is an interface which extends Univariate and adds
+measures not available in the superinterface such as mode, kurtosis, and skew
+
+* StoredUnivariateImpl provides an implementation which uses the
+ExpandableDoubleArray for internal storage.  Calculations are performed
+on demand *each* time a particular measure is required no state is
+maintained by this implementation.
+
+* Univariate provided methods addValue(int), addValue(float), addValue(long).
+There functions were removed as no cast is required - all of these
+assignments are widening conversions - no cast required
+
+* Removed the name property from Univariate - property not relevant to
+univariate statistics
+
+
+git-svn-id: https://svn.apache.org/repos/asf/jakarta/commons/proper/math/trunk@140828 13f79535-47bb-0310-9956-ffa450edef68

@@ -1,0 +1,55 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,132,* @return the current coding convention.
+True,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,134,CodingConvention getCodingConvention() {
+True,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,135,// Note: this assumes a thread safe coding convention object.
+True,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,src/com/google/javascript/jscomp/AbstractPeepholeOptimization.java,136,return currentTraversal.getCompiler().getCodingConvention();
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,348,@Override
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,349,public Bind describeFunctionBind(Node n) {
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,350,// It would be nice to be able to identify a fn.bind call
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,351,"// but that requires knowing the type of ""fn""."
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,353,if (n.getType() != Token.CALL) {
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,354,return null;
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,357,Node callTarget = n.getFirstChild();
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,358,String name = callTarget.getQualifiedName();
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,359,if (name != null) {
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,360,"if (name.equals(""goog.bind"") || name.equals(""goog$bind"")) {"
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,361,"// goog.bind(fn, self, args...);"
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,362,Node fn = callTarget.getNext();
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,363,Node thisValue = safeNext(fn);
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,364,Node parameters = safeNext(thisValue);
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,365,"return new Bind(fn, thisValue, parameters);"
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,368,"if (name.equals(""goog.partial"") || name.equals(""goog$partial"")) {"
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,369,"// goog.partial(fn, args...);"
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,370,Node fn = callTarget.getNext();
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,371,Node thisValue = null;
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,372,Node parameters = safeNext(fn);
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,373,"return new Bind(fn, thisValue, parameters);"
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,377,if (callTarget.getType() == Token.GETPROP
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,378,"&& callTarget.getLastChild().getString().equals(""bind"")"
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,379,&& callTarget.getFirstChild().getType() == Token.FUNCTION) {
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,380,"// (function(){}).bind(self, args...);"
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,381,Node fn = callTarget.getFirstChild();
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,382,Node thisValue = callTarget.getNext();
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,383,Node parameters = safeNext(thisValue);
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,384,"return new Bind(fn, thisValue, parameters);"
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,387,return null;
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,390,private Node safeNext(Node n) {
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,391,if (n != null) {
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,392,return n.getNext();
+True,src/com/google/javascript/jscomp/ClosureCodingConvention.java,src/com/google/javascript/jscomp/ClosureCodingConvention.java,394,return null;
+True,src/com/google/javascript/jscomp/CodingConvention.java,src/com/google/javascript/jscomp/CodingConvention.java,225,* A Bind instance or null.
+True,src/com/google/javascript/jscomp/CodingConvention.java,src/com/google/javascript/jscomp/CodingConvention.java,227,public Bind describeFunctionBind(Node n);
+True,src/com/google/javascript/jscomp/CodingConvention.java,src/com/google/javascript/jscomp/CodingConvention.java,229,public static class Bind {
+True,src/com/google/javascript/jscomp/CodingConvention.java,src/com/google/javascript/jscomp/CodingConvention.java,230,// The target of the bind action
+True,src/com/google/javascript/jscomp/CodingConvention.java,src/com/google/javascript/jscomp/CodingConvention.java,231,final Node target;
+True,src/com/google/javascript/jscomp/CodingConvention.java,src/com/google/javascript/jscomp/CodingConvention.java,232,"// The node representing the ""this"" value, maybe null"
+True,src/com/google/javascript/jscomp/CodingConvention.java,src/com/google/javascript/jscomp/CodingConvention.java,233,final Node thisValue;
+True,src/com/google/javascript/jscomp/CodingConvention.java,src/com/google/javascript/jscomp/CodingConvention.java,234,// The head of a Node list representing the parameters
+True,src/com/google/javascript/jscomp/CodingConvention.java,src/com/google/javascript/jscomp/CodingConvention.java,235,final Node parameters;
+True,src/com/google/javascript/jscomp/CodingConvention.java,src/com/google/javascript/jscomp/CodingConvention.java,237,"public Bind(Node target, Node thisValue, Node parameters) {"
+True,src/com/google/javascript/jscomp/CodingConvention.java,src/com/google/javascript/jscomp/CodingConvention.java,238,this.target = target;
+True,src/com/google/javascript/jscomp/CodingConvention.java,src/com/google/javascript/jscomp/CodingConvention.java,239,this.thisValue = thisValue;
+True,src/com/google/javascript/jscomp/CodingConvention.java,src/com/google/javascript/jscomp/CodingConvention.java,240,this.parameters = parameters;
+True,src/com/google/javascript/jscomp/DefaultCodingConvention.java,src/com/google/javascript/jscomp/DefaultCodingConvention.java,184,@Override
+True,src/com/google/javascript/jscomp/DefaultCodingConvention.java,src/com/google/javascript/jscomp/DefaultCodingConvention.java,185,public Bind describeFunctionBind(Node n) {
+True,src/com/google/javascript/jscomp/DefaultCodingConvention.java,src/com/google/javascript/jscomp/DefaultCodingConvention.java,186,return null;

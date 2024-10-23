@@ -1,0 +1,45 @@
+
+This CL adds a new AngularPass
+
+When enabled this flag triggers compiler to process a special
+@angularInject annotation.
+
+When a function declaration is annotated with @angularInject,
+AngularPass compiler pass will extract function parameter names,
+combine them into an array of strings and create a special
+`$inject` property on the declared function containing the array.
+
+For example,
+
+/** @angularInject */
+function Something(a, b) {}
+
+will be transformed into
+function Something(a, b) {}
+Something.$inject = ['a', 'b'];
+
+This would take of the burden of maintaining dependency declarations
+for Angular Dependency Injector from developers resulting in cleaner
+code while still supporting code minification.
+
+This CL adds AngularPass.java (and corresponding test file) containing
+AST traversal, node extraction and node creation logic.
+
+First, AngularPass.Traversal class is used to traverse AST, locate
+nodes annotated with @angularInject, determine their type, locate the
+FUNCTION node, and decide which node the new ".$inject = [...]" ASSIGN
+node should be attached to.
+
+Second, all discovered eligible nodes are iterated through, function
+parameters extracted and corresponding ".$inject = [param...]" node
+created and attached to the AST.
+
+R=blickly
+DELTA=579 (575 added, 1 deleted, 3 changed)
+
+
+Revision created by MOE tool push_codebase.
+MOE_MIGRATION=6187
+
+
+git-svn-id: https://closure-compiler.googlecode.com/svn/trunk@2487 b0f006be-c8cd-11de-a2e8-8d36a3108c74

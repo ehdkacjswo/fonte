@@ -1,0 +1,23 @@
+
+Adding @nosideeffects and @throws to many exports that were missing them. All of the ones fixed here were noticed causing extra statements to be included in real code.
+
+Added to:
+- Function.bind
+- JSON parse/stringify
+- Performance API getters
+- Blob ctors/slicing
+- Typed Array constructors and slicing (this was causing quite a few spurious ';new Float32Array(4);'s in my compiled code)
+- Canvas creates and gets; they change no state on the canvas
+- WebGL creates and gets; also change no state and commonly sit in asserts
+
+@throws was added to functions that are defined in the ECMAScript or their respective W3C spec to throw exceptions.
+
+R=nicksantos
+DELTA=134  (132 added, 0 deleted, 2 changed)
+
+
+Revision created by MOE tool push_codebase.
+MOE_MIGRATION=5762
+
+
+git-svn-id: https://closure-compiler.googlecode.com/svn/trunk@2303 b0f006be-c8cd-11de-a2e8-8d36a3108c74

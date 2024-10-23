@@ -1,0 +1,818 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,49,// For passes that traverse a list of functions rather than the AST.
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,50,"// If false, the pass will analyze all functions, even those that didn't"
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,51,// change since the last time it ran.
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,52,// Intended for use by the compiler only; not accessed by compiler users.
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,53,protected boolean analyzeChangedFunsOnly = true;
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,216,/** Let the PhaseOptimizer know which scope a pass is currently analyzing */
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,217,abstract void setScope(Node n);
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,219,"/** Returns the root of the source tree, ignoring externs */"
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,220,abstract Node getJsRoot();
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,222,/** True iff a function changed since the last time a pass was run */
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,223,abstract boolean hasScopeChanged(Node n);
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,225,"/** Passes that do cross-scope modifications use this (eg, InlineVariables) */"
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,226,abstract void reportChangeToScope(Node n);
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,228,/** Returns the containing function (or the top level node) for n */
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,229,abstract Node getEnclosingScope(Node n);
+False,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,245,bstract public ErrorManager getErrorManager();
+True,src/com/google/javascript/jscomp/AbstractCompiler.java,src/com/google/javascript/jscomp/AbstractCompiler.java,266,public abstract ErrorManager getErrorManager();
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,19,mport com.google.javascript.rhino.Node;
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,23, Records whether the code has changed since the last reset.
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,27,lass CodeChangeHandler {
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,28,rivate boolean hasChanged = false;
+True,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,24,interface CodeChangeHandler {
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,31,ublic void reportChange() {
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,32,asChanged = true;
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,35,** Report a change to a specific function in the AST. */
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,36,ublic void reportChangedFun(Node n) {
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,37,asChanged = true;
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,40,** Report that a function node has been removed from the AST */
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,41,ublic void reportDeletedFun(Node n) {
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,42,asChanged = true;
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,45,oid reset() {
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,46,asChanged = false;
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,49,oolean hasCodeChanged() {
+False,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,50,eturn hasChanged;
+True,src/com/google/javascript/jscomp/CodeChangeHandler.java,src/com/google/javascript/jscomp/CodeChangeHandler.java,26,public void reportChange();
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,171,// The compiler can ask phaseOptimizer for things like which pass is currently
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,172,"// running, or which functions have been changed by optimizations"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,173,private PhaseOptimizer phaseOptimizer = null;
+False,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,818,"haseOptimizer phaseOptimizer = new PhaseOptimizer(this, tracker,"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,821,"phaseOptimizer = new PhaseOptimizer(this, tracker,"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,854,phaseOptimizer = null;
+False,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1899,"haseOptimizer phaseOptimizer = new PhaseOptimizer(this, tracker, null);"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1903,"phaseOptimizer = new PhaseOptimizer(this, tracker, null);"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1912,phaseOptimizer = null;
+False,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1972,rotected final CodeChangeHandler recentChange = new CodeChangeHandler();
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1977,protected final RecentChange recentChange = new RecentChange();
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1996,@Override
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1997,void setScope(Node n) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1998,if (phaseOptimizer != null) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1999,phaseOptimizer.setScope(n);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2003,@Override
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2004,Node getJsRoot() {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2005,return jsRoot;
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2008,@Override
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2009,boolean hasScopeChanged(Node n) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2010,if (phaseOptimizer != null) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2011,return phaseOptimizer.hasScopeChanged(n);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2013,return true;
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2016,@Override
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2017,void reportChangeToScope(Node n) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2018,if (phaseOptimizer != null) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2019,phaseOptimizer.reportChangeToScope(n);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2020,phaseOptimizer.startCrossScopeReporting();
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2021,reportCodeChange();
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2022,phaseOptimizer.endCrossScopeReporting();
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2023,} else {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2024,reportCodeChange();
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2029,"* Some tests don't want to call the compiler ""wholesale,"" they may not want"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2030,"* to call check and/or optimize. With this method, tests can execute custom"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2031,* optimization loops.
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2033,@VisibleForTesting
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2034,void setPhaseOptimizer(PhaseOptimizer po) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2035,this.phaseOptimizer = po;
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2038,@Override
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2039,Node getEnclosingScope(Node n) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2040,while (n != jsRoot) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2041,n = n.getParent();
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2042,if (n.isFunction()) { return n; }
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,2044,return n;
+False,src/com/google/javascript/jscomp/ForbiddenChange.java,src/com/google/javascript/jscomp/ForbiddenChange.java,19,mport com.google.javascript.rhino.Node;
+False,src/com/google/javascript/jscomp/ForbiddenChange.java,src/com/google/javascript/jscomp/ForbiddenChange.java,26,inal class ForbiddenChange extends CodeChangeHandler {
+True,src/com/google/javascript/jscomp/ForbiddenChange.java,src/com/google/javascript/jscomp/ForbiddenChange.java,24,final class ForbiddenChange implements CodeChangeHandler {
+False,src/com/google/javascript/jscomp/ForbiddenChange.java,src/com/google/javascript/jscomp/ForbiddenChange.java,33,Override
+False,src/com/google/javascript/jscomp/ForbiddenChange.java,src/com/google/javascript/jscomp/ForbiddenChange.java,34,ublic void reportChangedFun(Node n) {
+False,src/com/google/javascript/jscomp/ForbiddenChange.java,src/com/google/javascript/jscomp/ForbiddenChange.java,35,"hrow new IllegalStateException(""Code changes forbidden"");"
+False,src/com/google/javascript/jscomp/ForbiddenChange.java,src/com/google/javascript/jscomp/ForbiddenChange.java,38,Override
+False,src/com/google/javascript/jscomp/ForbiddenChange.java,src/com/google/javascript/jscomp/ForbiddenChange.java,39,ublic void reportDeletedFun(Node n) {
+False,src/com/google/javascript/jscomp/ForbiddenChange.java,src/com/google/javascript/jscomp/ForbiddenChange.java,40,"hrow new IllegalStateException(""Code changes forbidden"");"
+False,src/com/google/javascript/jscomp/InlineFunctions.java,src/com/google/javascript/jscomp/InlineFunctions.java,832,ompiler.reportCodeChange();
+False,src/com/google/javascript/jscomp/InlineFunctions.java,src/com/google/javascript/jscomp/InlineFunctions.java,1017,rivate static class NamedFunction implements Function {
+True,src/com/google/javascript/jscomp/InlineFunctions.java,src/com/google/javascript/jscomp/InlineFunctions.java,1016,private class NamedFunction implements Function {
+True,src/com/google/javascript/jscomp/InlineFunctions.java,src/com/google/javascript/jscomp/InlineFunctions.java,1035,compiler.reportChangeToScope(fn);
+False,src/com/google/javascript/jscomp/InlineFunctions.java,src/com/google/javascript/jscomp/InlineFunctions.java,1046,rivate static class FunctionVar implements Function {
+True,src/com/google/javascript/jscomp/InlineFunctions.java,src/com/google/javascript/jscomp/InlineFunctions.java,1046,private class FunctionVar implements Function {
+True,src/com/google/javascript/jscomp/InlineFunctions.java,src/com/google/javascript/jscomp/InlineFunctions.java,1065,compiler.reportChangeToScope(var);
+False,src/com/google/javascript/jscomp/InlineFunctions.java,src/com/google/javascript/jscomp/InlineFunctions.java,1075,rivate static class FunctionExpression implements Function {
+True,src/com/google/javascript/jscomp/InlineFunctions.java,src/com/google/javascript/jscomp/InlineFunctions.java,1076,private class FunctionExpression implements Function {
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,359,"rivate void inline(Var v, Reference declaration,"
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,360,"eference init, Reference reference) {"
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,359,"private void inline(Var v, Reference decl, Reference init, Reference ref) {"
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,366,"nlineValue(v, reference, value.detachFromParent());"
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,367,f (declaration != init) {
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,365,"// decl and ref may be in different scopes, report change for both"
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,366,compiler.reportChangeToScope(compiler.getEnclosingScope(decl.getNode()));
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,367,compiler.reportChangeToScope(compiler.getEnclosingScope(ref.getNode()));
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,369,"inlineValue(v, ref, value.detachFromParent());"
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,370,if (decl != init) {
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,375,emoveDeclaration(declaration);
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,376, else {
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,377,ompiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,377,removeDeclaration(decl);
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,415,rivate void removeDeclaration(Reference declaration) {
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,416,ode varNode = declaration.getParent();
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,417,ode grandparent = declaration.getGrandparent();
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,419,arNode.removeChild(declaration.getNode());
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,415,private void removeDeclaration(Reference decl) {
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,416,Node varNode = decl.getParent();
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,417,Node grandparent = decl.getGrandparent();
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,419,compiler.reportChangeToScope(compiler.getEnclosingScope(decl.getNode()));
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,420,varNode.removeChild(decl.getNode());
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,427,ompiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,437,compiler.reportChangeToScope(compiler.getEnclosingScope(ref.getNode()));
+False,src/com/google/javascript/jscomp/InlineVariables.java,src/com/google/javascript/jscomp/InlineVariables.java,447,ompiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,83,/** Callback for passes that iterate over a list of functions */
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,84,public interface FunctionCallback {
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,85,"void visit(AbstractCompiler compiler, Node fnRoot);"
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,84, Callback
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,89,* Callback for tree-based traversals
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,91," {@link #visit(NodeTraversal, Node, Node)} in post order.</p>"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,96,"* {@link #visit(NodeTraversal, Node, Node)} in postorder.</p>"
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,99, <p>Visits a node in post order (after its children have been visited).
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,104,* <p>Visits a node in postorder (after its children have been visited).
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,127, Abstract callback to visit all nodes in post order.
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,132,* Abstract callback to visit all nodes in postorder.
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,142,/** Abstract callback to visit all nodes in preorder. */
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,143,public abstract static class AbstractPreOrderCallback implements Callback {
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,144,@Override
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,145,"public void visit(NodeTraversal t, Node n, Node parent) {}"
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,138, Abstract scoped callback to visit all nodes in post order.
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,149,* Abstract scoped callback to visit all nodes in postorder.
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,288,// null parent ensures that the shallow callbacks will traverse root
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,397, Gets the compiler.
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,399,ublic Compiler getCompiler() {
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,400,/ TODO(nicksantos): Remove this type cast. This is just temporary
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,401,/ while refactoring.
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,402,eturn (Compiler) compiler;
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,408,public AbstractCompiler getCompiler() {
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,409,return compiler;
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,413,f (line >=0) {
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,420,if (line >= 0) {
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,458,* Traversal for passes that work only on changed functions.
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,459,* Suppose a loopable pass P1 uses this traversal.
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,460,"* Then, if a function doesn't change between two runs of P1, it won't look at"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,461,* the function the second time.
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,462,"* (We're assuming that P1 runs to a fixpoint, o/w we may miss optimizations.)"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,464,public static void traverseChangedFunctions(
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,465,"AbstractCompiler compiler, FunctionCallback callback) {"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,466,final AbstractCompiler comp = compiler;
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,467,final FunctionCallback cb = callback;
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,468,final Node jsRoot = comp.getJsRoot();
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,469,if (comp.hasScopeChanged(jsRoot)) {
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,470,"cb.visit(comp, jsRoot);"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,472,"traverse(comp, jsRoot,"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,473,new AbstractPreOrderCallback() {
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,474,@Override
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,475,"public final boolean shouldTraverse(NodeTraversal t, Node n, Node p) {"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,476,if (n.isFunction() && comp.hasScopeChanged(n)) {
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,477,"cb.visit(comp, n);"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,479,return true;
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,477,"SuppressWarnings(""fallthrough"")"
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,486,"f (!callback.shouldTraverse(this, n, parent)) return;"
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,488,witch (type) {
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,489,ase Token.FUNCTION:
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,490,"raverseFunction(n, parent);"
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,491,reak;
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,519,"if (!callback.shouldTraverse(this, n, parent)) {"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,520,return;
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,493,efault:
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,494,or (Node child = n.getFirstChild(); child != null; ) {
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,495,"/ child could be replaced, in which case our child node"
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,496,/ would no longer point to the true next
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,497,ode next = child.getNext();
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,498,"raverseBranch(child, n);"
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,499,hild = next;
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,501,reak;
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,523,if (type == Token.FUNCTION) {
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,524,"traverseFunction(n, parent);"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,525,} else {
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,526,for (Node child = n.getFirstChild(); child != null; ) {
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,527,"// child could be replaced, in which case our child node"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,528,// would no longer point to the true next
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,529,Node next = child.getNext();
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,530,"traverseBranch(child, n);"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,531,child = next;
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,509, Traverses a function.
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,539,/** Traverses a function. */
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,541,reconditions.checkState(body.getNext() == null &&
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,542,"ody.isBlock(), body);"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,570,"Preconditions.checkState(body.getNext() == null && body.isBlock(), body);"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,593,compiler.setScope(node);
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,604,compiler.setScope(s.getRootNode());
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,623,if (!scopes.isEmpty()) {
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,624,compiler.setScope(scopes.peek().getRootNode());
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,650,"SError error = JSError.make(getBestSourceFileName(n),"
+False,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,651,", diagnosticType, arguments);"
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,683,JSError error = JSError.make(
+True,src/com/google/javascript/jscomp/NodeTraversal.java,src/com/google/javascript/jscomp/NodeTraversal.java,684,"getBestSourceFileName(n), n, diagnosticType, arguments);"
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,19,mport com.google.common.base.Preconditions;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,20,mport com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,19,import com.google.javascript.jscomp.NodeTraversal.AbstractShallowCallback;
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,20,import com.google.javascript.jscomp.NodeTraversal.FunctionCallback;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,23,mport java.util.ArrayList;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,32,lass PeepholeOptimizationsPass
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,33,mplements CompilerPass {
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,30,class PeepholeOptimizationsPass implements CompilerPass {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,39,/ Track whether the a scope has been modified so that it can be revisited
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,40,/ immediately.
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,41,rivate StateStack traversalState = new StateStack();
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,43,rivate boolean retraverseOnChange = true;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,45,rivate static class ScopeState {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,46,oolean changed;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,47,oolean traverseChildScopes;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,48,copeState() {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,49,eset();
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,52,oid reset() {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,53,hanged = false;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,54,raverseChildScopes = true;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,58,rivate static class StateStack {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,59,rivate ArrayList<ScopeState> states = Lists.newArrayList();
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,60,rivate int currentDepth = 0;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,62,tateStack() {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,63,tates.add(new ScopeState());
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,66,copeState peek() {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,67,eturn states.get(currentDepth);
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,70,oid push() {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,71,urrentDepth++;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,72,f (states.size() <= currentDepth) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,73,tates.add(new ScopeState());
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,74, else {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,75,tates.get(currentDepth).reset();
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,79,oid pop() {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,80,urrentDepth--;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,84,rivate class PeepholeChangeHandler extends CodeChangeHandler {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,85,Override
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,86,ublic void reportChange() {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,87,raversalState.peek().changed = true;
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,36,private boolean retraverseOnChange;
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,37,private RecentChange handler;
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,47,this.retraverseOnChange = true;
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,48,this.handler = new RecentChange();
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,101,eepholeOptimizationsPass setRetraverseOnChange(boolean retraverse) {
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,51,void setRetraverseOnChange(boolean retraverse) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,103,eturn this;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,112,eepholeChangeHandler handler = new PeepholeChangeHandler();
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,115,raverse(root);
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,63,"NodeTraversal.traverseChangedFunctions(compiler, new FunctionCallback() {"
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,64,@Override
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,65,"public void visit(AbstractCompiler compiler, Node root) {"
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,66,if (root.isFunction()) {
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,67,root = root.getLastChild();
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,69,do {
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,70,handler.reset();
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,71,"NodeTraversal.traverse(compiler, root, new PeepCallback());"
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,72,} while (retraverseOnChange && handler.hasCodeChanged());
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,120,rivate void traverse(Node node) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,121,/ The goal here is to avoid retraversing
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,122,/ the entire AST to catch newly created opportunities.
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,123,"/ So we track whether a ""unit of code"" has changed,"
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,124,/ and revisit immediately.
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,125,f (!shouldVisit(node)) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,126,eturn;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,129,nt visits = 0;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,130,o {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,131,ode c = node.getFirstChild();
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,132,hile (c != null) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,133,ode next = c.getNext();
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,134,raverse(c);
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,135, = next;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,138,isit(node);
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,139,isits++;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,141,"reconditions.checkState(visits < 10000, ""too many interations"");"
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,142, while (shouldRetraverse(node));
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,144,xitNode(node);
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,147,rivate boolean shouldRetraverse(Node node) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,148,f (retraverseOnChange
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,149,& node.getParent() != null
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,150,& (node.isFunction() || node.isScript())) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,151,copeState state = traversalState.peek();
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,152,f (state.changed) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,153,/ prepare to re-visit the scope:
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,154,"/ when revisiting, only visit the immediate scope"
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,155,/ this reduces the cost of getting to a fixed
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,156,/ point in global scope.
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,157,tate.changed = false;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,158,tate.traverseChildScopes = false;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,159,eturn true;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,162,eturn false;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,165,rivate boolean shouldVisit(Node node) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,166,f (node.isFunction() || node.isScript()) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,167,copeState previous = traversalState.peek();
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,168,f (!previous.traverseChildScopes) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,169,eturn false;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,171,raversalState.push();
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,173,eturn true;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,176,rivate void exitNode(Node node) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,177,f (node.isFunction() || node.isScript()) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,178,raversalState.pop();
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,182,ublic void visit(Node n) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,183,ode currentVersionOfNode = n;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,184,oolean somethingChanged = false;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,186,o {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,187,omethingChanged = false;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,188,or (AbstractPeepholeOptimization optimization : peepholeOptimizations) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,189,ode newVersionOfNode =
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,190,ptimization.optimizeSubtree(currentVersionOfNode);
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,192,f (newVersionOfNode != currentVersionOfNode) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,193,omethingChanged = true;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,195,urrentVersionOfNode = newVersionOfNode;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,198,f (currentVersionOfNode == null) {
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,199,eturn;
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,79,private class PeepCallback extends AbstractShallowCallback {
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,80,@Override
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,81,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,82,"Node currentNode = n, newNode;"
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,83,boolean codeChanged = false;
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,84,do {
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,85,codeChanged = false;
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,86,for (AbstractPeepholeOptimization optim : peepholeOptimizations) {
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,87,newNode = optim.optimizeSubtree(currentNode);
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,88,if (newNode != currentNode) {
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,89,codeChanged = true;
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,90,currentNode = newNode;
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,92,if (currentNode == null) {
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,93,return;
+False,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,202, while(somethingChanged);
+True,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java,96,} while(codeChanged);
+False,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,50,rivate final CodeChangeHandler codeChange = new CodeChangeHandler();
+True,src/com/google/javascript/jscomp/PerformanceTracker.java,src/com/google/javascript/jscomp/PerformanceTracker.java,50,private final RecentChange codeChange = new RecentChange();
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,27,import java.util.HashMap;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,30,import java.util.Map;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,37,* @author dimvar@google.com (Dimitris Vardoulakis)
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,68,rivate boolean loopMutex = false;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,71,private boolean inLoop;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,85,// These fields are used during optimization loops.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,86,// They are declared here for two reasons:
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,87,// 1) Loop and ScopedChangeHandler can communicate via shared state
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,88,"// 2) Compiler talks to PhaseOptimizer, not Loop or ScopedChangeHandler"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,89,private NamedPass currentPass;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,90,"// For each pass, remember the time at the end of the pass's last run."
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,91,"private Map<NamedPass, Integer> lastRuns;"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,92,private Node currentScope;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,93,"// Starts at 0, increases as ""interesting"" things happen."
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,94,"// Nothing happens at time START_TIME, the first pass starts at time 1."
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,95,// The correctness of scope-change tracking relies on Node/getIntProp
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,96,// returning 0 if the custom attribute on a node hasn't been set.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,97,private int timestamp;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,98,// The time of the last change made to the program by any pass.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,99,private int lastChange;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,100,private static final int START_TIME = 0;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,101,private Node jsRoot;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,102,// Compiler/reportChangeToScope must call reportCodeChange to update all
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,103,// change handlers. This flag prevents double update in ScopedChangeHandler.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,104,private boolean crossScopeReporting;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,117,this.inLoop = false;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,118,this.crossScopeReporting = false;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,119,this.timestamp = this.lastChange = START_TIME;
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,178, Sets the hashcode of the AST to be logged every pass. Intended for development.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,205,* Sets the hashcode of the AST to be logged every pass.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,206,* Intended for development.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,225,jsRoot = root;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,300,/** {@code n} is either a function or the top-level node of the AST */
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,301,void setScope(Node n) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,302,currentScope = n;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,305,boolean hasScopeChanged(Node n) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,306,"// Outside loops we don't track changed scopes, so we visit them all."
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,307,if (!inLoop) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,308,return true;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,310,int timeOfLastRun = lastRuns.get(currentPass);
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,311,// A pass looks at all functions when it first runs
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,312,return timeOfLastRun == START_TIME
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,313,|| n.getChangeTime() > timeOfLastRun;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,316,void reportChangeToScope(Node n) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,317,lastChange = timestamp;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,318,n.setChangeTime(timestamp);
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,319,// Every code change happens at a different time
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,320,timestamp++;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,323,// This method and the next one are used so that we don't falsely report the
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,324,// current scope as changed when reportChangeToScope is called from Compiler.
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,325,void startCrossScopeReporting() {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,326,crossScopeReporting = true;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,329,void endCrossScopeReporting() {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,330,crossScopeReporting = false;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,333,private class ScopedChangeHandler implements CodeChangeHandler {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,334,private int lastCodeChangeQuery;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,336,ScopedChangeHandler() {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,337,this.lastCodeChangeQuery = timestamp;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,340,@Override
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,341,public void reportChange() {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,342,if (crossScopeReporting) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,343,"// This call was caused by Compiler/reportChangeToScope, do nothing"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,344,return;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,346,lastChange = timestamp;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,347,currentScope.setChangeTime(timestamp);
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,348,// Every code change happens at a different time
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,349,timestamp++;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,352,private boolean hasCodeChangedSinceLastCall() {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,353,boolean result = lastChange > lastCodeChangeQuery;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,354,lastCodeChangeQuery = timestamp;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,355,// The next call to the method will happen at a different time
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,356,timestamp++;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,357,return result;
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,280,rivate CodeChangeHandler recentChange = new CodeChangeHandler();
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,370,private ScopedChangeHandler scopeHandler;
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,292,"reconditions.checkState(!loopMutex, ""Nested loops are forbidden"");"
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,293,oopMutex = true;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,382,"Preconditions.checkState(!inLoop, ""Nested loops are forbidden"");"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,383,inLoop = true;
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,300,ompiler.addChangeHandler(recentChange);
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,390,// Set up function-change tracking
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,391,scopeHandler = new ScopedChangeHandler();
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,392,compiler.addChangeHandler(scopeHandler);
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,393,currentScope = root;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,394,"// lastRuns is initialized before each loop. This way, when a pass is run"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,395,"// in the 2nd loop for the 1st time, it looks at all scopes."
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,396,"lastRuns = new HashMap<NamedPass, Integer>();"
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,397,for (NamedPass pass : myPasses) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,398,"lastRuns.put(pass, START_TIME);"
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,316,ecentChange.reset();
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,419,timestamp++;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,420,currentPass = pass;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,423,"lastRuns.put(pass, timestamp);"
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,325, else if (recentChange.hasCodeChanged()) {
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,426,} else if (scopeHandler.hasCodeChangedSinceLastCall()) {
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,346,oopMutex = false;
+False,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,347,ompiler.removeChangeHandler(recentChange);
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,447,inLoop = false;
+True,src/com/google/javascript/jscomp/PhaseOptimizer.java,src/com/google/javascript/jscomp/PhaseOptimizer.java,448,compiler.removeChangeHandler(scopeHandler);
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,2,* Copyright 2013 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,20,* Records whether the code has changed since the last reset.
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,21,* @author nicksantos@google.com (Nick Santos)
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,23,final class RecentChange implements CodeChangeHandler {
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,24,private boolean hasChanged = false;
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,26,@Override
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,27,public void reportChange() {
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,28,hasChanged = true;
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,31,public boolean hasCodeChanged() {
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,32,return hasChanged;
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,35,public void reset() {
+True,src/com/google/javascript/jscomp/RecentChange.java,src/com/google/javascript/jscomp/RecentChange.java,36,hasChanged = false;
+False,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,282,f (input == null)
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,282,if (input == null) {
+False,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,284,lse
+False,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,285,eturn input.getName();
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,285,return input.getName();
+False,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,554,f (scope.vars.containsKey(name))
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,554,if (scope.vars.containsKey(name)) {
+False,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,610,eturn !isGlobal();
+True,src/com/google/javascript/jscomp/Scope.java,src/com/google/javascript/jscomp/Scope.java,610,return parent != null;
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,21,mport com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback;
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,23,mport com.google.javascript.jscomp.NodeTraversal.ScopedCallback;
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,22,import com.google.javascript.jscomp.NodeTraversal.FunctionCallback;
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,52,lass UnreachableCodeElimination extends AbstractPostOrderCallback
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,53,"mplements CompilerPass, ScopedCallback  {"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,51,class UnreachableCodeElimination implements CompilerPass {
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,68,ublic void exitScope(NodeTraversal t) {
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,69,cope scope = t.getScope();
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,70,ode root = scope.getRootNode();
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,72,/ Computes the control flow graph.
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,73,"ontrolFlowAnalysis cfa = new ControlFlowAnalysis(compiler, false, false);"
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,74,"fa.process(null, root);"
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,75,ontrolFlowGraph<Node> cfg = cfa.getCfg();
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,77,"ew GraphReachability<Node, ControlFlowGraph.Branch>(cfg)"
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,78,compute(cfg.getEntry().getValue());
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,80,f (scope.isLocal()) {
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,81,oot = root.getLastChild();
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,84,o {
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,85,odeChanged = false;
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,86,"odeTraversal.traverse(compiler, root, new EliminationPass(cfg));"
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,87, while (codeChanged);
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,90,Override
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,91,"ublic void process(Node externs, Node root) {"
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,92,"odeTraversal.traverse(compiler, root, this);"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,65,"public void process(Node externs, Node toplevel) {"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,66,"NodeTraversal.traverseChangedFunctions(compiler, new FunctionCallback() {"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,67,@Override
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,68,"public void visit(AbstractCompiler compiler, Node root) {"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,69,// Computes the control flow graph.
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,70,ControlFlowAnalysis cfa =
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,71,"new ControlFlowAnalysis(compiler, false, false);"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,72,"cfa.process(null, root);"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,73,ControlFlowGraph<Node> cfg = cfa.getCfg();
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,74,"new GraphReachability<Node, ControlFlowGraph.Branch>(cfg)"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,75,.compute(cfg.getEntry().getValue());
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,76,if (root.isFunction()) {
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,77,root = root.getLastChild();
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,79,do {
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,80,codeChanged = false;
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,81,"NodeTraversal.traverse(compiler, root, new EliminationPass(cfg));"
+True,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,82,} while (codeChanged);
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,258,Override
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,259,"ublic void visit(NodeTraversal t, Node n, Node parent) {}"
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,261,Override
+False,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,src/com/google/javascript/jscomp/UnreachableCodeElimination.java,262,ublic void enterScope(NodeTraversal t) {}
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,105,AST_PROP          = 55;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,105,"CHANGE_TIME        = 56,    // For passes that work only on changed funs."
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,106,"LAST_PROP          = 56;    // Unused in the compiler, but keep for Rhino."
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,138,"case CHANGE_TIME: return ""change_time"";"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,138,"hrow new IllegalStateException(""unexpect prop id "" + propType);"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,140,"throw new IllegalStateException(""unexpected prop id "" + propType);"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,167,"oolean isEquivalentTo(Node node, boolean compareJsType, boolean recurse) {"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,168,"oolean equivalent = super.isEquivalentTo(node, compareJsType, recurse);"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,169,f (equivalent) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,169,boolean isEquivalentTo(
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,170,"Node node, boolean compareJsType, boolean recur, boolean shallow) {"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,171,"boolean equiv = super.isEquivalentTo(node, compareJsType, recur, shallow);"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,172,if (equiv) {
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,174,eturn (thisValue != 0.0) || (1/thisValue == 1/thatValue);
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,177,return (thisValue != 0.0) || (1 / thisValue == 1 / thatValue);
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,225,"oolean isEquivalentTo(Node node, boolean compareJsType, boolean recurse) {"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,226,"eturn (super.isEquivalentTo(node, compareJsType, recurse)"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,228,boolean isEquivalentTo(
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,229,"Node node, boolean compareJsType, boolean recur, boolean shallow) {"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,230,"return (super.isEquivalentTo(node, compareJsType, recur, shallow)"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,261,rivate static abstract class AbstractPropListItem
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,265,private abstract static class AbstractPropListItem
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,692,f (prev == null)
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,693,irst = first.next;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,694,lse
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,695,rev.next = child.next;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,696,f (child == last) last = prev;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,696,if (prev == null) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,697,first = first.next;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,698,} else {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,699,prev.next = child.next;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,701,if (child == last) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,702,last = prev;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,716,irst = newChild;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,723,first = newChild;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,718,ode prev = getChildBefore(child);
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,719,rev.next = newChild;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,725,Node prev = getChildBefore(child);
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,726,prev.next = newChild;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,728,if (child == last) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,729,last = newChild;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,721,f (child == last)
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,722,ast = newChild;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,743,f (child == last)
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,744,ast = newChild;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,751,if (child == last) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,752,last = newChild;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1358,f (!hasNext()) throw new NoSuchElementException();
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1367,if (!hasNext()) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1368,throw new NoSuchElementException();
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1394,or (Node n = first; n != null; n = n.next)
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1405,for (Node n = first; n != null; n = n.next) {
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1432,"f (!isEquivalentTo(node2, false, false)) {"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1443,"if (!isEquivalentTo(node2, false, false, false)) {"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1459,"f (!isEquivalentTo(node2, true, false)) {"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1470,"if (!isEquivalentTo(node2, true, false, false)) {"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1478,"eturn isEquivalentTo(node, false, true);"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1489,"return isEquivalentTo(node, false, true, false);"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1492,/** Checks equivalence without going into inner functions */
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1493,public boolean isEquivalentToShallow(Node node) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1494,"return isEquivalentTo(node, false, true, true);"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1486,"eturn isEquivalentTo(node, true, true);"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1502,"return isEquivalentTo(node, true, true, false);"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1491," @param recurse Whether to compare the children of the current node, if"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1507,"* @param recur Whether to compare the children of the current node, if"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1509,"* @param shallow If true, the method doesn't recur into inner functions."
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1495,"oolean isEquivalentTo(Node node, boolean compareJsType, boolean recurse) {"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1512,boolean isEquivalentTo(
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1513,"Node node, boolean compareJsType, boolean recur, boolean shallow) {"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1532,f (recurse) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1550,if (recur) {
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1537,"f (!n.isEquivalentTo(n2, compareJsType, true)) {"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1555,if (!n.isEquivalentTo(
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1556,"n2, compareJsType, !(shallow && n.isFunction()), shallow)) {"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1667,f (child == last) last = prev;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1686,if (child == last) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1687,last = prev;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1889,/** This node was last changed at {@code time} */
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1890,public void setChangeTime(int time) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1891,"putIntProp(CHANGE_TIME, time);"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1894,/** Returns the time of the last change for this node */
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1895,public int getChangeTime() {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1896,return getIntProp(CHANGE_TIME);
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1971,inal public static int FLAG_GLOBAL_STATE_UNMODIFIED = 1;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1972,inal public static int FLAG_THIS_UNMODIFIED = 2;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1973,inal public static int FLAG_ARGUMENTS_UNMODIFIED = 4;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1974,inal public static int FLAG_NO_THROWS = 8;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1975,inal public static int FLAG_LOCAL_RESULTS = 16;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2002,public static final int FLAG_GLOBAL_STATE_UNMODIFIED = 1;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2003,public static final int FLAG_THIS_UNMODIFIED = 2;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2004,public static final int FLAG_ARGUMENTS_UNMODIFIED = 4;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2005,public static final int FLAG_NO_THROWS = 8;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2006,public static final int FLAG_LOCAL_RESULTS = 16;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1977,inal public static int SIDE_EFFECTS_FLAGS_MASK = 31;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2008,public static final int SIDE_EFFECTS_FLAGS_MASK = 31;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1979,inal public static int SIDE_EFFECTS_ALL = 0;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,1980,inal public static int NO_SIDE_EFFECTS =
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2010,public static final int SIDE_EFFECTS_ALL = 0;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2011,public static final int NO_SIDE_EFFECTS =
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,25,import com.google.javascript.jscomp.NodeTraversal.AbstractPreOrderCallback;
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,34,import java.util.HashMap;
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,36,import java.util.Map;
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,741,"private Map<Node, Node> findCorrespondingNodes(Node n1, Node n2) {"
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,742,Preconditions.checkState(n1.isEquivalentTo(n2));
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,743,"Map<Node, Node> correspondingNodes = new HashMap<Node, Node>();"
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,744,"correspondingNodes.put(n1, n2);"
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,745,"correspondingNodesHelper(correspondingNodes, n1, n2);"
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,746,return correspondingNodes;
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,749,"private void correspondingNodesHelper(Map<Node, Node> map, Node n1, Node n2) {"
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,750,if (n1.isFunction()) {
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,751,"map.put(n1, n2);"
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,753,"for (Node child1 = n1.getFirstChild(), child2 = n2.getFirstChild();"
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,754,child1 != null;
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,755,"child1 = child1.getNext(), child2 = child2.getNext()) {"
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,756,"correspondingNodesHelper(map, child1, child2);"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,756,odeChangeHandler recentChange = new  CodeChangeHandler();
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,777,RecentChange recentChange = new RecentChange();
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,799,"final Map<Node, Node> nodeMap ="
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,800,"findCorrespondingNodes(mainRoot, mainRootClone);"
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,902,"/ Generally, externs should not be change by the compiler passes."
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,925,"// Generally, externs should not be changed by the compiler passes."
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,944,"// If a scope is marked as changed, it should not be shallow-equivalent"
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,945,// to its corresponding cloned scope. The converse is false b/c we don't
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,946,// track changes to scopes by non-loopable passes.
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,947,if (mainRoot.getChangeTime() != 0) {
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,948,assertFalse(mainRoot.isEquivalentToShallow(nodeMap.get(mainRoot)));
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,950,"NodeTraversal.traverse(compiler, mainRoot,"
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,951,new AbstractPreOrderCallback() {
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,952,@Override
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,953,public final boolean shouldTraverse(
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,954,"NodeTraversal t, Node n, Node p) {"
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,955,if (n.isFunction() &&
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,956,n.getChangeTime() != 0 && nodeMap.containsKey(n)) {
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,957,assertFalse(n.isEquivalentToShallow(nodeMap.get(n)));
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,959,return true;
+False,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,935,ode normalizeCheckExternsRootClone = normalizeCheckRootClone.getFirstChild();
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,977,Node normalizeCheckExternsRootClone =
+True,test/com/google/javascript/jscomp/CompilerTestCase.java,test/com/google/javascript/jscomp/CompilerTestCase.java,978,normalizeCheckRootClone.getFirstChild();
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,25,inal DiagnosticType NAME_ERROR =
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,25,static final DiagnosticType NAME_ERROR =
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,28,inal DiagnosticType INVALID_LIT_ERROR =
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,28,static final DiagnosticType INVALID_LIT_ERROR =
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,31,inal DiagnosticType USELESS_EACH_ERROR =
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,31,static final DiagnosticType USELESS_EACH_ERROR =
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,85,"estSame(setupCode+""obj2.meth=function() { return { a:{} }; };"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,85,"testSame(setupCode + ""obj2.meth=function() { return { a:{} }; };"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,98,String resultCode =
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,99,"""var jQuery={ expandedEach: function(vals, callback){} };"";"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,104,"etupCode + ""(function(){ var a = 'a'; jQuery.a = 1 })();"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,106,"resultCode + ""(function(){ var a = 'a'; jQuery.a = 1 })();"" +"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,114,"etupCode + ""(function(){ jQuery.a = 0; })();"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,116,"resultCode + ""(function(){ jQuery.a = 0; })();"" +"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,121,"etupCode + ""(function(){ var a = 'a'; jQuery.a = 1 })();"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,123,"resultCode + ""(function(){ var a = 'a'; jQuery.a = 1 })();"" +"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,128,"etupCode + ""(function(){ jQuery.a = 0; })();"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,130,"resultCode + ""(function(){ jQuery.a = 0; })();"" +"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,135,"etupCode + ""(function(){ jQuery.a = 0;"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,137,"resultCode + ""(function(){ jQuery.a = 0;"" +"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,142,"etupCode + ""(function(){"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,144,"resultCode + ""(function(){"" +"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,151,"etupCode + ""(function(){"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,153,"resultCode + ""(function(){"" +"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,153,"function key() {}; key(); })('test')})()"");"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,155,"""function key() {} key(); })('test')})()"");"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,158,"etupCode + ""alert((function(){"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,160,"resultCode + ""alert((function(){"" +"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,162,"estSame(setupCode + ""var a = ['a'];"" +"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,163,"jQuery.expandedEach(a, function(key,val){ jQuery[key]=val; })"","
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,164,NVALID_LIT_ERROR);
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,164,"String testCode = ""var a = ['a'];"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,165,"""jQuery.expandedEach(a, function(key,val){ jQuery[key]=val; })"";"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,166,"test(setupCode + testCode, resultCode + testCode, null, INVALID_LIT_ERROR);"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,167,"estSame(setupCode + ""var obj2={};"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,169,"test(setupCode + ""var obj2={};"" +"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,169,"obj2[ '[object ' + name + ']' ] = 'a';});"", NAME_ERROR, true);"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,171,"""obj2[ '[object ' + name + ']' ] = 'a';});"","
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,172,"resultCode + ""var obj2={};"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,173,"""jQuery.expandedEach(['foo','bar'], function(i, name) {"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,174,"""obj2[ '[object foo]' ] = 'a';});"","
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,175,"null, USELESS_EACH_ERROR);"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,172,"estSame(setupCode + ""var obj2={};"" +"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,173,"jQuery.expandedEach(['foo','bar'], function(i, name) {"" +"
+False,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,174,"obj2[i] = 1;});"", USELESS_EACH_ERROR, false);"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,178,testCode =
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,179,"""var obj2={}; jQuery.expandedEach(['foo','bar'], function(i, name) {"" +"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,180,"""obj2[i] = 1;});"";"
+True,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,test/com/google/javascript/jscomp/ExpandJqueryAliasesTest.java,181,"test(setupCode + testCode, resultCode + testCode, null, USELESS_EACH_ERROR);"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1238,f (letter >= 'i') letter++;
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1239,f (letter >= 'j') letter++;
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1240,f (letter >= 'o') letter++;
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1238,if (letter >= 'i') {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1239,letter++;
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1241,if (letter >= 'j') {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1242,letter++;
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1244,if (letter >= 'o') {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1245,letter++;
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1255,f (letter >= 'i') letter++;
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1256,f (letter >= 'j') letter++;
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1257,f (letter >= 'o') letter++;
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1261,if (letter >= 'i') {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1262,letter++;
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1264,if (letter >= 'j') {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1265,letter++;
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1267,if (letter >= 'o') {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1268,letter++;
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2515,// isEquivalentTo returns false for alpha-equivalent nodes
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2516,public void testIsEquivalentTo() {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2517,"String[] input1 = {""function f(z) { return z; }""};"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2518,"String[] input2 = {""function f(y) { return y; }""};"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2519,CompilerOptions options = new CompilerOptions();
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2520,"Node out1 = parse(input1, options, false);"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2521,"Node out2 = parse(input2, options, false);"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2522,assertFalse(out1.isEquivalentTo(out2));
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,2,* Copyright 2013 The Closure Compiler Authors.
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,17,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,19,import com.google.common.collect.Lists;
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,21,import java.util.List;
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,27,* This file contains the only tests that use the infrastructure in
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,28,* CompilerTestCase to run multiple passes. The other files that use
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,29,* CompilerTestCase test a single pass.
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,31,public class MultiPassTest extends CompilerTestCase {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,32,private List<PassFactory> passes;
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,34,public MultiPassTest() {}
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,36,protected CompilerPass getProcessor(Compiler compiler) {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,37,"PhaseOptimizer po = new PhaseOptimizer(compiler, null, null);"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,38,po.consume(passes);
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,39,compiler.setPhaseOptimizer(po);
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,40,return po;
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,43,public void testInlineVarsAndPeephole() {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,44,passes = Lists.newLinkedList();
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,45,addInlineVariables();
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,46,addPeephole();
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,47,"test(""function f() { var x = 1; return x + 5; }"","
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,48,"""function f() { return 6; }"");"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,51,public void testInlineVarsAndDeadCodeElim() {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,52,passes = Lists.newLinkedList();
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,53,addDeadCodeElimination();
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,54,addInlineVariables();
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,55,"test(""function f() { var x = 1; return x; x = 3; }"","
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,56,"""function f() { return 1; }"");"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,59,public void testTopScopeChange() {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,60,passes = Lists.newLinkedList();
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,61,addInlineVariables();
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,62,addPeephole();
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,63,"test(""var x = 1, y = x, z = x + y;"", ""var z = 2;"");"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,66,private void addDeadCodeElimination() {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,67,"passes.add(new PassFactory(""removeUnreachableCode"", false) {"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,68,@Override
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,69,protected CompilerPass create(AbstractCompiler compiler) {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,70,"return new UnreachableCodeElimination(compiler, true);"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,75,private void addInlineVariables() {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,76,"passes.add(new PassFactory(""inlineVariables"", false) {"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,77,@Override
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,78,protected CompilerPass create(AbstractCompiler compiler) {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,79,"return new InlineVariables(compiler, InlineVariables.Mode.ALL, true);"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,84,private void addPeephole() {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,85,"passes.add(new PassFactory(""peepholeOptimizations"", false) {"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,86,@Override
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,87,protected CompilerPass create(AbstractCompiler compiler) {
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,88,final boolean late = false;
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,89,"return new PeepholeOptimizationsPass(compiler,"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,90,"new PeepholeSubstituteAlternateSyntax(late),"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,91,"new PeepholeReplaceKnownMethods(late),"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,92,"new PeepholeRemoveDeadCode(),"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,93,"new PeepholeFoldConstants(late),"
+True,test/com/google/javascript/jscomp/MultiPassTest.java,test/com/google/javascript/jscomp/MultiPassTest.java,94,new PeepholeCollectPropertyAssignments());
+False,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,55,ompilerPass peepholePass =
+False,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,56,"ew PeepholeOptimizationsPass(compiler,"
+False,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,57,ew PeepholeSubstituteAlternateSyntax(late))
+False,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,58,setRetraverseOnChange(false);
+True,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,55,PeepholeOptimizationsPass peepholePass = new PeepholeOptimizationsPass(
+True,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,56,"compiler, new PeepholeSubstituteAlternateSyntax(late));"
+True,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,57,peepholePass.setRetraverseOnChange(false);
+False,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,335,"or (int i = 0; i < 200; i++) longRegexp += ""x"";"
+True,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,333,for (int i = 0; i < 200; i++) {
+True,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java,334,"longRegexp += ""x"";"
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,36,private final Node dummyRoot = new Node(Token.BLOCK);
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,45,racker = new PerformanceTracker(
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,46,"ew Node(Token.BLOCK), TracerMode.TIMING_ONLY);"
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,46,"tracker = new PerformanceTracker(dummyRoot, TracerMode.TIMING_ONLY);"
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,77,"ptimizer.process(null, null);"
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,77,"optimizer.process(null, dummyRoot);"
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,85,"ptimizer.process(null, null);"
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,85,"optimizer.process(null, dummyRoot);"
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,146, catch (IllegalArgumentException e) {}
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,146,} catch (IllegalArgumentException e) {
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,147,return;
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,158,"ptimizer.process(null, null);"
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,160,"optimizer.process(null, dummyRoot);"
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,176,"ptimizer.process(null, null);"
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,178,"optimizer.process(null, dummyRoot);"
+False,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,185,"ptimizer.process(null, null);"
+True,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,test/com/google/javascript/jscomp/PhaseOptimizerTest.java,187,"optimizer.process(null, dummyRoot);"
+False,test/com/google/javascript/jscomp/SourceInformationAnnotatorTest.java,test/com/google/javascript/jscomp/SourceInformationAnnotatorTest.java,43,"odeTraversal.traverse(null, root,"
+True,test/com/google/javascript/jscomp/SourceInformationAnnotatorTest.java,test/com/google/javascript/jscomp/SourceInformationAnnotatorTest.java,43,"NodeTraversal.traverse(new Compiler(), root,"

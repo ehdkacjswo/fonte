@@ -35,6 +35,7 @@ if __name__ == "__main__":
     assert 0 <= args.lamb < 1
 
     print(f"Number of total commits: {get_the_number_of_total_commits(args.coredir)}")
+
     if args.skip_stage_2:
         style_change_commits = []
     else:

@@ -1,0 +1,77 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,1,package org.jsoup.examples;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,3,import org.jsoup.Jsoup;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,4,import org.jsoup.helper.StringUtil;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,5,import org.jsoup.helper.Validate;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,6,import org.jsoup.nodes.Document;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,7,import org.jsoup.nodes.Element;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,8,import org.jsoup.nodes.Node;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,9,import org.jsoup.nodes.TextNode;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,10,import org.jsoup.select.NodeTraversor;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,11,import org.jsoup.select.NodeVisitor;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,13,import java.io.IOException;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,16,* HTML to plain-text. This example program demonstrates the use of jsoup to convert HTML input to lightly-formatted
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,17,"* plain-text. That is divergent from the general goal of jsoup's .text() methods, which is to get clean data from a"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,18,* scrape.
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,19,* <p/>
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,20,* Note that this is a fairly simplistic formatter -- for real world use you'll want to embrace and extend.
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,22,"* @author Jonathan Hedley, jonathan@hedley.net"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,24,public class HtmlToPlainText {
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,25,public static void main(String... args) throws IOException {
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,26,"Validate.isTrue(args.length == 1, ""usage: supply url to fetch"");"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,27,String url = args[0];
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,28,Document doc = Jsoup.connect(url).get();
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,30,HtmlToPlainText formatter = new HtmlToPlainText();
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,31,String plainText = formatter.getPlainText(doc);
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,32,System.out.println(plainText);
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,35,public String getPlainText(Element element) {
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,36,FormattingVisitor formatter = new FormattingVisitor();
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,37,NodeTraversor traversor = new NodeTraversor(formatter);
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,38,"traversor.traverse(element); // walk the DOM, and call .head() and .tail() for each node"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,40,return formatter.toString();
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,43,"// the formatting rules, implemented in a breadth-first DOM travarse"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,44,private class FormattingVisitor implements NodeVisitor {
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,45,private static final int maxWidth = 80;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,46,private int width = 0;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,47,private StringBuilder accum = new StringBuilder(); // holds the accumulated text
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,49,// hit when the node is first seen
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,50,"public void head(Node node, int depth) {"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,51,String name = node.nodeName();
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,52,if (node instanceof TextNode)
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,53,append(((TextNode) node).text()); // TextNodes carry all user-readable text in the DOM.
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,54,"else if (name.equals(""li""))"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,55,"append(""\n * "");"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,58,// hit when all of the node's children (if any) have been visited
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,59,"public void tail(Node node, int depth) {"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,60,String name = node.nodeName();
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,61,"if (name.equals(""br""))"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,62,"append(""\n"");"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,63,"else if (StringUtil.in(name, ""p"", ""h1"", ""h2"", ""h3"", ""h4"", ""h5""))"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,64,"append(""\n\n"");"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,65,"else if (name.equals(""a""))"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,66,"append(String.format("" <%s>"", node.absUrl(""href"")));"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,69,// appends text to the string builder with a simple word wrap method
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,70,private void append(String text) {
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,71,"if (text.startsWith(""\n""))"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,72,"width = 0; // reset counter if starts with a newline. only from formats above, not in natural text"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,73,"if (text.equals("" "") &&"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,74,"(accum.length() == 0 || StringUtil.in(accum.substring(accum.length() - 1), "" "", ""\n"")))"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,75,return; // don't accumulate long runs of empty spaces
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,77,"if (text.length() + width > maxWidth) { // won't fit, needs to wrap"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,78,"String words[] = text.split(""\\s+"");"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,79,for (int i = 0; i < words.length; i++) {
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,80,String word = words[i];
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,81,boolean last = i == words.length - 1;
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,82,if (!last) // insert a space if not the last word
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,83,"word = word + "" "";"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,84,if (word.length() + width > maxWidth) { // wrap and reset counter
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,85,"accum.append(""\n"").append(word);"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,86,width = word.length();
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,87,} else {
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,88,accum.append(word);
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,89,width += word.length();
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,92,"} else { // fits as is, without need to wrap text"
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,93,accum.append(text);
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,94,width += text.length();
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,98,public String toString() {
+True,src/main/java/org/jsoup/examples/HtmlToPlainText.java,src/main/java/org/jsoup/examples/HtmlToPlainText.java,99,return accum.toString();

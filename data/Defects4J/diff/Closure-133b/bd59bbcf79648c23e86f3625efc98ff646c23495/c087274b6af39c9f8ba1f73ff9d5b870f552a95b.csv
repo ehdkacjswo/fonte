@@ -1,0 +1,112 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,30,import com.google.common.collect.Multimap;
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,31,import com.google.common.collect.HashMultimap;
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,101,static final DiagnosticType CONST_PROPERTY_REASSIGNED_VALUE =
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,102,DiagnosticType.disabled(
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,103,"""JSC_CONSTANT_PROPERTY_REASSIGNED_VALUE"","
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,104,"""constant property {0} assigned a value more than once"");"
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,114,"private final Multimap<String, String> initializedConstantProperties;"
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,119,this.initializedConstantProperties = HashMultimap.create();
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,221,"checkConstantProperty(t, n);"
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,344,* Determines whether the given property with @const tag got reassigned
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,345,* @param t The current traversal.
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,346,* @param getprop The getprop node.
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,348,"private void checkConstantProperty(NodeTraversal t,"
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,349,Node getprop) {
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,350,// Check whether the property is modified
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,351,Node parent = getprop.getParent();
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,352,if (!(NodeUtil.isAssignmentOp(parent) && parent.getFirstChild() == getprop)
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,353,&& (parent.getType() != Token.INC) && (parent.getType() != Token.DEC)) {
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,354,return;
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,357,ObjectType objectType =
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,358,ObjectType.cast(dereference(getprop.getFirstChild().getJSType()));
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,359,String propertyName = getprop.getLastChild().getString();
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,361,// Check whether constant properties are reassigned
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,362,if (objectType != null) {
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,363,ObjectType oType = objectType;
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,364,while (oType != null) {
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,365,if (oType.hasReferenceName()) {
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,366,if (initializedConstantProperties.containsEntry(
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,367,"oType.getReferenceName(), propertyName)) {"
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,368,compiler.report(
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,369,"t.makeError(getprop, CONST_PROPERTY_REASSIGNED_VALUE,"
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,370,propertyName));
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,371,break;
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,374,oType = oType.getImplicitPrototype();
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,377,JSDocInfo info = objectType.getOwnPropertyJSDocInfo(propertyName);
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,378,if (info != null && info.isConstant()
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,379,&& objectType.hasReferenceName()) {
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,380,"initializedConstantProperties.put(objectType.getReferenceName(),"
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,381,propertyName);
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,384,// Add the prototype when we're looking at an instance object
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,385,if (objectType.isInstanceType()) {
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,386,ObjectType prototype = objectType.getImplicitPrototype();
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,387,if (prototype != null) {
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,388,JSDocInfo prototypeInfo
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,389,= prototype.getOwnPropertyJSDocInfo(propertyName);
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,390,if (prototypeInfo != null && prototypeInfo.isConstant()
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,391,&& prototype.hasReferenceName()) {
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,392,"initializedConstantProperties.put(prototype.getReferenceName(),"
+True,src/com/google/javascript/jscomp/CheckAccessControls.java,src/com/google/javascript/jscomp/CheckAccessControls.java,393,propertyName);
+False,src/com/google/javascript/jscomp/DiagnosticGroups.java,src/com/google/javascript/jscomp/DiagnosticGroups.java,62,"visibility"";"
+True,src/com/google/javascript/jscomp/DiagnosticGroups.java,src/com/google/javascript/jscomp/DiagnosticGroups.java,62,"""visibility"" +"
+True,src/com/google/javascript/jscomp/DiagnosticGroups.java,src/com/google/javascript/jscomp/DiagnosticGroups.java,63,"""constantProperty"";"
+True,src/com/google/javascript/jscomp/DiagnosticGroups.java,src/com/google/javascript/jscomp/DiagnosticGroups.java,84,public static DiagnosticGroup CONSTANT_PROPERTY = DiagnosticGroups
+True,src/com/google/javascript/jscomp/DiagnosticGroups.java,src/com/google/javascript/jscomp/DiagnosticGroups.java,85,".registerGroup(""constantProperty"","
+True,src/com/google/javascript/jscomp/DiagnosticGroups.java,src/com/google/javascript/jscomp/DiagnosticGroups.java,86,new DiagnosticGroup(
+True,src/com/google/javascript/jscomp/DiagnosticGroups.java,src/com/google/javascript/jscomp/DiagnosticGroups.java,87,CheckAccessControls.CONST_PROPERTY_REASSIGNED_VALUE));
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,30,import static com.google.javascript.jscomp.CheckAccessControls.CONST_PROPERTY_REASSIGNED_VALUE;
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,56,"options.setWarningLevel(DiagnosticGroups.CONSTANT_PROPERTY,"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,57,CheckLevel.ERROR);
+False,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,264,"/** @deprecated \n * @override */ SubFoo.prototype.bar = function() {};"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,267,"""/** @deprecated \n * @override */ SubFoo.prototype.bar = "" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,268,"""function() {};"" +"
+False,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,415,"/** @const */ SubFoo.prototype.bar_ = function() {};"","
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,419,"""SubFoo.prototype.bar_ = function() {};"","
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,658,public void testConstantProperty1() {
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,659,"test(""/** @constructor */ function A() {"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,660,"""/** @const */ this.bar = 3;}"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,661,"""/** @constructor */ function B() {"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,662,"""/** @const */ this.bar = 3;this.bar += 4;}"","
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,663,"null, CONST_PROPERTY_REASSIGNED_VALUE);"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,666,public void testConstantProperty2() {
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,667,"test(""/** @constructor */ function Foo() {}"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,668,"""/** @const */ Foo.prototype.prop = 2;"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,669,"""var foo = new Foo();"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,670,"""foo.prop = 3;"","
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,671,"null , CONST_PROPERTY_REASSIGNED_VALUE);"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,674,public void testConstantProperty3() {
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,675,"testSame(""var o = { /** @const */ x: 1 };"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,676,"""o.x = 2;"");"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,679,public void testConstantProperty4() {
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,680,"test(""/** @constructor */ function cat(name) {}"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,681,"""/** @const */ cat.test = 1;"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,682,"""cat.test *= 2;"","
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,683,"null, CONST_PROPERTY_REASSIGNED_VALUE);"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,686,public void testConstantProperty5() {
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,687,"test(""/** @constructor */ function Foo() { this.prop = 1;}"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,688,"""/** @const */ Foo.prototype.prop;"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,689,"""Foo.prototype.prop = 2"","
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,690,"null , CONST_PROPERTY_REASSIGNED_VALUE);"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,693,public void testConstantProperty6() {
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,694,"test(""/** @constructor */ function Foo() { this.prop = 1;}"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,695,"""/** @const */ Foo.prototype.prop = 2;"","
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,696,"null , CONST_PROPERTY_REASSIGNED_VALUE);"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,699,public void testConstantProperty7() {
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,700,"testSame(""/** @constructor */ function Foo() {} "" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,701,"""Foo.prototype.bar_ = function() {};"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,702,"""/** @constructor \n * @extends {Foo} */ "" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,703,"""function SubFoo() {};"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,704,"""/** @const */ /** @override */ SubFoo.prototype.bar_ = function() {};"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,705,"""SubFoo.prototype.baz = function() { this.bar_(); }"");"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,708,public void testConstantProperty8() {
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,709,"testSame(""var o = { /** @const */ x: 1 };"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,710,"""var y = o.x;"");"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,713,public void testConstantProperty9() {
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,714,"testSame(""/** @constructor */ function A() {"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,715,"""/** @const */ this.bar = 3;}"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,716,"""/** @constructor */ function B() {"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,717,"""this.bar = 4;}"");"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,720,public void testConstantProperty10() {
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,721,"testSame(""/** @constructor */ function Foo() { this.prop = 1;}"" +"
+True,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,test/com/google/javascript/jscomp/CheckAccessControlsTest.java,722,"""/** @const */ Foo.prototype.prop;"");"

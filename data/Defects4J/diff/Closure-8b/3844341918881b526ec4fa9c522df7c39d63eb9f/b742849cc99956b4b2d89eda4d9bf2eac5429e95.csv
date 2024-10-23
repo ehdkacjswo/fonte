@@ -1,0 +1,71 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,60,"* 7) Finds properties marked @expose, and rewrites them in [] notation."
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,148,FindExposeAnnotations findExposeAnnotations = new FindExposeAnnotations();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,149,"NodeTraversal.traverse(compiler, root, findExposeAnnotations);"
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,150,if (!findExposeAnnotations.exposedProperties.isEmpty()) {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,151,"NodeTraversal.traverse(compiler, root,"
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,152,new RewriteExposedProperties(
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,153,findExposeAnnotations.exposedProperties));
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,162,* Find all the @expose annotations.
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,164,private static class FindExposeAnnotations extends AbstractPostOrderCallback {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,165,private final Set<String> exposedProperties = Sets.newHashSet();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,167,"@Override public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,168,if (NodeUtil.isExprAssign(n)) {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,169,Node assign = n.getFirstChild();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,170,Node lhs = assign.getFirstChild();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,171,if (lhs.isGetProp() && isMarkedExpose(assign)) {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,172,exposedProperties.add(lhs.getLastChild().getString());
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,174,"} else if (NodeUtil.isObjectLitKey(n, parent) &&"
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,175,n.isString() &&
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,176,isMarkedExpose(n)) {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,177,exposedProperties.add(n.getString());
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,181,private boolean isMarkedExpose(Node n) {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,182,JSDocInfo info = n.getJSDocInfo();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,183,return info != null && info.isExpose();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,188,* Rewrite all exposed properties in [] form.
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,190,private class RewriteExposedProperties
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,191,extends AbstractPostOrderCallback {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,192,private final Set<String> exposedProperties;
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,194,RewriteExposedProperties(Set<String> exposedProperties) {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,195,this.exposedProperties = exposedProperties;
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,198,"@Override public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,199,if (n.isGetProp()) {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,200,String propName = n.getLastChild().getString();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,201,if (exposedProperties.contains(propName)) {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,202,Node obj = n.removeFirstChild();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,203,Node prop = n.removeFirstChild();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,204,"n.getParent().replaceChild(n, IR.getelem(obj, prop));"
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,205,compiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,207,"} else if (n.isString() && NodeUtil.isObjectLitKey(n, parent)) {"
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,208,String propName = n.getString();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,209,if (exposedProperties.contains(propName)) {
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,210,n.setQuotedString();
+True,src/com/google/javascript/jscomp/Normalize.java,src/com/google/javascript/jscomp/Normalize.java,211,compiler.reportCodeChange();
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,295,public void testExpose() {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,296,CompilerOptions options = createCompilerOptions();
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,297,CompilationLevel.ADVANCED_OPTIMIZATIONS
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,298,.setOptionsForCompilationLevel(options);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,299,"test(options,"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,300,"""var x = {eeny: 1, /** @expose */ meeny: 2};"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,301,"""/** @constructor */ var Foo = function() {};"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,302,"""/** @expose */  Foo.prototype.miny = 3;"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,303,"""Foo.prototype.moe = 4;"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,304,"""function moe(a, b) { return a.meeny + b.miny; }"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,305,"""window['x'] = x;"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,306,"""window['Foo'] = Foo;"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,307,"""window['moe'] = moe;"","
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,308,"""function a(){}"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,309,"""a.prototype.miny=3;"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,310,"""window.x={a:1,meeny:2};"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,311,"""window.Foo=a;"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,312,"""window.moe=function(b,c){"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,313,"""  return b.meeny+c.miny"" +"
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,465,public void testExposeSimple() {
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,466,"test(""var x = {}; /** @expose */ x.y = 3; x.y = 5;"","
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,467,"""var x = {}; x['y'] = 3; x['y'] = 5;"");"
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,470,public void testExposeComplex() {
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,471,test(
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,472,"""var x = {/** @expose */ a: 1, b: 2};"""
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,473,"+ ""x.a = 3; /** @expose */ x.b = 5;"","
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,474,"""var x = {'a': 1, 'b': 2};"""
+True,test/com/google/javascript/jscomp/NormalizeTest.java,test/com/google/javascript/jscomp/NormalizeTest.java,475,"+ ""x['a'] = 3; x['b'] = 5;"");"

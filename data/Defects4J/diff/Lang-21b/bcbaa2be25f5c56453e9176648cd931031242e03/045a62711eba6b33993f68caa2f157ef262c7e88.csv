@@ -1,0 +1,335 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,1,// package org.apache.commons.lang;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,4,"* Copyright 2002,2004 The Apache Software Foundation."
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,6,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,7,* you may not use this file except in compliance with the License.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,8,* You may obtain a copy of the License at
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,10,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,12,"* Unless required by applicable law or agreed to in writing, software"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,13,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,14,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,15,* See the License for the specific language governing permissions and
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,16,* limitations under the License.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,19,import java.text.*;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,20,import java.util.*;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,23,* A suite of utilities surrounding the use of the Calendar and Date object.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,25,"* @author <a href=""mailto:sergek@lokitech.com"">Serge Knystautas</a>"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,27,public class CalendarUtils {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,30,"* This is half a month, so this represents whether a date is in the top"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,31,* or bottom half of the month.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,33,public final static int SEMI_MONTH = 1001;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,35,private static final int[][] fields = {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,36,"{Calendar.MILLISECOND},"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,37,"{Calendar.SECOND},"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,38,"{Calendar.MINUTE},"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,39,"{Calendar.HOUR_OF_DAY, Calendar.HOUR},"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,40,"{Calendar.DATE, Calendar.DAY_OF_MONTH, Calendar.AM_PM /* Calendar.DAY_OF_YEAR, Calendar.DAY_OF_WEEK, Calendar.DAY_OF_WEEK_IN_MONTH */},"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,41,"{Calendar.MONTH, CalendarUtils.SEMI_MONTH},"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,42,"{Calendar.YEAR},"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,43,{Calendar.ERA}};
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,45,private static DateFormat[] dateFormats = {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,46,//3/31/92 10:00:07 PST
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,47,"new SimpleDateFormat(""M/dd/yy h:mm:ss z""),"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,48,"//January 23, 1987 10:05pm"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,49,"new SimpleDateFormat(""MMM d, yyyy h:mm a""),"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,50,//22:00 GMT
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,51,"new SimpleDateFormat(""h:mm z"")};"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,54,"* A week range, starting on Sunday."
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,56,public final static int RANGE_WEEK_SUNDAY = 1;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,59,"* A week range, starting on Monday."
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,61,public final static int RANGE_WEEK_MONDAY = 2;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,64,"* A week range, starting on the day focused."
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,66,public final static int RANGE_WEEK_RELATIVE = 3;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,69,"* A week range, centered around the day focused."
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,71,public final static int RANGE_WEEK_CENTER = 4;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,74,"* A month range, the week starting on Sunday."
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,76,public final static int RANGE_MONTH_SUNDAY = 5;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,79,"* A month range, the week starting on Monday."
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,81,public final static int RANGE_MONTH_MONDAY = 6;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,84,* See the other round method.  Works with a Date object.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,86,"public static Date round(Date val, int field) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,87,GregorianCalendar gval = new GregorianCalendar();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,88,gval.setTime(val);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,89,"modify(gval, field, true);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,90,return gval.getTime();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,94,"* Round this date, leaving the field specified as the most significant"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,95,"* field.  For example, if you had the datetime of 28 Mar 2002"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,96,"* 13:45:01.231, if this was passed with HOUR, it would return 28 Mar"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,97,"* 2002 14:00:00.000.  If this was passed with MONTH, it would return"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,98,* 1 April 2002 0:00:00.000.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,100,"public static Calendar round(Calendar val, int field) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,101,Calendar rounded = (Calendar) val.clone();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,102,"modify(rounded, field, true);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,103,return rounded;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,107,"* See the other round method.  Works with an Object, trying to"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,108,* use it as either a Date or Calendar.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,110,"public static Date round(Object val, int field) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,111,if (val instanceof Date) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,112,"return round((Date) val, field);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,113,} else if (val instanceof Calendar) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,114,"return round((Calendar) val, field).getTime();"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,115,} else {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,116,"throw new ClassCastException(""Could not round "" + val);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,121,* See the other trunc method.  Works with a Date.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,123,"public static Date trunc(Date val, int field) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,124,GregorianCalendar gval = new GregorianCalendar();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,125,gval.setTime(val);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,126,"modify(gval, field, false);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,127,return gval.getTime();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,131,"* Truncate this date, leaving the field specified as the most significant"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,132,"* field.  For example, if you had the datetime of 28 Mar 2002"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,133,"* 13:45:01.231, if you passed with HOUR, it would return 28 Mar"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,134,"* 2002 13:00:00.000.  If this was passed with MONTH, it would return"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,135,* 1 Mar 2002 0:00:00.000.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,137,"public static Calendar trunc(Calendar val, int field) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,138,Calendar truncated = (Calendar) val.clone();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,139,"modify(truncated, field, false);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,140,return truncated;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,144,"* See the other trunc method.  Works with an Object, trying to"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,145,* use it as either a Date or Calendar.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,147,"public static Date trunc(Object val, int field) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,148,if (val instanceof Date) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,149,"return trunc((Date) val, field);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,150,} else if (val instanceof Calendar) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,151,"return trunc((Calendar) val, field).getTime();"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,152,} else {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,153,"throw new ClassCastException(""Could not trunc "" + val);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,157,"private static void modify(Calendar val, int field, boolean round) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,158,boolean roundUp = false;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,159,for (int i = 0; i < fields.length; i++) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,160,for (int j = 0; j < fields[i].length; j++) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,161,if (fields[i][j] == field) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,162,//This is our field... we stop looping
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,163,if (round && roundUp) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,164,if (field == CalendarUtils.SEMI_MONTH) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,165,//This is a special case that's hard to generalize
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,166,"//If the date is 1, we round up to 16, otherwise"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,167,//  we subtract 15 days and add 1 month
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,168,if (val.get(Calendar.DATE) == 1) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,169,"val.add(Calendar.DATE, 15);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,170,} else {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,171,"val.add(Calendar.DATE, -15);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,172,"val.add(Calendar.MONTH, 1);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,174,} else {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,175,//We need at add one to this field since the
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,176,//  last number causes us to round up
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,177,"val.add(fields[i][0], 1);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,180,return;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,183,//We have various fields that are not easy roundings
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,184,int offset = 0;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,185,boolean offsetSet = false;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,186,//These are special types of fields that require different rounding rules
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,187,switch (field) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,188,case CalendarUtils.SEMI_MONTH:
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,189,if (fields[i][0] == Calendar.DATE) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,190,"//If we're going to drop the DATE field's value,"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,191,//  we want to do this our own way.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,192,//We need to subtrace 1 since the date has a minimum of 1
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,193,offset = val.get(Calendar.DATE) - 1;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,194,"//If we're above 15 days adjustment, that means we're in the"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,195,//  bottom half of the month and should stay accordingly.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,196,if (offset >= 15) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,197,offset -= 15;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,199,//Record whether we're in the top or bottom half of that range
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,200,roundUp = offset > 7;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,201,offsetSet = true;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,203,break;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,204,case Calendar.AM_PM:
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,205,if (fields[i][0] == Calendar.HOUR) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,206,"//If we're going to drop the HOUR field's value,"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,207,//  we want to do this our own way.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,208,offset = val.get(Calendar.HOUR);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,209,if (offset >= 12) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,210,offset -= 12;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,212,roundUp = offset > 6;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,213,offsetSet = true;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,215,break;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,217,if (!offsetSet) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,218,int min = val.getActualMinimum(fields[i][0]);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,219,int max = val.getActualMaximum(fields[i][0]);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,220,//Calculate the offset from the minimum allowed value
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,221,offset = val.get(fields[i][0]) - min;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,222,//Set roundUp if this is more than half way between the minimum and maximum
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,223,roundUp = offset > ((max - min) / 2);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,225,//We need to remove this field
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,226,"val.add(fields[i][0], -offset);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,228,"throw new RuntimeException(""We do not support that field."");"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,233,* Parses strings the way that CVS supports it... very human readable
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,235,public static Calendar parse(String original) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,236,"return parse(original, Locale.getDefault());"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,240,* Parses strings the way that CVS supports it... very human readable
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,242,"public static Calendar parse(String original, Locale locale) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,243,//Get the symbol names
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,244,DateFormatSymbols symbols = new DateFormatSymbols(locale);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,246,//Prep the string to parse
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,247,String value = original.toLowerCase().trim();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,249,//Get the current date/time
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,250,Calendar now = Calendar.getInstance();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,251,"if (value.endsWith("" ago"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,252,"//If this was a date that was ""ago"" the current time..."
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,253,//Strip out the ' ago' part
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,254,"value = value.substring(0, value.length() - 4);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,256,//Split the value and unit
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,257,"int start = value.indexOf("" "");"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,258,if (start < 0) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,259,"throw new RuntimeException(""Could not find space in between value and unit"");"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,261,String unit = value.substring(start + 1);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,262,"value = value.substring(0, start);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,263,"//We support ""a week"", so we need to parse the value as ""a"""
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,264,int val = 0;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,265,"if (value.equals(""a"") || value.equals(""an"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,266,val = 1;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,267,} else {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,268,val = Integer.parseInt(value);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,271,//Determine the unit
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,272,"if (unit.equals(""milliseconds"") || unit.equals(""millisecond"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,273,"now.add(Calendar.MILLISECOND, -val);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,274,"} else if (unit.equals(""seconds"") || unit.equals(""second"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,275,"now.add(Calendar.SECOND, -val);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,276,"} else if (unit.equals(""minutes"") || unit.equals(""minute"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,277,"now.add(Calendar.MINUTE, -val);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,278,"} else if (unit.equals(""hours"") || unit.equals(""hour"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,279,"now.add(Calendar.HOUR, -val);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,280,"} else if (unit.equals(""days"") || unit.equals(""day"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,281,"now.add(Calendar.DATE, -val);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,282,"} else if (unit.equals(""weeks"") || unit.equals(""week"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,283,"now.add(Calendar.DATE, -val * 7);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,284,"} else if (unit.equals(""fortnights"") || unit.equals(""fortnight"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,285,"now.add(Calendar.DATE, -val * 14);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,286,"} else if (unit.equals(""months"") || unit.equals(""month"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,287,"now.add(Calendar.MONTH, -val);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,288,"} else if (unit.equals(""years"") || unit.equals(""year"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,289,"now.add(Calendar.YEAR, -val);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,290,} else {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,291,"throw new RuntimeException(""We do not understand that many units ago"");"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,293,return now;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,294,"} else if (value.startsWith(""last "")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,295,//If this was the last time a certain field was met
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,296,//Strip out the 'last ' part
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,297,value = value.substring(5);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,298,//Get the current date/time
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,299,String[] strings = symbols.getWeekdays();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,300,for (int i = 0; i < strings.length; i++) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,301,if (value.equalsIgnoreCase(strings[i])) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,302,//How many days after Sunday
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,303,int daysAgo = now.get(Calendar.DAY_OF_WEEK) - i;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,304,if (daysAgo <= 0) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,305,daysAgo += 7;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,307,"now.add(Calendar.DATE, -daysAgo);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,308,return now;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,311,strings = symbols.getMonths();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,312,for (int i = 0; i < strings.length; i++) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,313,if (value.equalsIgnoreCase(strings[i])) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,314,//How many days after January
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,315,int monthsAgo = now.get(Calendar.MONTH) - i;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,316,if (monthsAgo <= 0) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,317,monthsAgo += 12;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,319,"now.add(Calendar.MONTH, -monthsAgo);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,320,return now;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,323,"if (value.equals(""week"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,324,"now.add(Calendar.DATE, -7);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,325,return now;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,327,"} else if (value.equals(""yesterday"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,328,"now.add(Calendar.DATE, -1);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,329,return now;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,330,"} else if (value.equals(""tomorrow"")) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,331,"now.add(Calendar.DATE, 1);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,332,return now;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,334,//Try to parse the date a number of different ways
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,335,for (int i = 0; i < dateFormats.length; i++) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,336,try {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,337,Date datetime = dateFormats[i].parse(original);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,338,Calendar cal = Calendar.getInstance();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,339,cal.setTime(datetime);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,340,return cal;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,341,} catch (ParseException pe) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,342,//we ignore this and just keep trying
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,346,"throw new RuntimeException(""Unable to parse '"" + original + ""'."");"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,350,* This constructs an Iterator that will start and stop over a date
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,351,"* range based on the focused date and the range style.  For instance,"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,352,"* passing Thursday, July 4, 2002 and a RANGE_MONTH_SUNDAY will return"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,353,"* an Iterator that starts with Sunday, June 30, 2002 and ends with"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,354,"* Saturday, August 3, 2002."
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,356,"public static Iterator getCalendarIterator(Calendar focus, int rangeStyle) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,357,Calendar start = null;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,358,Calendar end = null;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,359,int startCutoff = Calendar.SUNDAY;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,360,int endCutoff = Calendar.SATURDAY;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,361,switch (rangeStyle) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,362,case RANGE_MONTH_SUNDAY:
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,363,case RANGE_MONTH_MONDAY:
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,364,//Set start to the first of the month
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,365,"start = trunc(focus, Calendar.MONTH);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,366,//Set end to the last of the month
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,367,end = (Calendar) start.clone();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,368,"end.add(Calendar.MONTH, 1);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,369,"end.add(Calendar.DATE, -1);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,370,//Loop start back to the previous sunday or monday
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,371,if (rangeStyle == RANGE_MONTH_MONDAY) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,372,startCutoff = Calendar.MONDAY;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,373,endCutoff = Calendar.SUNDAY;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,375,break;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,376,case RANGE_WEEK_SUNDAY:
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,377,case RANGE_WEEK_MONDAY:
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,378,case RANGE_WEEK_RELATIVE:
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,379,case RANGE_WEEK_CENTER:
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,380,//Set start and end to the current date
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,381,"start = trunc(focus, Calendar.DATE);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,382,"end = trunc(focus, Calendar.DATE);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,383,switch (rangeStyle) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,384,case RANGE_WEEK_SUNDAY:
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,385,//already set by default
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,386,break;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,387,case RANGE_WEEK_MONDAY:
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,388,startCutoff = Calendar.MONDAY;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,389,endCutoff = Calendar.SUNDAY;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,390,break;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,391,case RANGE_WEEK_RELATIVE:
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,392,startCutoff = focus.get(Calendar.DAY_OF_WEEK);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,393,endCutoff = startCutoff - 1;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,394,break;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,395,case RANGE_WEEK_CENTER:
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,396,startCutoff = focus.get(Calendar.DAY_OF_WEEK) - 3;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,397,endCutoff = focus.get(Calendar.DAY_OF_WEEK) + 3;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,398,break;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,400,break;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,401,default:
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,402,"throw new RuntimeException(""The range style "" + rangeStyle + "" is not valid."");"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,404,if (startCutoff < Calendar.SUNDAY) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,405,startCutoff += 7;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,407,if (endCutoff > Calendar.SATURDAY) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,408,endCutoff -= 7;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,410,while (start.get(Calendar.DAY_OF_WEEK) != startCutoff) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,411,"start.add(Calendar.DATE, -1);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,413,while (end.get(Calendar.DAY_OF_WEEK) != endCutoff) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,414,"end.add(Calendar.DATE, 1);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,416,final Calendar startFinal = start;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,417,final Calendar endFinal = end;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,418,Iterator it = new Iterator() {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,419,Calendar spot = null;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,421,spot = startFinal;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,422,"spot.add(Calendar.DATE, -1);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,425,public boolean hasNext() {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,426,return spot.before(endFinal);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,429,public Object next() {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,430,if (spot.equals(endFinal)) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,431,throw new NoSuchElementException();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,433,"spot.add(Calendar.DATE, 1);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,434,return spot.clone();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,437,public void remove() {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,438,throw new UnsupportedOperationException();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,441,return it;
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,445,* See the other getCalendarIterator.  Works with a Date.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,447,"public static Iterator getCalendarIterator(Date focus, int rangeStyle) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,448,GregorianCalendar gval = new GregorianCalendar();
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,449,gval.setTime(focus);
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,450,"return getCalendarIterator(gval, rangeStyle);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,454,"* See the other getCalendarIterator.  Works with an Object, trying"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,455,* to use it as a Date or Calendar.
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,457,"public static Iterator getCalendarIterator(Object focus, int rangeStyle) {"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,458,if (focus instanceof Date) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,459,"return getCalendarIterator((Date) focus, rangeStyle);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,460,} else if (focus instanceof Calendar) {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,461,"return getCalendarIterator((Calendar) focus, rangeStyle);"
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,462,} else {
+True,src/pending/CalendarUtils.java,src/pending/CalendarUtils.java,463,"throw new ClassCastException(""Could not iterate based on "" + focus);"

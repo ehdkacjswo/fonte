@@ -1,0 +1,317 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1108,"symbolTable.fillPropertySymbols(this, externsRoot, jsRoot);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,22,import com.google.common.collect.Iterables;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,25,import com.google.common.collect.Sets;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,43,import java.util.Set;
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,69," By design, this symbol table conflates ""type Foo"" with ""the constructor"
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,70," that creates objects of type Foo"" when looking up types. JSCompiler"
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,71," internally treats these as distinct objects, but we assume that most"
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,72, clients will not care about the distinction.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,72,"* By design, when this symbol table creates symbols for types, it tries"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,73,"* to mimic the symbol table you would get in an OO language. For example,"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,74,"* the ""type Foo"" and ""the constructor that creates objects of type Foo"""
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,75,"* are the same symbol. The types of ""Foo.prototype"" and ""new Foo()"" also"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,76,* have the same symbol. Although JSCompiler internally treats these as
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,77,"* distinct symbols, we assume that most clients will not care about"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,78,* the distinction.
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,89," All scopes in the program, uniquely identified by the node where"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,95,"* All syntactic scopes in the program, uniquely identified by the node where"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,149,if (scope.isPropertyScope()) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,150,JSType type = scope.getTypeOfThis();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,151,if (type != null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,152,if (type.isNominalConstructor()) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,153,return getSymbolDeclaredBy(type.toMaybeFunctionType());
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,154,} else if (type.isFunctionPrototypeType()) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,155,return getSymbolForInstancesOf(
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,156,((ObjectType) type).getOwnerFunction());
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,159,return null;
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,162,"eturn getAllSymbolsForType(sym.getType(), sym.scope);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,181,return getAllSymbolsForType(sym.getType());
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,185,* Returns the global scope.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,187,public SymbolScope getGlobalScope() {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,188,return globalScope;
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,181,rivate List<Symbol> getAllSymbolsForType(
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,182,"SType type, SymbolScope scope) {"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,208,* Gets the symbol for the prototype if this is the symbol for a constructor
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,209,* or interface.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,211,public Symbol getSymbolForInstancesOf(Symbol sym) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,212,FunctionType fn = sym.getFunctionType();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,213,if (fn != null && fn.isNominalConstructor()) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,214,return getSymbolForInstancesOf(fn);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,216,return null;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,220,* Gets the symbol for the prototype of the given constructor or interface.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,222,public Symbol getSymbolForInstancesOf(FunctionType fn) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,223,Preconditions.checkState(fn.isConstructor() || fn.isInterface());
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,224,ObjectType pType = fn.getPrototype();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,225,String name = pType.getReferenceName();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,226,if (name == null || globalScope == null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,227,return null;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,230,Node source = fn.getSource();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,231,return (source == null ?
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,232,globalScope : getEnclosingScope(source)).getSlot(name);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,236,* Gets all symbols associated with the given type.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,237,"* For union types, this may be multiple symbols."
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,239,public List<Symbol> getAllSymbolsForType(JSType type) {
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,190,"esult.addAll(getAllSymbolsForType(alt, scope));"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,248,// Our type system never has nested unions.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,249,Symbol altSym = getOnlySymbolForType(alt);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,250,if (altSym != null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,251,result.add(altSym);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,256,Symbol result = getOnlySymbolForType(type);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,257,return result == null
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,258,? ImmutableList.<Symbol>of() : ImmutableList.of(result);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,262,* Gets all symbols associated with the given type.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,263,"* If there are more that one symbol associated with the given type,"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,264,* return null.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,266,private Symbol getOnlySymbolForType(JSType type) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,267,if (type == null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,268,return null;
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,197,"ymbol result = globalScope.getSlot(""Function"");"
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,198,eturn result == null ?
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,199,mmutableList.<Symbol>of() : ImmutableList.of(result);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,273,"return globalScope.getSlot(""Function"");"
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,205,ymbol result = scope.getSlot(
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,280,FunctionType ctor = objType.getConstructor();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,281,Node sourceNode = ctor == null ? null : ctor.getSource();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,282,SymbolScope scope = sourceNode == null
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,283,? globalScope : getEnclosingScope(sourceNode);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,285,return scope.getSlot(
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,208,eturn result == null
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,209, ImmutableList.<Symbol>of() : ImmutableList.of(result);
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,213,eturn ImmutableList.of();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,291,return null;
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,273,ySymbol = new Symbol(
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,274,"ame,"
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,275,"therSymbol.getType(),"
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,276,"therSymbol.isTypeInferred(),"
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,277,yScope);
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,278,"ymbols.put(declNode, name, mySymbol);"
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,279,"yScope.ownSymbols.put(name, mySymbol);"
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,281,"ySymbol.setDeclaration(new Reference(mySymbol, declNode));"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,351,"mySymbol = copySymbolTo(otherSymbol, myScope);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,368,"private Symbol copySymbolTo(StaticSlot<JSType> sym, SymbolScope scope) {"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,369,return declareSymbol(
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,370,"sym.getName(), sym.getType(), sym.isTypeInferred(), scope,"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,371,// All symbols must have declaration nodes.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,372,Preconditions.checkNotNull(sym.getDeclaration().getNode()));
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,375,private Symbol declareSymbol(
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,376,"String name, JSType type, boolean inferred,"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,377,"SymbolScope scope, Node declNode) {"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,378,"Symbol symbol = new Symbol(name, type, inferred, scope);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,379,"symbols.put(declNode, name, symbol);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,381,"Symbol replacedSymbol = scope.ownSymbols.put(name, symbol);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,382,Preconditions.checkState(replacedSymbol == null);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,384,"symbol.setDeclaration(new Reference(symbol, declNode));"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,385,return symbol;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,388,private void removeSymbol(Symbol s) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,389,SymbolScope scope = getScope(s);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,390,if (scope.ownSymbols.remove(s.getName()) != s) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,391,"throw new IllegalStateException(""Symbol not found in scope "" + s);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,393,"if (symbols.remove(s.getDeclaration().getNode(), s.getName()) != s) {"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,394,"throw new IllegalStateException(""Symbol not found in table "" + s);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,430,* Create symbols and references for all properites of types in
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,431,* this symbol table.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,433,"* This gets a little bit tricky, because of the way this symbol table"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,434,"* conflates ""type Foo"" and ""the constructor of type Foo"". So if you"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,435,* have:
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,437,* <code>
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,438,"* SymbolTable symbolTale = for(""var x = new Foo();"");"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,439,"* Symbol x = symbolTable.getGlobalScope().getSlot(""x"");"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,440,* Symbol type = symbolTable.getOnlySymbolForType(x.getType());
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,441,* </code>
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,443,* Then type.getPropertyScope() will have the properties of the
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,444,"* constructor ""Foo"". To get the properties of instances of ""Foo"","
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,445,* you will need to call:
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,447,* <code>
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,448,* Symbol instance = symbolTable.getSymbolForInstancesOf(type);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,449,* </code>
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,451,"* As described at the top of this file, notice that ""new Foo()"" and"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,452,"* ""Foo.prototype"" are represented by the same symbol."
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,454,void fillPropertySymbols(
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,455,"AbstractCompiler compiler, Node externs, Node root) {"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,456,// Collect all ctors and interface ctors.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,457,"// We need to create these lists first, so that we don't end up"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,458,// mutating the symbol table while we're creating new symbols.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,459,List<Symbol> types = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,460,List<Symbol> instances = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,461,for (Symbol sym : getAllSymbols()) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,462,FunctionType t = sym.getFunctionType();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,463,if (t != null && t.isNominalConstructor()) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,464,types.add(sym);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,466,Symbol instance = getSymbolForInstancesOf(t);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,467,if (instance != null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,468,instances.add(instance);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,473,// Create symbols for their properties.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,474,"for (Symbol s : Iterables.concat(types, instances)) {"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,475,createPropertyScopeFor(s);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,478,"(new PropertyRefCollector(compiler)).process(externs, root);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,481,private void createPropertyScopeFor(Symbol s) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,482,"// In order to build a property scope for s, we will need to build"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,483,// a property scope for all its implicit prototypes first. This means
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,484,// that sometimes we will already have built its property scope
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,485,// for a previous symbol.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,486,if (s.propertyScope != null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,487,return;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,490,SymbolScope parentPropertyScope = null;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,491,ObjectType type = s.getType().toObjectType();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,492,ObjectType proto = type.getParentScope();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,493,if (proto != null && proto != type && proto.getConstructor() != null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,494,Symbol parentSymbol = getSymbolForInstancesOf(proto.getConstructor());
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,495,if (parentSymbol != null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,496,createPropertyScopeFor(parentSymbol);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,497,parentPropertyScope = parentSymbol.getPropertyScope();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,501,ObjectType instanceType = type;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,502,Iterable<String> propNames = type.getOwnPropertyNames();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,503,if (instanceType.isFunctionPrototypeType()) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,504,"// Merge the properties of ""Foo.prototype"" and ""new Foo()"" together."
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,505,instanceType =
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,506,((ObjectType) instanceType)
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,507,.getOwnerFunction().getInstanceType();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,508,Set<String> set = Sets.newHashSet(propNames);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,509,"Iterables.addAll(set, instanceType.getOwnPropertyNames());"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,510,propNames = set;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,513,"s.propertyScope = new SymbolScope(null, parentPropertyScope, type);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,514,for (String propName : propNames) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,515,StaticSlot<JSType> newProp = instanceType.getSlot(propName);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,516,if (newProp.getDeclaration() == null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,517,// Skip properties without declarations. We won't know how to index
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,518,"// them, because we index things by node."
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,519,continue;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,522,// We have symbol tables that do not do type analysis. They just try
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,523,// to build a complete index of all objects in the program. So we might
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,524,"// already have symbols for things like ""Foo.bar"". If this happens,"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,525,// throw out the old symbol and use the type-based symbol.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,526,"Symbol oldProp = getScope(s).getSlot(s.getName() + ""."" + propName);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,527,if (oldProp != null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,528,removeSymbol(oldProp);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,531,"copySymbolTo(newProp, s.propertyScope);"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,577,private SymbolScope propertyScope = null;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,591,public FunctionType getFunctionType() {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,592,return JSType.toMaybeFunctionType(getType());
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,626,public SymbolScope getPropertyScope() {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,627,return propertyScope;
+False,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,474,eturn getParentScope() == null;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,690,return getParentScope() == null && getRootNode() != null;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,693,public boolean isPropertyScope() {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,694,return getRootNode() == null;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,698,private class PropertyRefCollector
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,699,extends NodeTraversal.AbstractPostOrderCallback
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,700,implements CompilerPass {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,701,private final AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,703,PropertyRefCollector(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,704,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,707,@Override
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,708,"public void process(Node externs, Node root) {"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,709,NodeTraversal.traverseRoots(
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,710,"compiler,"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,711,"Lists.newArrayList(externs, root),"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,712,this);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,715,@Override
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,716,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,717,if (n.getType() == Token.GETPROP) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,718,JSType owner = n.getFirstChild().getJSType();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,719,if (owner == null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,720,return;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,723,String propName = n.getLastChild().getString();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,724,if (owner.isNominalConstructor()) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,725,Symbol sym = getSymbolDeclaredBy(owner.toMaybeFunctionType());
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,726,if (sym == null || sym.getPropertyScope() == null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,727,// This will happen in some rare cases where there are no
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,728,// extern declarations for built-in types (like Function).
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,729,return;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,732,Symbol prop = sym.getPropertyScope().getSlot(propName);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,733,if (prop != null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,734,prop.defineReferenceAt(n);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,736,} else {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,737,for (Symbol ctor : getAllSymbolsForType(owner)) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,738,Symbol sym = getSymbolForInstancesOf(ctor);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,739,if (sym != null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,740,Symbol prop = sym.getPropertyScope().getSlot(propName);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,741,if (prop != null) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,742,prop.defineReferenceAt(n);
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,338,* Whether this type is the original constructor of a nominal type.
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,339,* Does not include structural constructors.
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,341,public final boolean isNominalConstructor() {
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,342,return (isConstructor() || isInterface()) &&
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,343,toMaybeFunctionType().getInstanceType().isNominalType();
+False,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,93,ublic StaticScope<JSType> getParentScope() {
+True,src/com/google/javascript/rhino/jstype/ObjectType.java,src/com/google/javascript/rhino/jstype/ObjectType.java,93,public ObjectType getParentScope() {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,73,"// Because the type of goog is anonymous, we build its properties into"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,74,// the global scope.
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,92,public void testRemovalOfNamespacedReferencesOfProperties()
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,93,throws Exception {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,94,SymbolTable table = createSymbolTable(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,95,"""/** @constructor */ var DomHelper = function(){};"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,96,"""/** method */ DomHelper.method = function() {};"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,98,"Symbol domHelper = getGlobalVar(table, ""DomHelper"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,99,assertNotNull(domHelper);
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,101,"Symbol domHelperNamespacedMethod = getGlobalVar(table, ""DomHelper.method"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,102,assertNull(domHelperNamespacedMethod);
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,104,"Symbol domHelperMethod = domHelper.getPropertyScope().getSlot(""method"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,105,assertNotNull(domHelperMethod);
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,195,public void testStaticMethodReferences() throws Exception {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,196,SymbolTable table = createSymbolTable(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,197,"""/** @constructor */ var DomHelper = function(){};"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,198,"""/** method */ DomHelper.method = function() {};"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,199,"""function f() { var x = DomHelper; x.method() + x.method(); }"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,201,Symbol method =
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,202,"getGlobalVar(table, ""DomHelper"").getPropertyScope().getSlot(""method"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,203,assertEquals(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,204,"3, Iterables.size(table.getReferences(method)));"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,207,public void testMethodReferences() throws Exception {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,208,SymbolTable table = createSymbolTable(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,209,"""/** @constructor */ var DomHelper = function(){};"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,210,"""/** method */ DomHelper.prototype.method = function() {};"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,211,"""function f() { "" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,212,"""  (new DomHelper()).method(); (new DomHelper()).method(); };"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,214,Symbol method =
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,215,"getGlobalVar(table, ""DomHelper.prototype"")"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,216,".getPropertyScope().getSlot(""method"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,217,assertEquals(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,218,"3, Iterables.size(table.getReferences(method)));"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,221,public void testFieldReferences() throws Exception {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,222,SymbolTable table = createSymbolTable(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,223,"""/** @constructor */ var DomHelper = function(){"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,224,"""  /** @type {number} */ this.field = 3;"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,226,"""function f() { "" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,227,"""  return (new DomHelper()).field + (new DomHelper()).field; };"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,229,Symbol field =
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,230,"getGlobalVar(table, ""DomHelper.prototype"")"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,231,".getPropertyScope().getSlot(""field"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,232,assertEquals(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,233,"3, Iterables.size(table.getReferences(field)));"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,236,public void testUndeclaredFieldReferences() throws Exception {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,237,"// We do not currently create symbol table entries for undeclared fields,"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,238,// but this may change in the future.
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,239,SymbolTable table = createSymbolTable(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,240,"""/** @constructor */ var DomHelper = function(){};"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,241,"""DomHelper.prototype.method = function() { "" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,242,"""  this.field = 3;"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,243,"""  return x.field;"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,246,Symbol field =
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,247,"getGlobalVar(table, ""DomHelper.prototype"")"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,248,".getPropertyScope().getSlot(""field"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,249,assertNull(field);
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,252,public void testPrototypeReferences() throws Exception {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,253,SymbolTable table = createSymbolTable(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,254,"""/** @constructor */ function DomHelper() {}"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,255,"""DomHelper.prototype.method = function() {};"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,256,Symbol prototype =
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,257,"getGlobalVar(table, ""DomHelper.prototype"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,258,assertNotNull(prototype);
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,260,List<Reference> refs = Lists.newArrayList(table.getReferences(prototype));
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,262,// One of the refs is implicit in the declaration of the function.
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,263,"assertEquals(2, refs.size());"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,266,public void testPrototypeReferences2() throws Exception {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,267,SymbolTable table = createSymbolTable(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,268,"""/** @constructor */\n"""
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,269,"+ ""function Snork() {}\n"""
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,270,"+ ""Snork.prototype.baz = 3;\n"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,271,Symbol prototype =
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,272,"getGlobalVar(table, ""Snork.prototype"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,273,assertNotNull(prototype);
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,275,List<Reference> refs = Lists.newArrayList(table.getReferences(prototype));
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,277,// TODO(nicksantos): This is a bug and should be fixed.
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,278,// It has to do with some weirdness with how prototypes are handled
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,279,// in our type system.
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,280,"assertEquals(1, refs.size());"

@@ -1,0 +1,299 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,43,public boolean isTypeMockable(Class<?> typeToMock) {
+True,src/org/mockito/internal/MockitoCore.java,src/org/mockito/internal/MockitoCore.java,44,return mockUtil.isTypeMockable(typeToMock);
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,2, Copyright (c) 2007 Mockito contributors
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,3, This program is made available under the terms of the MIT License.
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,5,ackage org.mockito.internal.configuration;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,7,mport org.mockito.configuration.IMockitoConfiguration;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,8,mport org.mockito.exceptions.base.MockitoException;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,9,mport org.mockito.exceptions.misusing.MockitoConfigurationException;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,10,mport org.mockito.internal.creation.CglibMockMaker;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,11,mport org.mockito.internal.exceptions.stacktrace.DefaultStackTraceCleanerProvider;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,12,mport org.mockito.plugins.MockMaker;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,13,mport org.mockito.plugins.StackTraceCleanerProvider;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,15,mport java.io.*;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,16,mport java.net.URL;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,17,mport java.util.ArrayList;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,18,mport java.util.Collections;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,19,mport java.util.Enumeration;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,20,mport java.util.List;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,23, Loads configuration or extension points available in the classpath.
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,25, <p>
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,26, <ul>
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,27,     <li>
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,28,         Can load the mockito configuration. The user who want to provide his own mockito configuration
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,29,         should write the class <code>org.mockito.configuration.MockitoConfiguration</code> that implements
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,30,         {@link IMockitoConfiguration}. For example :
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,31,"         <pre class=""code""><code class=""java"">"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,32, package org.mockito.configuration;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,36, public class MockitoConfiguration implements IMockitoConfiguration {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,37,     boolean enableClassCache() { return false; }
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,41,     </code></pre>
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,42,     </li>
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,43,     <li>
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,44,         Can load available mockito extensions. Currently Mockito only have one extension point the
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,45,         {@link MockMaker}. This extension point allows a user to provide his own bytecode engine to build mocks.
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,46,"         <br>Suppose you wrote an extension to create mocks with some <em>Awesome</em> library, in order to tell"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,47,         Mockito to use it you need to put in your classpath
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,48,"         <ol style=""list-style-type: lower-alpha"">"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,49,"             <li>The implementation itself, for example <code>org.awesome.mockito.AwesomeMockMaker</code>.</li>"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,50,             <li>A file named <code>org.mockito.plugins.MockMaker</code> in a folder named
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,51,"             <code>mockito-extensions</code>, the content of this file need to have <strong>one</strong> line with"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,52,             the qualified name <code>org.awesome.mockito.AwesomeMockMaker</code>.</li>
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,53,         </ol>
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,54,     </li>
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,55, </ul>
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,56, </p>
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,58,ublic class ClassPathLoader {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,59,rivate static final MockMaker mockMaker = findPlatformMockMaker();
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,60,rivate static final StackTraceCleanerProvider stackTraceCleanerProvider =
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,61,"indPluginImplementation(StackTraceCleanerProvider.class, new DefaultStackTraceCleanerProvider());"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,62,"ublic static final String MOCKITO_CONFIGURATION_CLASS_NAME = ""org.mockito.configuration.MockitoConfiguration"";"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,65, @return configuration loaded from classpath or null
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,67,"SuppressWarnings({""unchecked""})"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,68,ublic IMockitoConfiguration loadConfiguration() {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,69,/Trying to get config from classpath
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,70,lass configClass;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,71,ry {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,72,onfigClass = (Class) Class.forName(MOCKITO_CONFIGURATION_CLASS_NAME);
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,73, catch (ClassNotFoundException e) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,74,"/that's ok, it means there is no global config, using default one."
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,75,eturn null;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,78,ry {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,79,eturn (IMockitoConfiguration) configClass.newInstance();
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,80, catch (ClassCastException e) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,81,"hrow new MockitoConfigurationException(""MockitoConfiguration class must implement "" + IMockitoConfiguration.class.getName() + "" interface."", e);"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,82, catch (Exception e) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,83,"hrow new MockitoConfigurationException(""Unable to instantiate "" + MOCKITO_CONFIGURATION_CLASS_NAME +"" class. Does it have a safe, no-arg constructor?"", e);"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,88, Returns the implementation of the mock maker available for the current runtime.
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,90, <p>Returns {@link CglibMockMaker} if no {@link MockMaker} extension exists
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,91, or is visible in the current classpath.</p>
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,93,ublic static MockMaker getMockMaker() {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,94,eturn mockMaker;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,97,ublic static StackTraceCleanerProvider getStackTraceCleanerProvider() {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,98,/TODO we should throw some sensible exception if this is null.
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,99,eturn stackTraceCleanerProvider;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,103," Scans the classpath to find a mock maker plugin if one is available,"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,104, allowing mockito to run on alternative platforms like Android.
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,106,tatic MockMaker findPlatformMockMaker() {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,107,"eturn findPluginImplementation(MockMaker.class, new CglibMockMaker());"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,110,"tatic <T> T findPluginImplementation(Class<T> pluginType, T defaultPlugin) {"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,111,or (T plugin : loadImplementations(pluginType)) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,112,eturn plugin; // return the first one service loader finds (if any)
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,114,eturn defaultPlugin; // default implementation
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,118, Equivalent to {@link java.util.ServiceLoader#load} but without requiring
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,119, Java 6 / Android 2.3 (Gingerbread).
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,121,tatic <T> List<T> loadImplementations(Class<T> service) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,122,lassLoader loader = Thread.currentThread().getContextClassLoader();
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,123,f (loader == null) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,124,oader = ClassLoader.getSystemClassLoader();
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,127,numeration<URL> resources;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,128,ry {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,129,"esources = loader.getResources(""mockito-extensions/"" + service.getName());"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,130, catch (IOException e) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,131,"hrow new MockitoException(""Failed to load "" + service, e);"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,134,ist<T> result = new ArrayList<T>();
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,135,or (URL resource : Collections.list(resources)) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,136,nputStream in = null;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,137,ry {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,138,n = resource.openStream();
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,139,"or (String line : readerToLines(new InputStreamReader(in, ""UTF-8""))) {"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,140,tring name = stripCommentAndWhitespace(line);
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,141,f (name.length() != 0) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,142,esult.add(service.cast(loader.loadClass(name).newInstance()));
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,145, catch (Exception e) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,146,hrow new MockitoConfigurationException(
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,147,"Failed to load "" + service + "" using "" + resource, e);"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,148, finally {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,149,loseQuietly(in);
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,152,eturn result;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,155,tatic List<String> readerToLines(Reader reader) throws IOException {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,156,ist<String> result = new ArrayList<String>();
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,157,ufferedReader lineReader = new BufferedReader(reader);
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,158,tring line;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,159,hile ((line = lineReader.readLine()) != null) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,160,esult.add(line);
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,162,eturn result;
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,165,tatic String stripCommentAndWhitespace(String line) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,166,nt hash = line.indexOf('#');
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,167,f (hash != -1) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,168,"ine = line.substring(0, hash);"
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,170,eturn line.trim();
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,173,rivate static void closeQuietly(InputStream in) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,174,f (in != null) {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,175,ry {
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,176,n.close();
+False,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,177, catch (IOException ignored) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,2,* Copyright (c) 2007 Mockito contributors
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,3,* This program is made available under the terms of the MIT License.
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,5,package org.mockito.internal.configuration;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,7,import org.mockito.configuration.IMockitoConfiguration;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,8,import org.mockito.exceptions.base.MockitoException;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,9,import org.mockito.exceptions.misusing.MockitoConfigurationException;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,10,import org.mockito.plugins.MockMaker;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,11,import org.mockito.plugins.StackTraceCleanerProvider;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,13,import java.io.*;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,14,import java.net.URL;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,15,import java.util.ArrayList;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,16,import java.util.Collections;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,17,import java.util.Enumeration;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,18,import java.util.List;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,21,* Loads configuration or extension points available in the classpath.
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,23,* <p>
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,24,* <ul>
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,25,*     <li>
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,26,*         Can load the mockito configuration. The user who want to provide his own mockito configuration
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,27,*         should write the class <code>org.mockito.configuration.MockitoConfiguration</code> that implements
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,28,*         {@link IMockitoConfiguration}. For example :
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,29,"*         <pre class=""code""><code class=""java"">"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,30,* package org.mockito.configuration;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,34,* public class MockitoConfiguration implements IMockitoConfiguration {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,35,*     boolean enableClassCache() { return false; }
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,39,*     </code></pre>
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,40,*     </li>
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,41,*     <li>
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,42,*         Can load available mockito extensions. Currently Mockito only have one extension point the
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,43,*         {@link MockMaker}. This extension point allows a user to provide his own bytecode engine to build mocks.
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,44,"*         <br>Suppose you wrote an extension to create mocks with some <em>Awesome</em> library, in order to tell"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,45,*         Mockito to use it you need to put in your classpath
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,46,"*         <ol style=""list-style-type: lower-alpha"">"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,47,"*             <li>The implementation itself, for example <code>org.awesome.mockito.AwesomeMockMaker</code>.</li>"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,48,*             <li>A file named <code>org.mockito.plugins.MockMaker</code> in a folder named
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,49,"*             <code>mockito-extensions</code>, the content of this file need to have <strong>one</strong> line with"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,50,*             the qualified name <code>org.awesome.mockito.AwesomeMockMaker</code>.</li>
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,51,*         </ol>
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,52,*     </li>
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,53,* </ul>
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,54,* </p>
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,56,public class ClassPathLoader {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,57,private static final String DEFAULT_MOCK_MAKER_CLASS =
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,58,"""org.mockito.internal.creation.CglibMockMaker"";"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,59,private static final String DEFAULT_STACK_TRACE_CLEANER_PROVIDER_CLASS =
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,60,"""org.mockito.internal.exceptions.stacktrace.DefaultStackTraceCleanerProvider"";"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,61,"public static final String MOCKITO_CONFIGURATION_CLASS_NAME = ""org.mockito.configuration.MockitoConfiguration"";"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,63,private static final MockMaker mockMaker = findPlatformMockMaker();
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,64,private static final StackTraceCleanerProvider stackTraceCleanerProvider =
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,65,findPlatformStackTraceCleanerProvider();
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,68,* @return configuration loaded from classpath or null
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,70,"@SuppressWarnings({""unchecked""})"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,71,public IMockitoConfiguration loadConfiguration() {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,72,//Trying to get config from classpath
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,73,Class configClass;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,74,try {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,75,configClass = (Class) Class.forName(MOCKITO_CONFIGURATION_CLASS_NAME);
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,76,} catch (ClassNotFoundException e) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,77,"//that's ok, it means there is no global config, using default one."
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,78,return null;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,81,try {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,82,return (IMockitoConfiguration) configClass.newInstance();
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,83,} catch (ClassCastException e) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,84,"throw new MockitoConfigurationException(""MockitoConfiguration class must implement "" + IMockitoConfiguration.class.getName() + "" interface."", e);"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,85,} catch (Exception e) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,86,"throw new MockitoConfigurationException(""Unable to instantiate "" + MOCKITO_CONFIGURATION_CLASS_NAME +"" class. Does it have a safe, no-arg constructor?"", e);"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,91,* Returns the implementation of the mock maker available for the current runtime.
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,93,* <p>Returns {@link org.mockito.internal.creation.CglibMockMaker} if no
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,94,* {@link MockMaker} extension exists or is visible in the current classpath.</p>
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,96,public static MockMaker getMockMaker() {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,97,return mockMaker;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,100,public static StackTraceCleanerProvider getStackTraceCleanerProvider() {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,101,//TODO we should throw some sensible exception if this is null.
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,102,return stackTraceCleanerProvider;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,106,"* Scans the classpath to find a mock maker plugin if one is available,"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,107,* allowing mockito to run on alternative platforms like Android.
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,109,static MockMaker findPlatformMockMaker() {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,110,"return findPluginImplementation(MockMaker.class, DEFAULT_MOCK_MAKER_CLASS);"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,113,static StackTraceCleanerProvider findPlatformStackTraceCleanerProvider() {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,114,return findPluginImplementation(
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,115,"StackTraceCleanerProvider.class, DEFAULT_STACK_TRACE_CLEANER_PROVIDER_CLASS);"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,118,"static <T> T findPluginImplementation(Class<T> pluginType, String defaultPluginClassName) {"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,119,for (T plugin : loadImplementations(pluginType)) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,120,return plugin; // return the first one service loader finds (if any)
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,123,try {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,124,// Default implementation. Use our own ClassLoader instead of the context
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,125,"// ClassLoader, as the default implementation is assumed to be part of"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,126,// Mockito and may not be available via the context ClassLoader.
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,127,return pluginType.cast(Class.forName(defaultPluginClassName).newInstance());
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,128,} catch (Exception e) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,129,"throw new MockitoException(""Internal problem occurred, please report it. "" +"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,130,"""Mockito is unable to load the default implementation of class that is a part of Mockito distribution. "" +"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,131,"""Failed to load "" + pluginType, e);"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,136,* Equivalent to {@link java.util.ServiceLoader#load} but without requiring
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,137,* Java 6 / Android 2.3 (Gingerbread).
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,139,static <T> List<T> loadImplementations(Class<T> service) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,140,ClassLoader loader = Thread.currentThread().getContextClassLoader();
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,141,if (loader == null) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,142,loader = ClassLoader.getSystemClassLoader();
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,144,Enumeration<URL> resources;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,145,try {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,146,"resources = loader.getResources(""mockito-extensions/"" + service.getName());"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,147,} catch (IOException e) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,148,"throw new MockitoException(""Failed to load "" + service, e);"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,151,List<T> result = new ArrayList<T>();
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,152,for (URL resource : Collections.list(resources)) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,153,InputStream in = null;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,154,try {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,155,in = resource.openStream();
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,156,"for (String line : readerToLines(new InputStreamReader(in, ""UTF-8""))) {"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,157,String name = stripCommentAndWhitespace(line);
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,158,if (name.length() != 0) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,159,result.add(service.cast(loader.loadClass(name).newInstance()));
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,162,} catch (Exception e) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,163,throw new MockitoConfigurationException(
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,164,"""Failed to load "" + service + "" using "" + resource, e);"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,165,} finally {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,166,closeQuietly(in);
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,169,return result;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,172,static List<String> readerToLines(Reader reader) throws IOException {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,173,List<String> result = new ArrayList<String>();
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,174,BufferedReader lineReader = new BufferedReader(reader);
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,175,String line;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,176,while ((line = lineReader.readLine()) != null) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,177,result.add(line);
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,179,return result;
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,182,static String stripCommentAndWhitespace(String line) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,183,int hash = line.indexOf('#');
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,184,if (hash != -1) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,185,"line = line.substring(0, hash);"
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,187,return line.trim();
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,190,private static void closeQuietly(InputStream in) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,191,if (in != null) {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,192,try {
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,193,in.close();
+True,src/org/mockito/internal/configuration/ClassPathLoader.java,src/org/mockito/internal/configuration/ClassPathLoader.java,194,} catch (IOException ignored) {
+False,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,51,ublic boolean canImposterise(Class<?> type) {
+False,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,52,eturn !type.isPrimitive() && !Modifier.isFinal(type.getModifiers());
+True,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,9,import org.mockito.internal.MockitoCore;
+False,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,12,mport org.mockito.internal.util.MockCreationValidator;
+False,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,20,mport static org.mockito.Mockito.mock;
+True,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,44,private MockitoCore mockitoCore = new MockitoCore();
+False,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,52,f (!new MockCreationValidator().isTypeMockable(rawType)) {
+True,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,52,if (!mockitoCore.isTypeMockable(rawType)) {
+False,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,85,eturn mock(
+True,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java,85,return mockitoCore.mock(
+False,src/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java,src/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java,31,f (!ClassImposterizer.INSTANCE.canImposterise(clazz)) {
+True,src/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java,src/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java,31,if (!mockitoCore.isTypeMockable(clazz)) {
+False,src/org/mockito/internal/util/MockCreationValidator.java,src/org/mockito/internal/util/MockCreationValidator.java,8,mport org.mockito.internal.creation.jmock.ClassImposterizer;
+False,src/org/mockito/internal/util/MockCreationValidator.java,src/org/mockito/internal/util/MockCreationValidator.java,17,ublic boolean isTypeMockable(Class<?> clz) {
+False,src/org/mockito/internal/util/MockCreationValidator.java,src/org/mockito/internal/util/MockCreationValidator.java,18,eturn ClassImposterizer.INSTANCE.canImposterise(clz);
+True,src/org/mockito/internal/util/MockCreationValidator.java,src/org/mockito/internal/util/MockCreationValidator.java,16,private final MockUtil mockUtil = new MockUtil();
+False,src/org/mockito/internal/util/MockCreationValidator.java,src/org/mockito/internal/util/MockCreationValidator.java,22,f (!isTypeMockable(classToMock)) {
+True,src/org/mockito/internal/util/MockCreationValidator.java,src/org/mockito/internal/util/MockCreationValidator.java,19,if (!mockUtil.isTypeMockable(classToMock)) {
+True,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,18,import java.lang.reflect.Modifier;
+True,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,25,public boolean isTypeMockable(Class<?> type) {
+True,src/org/mockito/internal/util/MockUtil.java,src/org/mockito/internal/util/MockUtil.java,26,return !type.isPrimitive() && !Modifier.isFinal(type.getModifiers());
+False,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,65,inal class FinalClass {}
+False,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,69,Test
+False,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,70,ublic void shouldKnowIfCanImposterize() throws Exception {
+False,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,71,ssertFalse(ClassImposterizer.INSTANCE.canImposterise(FinalClass.class));
+False,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,72,ssertFalse(ClassImposterizer.INSTANCE.canImposterise(int.class));
+False,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,74,ssertTrue(ClassImposterizer.INSTANCE.canImposterise(SomeClass.class));
+False,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,test/org/mockito/internal/creation/jmock/ClassImposterizerTest.java,75,ssertTrue(ClassImposterizer.INSTANCE.canImposterise(SomeInterface.class));
+True,test/org/mockito/internal/util/MockUtilTest.java,test/org/mockito/internal/util/MockUtilTest.java,92,final class FinalClass {}
+True,test/org/mockito/internal/util/MockUtilTest.java,test/org/mockito/internal/util/MockUtilTest.java,93,class SomeClass {}
+True,test/org/mockito/internal/util/MockUtilTest.java,test/org/mockito/internal/util/MockUtilTest.java,94,interface SomeInterface {}
+True,test/org/mockito/internal/util/MockUtilTest.java,test/org/mockito/internal/util/MockUtilTest.java,96,@Test
+True,test/org/mockito/internal/util/MockUtilTest.java,test/org/mockito/internal/util/MockUtilTest.java,97,public void shouldKnowIfTypeIsMockable() throws Exception {
+True,test/org/mockito/internal/util/MockUtilTest.java,test/org/mockito/internal/util/MockUtilTest.java,98,assertFalse(mockUtil.isTypeMockable(FinalClass.class));
+True,test/org/mockito/internal/util/MockUtilTest.java,test/org/mockito/internal/util/MockUtilTest.java,99,assertFalse(mockUtil.isTypeMockable(int.class));
+True,test/org/mockito/internal/util/MockUtilTest.java,test/org/mockito/internal/util/MockUtilTest.java,101,assertTrue(mockUtil.isTypeMockable(SomeClass.class));
+True,test/org/mockito/internal/util/MockUtilTest.java,test/org/mockito/internal/util/MockUtilTest.java,102,assertTrue(mockUtil.isTypeMockable(SomeInterface.class));

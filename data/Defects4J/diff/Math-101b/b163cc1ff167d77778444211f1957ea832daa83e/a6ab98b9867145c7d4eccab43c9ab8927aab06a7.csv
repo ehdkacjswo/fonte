@@ -1,0 +1,988 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,2,* Copyright 2005 The Apache Software Foundation.
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,5,* you may not use this file except in compliance with the License.
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,6,* You may obtain a copy of the License at
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,8,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,13,* See the License for the specific language governing permissions and
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,14,* limitations under the License.
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,16,package org.apache.commons.math.transform;
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,18,import java.io.Serializable;
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,19,import org.apache.commons.math.analysis.*;
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,20,import org.apache.commons.math.complex.*;
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,21,import org.apache.commons.math.MathException;
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,24,"* Implements the <a href=""http://documents.wolfram.com/v5/Add-onsLinks/"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,25,"* StandardPackages/LinearAlgebra/FourierTrig.html"">Fast Cosine Transform</a>"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,26,"* for transformation of one-dimensional data sets. For reference, see"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,27,"* <b>Fast Fourier Transforms</b>, ISBN 0849371635, chapter 3."
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,28,* <p>
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,29,"* FCT is its own inverse, up to a multiplier depending on conventions."
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,30,* The equations are listed in the comments of the corresponding methods.
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,31,* <p>
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,32,"* Different from FFT and FST, FCT requires the length of data set to be"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,33,* power of 2 plus one. Users should especially pay attention to the
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,34,* function transformation on how this affects the sampling.
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,36,* @version $Revision$ $Date$
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,38,public class FastCosineTransformer implements Serializable {
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,40,/** serializable version identifier */
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,41,static final long serialVersionUID = -7673941545134707766L;
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,44,* Construct a default transformer.
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,46,FastCosineTransformer() {
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,47,super();
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,51,* Transform the given real data set.
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,52,* <p>
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,53,* The formula is $ F_n = (1/2) [f_0 + (-1)^n f_N] +
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,54,*                        \Sigma_{k=0}^{N-1} f_k \cos(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,56,* @param f the real data array to be transformed
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,57,* @return the real transformed array
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,58,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,59,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,61,"public double[] transform(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,62,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,64,return fct(f);
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,68,"* Transform the given real function, sampled on the given interval."
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,69,* <p>
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,70,* The formula is $ F_n = (1/2) [f_0 + (-1)^n f_N] +
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,71,*                        \Sigma_{k=0}^{N-1} f_k \cos(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,73,* @param f the function to be sampled and transformed
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,74,* @param min the lower bound for the interval
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,75,* @param max the upper bound for the interval
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,76,* @param n the number of sample points
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,77,* @return the real transformed array
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,78,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,79,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,81,public double[] transform(
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,82,"UnivariateRealFunction f, double min, double max, int n)"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,83,"throws MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,85,"double data[] = FastFourierTransformer.sample(f, min, max, n);"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,86,return fct(data);
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,90,* Transform the given real data set.
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,91,* <p>
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,92,* The formula is $ F_n = \sqrt{1/2N} [f_0 + (-1)^n f_N] +
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,93,*                        \sqrt{2/N} \Sigma_{k=0}^{N-1} f_k \cos(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,95,* @param f the real data array to be transformed
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,96,* @return the real transformed array
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,97,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,98,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,100,"public double[] transform2(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,101,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,103,double scaling_coefficient = Math.sqrt(2.0 / (f.length-1));
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,104,"return FastFourierTransformer.scaleArray(fct(f), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,108,"* Transform the given real function, sampled on the given interval."
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,109,* <p>
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,110,* The formula is $ F_n = \sqrt{1/2N} [f_0 + (-1)^n f_N] +
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,111,*                        \sqrt{2/N} \Sigma_{k=0}^{N-1} f_k \cos(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,113,* @param f the function to be sampled and transformed
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,114,* @param min the lower bound for the interval
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,115,* @param max the upper bound for the interval
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,116,* @param n the number of sample points
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,117,* @return the real transformed array
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,118,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,119,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,121,public double[] transform2(
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,122,"UnivariateRealFunction f, double min, double max, int n)"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,123,"throws MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,125,"double data[] = FastFourierTransformer.sample(f, min, max, n);"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,126,double scaling_coefficient = Math.sqrt(2.0 / (n-1));
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,127,"return FastFourierTransformer.scaleArray(fct(data), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,131,* Inversely transform the given real data set.
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,132,* <p>
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,133,* The formula is $ f_k = (1/N) [F_0 + (-1)^k F_N] +
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,134,*                        (2/N) \Sigma_{n=0}^{N-1} F_n \cos(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,136,* @param f the real data array to be inversely transformed
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,137,* @return the real inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,138,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,139,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,141,"public double[] inversetransform(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,142,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,144,double scaling_coefficient = 2.0 / (f.length - 1);
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,145,"return FastFourierTransformer.scaleArray(fct(f), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,149,"* Inversely transform the given real function, sampled on the given interval."
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,150,* <p>
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,151,* The formula is $ f_k = (1/N) [F_0 + (-1)^k F_N] +
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,152,*                        (2/N) \Sigma_{n=0}^{N-1} F_n \cos(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,154,* @param f the function to be sampled and inversely transformed
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,155,* @param min the lower bound for the interval
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,156,* @param max the upper bound for the interval
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,157,* @param n the number of sample points
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,158,* @return the real inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,159,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,160,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,162,public double[] inversetransform(
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,163,"UnivariateRealFunction f, double min, double max, int n)"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,164,"throws MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,166,"double data[] = FastFourierTransformer.sample(f, min, max, n);"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,167,double scaling_coefficient = 2.0 / (n - 1);
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,168,"return FastFourierTransformer.scaleArray(fct(data), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,172,* Inversely transform the given real data set.
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,173,* <p>
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,174,* The formula is $ f_k = \sqrt{1/2N} [F_0 + (-1)^k F_N] +
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,175,*                        \sqrt{2/N} \Sigma_{n=0}^{N-1} F_n \cos(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,177,* @param f the real data array to be inversely transformed
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,178,* @return the real inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,179,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,180,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,182,"public double[] inversetransform2(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,183,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,185,return transform2(f);
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,189,"* Inversely transform the given real function, sampled on the given interval."
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,190,* <p>
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,191,* The formula is $ f_k = \sqrt{1/2N} [F_0 + (-1)^k F_N] +
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,192,*                        \sqrt{2/N} \Sigma_{n=0}^{N-1} F_n \cos(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,194,* @param f the function to be sampled and inversely transformed
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,195,* @param min the lower bound for the interval
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,196,* @param max the upper bound for the interval
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,197,* @param n the number of sample points
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,198,* @return the real inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,199,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,200,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,202,public double[] inversetransform2(
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,203,"UnivariateRealFunction f, double min, double max, int n)"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,204,"throws MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,206,"return transform2(f, min, max, n);"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,210,* Perform the FCT algorithm (including inverse).
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,212,* @param f the real data array to be transformed
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,213,* @return the real transformed array
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,214,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,215,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,217,"protected double[] fct(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,218,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,220,"double A, B, C, F1, x[], F[] = new double[f.length];"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,222,int N = f.length - 1;
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,223,if (!FastFourierTransformer.isPowerOf2(N)) {
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,224,throw new IllegalArgumentException
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,225,"(""Number of samples not power of 2 plus one: "" + f.length);"
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,227,if (N == 1) {       // trivial case
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,228,F[0] = 0.5 * (f[0] + f[1]);
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,229,F[1] = 0.5 * (f[0] - f[1]);
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,230,return F;
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,233,// construct a new array and perform FFT on it
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,234,x = new double[N];
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,235,x[0] = 0.5 * (f[0] + f[N]);
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,236,x[N >> 1] = f[N >> 1];
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,237,F1 = 0.5 * (f[0] - f[N]);   // temporary variable for F[1]
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,238,for (int i = 1; i < (N >> 1); i++) {
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,239,A = 0.5 * (f[i] + f[N-i]);
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,240,B = Math.sin(i * Math.PI / N) * (f[i] - f[N-i]);
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,241,C = Math.cos(i * Math.PI / N) * (f[i] - f[N-i]);
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,242,x[i] = A - B;
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,243,x[N-i] = A + B;
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,244,F1 += C;
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,246,FastFourierTransformer transformer = new FastFourierTransformer();
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,247,Complex y[] = transformer.transform(x);
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,249,// reconstruct the FCT result for the original array
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,250,F[0] = y[0].getReal();
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,251,F[1] = F1;
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,252,for (int i = 1; i < (N >> 1); i++) {
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,253,F[2*i] = y[i].getReal();
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,254,F[2*i+1] = F[2*i-1] - y[i].getImaginary();
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,256,F[N] = y[N >> 1].getReal();
+True,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,src/java/org/apache/commons/math/transform/FastCosineTransformer.java,258,return F;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,2,* Copyright 2005 The Apache Software Foundation.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,5,* you may not use this file except in compliance with the License.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,6,* You may obtain a copy of the License at
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,8,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,13,* See the License for the specific language governing permissions and
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,14,* limitations under the License.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,16,package org.apache.commons.math.transform;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,18,import java.io.Serializable;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,19,import org.apache.commons.math.analysis.*;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,20,import org.apache.commons.math.complex.*;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,21,import org.apache.commons.math.MathException;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,24,"* Implements the <a href=""http://mathworld.wolfram.com/FastFourierTransform.html"">"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,25,* Fast Fourier Transform</a> for transformation of one-dimensional data sets.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,26,"* For reference, see <b>Applied Numerical Linear Algebra</b>, ISBN 0898713897,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,27,* chapter 6.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,28,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,29,"* There are several conventions for the definition of FFT and inverse FFT,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,30,* mainly on different coefficient and exponent. Here the equations are listed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,31,* in the comments of the corresponding methods.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,32,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,33,"* We require the length of data set to be power of 2, this greatly simplifies"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,34,* and speeds up the code. Users can pad the data with zeros to meet this
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,35,"* requirement. There are other flavors of FFT, for reference, see S. Winograd,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,36,"* <i>On computing the discrete Fourier transform</i>, Mathematics of Computation,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,37,"* 32 (1978), 175 - 199."
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,39,* @version $Revision$ $Date$
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,41,public class FastFourierTransformer implements Serializable {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,43,/** serializable version identifier */
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,44,static final long serialVersionUID = 5138259215438106000L;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,46,/** array of the roots of unity */
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,47,private Complex omega[] = new Complex[0];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,50,* |omegaCount| is the length of lasted computed omega[]. omegaCount
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,51,* is positive for forward transform and negative for inverse transform.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,53,private int omegaCount = 0;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,56,* Construct a default transformer.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,58,FastFourierTransformer() {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,59,super();
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,63,* Transform the given real data set.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,64,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,65,* The formula is $ y_n = \Sigma_{k=0}^{N-1} e^{-2 \pi i nk/N} x_k $
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,67,* @param f the real data array to be transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,68,* @return the complex transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,69,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,70,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,72,"public Complex[] transform(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,73,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,75,"return fft(f, false);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,79,"* Transform the given real function, sampled on the given interval."
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,80,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,81,* The formula is $ y_n = \Sigma_{k=0}^{N-1} e^{-2 \pi i nk/N} x_k $
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,83,* @param f the function to be sampled and transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,84,* @param min the lower bound for the interval
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,85,* @param max the upper bound for the interval
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,86,* @param n the number of sample points
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,87,* @return the complex transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,88,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,89,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,91,public Complex[] transform(
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,92,"UnivariateRealFunction f, double min, double max, int n)"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,93,"throws MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,95,"double data[] = sample(f, min, max, n);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,96,"return fft(data, false);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,100,* Transform the given complex data set.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,101,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,102,* The formula is $ y_n = \Sigma_{k=0}^{N-1} e^{-2 \pi i nk/N} x_k $
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,104,* @param f the complex data array to be transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,105,* @return the complex transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,106,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,107,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,109,"public Complex[] transform(Complex f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,110,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,112,computeOmega(f.length);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,113,return fft(f);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,117,* Transform the given real data set.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,118,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,119,* The formula is $y_n = (1/\sqrt{N}) \Sigma_{k=0}^{N-1} e^{-2 \pi i nk/N} x_k$
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,121,* @param f the real data array to be transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,122,* @return the complex transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,123,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,124,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,126,"public Complex[] transform2(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,127,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,129,double scaling_coefficient = 1.0 / Math.sqrt(f.length);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,130,"return scaleArray(fft(f, false), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,134,"* Transform the given real function, sampled on the given interval."
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,135,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,136,* The formula is $y_n = (1/\sqrt{N}) \Sigma_{k=0}^{N-1} e^{-2 \pi i nk/N} x_k$
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,138,* @param f the function to be sampled and transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,139,* @param min the lower bound for the interval
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,140,* @param max the upper bound for the interval
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,141,* @param n the number of sample points
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,142,* @return the complex transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,143,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,144,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,146,public Complex[] transform2(
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,147,"UnivariateRealFunction f, double min, double max, int n)"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,148,"throws MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,150,"double data[] = sample(f, min, max, n);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,151,double scaling_coefficient = 1.0 / Math.sqrt(n);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,152,"return scaleArray(fft(data, false), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,156,* Transform the given complex data set.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,157,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,158,* The formula is $y_n = (1/\sqrt{N}) \Sigma_{k=0}^{N-1} e^{-2 \pi i nk/N} x_k$
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,160,* @param f the complex data array to be transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,161,* @return the complex transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,162,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,163,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,165,"public Complex[] transform2(Complex f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,166,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,168,computeOmega(f.length);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,169,double scaling_coefficient = 1.0 / Math.sqrt(f.length);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,170,"return scaleArray(fft(f), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,174,* Inversely transform the given real data set.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,175,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,176,* The formula is $ x_k = (1/N) \Sigma_{n=0}^{N-1} e^{2 \pi i nk/N} y_n $
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,178,* @param f the real data array to be inversely transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,179,* @return the complex inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,180,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,181,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,183,"public Complex[] inversetransform(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,184,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,186,double scaling_coefficient = 1.0 / f.length;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,187,"return scaleArray(fft(f, true), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,191,"* Inversely transform the given real function, sampled on the given interval."
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,192,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,193,* The formula is $ x_k = (1/N) \Sigma_{n=0}^{N-1} e^{2 \pi i nk/N} y_n $
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,195,* @param f the function to be sampled and inversely transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,196,* @param min the lower bound for the interval
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,197,* @param max the upper bound for the interval
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,198,* @param n the number of sample points
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,199,* @return the complex inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,200,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,201,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,203,public Complex[] inversetransform(
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,204,"UnivariateRealFunction f, double min, double max, int n)"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,205,"throws MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,207,"double data[] = sample(f, min, max, n);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,208,double scaling_coefficient = 1.0 / n;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,209,"return scaleArray(fft(data, true), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,213,* Inversely transform the given complex data set.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,214,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,215,* The formula is $ x_k = (1/N) \Sigma_{n=0}^{N-1} e^{2 \pi i nk/N} y_n $
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,217,* @param f the complex data array to be inversely transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,218,* @return the complex inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,219,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,220,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,222,"public Complex[] inversetransform(Complex f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,223,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,225,computeOmega(-f.length);    // pass negative argument
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,226,double scaling_coefficient = 1.0 / f.length;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,227,"return scaleArray(fft(f), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,231,* Inversely transform the given real data set.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,232,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,233,* The formula is $x_k = (1/\sqrt{N}) \Sigma_{n=0}^{N-1} e^{2 \pi i nk/N} y_n$
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,235,* @param f the real data array to be inversely transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,236,* @return the complex inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,237,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,238,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,240,"public Complex[] inversetransform2(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,241,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,243,double scaling_coefficient = 1.0 / Math.sqrt(f.length);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,244,"return scaleArray(fft(f, true), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,248,"* Inversely transform the given real function, sampled on the given interval."
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,249,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,250,* The formula is $x_k = (1/\sqrt{N}) \Sigma_{n=0}^{N-1} e^{2 \pi i nk/N} y_n$
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,252,* @param f the function to be sampled and inversely transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,253,* @param min the lower bound for the interval
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,254,* @param max the upper bound for the interval
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,255,* @param n the number of sample points
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,256,* @return the complex inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,257,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,258,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,260,public Complex[] inversetransform2(
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,261,"UnivariateRealFunction f, double min, double max, int n)"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,262,"throws MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,264,"double data[] = sample(f, min, max, n);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,265,double scaling_coefficient = 1.0 / Math.sqrt(n);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,266,"return scaleArray(fft(data, true), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,270,* Inversely transform the given complex data set.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,271,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,272,* The formula is $x_k = (1/\sqrt{N}) \Sigma_{n=0}^{N-1} e^{2 \pi i nk/N} y_n$
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,274,* @param f the complex data array to be inversely transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,275,* @return the complex inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,276,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,277,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,279,"public Complex[] inversetransform2(Complex f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,280,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,282,computeOmega(-f.length);    // pass negative argument
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,283,double scaling_coefficient = 1.0 / Math.sqrt(f.length);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,284,"return scaleArray(fft(f), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,288,* Perform the base-4 Cooley-Tukey FFT algorithm (including inverse).
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,290,* @param f the real data array to be transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,291,* @param isInverse the indicator of forward or inverse transform
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,292,* @return the complex transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,293,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,294,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,296,"protected Complex[] fft(double f[], boolean isInverse) throws"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,297,"MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,299,verifyDataSet(f);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,300,Complex F[] = new Complex[f.length];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,301,if (f.length == 1) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,302,"F[0] = new Complex(f[0], 0.0);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,303,return F;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,306,"// Rather than the naive real to complex conversion, pack 2N"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,307,// real numbers into N complex numbers for better performance.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,308,int N = f.length >> 1;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,309,Complex c[] = new Complex[N];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,310,for (int i = 0; i < N; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,311,"c[i] = new Complex(f[2*i], f[2*i+1]);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,313,computeOmega(isInverse ? -N : N);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,314,Complex z[] = fft(c);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,316,// reconstruct the FFT result for the original array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,317,computeOmega(isInverse ? -2*N : 2*N);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,318,"F[0] = new Complex(2 * (z[0].getReal() + z[0].getImaginary()), 0.0);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,319,"F[N] = new Complex(2 * (z[0].getReal() - z[0].getImaginary()), 0.0);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,320,for (int i = 1; i < N; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,321,Complex A = z[N-i].conjugate();
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,322,Complex B = z[i].add(A);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,323,Complex C = z[i].subtract(A);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,324,Complex D = omega[i].multiply(Complex.I);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,325,F[i] = B.subtract(C.multiply(D));
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,326,F[2*N-i] = F[i].conjugate();
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,329,"return scaleArray(F, 0.5);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,333,* Perform the base-4 Cooley-Tukey FFT algorithm (including inverse).
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,335,* @param data the complex data array to be transformed
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,336,* @return the complex transformed array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,337,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,338,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,340,"protected Complex[] fft(Complex data[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,341,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,343,"int i, j, k, m, N = data.length;"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,344,"Complex A, B, C, D, E, F, z, f[] = new Complex[N];"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,346,// initial simple cases
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,347,verifyDataSet(data);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,348,if (N == 1) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,349,f[0] = data[0];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,350,return f;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,352,if (N == 2) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,353,f[0] = data[0].add(data[1]);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,354,f[1] = data[0].subtract(data[1]);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,355,return f;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,358,// permute original data array in bit-reversal order
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,359,j = 0;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,360,for (i = 0; i < N; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,361,f[i] = data[j];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,362,k = N >> 1;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,363,while (j >= k && k > 0) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,364,j -= k; k >>= 1;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,366,j += k;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,369,// the bottom base-4 round
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,370,for (i = 0; i < N; i += 4) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,371,A = f[i].add(f[i+1]);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,372,B = f[i+2].add(f[i+3]);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,373,C = f[i].subtract(f[i+1]);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,374,D = f[i+2].subtract(f[i+3]);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,375,E = C.add(D.multiply(Complex.I));
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,376,F = C.subtract(D.multiply(Complex.I));
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,377,f[i] = A.add(B);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,378,f[i+2] = A.subtract(B);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,379,// omegaCount indicates forward or inverse transform
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,380,f[i+1] = omegaCount < 0 ? E : F;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,381,f[i+3] = omegaCount > 0 ? E : F;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,384,// iterations from bottom to top take O(N*logN) time
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,385,for (i = 4; i < N; i <<= 1) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,386,m = N / (i<<1);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,387,for (j = 0; j < N; j += i<<1) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,388,for (k = 0; k < i; k++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,389,z = f[i+j+k].multiply(omega[k*m]);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,390,f[i+j+k] = f[j+k].subtract(z);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,391,f[j+k] = f[j+k].add(z);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,395,return f;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,399,* Calculate the n-th roots of unity.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,400,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,401,"* The computed omega[] = { 1, w, w^2, ... w^(n-1) } where"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,402,"* w = exp(-2 \pi i / n), i = sqrt(-1). Note n is positive for"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,403,* forward transform and negative for inverse transform.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,405,* @param n the integer passed in
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,406,* @throws IllegalArgumentException if n = 0
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,408,protected void computeOmega(int n) throws IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,409,if (n == 0) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,410,throw new IllegalArgumentException
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,411,"(""Cannot compute 0-th root of unity, indefinite result."");"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,413,// avoid repetitive calculations
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,414,if (n == omegaCount) { return; }
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,415,if (n + omegaCount == 0) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,416,for (int i = 0; i < Math.abs(omegaCount); i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,417,omega[i] = omega[i].conjugate();
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,419,omegaCount = n;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,420,return;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,422,// calculate everything from scratch
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,423,omega = new Complex[Math.abs(n)];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,424,double t = 2.0 * Math.PI / n;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,425,double cost = Math.cos(t);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,426,double sint = Math.sin(t);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,427,"omega[0] = new Complex(1.0, 0.0);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,428,for (int i = 1; i < Math.abs(n); i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,429,omega[i] = new Complex(
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,430,"omega[i-1].getReal() * cost + omega[i-1].getImaginary() * sint,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,431,omega[i-1].getImaginary() * cost - omega[i-1].getReal() * sint);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,433,omegaCount = n;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,437,* Sample the given univariate real function on the given interval.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,438,* <p>
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,439,* The interval is divided equally into N sections and sample points
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,440,* are taken from min to max-(max-min)/N. Usually f(x) is periodic
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,441,"* such that f(min) = f(max) (note max is not sampled), but we don't"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,442,* require that.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,444,* @param f the function to be sampled
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,445,* @param min the lower bound for the interval
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,446,* @param max the upper bound for the interval
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,447,* @param n the number of sample points
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,448,* @return the samples array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,449,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,450,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,452,public static double[] sample(
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,453,"UnivariateRealFunction f, double min, double max, int n)"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,454,"throws MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,456,if (n <= 0) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,457,"throw new IllegalArgumentException(""Number of samples not positive."");"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,459,"verifyInterval(min, max);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,461,double s[] = new double[n];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,462,double h = (max - min) / n;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,463,for (int i = 0; i < n; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,464,s[i] = f.value(min + i * h);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,466,return s;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,470,* Multiply every component in the given real array by the
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,471,* given real number. The change is made in place.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,473,* @param f the real array to be scaled
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,474,* @param d the real scaling coefficient
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,475,* @return a reference to the scaled array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,477,"public static double[] scaleArray(double f[], double d) {"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,478,for (int i = 0; i < f.length; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,479,f[i] *= d;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,481,return f;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,485,* Multiply every component in the given complex array by the
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,486,* given real number. The change is made in place.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,488,* @param f the complex array to be scaled
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,489,* @param d the real scaling coefficient
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,490,* @return a reference to the scaled array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,492,"public static Complex[] scaleArray(Complex f[], double d) {"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,493,for (int i = 0; i < f.length; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,494,"f[i] = new Complex(d * f[i].getReal(), d * f[i].getImaginary());"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,496,return f;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,500,* Returns true if the argument is power of 2.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,502,* @param n the number to test
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,503,* @return true if the argument is power of 2
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,505,public static boolean isPowerOf2(long n) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,506,return (n > 0) && ((n & (n - 1)) == 0);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,510,* Verifies that the data set has length of power of 2.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,512,* @param d the data array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,513,* @throws IllegalArgumentException if array length is not power of 2
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,515,public static void verifyDataSet(double d[]) throws IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,516,if (!isPowerOf2(d.length)) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,517,throw new IllegalArgumentException
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,518,"(""Number of samples not power of 2, consider padding for fix."");"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,523,* Verifies that the data set has length of power of 2.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,525,* @param o the data array
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,526,* @throws IllegalArgumentException if array length is not power of 2
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,528,public static void verifyDataSet(Object o[]) throws IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,529,if (!isPowerOf2(o.length)) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,530,throw new IllegalArgumentException
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,531,"(""Number of samples not power of 2, consider padding for fix."");"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,536,* Verifies that the endpoints specify an interval.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,538,* @param lower lower endpoint
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,539,* @param upper upper endpoint
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,540,* @throws IllegalArgumentException if not interval
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,542,"public static void verifyInterval(double lower, double upper) throws"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,543,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,545,if (lower >= upper) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,546,throw new IllegalArgumentException
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,547,"(""Endpoints do not specify an interval: ["" + lower +"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,548,""", "" + upper + ""]"");"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,2,* Copyright 2005 The Apache Software Foundation.
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,5,* you may not use this file except in compliance with the License.
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,6,* You may obtain a copy of the License at
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,8,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,13,* See the License for the specific language governing permissions and
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,14,* limitations under the License.
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,16,package org.apache.commons.math.transform;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,18,import java.io.Serializable;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,19,import org.apache.commons.math.analysis.*;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,20,import org.apache.commons.math.complex.*;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,21,import org.apache.commons.math.MathException;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,24,"* Implements the <a href=""http://documents.wolfram.com/v5/Add-onsLinks/"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,25,"* StandardPackages/LinearAlgebra/FourierTrig.html"">Fast Sine Transform</a>"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,26,"* for transformation of one-dimensional data sets. For reference, see"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,27,"* <b>Fast Fourier Transforms</b>, ISBN 0849371635, chapter 3."
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,28,* <p>
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,29,"* FST is its own inverse, up to a multiplier depending on conventions."
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,30,* The equations are listed in the comments of the corresponding methods.
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,31,* <p>
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,32,"* Similar to FFT, we also require the length of data set to be power of 2."
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,33,"* In addition, the first element must be 0 and it's enforced in function"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,34,* transformation after sampling.
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,36,* @version $Revision$ $Date$
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,38,public class FastSineTransformer implements Serializable {
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,40,/** serializable version identifier */
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,41,static final long serialVersionUID = -478002039949390854L;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,44,* Construct a default transformer.
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,46,FastSineTransformer() {
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,47,super();
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,51,* Transform the given real data set.
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,52,* <p>
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,53,* The formula is $ F_n = \Sigma_{k=0}^{N-1} f_k \sin(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,55,* @param f the real data array to be transformed
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,56,* @return the real transformed array
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,57,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,58,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,60,"public double[] transform(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,61,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,63,return fst(f);
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,67,"* Transform the given real function, sampled on the given interval."
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,68,* <p>
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,69,* The formula is $ F_n = \Sigma_{k=0}^{N-1} f_k \sin(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,71,* @param f the function to be sampled and transformed
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,72,* @param min the lower bound for the interval
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,73,* @param max the upper bound for the interval
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,74,* @param n the number of sample points
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,75,* @return the real transformed array
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,76,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,77,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,79,public double[] transform(
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,80,"UnivariateRealFunction f, double min, double max, int n)"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,81,"throws MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,83,"double data[] = FastFourierTransformer.sample(f, min, max, n);"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,84,data[0] = 0.0;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,85,return fst(data);
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,89,* Transform the given real data set.
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,90,* <p>
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,91,* The formula is $ F_n = \sqrt{2/N} \Sigma_{k=0}^{N-1} f_k \sin(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,93,* @param f the real data array to be transformed
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,94,* @return the real transformed array
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,95,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,96,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,98,"public double[] transform2(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,99,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,101,double scaling_coefficient = Math.sqrt(2.0 / f.length);
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,102,"return FastFourierTransformer.scaleArray(fst(f), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,106,"* Transform the given real function, sampled on the given interval."
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,107,* <p>
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,108,* The formula is $ F_n = \sqrt{2/N} \Sigma_{k=0}^{N-1} f_k \sin(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,110,* @param f the function to be sampled and transformed
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,111,* @param min the lower bound for the interval
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,112,* @param max the upper bound for the interval
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,113,* @param n the number of sample points
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,114,* @return the real transformed array
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,115,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,116,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,118,public double[] transform2(
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,119,"UnivariateRealFunction f, double min, double max, int n)"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,120,"throws MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,122,"double data[] = FastFourierTransformer.sample(f, min, max, n);"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,123,data[0] = 0.0;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,124,double scaling_coefficient = Math.sqrt(2.0 / n);
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,125,"return FastFourierTransformer.scaleArray(fst(data), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,129,* Inversely transform the given real data set.
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,130,* <p>
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,131,* The formula is $ f_k = (2/N) \Sigma_{n=0}^{N-1} F_n \sin(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,133,* @param f the real data array to be inversely transformed
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,134,* @return the real inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,135,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,136,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,138,"public double[] inversetransform(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,139,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,141,double scaling_coefficient = 2.0 / f.length;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,142,"return FastFourierTransformer.scaleArray(fst(f), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,146,"* Inversely transform the given real function, sampled on the given interval."
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,147,* <p>
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,148,* The formula is $ f_k = (2/N) \Sigma_{n=0}^{N-1} F_n \sin(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,150,* @param f the function to be sampled and inversely transformed
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,151,* @param min the lower bound for the interval
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,152,* @param max the upper bound for the interval
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,153,* @param n the number of sample points
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,154,* @return the real inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,155,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,156,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,158,public double[] inversetransform(
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,159,"UnivariateRealFunction f, double min, double max, int n)"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,160,"throws MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,162,"double data[] = FastFourierTransformer.sample(f, min, max, n);"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,163,data[0] = 0.0;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,164,double scaling_coefficient = 2.0 / n;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,165,"return FastFourierTransformer.scaleArray(fst(data), scaling_coefficient);"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,169,* Inversely transform the given real data set.
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,170,* <p>
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,171,* The formula is $ f_k = \sqrt{2/N} \Sigma_{n=0}^{N-1} F_n \sin(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,173,* @param f the real data array to be inversely transformed
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,174,* @return the real inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,175,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,176,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,178,"public double[] inversetransform2(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,179,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,181,return transform2(f);
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,185,"* Inversely transform the given real function, sampled on the given interval."
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,186,* <p>
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,187,* The formula is $ f_k = \sqrt{2/N} \Sigma_{n=0}^{N-1} F_n \sin(\pi nk/N) $
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,189,* @param f the function to be sampled and inversely transformed
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,190,* @param min the lower bound for the interval
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,191,* @param max the upper bound for the interval
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,192,* @param n the number of sample points
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,193,* @return the real inversely transformed array
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,194,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,195,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,197,public double[] inversetransform2(
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,198,"UnivariateRealFunction f, double min, double max, int n)"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,199,"throws MathException, IllegalArgumentException {"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,201,"return transform2(f, min, max, n);"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,205,* Perform the FST algorithm (including inverse).
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,207,* @param f the real data array to be transformed
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,208,* @return the real transformed array
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,209,* @throws MathException if any math-related errors occur
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,210,* @throws IllegalArgumentException if any parameters are invalid
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,212,"protected double[] fst(double f[]) throws MathException,"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,213,IllegalArgumentException {
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,215,"double A, B, x[], F[] = new double[f.length];"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,217,FastFourierTransformer.verifyDataSet(f);
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,218,if (f[0] != 0.0) {
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,219,throw new IllegalArgumentException
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,220,"(""The first element is not zero: "" + f[0]);"
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,222,int N = f.length;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,223,if (N == 1) {       // trivial case
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,224,F[0] = 0.0;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,225,return F;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,228,// construct a new array and perform FFT on it
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,229,x = new double[N];
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,230,x[0] = 0.0;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,231,x[N >> 1] = 2.0 * f[N >> 1];
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,232,for (int i = 1; i < (N >> 1); i++) {
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,233,A = Math.sin(i * Math.PI / N) * (f[i] + f[N-i]);
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,234,B = 0.5 * (f[i] - f[N-i]);
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,235,x[i] = A + B;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,236,x[N-i] = A - B;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,238,FastFourierTransformer transformer = new FastFourierTransformer();
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,239,Complex y[] = transformer.transform(x);
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,241,// reconstruct the FST result for the original array
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,242,F[0] = 0.0;
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,243,F[1] = 0.5 * y[0].getReal();
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,244,for (int i = 1; i < (N >> 1); i++) {
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,245,F[2*i] = -y[i].getImaginary();
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,246,F[2*i+1] = y[i].getReal() + F[2*i-1];
+True,src/java/org/apache/commons/math/transform/FastSineTransformer.java,src/java/org/apache/commons/math/transform/FastSineTransformer.java,249,return F;
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,2,* Copyright 2005 The Apache Software Foundation.
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,5,* you may not use this file except in compliance with the License.
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,6,* You may obtain a copy of the License at
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,8,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,13,* See the License for the specific language governing permissions and
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,14,* limitations under the License.
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,16,package org.apache.commons.math.transform;
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,18,import org.apache.commons.math.analysis.*;
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,19,import org.apache.commons.math.MathException;
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,20,import junit.framework.TestCase;
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,23,* Testcase for fast cosine transformer.
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,24,* <p>
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,25,"* FCT algorithm is exact, the small tolerance number is used only"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,26,* to account for round-off errors.
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,28,* @version $Revision$ $Date$
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,30,public final class FastCosineTransformerTest extends TestCase {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,33,* Test of transformer for the ad hoc data.
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,35,public void testAdHocData() throws MathException {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,36,FastCosineTransformer transformer = new FastCosineTransformer();
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,37,"double result[], tolerance = 1E-12;"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,39,"double x[] = { 0.0, 1.0, 4.0, 9.0, 16.0, 25.0, 36.0, 49.0, 64.0 };"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,40,"double y[] = { 172.0, -105.096569476353, 27.3137084989848,"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,41,"-12.9593152353742, 8.0, -5.78585076868676,"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,42,"4.68629150101524, -4.15826451958632, 4.0 };"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,44,result = transformer.transform(x);
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,45,for (int i = 0; i < result.length; i++) {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,46,"assertEquals(y[i], result[i], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,49,result = transformer.inversetransform(y);
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,50,for (int i = 0; i < result.length; i++) {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,51,"assertEquals(x[i], result[i], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,54,"FastFourierTransformer.scaleArray(x, Math.sqrt(0.5 * (x.length-1)));"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,56,result = transformer.transform2(y);
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,57,for (int i = 0; i < result.length; i++) {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,58,"assertEquals(x[i], result[i], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,61,result = transformer.inversetransform2(x);
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,62,for (int i = 0; i < result.length; i++) {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,63,"assertEquals(y[i], result[i], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,68,* Test of transformer for the sine function.
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,70,public void testSinFunction() throws MathException {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,71,UnivariateRealFunction f = new SinFunction();
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,72,FastCosineTransformer transformer = new FastCosineTransformer();
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,73,"double min, max, result[], tolerance = 1E-12; int N = 9;"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,75,"double expected[] = { 0.0, 3.26197262739567, 0.0,"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,76,"-2.17958042710327, 0.0, -0.648846697642915,"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,77,"0.0, -0.433545502649478, 0.0 };"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,78,min = 0.0; max = 2.0 * Math.PI * N / (N-1);
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,79,"result = transformer.transform(f, min, max, N);"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,80,for (int i = 0; i < N; i++) {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,81,"assertEquals(expected[i], result[i], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,84,min = -Math.PI; max = Math.PI * (N+1) / (N-1);
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,85,"result = transformer.transform(f, min, max, N);"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,86,for (int i = 0; i < N; i++) {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,87,"assertEquals(-expected[i], result[i], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,92,* Test of parameters for the transformer.
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,94,public void testParameters() throws Exception {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,95,UnivariateRealFunction f = new SinFunction();
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,96,FastCosineTransformer transformer = new FastCosineTransformer();
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,98,try {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,99,// bad interval
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,100,"transformer.transform(f, 1, -1, 65);"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,101,"fail(""Expecting IllegalArgumentException - bad interval"");"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,102,} catch (IllegalArgumentException ex) {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,103,// expected
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,105,try {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,106,// bad samples number
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,107,"transformer.transform(f, -1, 1, 1);"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,108,"fail(""Expecting IllegalArgumentException - bad samples number"");"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,109,} catch (IllegalArgumentException ex) {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,110,// expected
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,112,try {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,113,// bad samples number
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,114,"transformer.transform(f, -1, 1, 64);"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,115,"fail(""Expecting IllegalArgumentException - bad samples number"");"
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,116,} catch (IllegalArgumentException ex) {
+True,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,src/test/org/apache/commons/math/transform/FastCosineTransformerTest.java,117,// expected
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,2,* Copyright 2005 The Apache Software Foundation.
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,5,* you may not use this file except in compliance with the License.
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,6,* You may obtain a copy of the License at
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,8,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,13,* See the License for the specific language governing permissions and
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,14,* limitations under the License.
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,16,package org.apache.commons.math.transform;
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,18,import org.apache.commons.math.analysis.*;
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,19,import org.apache.commons.math.complex.*;
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,20,import org.apache.commons.math.MathException;
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,21,import junit.framework.TestCase;
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,24,* Testcase for fast Fourier transformer.
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,25,* <p>
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,26,"* FFT algorithm is exact, the small tolerance number is used only"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,27,* to account for round-off errors.
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,29,* @version $Revision$ $Date$
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,31,public final class FastFourierTransformerTest extends TestCase {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,34,* Test of transformer for the ad hoc data taken from Mathematica.
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,36,public void testAdHocData() throws MathException {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,37,FastFourierTransformer transformer = new FastFourierTransformer();
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,38,Complex result[]; double tolerance = 1E-12;
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,40,"double x[] = {1.3, 2.4, 1.7, 4.1, 2.9, 1.7, 5.1, 2.7};"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,41,Complex y[] = {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,42,"new Complex(21.9, 0.0),"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,43,"new Complex(-2.09497474683058, 1.91507575950825),"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,44,"new Complex(-2.6, 2.7),"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,45,"new Complex(-1.10502525316942, -4.88492424049175),"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,46,"new Complex(0.1, 0.0),"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,47,"new Complex(-1.10502525316942, 4.88492424049175),"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,48,"new Complex(-2.6, -2.7),"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,49,"new Complex(-2.09497474683058, -1.91507575950825)};"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,51,result = transformer.transform(x);
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,52,for (int i = 0; i < result.length; i++) {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,53,"assertEquals(y[i].getReal(), result[i].getReal(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,54,"assertEquals(y[i].getImaginary(), result[i].getImaginary(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,57,result = transformer.inversetransform(y);
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,58,for (int i = 0; i < result.length; i++) {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,59,"assertEquals(x[i], result[i].getReal(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,60,"assertEquals(0.0, result[i].getImaginary(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,63,"double x2[] = {10.4, 21.6, 40.8, 13.6, 23.2, 32.8, 13.6, 19.2};"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,64,"transformer.scaleArray(x2, 1.0 / Math.sqrt(x2.length));"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,65,Complex y2[] = y;
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,67,result = transformer.transform2(y2);
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,68,for (int i = 0; i < result.length; i++) {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,69,"assertEquals(x2[i], result[i].getReal(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,70,"assertEquals(0.0, result[i].getImaginary(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,73,result = transformer.inversetransform2(x2);
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,74,for (int i = 0; i < result.length; i++) {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,75,"assertEquals(y2[i].getReal(), result[i].getReal(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,76,"assertEquals(y2[i].getImaginary(), result[i].getImaginary(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,81,* Test of transformer for the sine function.
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,83,public void testSinFunction() throws MathException {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,84,UnivariateRealFunction f = new SinFunction();
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,85,FastFourierTransformer transformer = new FastFourierTransformer();
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,86,Complex result[]; int N = 1 << 8;
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,87,"double min, max, tolerance = 1E-12;"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,89,min = 0.0; max = 2.0 * Math.PI;
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,90,"result = transformer.transform(f, min, max, N);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,91,"assertEquals(0.0, result[1].getReal(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,92,"assertEquals(-(N >> 1), result[1].getImaginary(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,93,"assertEquals(0.0, result[N-1].getReal(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,94,"assertEquals(N >> 1, result[N-1].getImaginary(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,95,for (int i = 0; i < N-1; i += (i == 0 ? 2 : 1)) {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,96,"assertEquals(0.0, result[i].getReal(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,97,"assertEquals(0.0, result[i].getImaginary(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,100,min = -Math.PI; max = Math.PI;
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,101,"result = transformer.inversetransform(f, min, max, N);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,102,"assertEquals(0.0, result[1].getReal(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,103,"assertEquals(-0.5, result[1].getImaginary(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,104,"assertEquals(0.0, result[N-1].getReal(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,105,"assertEquals(0.5, result[N-1].getImaginary(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,106,for (int i = 0; i < N-1; i += (i == 0 ? 2 : 1)) {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,107,"assertEquals(0.0, result[i].getReal(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,108,"assertEquals(0.0, result[i].getImaginary(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,113,* Test of parameters for the transformer.
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,115,public void testParameters() throws Exception {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,116,UnivariateRealFunction f = new SinFunction();
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,117,FastFourierTransformer transformer = new FastFourierTransformer();
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,119,try {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,120,// bad interval
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,121,"transformer.transform(f, 1, -1, 64);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,122,"fail(""Expecting IllegalArgumentException - bad interval"");"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,123,} catch (IllegalArgumentException ex) {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,124,// expected
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,126,try {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,127,// bad samples number
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,128,"transformer.transform(f, -1, 1, 0);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,129,"fail(""Expecting IllegalArgumentException - bad samples number"");"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,130,} catch (IllegalArgumentException ex) {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,131,// expected
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,133,try {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,134,// bad samples number
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,135,"transformer.transform(f, -1, 1, 100);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,136,"fail(""Expecting IllegalArgumentException - bad samples number"");"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,137,} catch (IllegalArgumentException ex) {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,138,// expected
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,2,* Copyright 2005 The Apache Software Foundation.
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,5,* you may not use this file except in compliance with the License.
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,6,* You may obtain a copy of the License at
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,8,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,13,* See the License for the specific language governing permissions and
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,14,* limitations under the License.
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,16,package org.apache.commons.math.transform;
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,18,import org.apache.commons.math.analysis.*;
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,19,import org.apache.commons.math.MathException;
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,20,import junit.framework.TestCase;
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,23,* Testcase for fast sine transformer.
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,24,* <p>
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,25,"* FST algorithm is exact, the small tolerance number is used only"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,26,* to account for round-off errors.
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,28,* @version $Revision$ $Date$
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,30,public final class FastSineTransformerTest extends TestCase {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,33,* Test of transformer for the ad hoc data.
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,35,public void testAdHocData() throws MathException {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,36,FastSineTransformer transformer = new FastSineTransformer();
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,37,"double result[], tolerance = 1E-12;"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,39,"double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0 };"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,40,"double y[] = { 0.0, 20.1093579685034, -9.65685424949238,"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,41,"5.98642305066196, -4.0, 2.67271455167720,"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,42,"-1.65685424949238, 0.795649469518633 };"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,44,result = transformer.transform(x);
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,45,for (int i = 0; i < result.length; i++) {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,46,"assertEquals(y[i], result[i], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,49,result = transformer.inversetransform(y);
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,50,for (int i = 0; i < result.length; i++) {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,51,"assertEquals(x[i], result[i], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,54,"FastFourierTransformer.scaleArray(x, Math.sqrt(x.length / 2.0));"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,56,result = transformer.transform2(y);
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,57,for (int i = 0; i < result.length; i++) {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,58,"assertEquals(x[i], result[i], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,61,result = transformer.inversetransform2(x);
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,62,for (int i = 0; i < result.length; i++) {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,63,"assertEquals(y[i], result[i], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,68,* Test of transformer for the sine function.
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,70,public void testSinFunction() throws MathException {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,71,UnivariateRealFunction f = new SinFunction();
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,72,FastSineTransformer transformer = new FastSineTransformer();
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,73,"double min, max, result[], tolerance = 1E-12; int N = 1 << 8;"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,75,min = 0.0; max = 2.0 * Math.PI;
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,76,"result = transformer.transform(f, min, max, N);"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,77,"assertEquals(N >> 1, result[2], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,78,for (int i = 0; i < N; i += (i == 1 ? 2 : 1)) {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,79,"assertEquals(0.0, result[i], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,82,min = -Math.PI; max = Math.PI;
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,83,"result = transformer.transform(f, min, max, N);"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,84,"assertEquals(-(N >> 1), result[2], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,85,for (int i = 0; i < N; i += (i == 1 ? 2 : 1)) {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,86,"assertEquals(0.0, result[i], tolerance);"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,91,* Test of parameters for the transformer.
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,93,public void testParameters() throws Exception {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,94,UnivariateRealFunction f = new SinFunction();
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,95,FastSineTransformer transformer = new FastSineTransformer();
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,97,try {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,98,// bad interval
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,99,"transformer.transform(f, 1, -1, 64);"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,100,"fail(""Expecting IllegalArgumentException - bad interval"");"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,101,} catch (IllegalArgumentException ex) {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,102,// expected
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,104,try {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,105,// bad samples number
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,106,"transformer.transform(f, -1, 1, 0);"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,107,"fail(""Expecting IllegalArgumentException - bad samples number"");"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,108,} catch (IllegalArgumentException ex) {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,109,// expected
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,111,try {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,112,// bad samples number
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,113,"transformer.transform(f, -1, 1, 100);"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,114,"fail(""Expecting IllegalArgumentException - bad samples number"");"
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,115,} catch (IllegalArgumentException ex) {
+True,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,src/test/org/apache/commons/math/transform/FastSineTransformerTest.java,116,// expected

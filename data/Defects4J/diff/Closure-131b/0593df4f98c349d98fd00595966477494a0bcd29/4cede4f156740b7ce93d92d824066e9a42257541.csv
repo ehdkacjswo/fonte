@@ -1,0 +1,113 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,21,import com.google.common.collect.Sets;
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,26,import java.util.Set;
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,74,// Vars that still need to be declared in externs. These will be declared
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,75,"// at the end of the pass, or when we see the equivalent var declared"
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,76,// in the normal code.
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,77,private Set<String> varsToDeclareInExterns = Sets.newHashSet();
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,103,for (String varName : varsToDeclareInExterns) {
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,104,createSynthesizedExternVar(varName);
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,128,// Check if this is a declaration for a var that has been declared
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,129,"// elsewhere. If so, mark it as a duplicate."
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,130,if ((parent.getType() == Token.VAR ||
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,131,NodeUtil.isFunctionDeclaration(parent)) &&
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,132,varsToDeclareInExterns.contains(varName)) {
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,133,createSynthesizedExternVar(varName);
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,135,"parent.addSuppression(""duplicate"");"
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,134,/ Create a new variable in a synthetic script. This will prevent
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,135,/ subsequent compiler passes from crashing.
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,136,"ode nameNode = Node.newString(Token.NAME, varName);"
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,138,/ Mark the variable as constant if it matches the coding convention
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,139,/ for constant vars.
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,140,"/ NOTE(nicksantos): honestly, i'm not sure how much this matters."
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,141,"/ AFAIK, all people who use the CONST coding convention also"
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,142,/ compile with undeclaredVars as errors. We have some test
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,143,"/ cases for this configuration though, and it makes them happier."
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,144,f (compiler.getCodingConvention().isConstant(varName)) {
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,145,"ameNode.putBooleanProp(Node.IS_CONSTANT_NAME, true);"
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,148,etSynthesizedExternsRoot().addChildToBack(
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,149,"ew Node(Token.VAR, nameNode));"
+False,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,150,"cope.getGlobalScope().declare(varName, nameNode,"
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,154,createSynthesizedExternVar(varName);
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,155,"scope.getGlobalScope().declare(varName, n,"
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,198,* Create a new variable in a synthetic script. This will prevent
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,199,* subsequent compiler passes from crashing.
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,201,private void createSynthesizedExternVar(String varName) {
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,202,"Node nameNode = Node.newString(Token.NAME, varName);"
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,204,// Mark the variable as constant if it matches the coding convention
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,205,// for constant vars.
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,206,"// NOTE(nicksantos): honestly, i'm not sure how much this matters."
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,207,"// AFAIK, all people who use the CONST coding convention also"
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,208,// compile with undeclaredVars as errors. We have some test
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,209,"// cases for this configuration though, and it makes them happier."
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,210,if (compiler.getCodingConvention().isConstant(varName)) {
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,211,"nameNode.putBooleanProp(Node.IS_CONSTANT_NAME, true);"
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,214,getSynthesizedExternsRoot().addChildToBack(
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,215,"new Node(Token.VAR, nameNode));"
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,216,varsToDeclareInExterns.remove(varName);
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,238,varsToDeclareInExterns.add(n.getString());
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,245,Scope scope = t.getScope();
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,246,Scope.Var var = scope.getVar(n.getString());
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,247,if (var == null) {
+True,src/com/google/javascript/jscomp/VarCheck.java,src/com/google/javascript/jscomp/VarCheck.java,248,varsToDeclareInExterns.add(n.getString());
+True,src/com/google/javascript/rhino/JSDocInfo.java,src/com/google/javascript/rhino/JSDocInfo.java,45,import com.google.common.collect.Sets;
+True,src/com/google/javascript/rhino/JSDocInfo.java,src/com/google/javascript/rhino/JSDocInfo.java,519,* Add a suppressed warning.
+True,src/com/google/javascript/rhino/JSDocInfo.java,src/com/google/javascript/rhino/JSDocInfo.java,521,void addSuppression(String suppression) {
+True,src/com/google/javascript/rhino/JSDocInfo.java,src/com/google/javascript/rhino/JSDocInfo.java,522,lazyInitInfo();
+True,src/com/google/javascript/rhino/JSDocInfo.java,src/com/google/javascript/rhino/JSDocInfo.java,524,if (info.suppressions == null) {
+True,src/com/google/javascript/rhino/JSDocInfo.java,src/com/google/javascript/rhino/JSDocInfo.java,525,info.suppressions = Sets.newHashSet();
+True,src/com/google/javascript/rhino/JSDocInfo.java,src/com/google/javascript/rhino/JSDocInfo.java,527,info.suppressions.add(suppression);
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,151,"UPPRESSIONS       = 49,    // Used by the compiler to associate"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,152,/ @suppress directly with functions
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,153,/ and scripts.
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,154,"REE_CALL          = 50,    // A CALL without an explicit ""this"" value."
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,151,"FREE_CALL          = 49,    // A CALL without an explicit ""this"" value."
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,156,AST_PROP          = 50;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,153,LAST_PROP          = 49;
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2044, Sets the warning suppressions on this node.
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2041,* Adds a warning to be suppressed. This is indistinguishable
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2042,* from having a {@code @suppress} tag in the code.
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2046,ublic void setSuppressions(Set<String> val) {
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2047,reconditions.checkState(type == Token.FUNCTION || type == Token.SCRIPT);
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2048,"utProp(SUPPRESSIONS, val);"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2052, Returns the set of supressions for this node.
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2054,"SuppressWarnings(""unchecked"")"
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2055,ublic Set<String> getSuppressions() {
+False,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2056,eturn (Set<String>) getProp(SUPPRESSIONS);
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2044,public void addSuppression(String warning) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2045,if (getJSDocInfo() == null) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2046,setJSDocInfo(new JSDocInfo(false));
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2048,getJSDocInfo().addSuppression(warning);
+False,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,58,rotected CompilerPass getProcessor(Compiler compiler) {
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,58,protected CompilerPass getProcessor(final Compiler compiler) {
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,59,if (!sanityCheck) {
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,60,return new CompilerPass() {
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,61,"@Override public void process(Node externs, Node root) {"
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,62,"new VarCheck(compiler, false).process(externs, root);"
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,63,if (!compiler.hasErrors()) {
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,64,"new VarCheck(compiler, true).process(externs, root);"
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,118,public void testMultiplyDeclaredVars4() {
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,119,"testSame(""x;"", ""var x = 1; var x = 2;"","
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,120,"SyntacticScopeCreator.VAR_MULTIPLY_DECLARED_ERROR, true);"
+False,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,272,"heckSynthesizedExtern(""x"", ""var x"");"
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,287,"checkSynthesizedExtern(""x"", ""var x;"");"
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,320,public void testVariableInNormalCodeUsedInExterns1() {
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,321,checkSynthesizedExtern(
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,322,"""x.foo;"", ""var x;"", ""var x; x.foo;"");"
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,325,public void testVariableInNormalCodeUsedInExterns2() {
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,326,checkSynthesizedExtern(
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,327,"""x;"", ""var x;"", ""var x; x;"");"
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,330,public void testVariableInNormalCodeUsedInExterns3() {
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,331,checkSynthesizedExtern(
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,332,"""x.foo;"", ""function x() {}"", ""var x; x.foo; "");"
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,335,public void testVariableInNormalCodeUsedInExterns4() {
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,336,checkSynthesizedExtern(
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,337,"""x;"", ""function x() {}"", ""var x; x; "");"
+False,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,328,"ublic void checkSynthesizedExtern(String input, String expectedExtern) {"
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,363,public void checkSynthesizedExtern(
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,364,"String input, String expectedExtern) {"
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,365,"checkSynthesizedExtern("""", input, expectedExtern);"
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,368,public void checkSynthesizedExtern(
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,369,"String extern, String input, String expectedExtern) {"
+False,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,335,"ew JSSourceFile[] {},"
+True,test/com/google/javascript/jscomp/VarCheckTest.java,test/com/google/javascript/jscomp/VarCheckTest.java,376,"new JSSourceFile[] { JSSourceFile.fromCode(""extern"", extern) },"

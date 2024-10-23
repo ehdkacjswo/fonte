@@ -1,0 +1,22 @@
+Configured checkstyle to stop complaining about incomplete Javadoc in some very specific cases.
+
+This problem has been discussed previously here:
+  http://markmail.org/message/pmbiyiqssjesq7tm
+
+The solution implemented with this modification is to configure checkstyle
+in such a way the errors can be filtered out using dedicated comments in the
+source code:
+
+  // CHECKSTYLE: stop JavadocMethodCheck
+
+  // a bunch of functions known to trigger warnings
+  // that we explicitly REFUSE to fix
+
+  // CHECKSTYLE: resume JavadocMethodCheck
+
+The checks are still performed normally in file parts not bracketed by
+these comments. Hence the first few methods in o.a.c.m.stat.inference.TestUtils are
+still checked for correct javadoc, and only for the last ones in the same files
+are the checks relaxed.
+
+git-svn-id: https://svn.apache.org/repos/asf/commons/proper/math/branches/MATH_2_0@658671 13f79535-47bb-0310-9956-ffa450edef68

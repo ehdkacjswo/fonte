@@ -1,0 +1,73 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1143,/ We have to rebuild the global scope.
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1144,"/ If this is not fast enough, we'll need to change the interface"
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1145,/ of ScopeCreator so that it can patch new variables into an existing
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1146,/ scope (right now it can only create new scopes).
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1147,"egenerateGlobalTypedScope(compiler, compiler.getRoot());"
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1143,"patchGlobalTypedScope(compiler, scriptRoot);"
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,19,import com.google.common.base.Preconditions;
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,20,mport com.google.javascript.jscomp.Scope.Var;
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,26,mport java.util.Iterator;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,48,* This is the scope creator that {@code TypedScopeCreator} delegates to.
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,50,private TypedScopeCreator internalScopeCreator;
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,56, Regenerates the top scope.
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,60,* Regenerates the top scope from scratch.
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,62,* @param compiler The compiler for which the global scope is regenerated.
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,63,* @param root The root of the AST.
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,59,emoizedScopeCreator oldScopeCreator = typedScopeCreator;
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,60,ypedScopeCreator =
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,61,ew MemoizedScopeCreator(new TypedScopeCreator(compiler));
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,66,internalScopeCreator = new TypedScopeCreator(compiler);
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,67,typedScopeCreator = new MemoizedScopeCreator(internalScopeCreator);
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,64,f (oldScopeCreator != null) {
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,65,cope oldTopScope = oldScopeCreator.getScopeIfMemoized(root);
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,66,f (oldTopScope != null) {
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,67,"/ For each variable declared with the VAR keyword, we want to grab"
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,68,/ its old inferred type.
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,70,/ This is purely a heuristic. There are probably better ones we
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,71,/ can use to increase the accuracy (like checking if a variable
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,72,/ has been modified in the current script).
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,73,terator<Var> varIt =
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,74,opScope.getDeclarativelyUnboundVarsWithoutTypes();
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,75,hile (varIt.hasNext()) {
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,76,ar newVar = varIt.next();
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,77,ar oldVar = oldTopScope.getVar(newVar.getName());
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,78,f (oldVar != null) {
+False,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,79,ewVar.setType(oldVar.getType());
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,72,* Regenerates the top scope potentially only for a sub-tree of AST and then
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,73,* copies information for the old global scope.
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,75,* @param compiler The compiler for which the global scope is generated.
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,76,* @param scriptRoot The root of the AST used to generate global scope.
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,78,"void patchGlobalTypedScope(AbstractCompiler compiler, Node scriptRoot) {"
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,79,Preconditions.checkNotNull(internalScopeCreator);
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,80,"internalScopeCreator.patchGlobalScope(topScope, scriptRoot);"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,178,@Override
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,225,* Patches a given global scope by removing variables previously declared in
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,226,* a script and re-traversing a new version of that script.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,228,* @param globalScope The global scope generated by {@code createScope}.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,229,* @param scriptRoot The script that is modified.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,231,"void patchGlobalScope(Scope globalScope, Node scriptRoot) {"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,232,// Preconditions: This is supposed to be called only on (named) SCRIPT nodes
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,233,// and a global typed scope should have been generated already.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,234,Preconditions.checkState(scriptRoot.getType() == Token.SCRIPT);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,235,Preconditions.checkNotNull(globalScope);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,236,Preconditions.checkState(globalScope.isGlobal());
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,238,// TODO(bashir): Variable declaration is not the only side effect of last
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,239,// global scope generation but here we only wipe that part off!
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,241,// Remove all variables that were previously declared in this scripts.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,242,String scriptName = NodeUtil.getSourceName(scriptRoot);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,243,Preconditions.checkNotNull(scriptName);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,244,// First find all vars to remove then remove them because of iterator!
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,245,Iterator<Var> varIter = globalScope.getVars();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,246,List<Var> varsToRemove = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,247,while (varIter.hasNext()) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,248,Var oldVar = varIter.next();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,249,if (scriptName.equals(oldVar.getInputName())) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,250,varsToRemove.add(oldVar);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,253,for (Var var : varsToRemove) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,254,globalScope.undeclare(var);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,257,// Now re-traverse the given script.
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,258,GlobalScopeBuilder scopeBuilder = new GlobalScopeBuilder(globalScope);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,259,"NodeTraversal.traverse(compiler, scriptRoot, scopeBuilder);"
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,902, @param lvalueNode The node where this function is being
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,941,* @param lValueNode The node where this function is being

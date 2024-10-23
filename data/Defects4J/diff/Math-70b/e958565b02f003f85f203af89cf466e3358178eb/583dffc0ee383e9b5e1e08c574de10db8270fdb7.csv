@@ -1,0 +1,159 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,19,import java.lang.reflect.Array;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,21,import java.util.Arrays;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,569,* Performs a multi-dimensional Fourier transform on a given
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,570,"* array, using {@link #inversetransform2(Complex[])} and"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,571,* {@link #transform2(Complex[])} in a row-column implementation
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,572,* in any number of dimensions with Θ(N×log(N)) complexity with
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,573,"* N=n_1×n_2×n_3×⋯×n_d, n_x=number of elements in dimension x,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,574,* and d=total number of dimensions.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,576,* @param forward inverseTransform2 is preformed if this is false
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,577,* @param mdca Multi-Dimensional Complex Array id est Complex[][][][]
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,578,* @throws MathException if any dimension is not a power of two
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,580,"public Object mdfft(Object mdca, boolean forward) throws MathException {"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,581,MultiDimensionalComplexMatrix mdcm = (MultiDimensionalComplexMatrix)
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,582,new MultiDimensionalComplexMatrix(mdca).clone();
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,583,int[] dimensionSize = mdcm.getDimensionSizes();
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,584,//cycle through each dimension
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,585,for (int i = 0; i < dimensionSize.length; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,586,"mdfft(mdcm, forward, i, new int[0]);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,588,return mdcm.getArray();
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,591,"private void mdfft(MultiDimensionalComplexMatrix mdcm, boolean forward,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,592,"int d, int[] subVector) throws MathException {"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,593,int[] dimensionSize = mdcm.getDimensionSizes();
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,594,//if done
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,595,if (subVector.length == dimensionSize.length) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,596,Complex[] temp = new Complex[dimensionSize[d]];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,597,for (int i = 0; i < dimensionSize[d]; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,598,//fft along dimension d
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,599,subVector[d] = i;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,600,temp[i] = mdcm.get(subVector);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,603,if (forward)
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,604,temp = transform2(temp);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,605,else
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,606,temp = inversetransform2(temp);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,608,for (int i = 0; i < dimensionSize[d]; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,609,subVector[d] = i;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,610,"mdcm.set(temp[i], subVector);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,612,} else {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,613,int[] vector = new int[subVector.length + 1];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,614,"System.arraycopy(subVector, 0, vector, 0, subVector.length);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,615,if (subVector.length == d) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,616,//value is not important once the recursion is done.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,617,//then an fft will be applied along the dimension d.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,618,vector[d] = 0;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,619,"mdfft(mdcm, forward, d, vector);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,620,} else {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,621,for (int i = 0; i < dimensionSize[subVector.length]; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,622,vector[subVector.length] = i;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,623,//further split along the next dimension
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,624,"mdfft(mdcm, forward, d, vector);"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,628,return;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,632,* not designed for synchronized access
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,633,* may eventually be replaced by jsr-83 of the java community process
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,634,* http://jcp.org/en/jsr/detail?id=83
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,635,* may require additional exception throws for other basic requirements.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,637,"private class MultiDimensionalComplexMatrix implements Serializable,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,638,Cloneable {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,639,private static final long serialVersionUID =  0x564FCD47EBA8169BL;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,641,protected int[] dimensionSize = new int[1];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,642,protected Object multiDimensionalComplexArray;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,644,public MultiDimensionalComplexMatrix(Object
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,645,multiDimensionalComplexArray) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,646,this.multiDimensionalComplexArray = multiDimensionalComplexArray;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,647,int numOfDimensions = 0;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,649,Object lastDimension = multiDimensionalComplexArray;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,650,while(lastDimension instanceof Object[]) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,651,numOfDimensions++;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,652,//manually implement variable size int[]
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,653,if (dimensionSize.length < numOfDimensions) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,654,int[] newDimensionSize = new int[(int) Math.ceil(
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,655,dimensionSize.length*1.6)];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,656,"System.arraycopy(dimensionSize, 0, newDimensionSize, 0,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,657,dimensionSize.length);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,658,dimensionSize = newDimensionSize;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,660,dimensionSize[numOfDimensions - 1] = ((Object[])
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,661,lastDimension).length;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,662,lastDimension = ((Object[]) lastDimension)[0];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,664,if (dimensionSize.length > numOfDimensions) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,665,int[] newDimensionSize = new int[numOfDimensions];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,666,"System.arraycopy(dimensionSize, 0, newDimensionSize, 0,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,667,numOfDimensions);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,668,dimensionSize = newDimensionSize;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,672,public Complex get(int... vector) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,673,if ((vector == null && dimensionSize.length > 1) ||
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,674,vector.length != dimensionSize.length) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,675,"throw new IllegalArgumentException(""Number of dimensions must """
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,676,"+ ""match"");"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,679,Object lastDimension = multiDimensionalComplexArray;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,681,for (int i = 0; i < dimensionSize.length; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,682,lastDimension = ((Object[]) lastDimension)[vector[i]];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,684,return (Complex) lastDimension;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,687,"public Complex set(Complex magnitude, int... vector) {"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,688,if ((vector == null && dimensionSize.length > 1) ||
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,689,vector.length != dimensionSize.length) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,690,"throw new IllegalArgumentException(""Number of dimensions must """
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,691,"+ ""match"");"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,694,Object lastDimension = multiDimensionalComplexArray;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,696,for (int i = 0; i < dimensionSize.length - 1; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,697,lastDimension = ((Object[]) lastDimension)[vector[i]];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,700,Complex lastValue = (Complex) ((Object[])
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,701,lastDimension)[vector[dimensionSize.length - 1]];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,702,((Object[]) lastDimension)[vector[dimensionSize.length - 1]] =
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,703,magnitude;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,704,return lastValue;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,707,public int[] getDimensionSizes() {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,708,return dimensionSize.clone();
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,711,public Object getArray() {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,712,return multiDimensionalComplexArray;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,715,@Override
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,716,public Object clone() {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,717,MultiDimensionalComplexMatrix mdcm =
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,718,new MultiDimensionalComplexMatrix(Array.newInstance(
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,719,"Complex.class, dimensionSize));"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,720,clone(mdcm);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,721,return mdcm;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,725,* Copy contents of current array into mdcm.
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,727,private void clone(MultiDimensionalComplexMatrix mdcm) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,728,int[] vector = new int[dimensionSize.length];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,729,int size = 1;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,730,for (int i = 0; i < dimensionSize.length; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,731,size *= dimensionSize[i];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,733,int[][] vectorList = new int[size][dimensionSize.length];
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,734,for (int[] nextVector: vectorList) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,735,"System.arraycopy(vector, 0, nextVector, 0,"
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,736,dimensionSize.length);
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,737,for (int i = 0; i < dimensionSize.length; i++) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,738,vector[i]++;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,739,if (vector[i] < dimensionSize[i]) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,740,break;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,741,} else {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,742,vector[i] = 0;
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,747,for (int[] nextVector: vectorList) {
+True,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,src/java/org/apache/commons/math/transform/FastFourierTransformer.java,748,"mdcm.set(get(nextVector), nextVector);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,81,public void test2DData() throws MathException {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,82,FastFourierTransformer transformer = new FastFourierTransformer();
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,83,double tolerance = 1E-12;
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,84,"Complex[][] input = new Complex[][] {new Complex[] {new Complex(1, 0),"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,85,"new Complex(2, 0)},"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,86,"new Complex[] {new Complex(3, 1),"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,87,"new Complex(4, 2)}};"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,88,"Complex[][] goodOutput = new Complex[][] {new Complex[] {new Complex(5,"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,89,"1.5), new Complex(-1, -.5)}, new Complex[] {new Complex(-2,"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,90,"-1.5), new Complex(0, .5)}};"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,91,"Complex[][] output = (Complex[][])transformer.mdfft(input, true);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,92,"Complex[][] output2 = (Complex[][])transformer.mdfft(output, false);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,94,"assertEquals(input.length, output.length);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,95,"assertEquals(input.length, output2.length);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,96,"assertEquals(input[0].length, output[0].length);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,97,"assertEquals(input[0].length, output2[0].length);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,98,"assertEquals(input[1].length, output[1].length);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,99,"assertEquals(input[1].length, output2[1].length);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,101,for (int i = 0; i < input.length; i++) {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,102,for (int j = 0; j < input[0].length; j++) {
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,103,"assertEquals(input[i][j].getImaginary(), output2[i][j].getImaginary(),"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,104,tolerance);
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,105,"assertEquals(input[i][j].getReal(), output2[i][j].getReal(), tolerance);"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,106,"assertEquals(goodOutput[i][j].getImaginary(), output[i][j].getImaginary(),"
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,107,tolerance);
+True,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,src/test/org/apache/commons/math/transform/FastFourierTransformerTest.java,108,"assertEquals(goodOutput[i][j].getReal(), output[i][j].getReal(), tolerance);"

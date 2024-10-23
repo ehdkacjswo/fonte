@@ -1,0 +1,483 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,20,import com.google.common.collect.HashMultimap;
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,24,import com.google.common.collect.Multimap;
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,44,import java.util.PriorityQueue;
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,134,"* When multiple names in the global scope point to the same object, we"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,135,* call them aliases. Store a map from each alias name to the alias set.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,137,"private final Map<String, AliasSet> aliases = Maps.newHashMap();"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,140,"* All the aliases in a program form a graph, where each global name is"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,141,"* a node in the graph, and two names are connected if one directly aliases"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,142,* the other.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,144,* An {@code AliasSet} represents a connected component in that graph. We do
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,145,* not explicitly track the graph--we just track the connected components.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,147,private static class AliasSet {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,148,Set<String> names = Sets.newHashSet();
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,150,// Every alias set starts with exactly 2 names.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,151,"AliasSet(String name1, String name2) {"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,152,names.add(name1);
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,153,names.add(name2);
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,227,/** Whether the name has descendants that are written to. */
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,228,boolean hasWrittenDescendants = false;
+False,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,516,"ecordDepScope(parent, ns);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,546,if (parent.getType() == Token.FOR && !NodeUtil.isForIn(parent)) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,547,"// Patch for assignments that appear in the init,"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,548,// condition or iteration part of a FOR loop.  Without
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,549,"// this change, all 3 of those parts try to claim the for"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,550,// loop as their dependency scope.  The last assignment in
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,551,"// those three fields wins, which can result in incorrect"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,552,// reference edges between referenced and assigned variables.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,554,// TODO(user) revisit the dependency scope calculation
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,555,// logic.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,556,if (parent.getFirstChild().getNext() != n) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,557,"recordDepScope(n, ns);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,558,} else {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,559,"recordDepScope(nameNode, ns);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,561,} else {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,562,"recordDepScope(parent, ns);"
+False,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,600,"sName name = getName(ns.prototypeClass, false);"
+False,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,601,f (name != null) {
+False,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,602,ame.prototypeNames.add(ns.prototypeProperty);
+False,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,603,"efNodes.add(new PrototypeSetNode(name, n));"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,647,"recordPrototypeSet(ns.prototypeClass, ns.prototypeProperty, n);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,676,"// Now, look at all parent names and record that their properties have"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,677,// been written to.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,678,if (node.getType() == Token.GETELEM) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,679,recordWriteOnProperties(name);
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,680,} else if (name.indexOf('.') != -1) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,681,"recordWriteOnProperties(name.substring(0, name.lastIndexOf('.')));"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,686,"* Records the assignment to a prototype property of a global name,"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,687,* if possible.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,689,* @param className The name of the class.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,690,* @param prototypeProperty The name of the prototype property.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,691,* @param node The top node representing the name (GETPROP)
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,693,"private void recordPrototypeSet(String className, String prototypeProperty,"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,694,Node node) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,695,"JsName name = getName(className, false);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,696,if (name != null) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,697,name.prototypeNames.add(prototypeProperty);
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,698,"refNodes.add(new PrototypeSetNode(name, node));"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,699,recordWriteOnProperties(className);
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,704,* Record that the properties of this name have been written to.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,706,private void recordWriteOnProperties(String parentName) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,707,do {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,708,"JsName parent = getName(parentName, true);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,709,if (parent.hasWrittenDescendants) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,710,"// If we already recorded this name, then all its parents must"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,711,// also be recorded. short-circuit this loop.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,712,return;
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,713,} else {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,714,parent.hasWrittenDescendants = true;
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,717,if (parentName.indexOf('.') == -1) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,718,return;
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,720,"parentName = parentName.substring(0, parentName.lastIndexOf('.'));"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,721,} while(true);
+False,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,747,"ecordReference(nameInfo.name,"
+False,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,748,"ameInfo.superclass,"
+False,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,749,efType.INHERITANCE);
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,837,recordReference(
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,838,"nameInfo.name, nameInfo.superclass, RefType.INHERITANCE);"
+False,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,756,"ecordReference(nameInfo.name,"
+False,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,757,"odeName,"
+False,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,758,efType.REGULAR);
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,845,recordReference(
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,846,"nameInfo.name, nodeName, RefType.REGULAR);"
+False,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,812,"ecordReference(referringName, name, RefType.REGULAR);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,900,if ((parent.getType() == Token.NAME ||
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,901,parent.getType() == Token.ASSIGN) &&
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,902,scopes.get(parent) == referring) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,903,"recordAlias(referringName, name);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,904,} else {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,905,RefType depType = referring.onlyAffectsClassDef ?
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,906,RefType.INHERITANCE : RefType.REGULAR;
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,907,"recordReference(referringName, name, depType);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1003,// Create bi-directional references between parent names and their
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1004,// descendents. This may create new names.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1007,"// If we modify the property of an alias, make sure that modification"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1008,// gets reflected in the original object.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1009,referenceAliases();
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1019,* Records an alias of one name to another name.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1021,"private void recordAlias(String fromName, String toName) {"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1022,"recordReference(fromName, toName, RefType.REGULAR);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1024,// We need to add an edge to the alias graph. The alias graph is expressed
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1025,"// implicitly as a set of connected components, called AliasSets."
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1027,// There are three possibilities:
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1028,// 1) Neither name is part of a connected component. Create a new one.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1029,// 2) Exactly one name is part of a connected component. Merge the new
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1030,//    name into the component.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1031,// 3) The two names are already part of connected components. Merge
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1032,//    those components together.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1033,AliasSet toNameAliasSet = aliases.get(toName);
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1034,AliasSet fromNameAliasSet = aliases.get(fromName);
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1035,AliasSet resultSet = null;
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1036,if (toNameAliasSet == null && fromNameAliasSet == null) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1037,"resultSet = new AliasSet(toName, fromName);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1038,} else if (toNameAliasSet != null && fromNameAliasSet != null) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1039,resultSet = toNameAliasSet;
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1040,resultSet.names.addAll(fromNameAliasSet.names);
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1041,for (String name : fromNameAliasSet.names) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1042,"aliases.put(name, resultSet);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1044,} else if (toNameAliasSet != null) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1045,resultSet = toNameAliasSet;
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1046,resultSet.names.add(fromName);
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1047,} else {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1048,resultSet = fromNameAliasSet;
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1049,resultSet.names.add(toName);
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1051,"aliases.put(fromName, resultSet);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1052,"aliases.put(toName, resultSet);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1060,if (fromName.equals(toName)) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1061,// Don't bother recording self-references.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1062,return;
+False,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,923,"f (!referenceGraph.isConnectedInDirection(from, to)) {"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1069,"if (!referenceGraph.isConnectedInDirection(from, depType, to)) {"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1212,* The NameAnalyzer algorithm works best when all objects have a canonical
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1213,* name in the global scope. When multiple names in the global scope
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1214,"* point to the same object, things start to break down."
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1216,"* For example, if we have"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1217,* <code>
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1218,* var a = {};
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1219,* var b = a;
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1220,* a.foo = 3;
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1221,* alert(b.foo);
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1222,* </code>
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1223,"* then a.foo and b.foo are the same name, even though NameAnalyzer doesn't"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1224,* represent them as such.
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1226,"* To handle this case, we look at all the aliases in the program."
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1227,"* If descendant properties of that alias are assigned, then we create a"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1228,"* directional reference from the original name to the alias. For example,"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1229,"* in this case, the assign to {@code a.foo} triggers a reference from"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1230,"* {@code b} to {@code a}, but NOT from a to b."
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1232,private void referenceAliases() {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1233,"for (Map.Entry<String, AliasSet> entry : aliases.entrySet()) {"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1234,"JsName name = getName(entry.getKey(), false);"
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1235,if (name.hasWrittenDescendants) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1236,for (String alias : entry.getValue().names) {
+True,src/com/google/javascript/jscomp/NameAnalyzer.java,src/com/google/javascript/jscomp/NameAnalyzer.java,1237,"recordReference(alias, entry.getKey(), RefType.REGULAR);"
+True,src/com/google/javascript/jscomp/graph/DiGraph.java,src/com/google/javascript/jscomp/graph/DiGraph.java,65,* Checks whether two nodes in the graph are connected via a directed edge.
+True,src/com/google/javascript/jscomp/graph/DiGraph.java,src/com/google/javascript/jscomp/graph/DiGraph.java,67,* @param n1 Node 1.
+True,src/com/google/javascript/jscomp/graph/DiGraph.java,src/com/google/javascript/jscomp/graph/DiGraph.java,68,* @param n2 Node 2.
+True,src/com/google/javascript/jscomp/graph/DiGraph.java,src/com/google/javascript/jscomp/graph/DiGraph.java,69,* @return <code>true</code> if the graph contains edge from n1 to n2.
+True,src/com/google/javascript/jscomp/graph/DiGraph.java,src/com/google/javascript/jscomp/graph/DiGraph.java,74,* Checks whether two nodes in the graph are connected via a directed edge
+True,src/com/google/javascript/jscomp/graph/DiGraph.java,src/com/google/javascript/jscomp/graph/DiGraph.java,75,* with the given value.
+True,src/com/google/javascript/jscomp/graph/DiGraph.java,src/com/google/javascript/jscomp/graph/DiGraph.java,77,* @param n1 Node 1.
+True,src/com/google/javascript/jscomp/graph/DiGraph.java,src/com/google/javascript/jscomp/graph/DiGraph.java,78,* @param edgeValue edge value tag
+True,src/com/google/javascript/jscomp/graph/DiGraph.java,src/com/google/javascript/jscomp/graph/DiGraph.java,79,* @param n2 Node 2.
+True,src/com/google/javascript/jscomp/graph/DiGraph.java,src/com/google/javascript/jscomp/graph/DiGraph.java,80,* @return <code>true</code> if the edge exists.
+True,src/com/google/javascript/jscomp/graph/DiGraph.java,src/com/google/javascript/jscomp/graph/DiGraph.java,82,"public abstract boolean isConnectedInDirection(N n1, E edgeValue, N n2);"
+True,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,20,import com.google.common.base.Predicate;
+True,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,21,import com.google.common.base.Predicates;
+True,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,196,"return isConnectedInDirection(n1, Predicates.<E>alwaysTrue(), n2);"
+True,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,199,@Override
+True,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,200,"public boolean isConnectedInDirection(N n1, E edgeValue, N n2) {"
+True,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,201,"return isConnectedInDirection(n1, Predicates.equalTo(edgeValue), n2);"
+True,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,204,"private boolean isConnectedInDirection(N n1, Predicate<E> edgeMatcher, N n2) {"
+False,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,205,f (outEdge.getDestination() == dNode2) {
+True,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,216,if (outEdge.getDestination() == dNode2 &&
+True,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,src/com/google/javascript/jscomp/graph/LinkedDirectedGraph.java,217,edgeMatcher.apply(outEdge.getValue())) {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,626,public void testSetterInForStruct9() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,627,"test(""var Class = function() {}; "" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,628,"""for (var i = 1; Class.property_ = 0; i++);"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,629,"""for (var i = 1; 0; i++);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,632,public void testSetterInForStruct10() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,633,"test(""var Class = function() {}; "" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,634,"""for (var i = 1; Class.property_ = 0; i = 2);"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,635,"""for (; 0;);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,638,public void testSetterInForStruct11() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,639,"test(""var Class = function() {}; "" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,640,"""for (;Class.property_ = 0;);"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,641,"""for (;0;);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,644,public void testSetterInForStruct12() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,645,"test(""var a = 1; var Class = function() {}; "" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,646,"""for (;Class.property_ = a;);"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,647,"""var a = 1; for (; a;);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,650,public void testSetterInForStruct13() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,651,"test(""var a = 1; var Class = function() {}; "" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,652,"""for (Class.property_ = a; 0 ;);"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,653,"""for (; 0;);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,656,public void testSetterInForStruct14() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,657,"test(""var a = 1; var Class = function() {}; "" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,658,"""for (; 0; Class.property_ = a);"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,659,"""for (; 0;);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,662,public void testSetterInForStruct15() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,663,"test(""var Class = function() {}; "" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,664,"""for (var i = 1; 0; Class.prototype.property_ = 0);"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,665,"""for (; 0; 0);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,668,public void testSetterInForStruct16() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,669,"test(""var Class = function() {}; "" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,670,"""for (var i = 1; i = 0; Class.prototype.property_ = 0);"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,671,"""for (; 0; 0);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,674,public void testSetterInForIn1() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,675,"test(""var foo = {}; var bar; for(e in bar = foo.a);"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,676,"""var foo = {}; for(e in foo.a);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,679,public void testSetterInForIn2() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,680,"testSame(""var foo = {}; var bar; for(e in bar = foo.a); bar"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,683,public void testSetterInForIn3() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,684,// TODO(user) Fix issue similar to b/2316773: bar should be preserved
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,685,// but isn't due to missing references between e and foo.a
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,686,"test(""var foo = {}; var bar; for(e in bar = foo.a); bar.b = 3"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,687,"""var foo = {}; for(e in foo.a);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,690,public void testSetterInForIn4() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,691,// TODO(user) Fix issue similar to b/2316773: bar should be preserved
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,692,// but isn't due to missing references between e and foo.a
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,693,"test(""var foo = {}; var bar; for (e in bar = foo.a); bar.b = 3; foo.a"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,694,"""var foo = {}; for (e in foo.a); foo.a"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,697,public void testSetterInForIn5() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,698,// TODO(user) Fix issue similar to b/2316773: bar should be preserved
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,699,// but isn't due to missing references between e and foo.a
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,700,"test(""var foo = {}; var bar; for (e in foo.a) { bar = e } bar.b = 3; foo.a"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,701,"""var foo={};for(e in foo.a);foo.a"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,704,public void testSetterInForIn6() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,705,"testSame(""var foo = {};for(e in foo);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,708,public void testSetterInIfPredicate() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,709,"// TODO(user) Make NameAnalyzer smarter so it can remove ""Class""."
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,710,"testSame(""var a = 1;"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,711,"""var Class = function() {}; "" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,712,"""if (Class.property_ = a);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,715,public void testSetterInWhilePredicate() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,716,"// TODO(user) Make NameAnalyzer smarter so it can remove ""Class""."
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,717,"testSame(""var a = 1;"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,718,"""var Class = function() {}; "" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,719,"""while (Class.property_ = a);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,722,public void testSetterInDoWhilePredicate() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,723,"// TODO(user) Make NameAnalyzer smarter so it can remove ""Class""."
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,724,"testSame(""var a = 1;"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,725,"""var Class = function() {}; "" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,726,"""do {} while(Class.property_ = a);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,729,public void testSetterInSwitchInput() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,730,"// TODO(user) Make NameAnalyzer smarter so it can remove ""Class""."
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,731,"testSame(""var a = 1;"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,732,"""var Class = function() {}; "" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,733,"""switch (Class.property_ = a) {"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,734,"""  default:"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1268,public void testPreservePropertyMutationsToAlias1() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1269,// Test for issue b/2316773 - property get case
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1270,"// Since a is referenced, property mutations via a's alias b must"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1271,// be preserved.
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1272,"testSame(""var a = {}; var b = a; b.x = 1; a"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1275,public void testPreservePropertyMutationsToAlias2() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1276,"// Test for issue b/2316773 - property get case, don't keep 'c'"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1277,"test(""var a = {}; var b = a; var c = a; b.x = 1; a"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1278,"""var a = {}; var b = a; b.x = 1; a"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1281,public void testPreservePropertyMutationsToAlias3() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1282,"// Test for issue b/2316773 - property get case, chain"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1283,"testSame(""var a = {}; var b = a; var c = b; c.x = 1; a"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1286,public void testPreservePropertyMutationsToAlias4() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1287,// Test for issue b/2316773 - element get case
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1288,"testSame(""var a = {}; var b = a; b['x'] = 1; a"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1291,public void testPreservePropertyMutationsToAlias5() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1292,// From issue b/2316773 description
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1293,"testSame(""function testCall(o){}"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1294,"""var DATA = {'prop': 'foo','attr': {}};"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1295,"""var SUBDATA = DATA['attr'];"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1296,"""SUBDATA['subprop'] = 'bar';"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1297,"""testCall(DATA);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1300,public void testPreservePropertyMutationsToAlias6() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1301,// Longer GETELEM chain
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1302,"testSame(""function testCall(o){}"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1303,"""var DATA = {'prop': 'foo','attr': {}};"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1304,"""var SUBDATA = DATA['attr'];"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1305,"""var SUBSUBDATA = SUBDATA['subprop'];"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1306,"""SUBSUBDATA['subsubprop'] = 'bar';"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1307,"""testCall(DATA);"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1310,public void testPreservePropertyMutationsToAlias7() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1311,// Make sure that the base class does not depend on the derived class.
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1312,"test(""var a = {}; var b = {}; b.x = 0;"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1313,"""var goog = {}; goog.inherits(b, a); a"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1314,"""var a = {}; a"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1317,public void testPreservePropertyMutationsToAlias8() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1318,// Make sure that the derived classes don't end up depending on each other.
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1319,"test(""var a = {};"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1320,"""var b = {}; b.x = 0;"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1321,"""var c = {}; c.y = 0;"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1322,"""var goog = {}; goog.inherits(b, a); goog.inherits(c, a); c"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1323,"""var a = {}; var c = {}; c.y = 0;"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1324,"""var goog = {}; goog.inherits(c, a); c"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1327,public void testPreservePropertyMutationsToAlias9() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1328,"testSame(""var a = {b: {}};"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1329,"""var c = a.b; c.d = 3;"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1330,"""a.d = 3; a.d;"");"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1333,public void testRemoveAlias() {
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1334,"test(""var a = {b: {}};"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1335,"""var c = a.b;"" +"
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1336,"""a.d = 3; a.d;"","
+True,test/com/google/javascript/jscomp/NameAnalyzerTest.java,test/com/google/javascript/jscomp/NameAnalyzerTest.java,1337,"""var a = {b: {}}; a.d = 3; a.d;"");"
+False,test/com/google/javascript/jscomp/GraphColoringTest.java,test/com/google/javascript/jscomp/graph/GraphColoringTest.java,17,ackage com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/GraphColoringTest.java,test/com/google/javascript/jscomp/graph/GraphColoringTest.java,17,package com.google.javascript.jscomp.graph;
+False,test/com/google/javascript/jscomp/GraphReachabilityTest.java,test/com/google/javascript/jscomp/graph/GraphReachabilityTest.java,17,ackage com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/GraphReachabilityTest.java,test/com/google/javascript/jscomp/graph/GraphReachabilityTest.java,17,package com.google.javascript.jscomp.graph;
+False,test/com/google/javascript/jscomp/GraphTest.java,test/com/google/javascript/jscomp/graph/GraphTest.java,17,ackage com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/GraphTest.java,test/com/google/javascript/jscomp/graph/GraphTest.java,17,package com.google.javascript.jscomp.graph;
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,2,* Copyright 2008 Google Inc.
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,17,package com.google.javascript.jscomp.graph;
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,19,import com.google.common.collect.HashMultiset;
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,20,import com.google.common.collect.ImmutableSet;
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,22,import junit.framework.Assert;
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,23,import junit.framework.TestCase;
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,25,import java.util.Arrays;
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,26,import java.util.Collection;
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,27,import java.util.Iterator;
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,28,import java.util.Set;
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,31,* Unit test for the {@link StandardUnionFind} data structure.
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,35,public class StandardUnionFindTest extends TestCase {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,36,private StandardUnionFind<String> union;
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,38,@Override protected void setUp() {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,39,union = new StandardUnionFind<String>();
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,42,public void testEmpty() {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,43,"assertEquals(0, union.allEquivalenceClasses().size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,46,public void testAdd() {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,47,"union.add(""foo"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,48,"union.add(""bar"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,49,"assertTrue(null != union.find(""foo""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,50,"assertEquals(2, union.allEquivalenceClasses().size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,53,public void testUnion() {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,54,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,55,"union.union(""C"", ""D"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,56,"assertEquals(union.find(""A""), union.find(""B""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,57,"assertEquals(union.find(""C""), union.find(""D""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,58,"assertFalse(union.find(""A"").equals(union.find(""D"")));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,61,public void testSetSize() {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,62,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,63,"union.union(""B"", ""C"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,64,"union.union(""D"", ""E"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,65,"union.union(""F"", ""F"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,67,"assertEquals(3, union.findAll(""A"").size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,68,"assertEquals(3, union.findAll(""B"").size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,69,"assertEquals(3, union.findAll(""C"").size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,70,"assertEquals(2, union.findAll(""D"").size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,71,"assertEquals(1, union.findAll(""F"").size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,75,public void testFind() {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,76,"union.add(""A"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,77,"union.add(""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,78,"assertEquals(""A"", union.find(""A""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,79,"assertEquals(""B"", union.find(""B""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,81,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,82,"assertEquals(union.find(""A""), union.find(""B""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,84,try {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,85,"union.find(""Z"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,86,"fail(""find() on unknown element should not be allowed."");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,87,} catch (IllegalArgumentException e) {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,91,public void testAllEquivalenceClasses() {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,92,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,93,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,94,"union.union(""B"", ""A"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,95,"union.union(""B"", ""C"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,96,"union.union(""D"", ""E"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,97,"union.union(""F"", ""F"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,99,Collection<Set<String>> classes = union.allEquivalenceClasses();
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,100,"assertEquals(3, classes.size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,101,"assertContentsAnyOrder(classes,"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,102,"ImmutableSet.of(""A"", ""B"", ""C""),"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,103,"ImmutableSet.of(""D"", ""E""),"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,104,"ImmutableSet.of(""F""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,107,public void testFindAll() {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,108,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,109,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,110,"union.union(""B"", ""A"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,111,"union.union(""D"", ""E"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,112,"union.union(""F"", ""F"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,114,"Set<String> aSet = union.findAll(""A"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,115,"assertEquals(2, aSet.size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,116,"assertTrue(aSet.contains(""A""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,117,"assertTrue(aSet.contains(""B""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,118,"assertFalse(aSet.contains(""C""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,119,"assertFalse(aSet.contains(""D""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,120,"assertFalse(aSet.contains(""E""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,121,"assertFalse(aSet.contains(""F""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,123,"union.union(""B"", ""C"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,124,"assertTrue(aSet.contains(""C""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,125,"assertEquals(3, aSet.size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,127,try {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,128,"union.findAll(""Z"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,129,"fail(""findAll() on unknown element should not be allowed."");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,130,} catch (IllegalArgumentException e) {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,134,public void testFindAllIterator() {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,135,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,136,"union.union(""B"", ""C"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,137,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,138,"union.union(""D"", ""E"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,140,"Set<String> aSet = union.findAll(""A"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,141,Iterator<String> aIter = aSet.iterator();
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,142,assertTrue(aIter.hasNext());
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,143,"assertEquals(""A"", aIter.next());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,144,"assertEquals(""B"", aIter.next());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,145,"assertEquals(""C"", aIter.next());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,146,assertFalse(aIter.hasNext());
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,148,"Set<String> dSet = union.findAll(""D"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,149,Iterator<String> dIter = dSet.iterator();
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,150,assertTrue(dIter.hasNext());
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,151,"assertEquals(""D"", dIter.next());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,152,"assertEquals(""E"", dIter.next());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,153,assertFalse(dIter.hasNext());
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,156,public void testFindAllSize() {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,157,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,158,"union.union(""B"", ""C"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,159,"assertEquals(3, union.findAll(""A"").size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,160,"assertEquals(3, union.findAll(""B"").size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,161,"assertEquals(3, union.findAll(""C"").size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,162,"union.union(""D"", ""E"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,163,"assertEquals(3, union.findAll(""C"").size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,164,"assertEquals(2, union.findAll(""D"").size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,165,"union.union(""B"", ""E"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,166,"assertEquals(5, union.findAll(""C"").size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,167,"assertEquals(5, union.findAll(""D"").size());"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,170,public void testElements(){
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,171,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,172,"union.union(""B"", ""C"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,173,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,174,"union.union(""D"", ""E"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,176,Set<String> elements = union.elements();
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,177,"assertEquals(ImmutableSet.of(""A"", ""B"", ""C"", ""D"", ""E""), elements);"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,178,"assertFalse(elements.contains(""F""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,181,public void testCopy() {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,182,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,183,"union.union(""B"", ""Z"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,184,"union.union(""X"", ""Y"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,185,UnionFind<String> copy = new StandardUnionFind<String>(union);
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,186,"assertContentsAnyOrder(copy.findAll(""Z""), ""A"", ""B"", ""Z"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,187,"assertContentsAnyOrder(copy.findAll(""X""), ""X"", ""Y"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,190,public void testChangesToCopyDontAffectOriginal() {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,191,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,192,"union.union(""X"", ""Y"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,193,"union.union(""A"", ""C"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,194,UnionFind<String> copy = new StandardUnionFind<String>(union);
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,195,"copy.union(""A"", ""D"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,196,"assertContentsAnyOrder(copy.findAll(""D""), ""A"", ""B"", ""C"", ""D"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,197,"assertContentsAnyOrder(union.findAll(""A""), ""A"", ""B"", ""C"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,198,"assertContentsAnyOrder(copy.findAll(""X""), ""X"", ""Y"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,199,try {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,200,"union.findAll(""D"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,201,"fail(""D has been inserted to the original collection"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,202,} catch (IllegalArgumentException e) {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,203,// Expected.
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,207,public void testCheckEquivalent() {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,208,"union.union(""A"", ""B"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,209,"union.add(""C"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,210,"assertTrue(union.areEquivalent(""A"", ""B""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,211,"assertFalse(union.areEquivalent(""C"", ""A""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,212,"assertFalse(union.areEquivalent(""C"", ""B""));"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,213,try {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,214,"union.areEquivalent(""A"", ""F"");"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,215,} catch (IllegalArgumentException e) {
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,216,// Expected.
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,221,* Asserts that {@code actual} contains precisely the elements
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,222,"* {@code expected}, in any order.  Both collections may contain"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,223,"* duplicates, and this method will only pass if the quantities are"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,224,* exactly the same.
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,226,private static void assertContentsAnyOrder(
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,227,"String message, Iterable<?> actual, Object... expected) {"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,228,"Assert.assertEquals(message,"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,229,"HashMultiset.create(Arrays.asList(expected)),"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,230,HashMultiset.create(actual));
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,234,"* Variant of {@link #assertContentsAnyOrder(String,Iterable,Object...)}"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,235,* using a generic message.
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,237,private static void assertContentsAnyOrder(
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,238,"Iterable<?> actual, Object... expected) {"
+True,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,test/com/google/javascript/jscomp/graph/StandardUnionFindTest.java,239,"assertContentsAnyOrder((String) null, actual, expected);"

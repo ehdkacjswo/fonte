@@ -1,0 +1,358 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,2,* Copyright 2010 Google Inc.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,19,import com.google.common.collect.Lists;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,20,import com.google.common.collect.Maps;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,21,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,22,import com.google.javascript.rhino.Token;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,24,import java.util.List;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,25,import java.util.Map;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,28,* Process aliases in goog.scope blocks.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,30,* goog.scope(function() {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,31,*   var dom = goog.dom;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,32,*   var DIV = dom.TagName.DIV;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,34,*   dom.createElement(DIV);
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,37,* should become
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,39,* goog.dom.createElement(goog.dom.TagName.DIV);
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,41,* @author robbyw@google.com (Robby Walker)
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,43,class ScopedAliases implements CompilerPass {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,44,/** Name used to denote an scoped function block used for aliasing. */
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,45,"static final String SCOPING_METHOD_NAME = ""goog.scope"";"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,47,final AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,49,ScopedAliases(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,50,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,53,@Override
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,54,"public void process(Node externs, Node root) {"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,55,Traversal traversal = new Traversal();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,56,"NodeTraversal.traverse(compiler, root, traversal);"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,58,// Apply the aliases.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,59,for (AliasedNode entry : traversal.getAliasUsages()) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,60,entry.getAliasReference().getParent().replaceChild(
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,61,"entry.getAliasReference(),"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,62,entry.getAliasDefinition().cloneTree());
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,65,// Remove the alias definitions.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,66,for (Node aliasDefinition : traversal.getAliasDefinitions()) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,67,if (aliasDefinition.getParent().getType() == Token.VAR &&
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,68,aliasDefinition.getParent().getChildCount() == 1) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,69,aliasDefinition.getParent().detachFromParent();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,70,} else {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,71,aliasDefinition.detachFromParent();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,75,// Collapse the scopes.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,76,for (Node scopeCall : traversal.getScopeCalls()) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,77,Node expressionWithScopeCall = scopeCall.getParent();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,78,Node scopeClosureBlock = scopeCall.getLastChild().getLastChild();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,79,scopeClosureBlock.detachFromParent();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,80,expressionWithScopeCall.getParent().replaceChild(
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,81,"expressionWithScopeCall,"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,82,scopeClosureBlock);
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,83,NodeUtil.tryMergeBlock(scopeClosureBlock);
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,86,if (traversal.getAliasUsages().size() > 0 ||
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,87,traversal.getAliasDefinitions().size() > 0 ||
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,88,traversal.getScopeCalls().size() > 0) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,89,compiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,93,private class AliasedNode {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,94,private final Node aliasReference;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,96,private final Node aliasDefinition;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,98,"AliasedNode(Node aliasReference, Node aliasDefinition) {"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,99,this.aliasReference = aliasReference;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,100,this.aliasDefinition = aliasDefinition;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,103,public Node getAliasReference() {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,104,return aliasReference;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,107,public Node getAliasDefinition() {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,108,return aliasDefinition;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,112,private class Traversal implements NodeTraversal.ScopedCallback {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,113,// The job of this class is to collect these three data sets.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,114,private List<Node> aliasDefinitions = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,116,private List<Node> scopeCalls = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,118,private List<AliasedNode> aliasUsages = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,120,// This map is temporary and cleared for each scope.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,121,"private Map<String, Node> aliases = Maps.newHashMap();"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,124,List<Node> getAliasDefinitions() {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,125,return aliasDefinitions;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,128,private List<AliasedNode> getAliasUsages() {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,129,return aliasUsages;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,132,List<Node> getScopeCalls() {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,133,return scopeCalls;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,136,private boolean isCallToScopeMethod(Node n) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,137,return n.getType() == Token.CALL &&
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,138,SCOPING_METHOD_NAME.equals(n.getFirstChild().getQualifiedName());
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,141,@Override
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,142,public void enterScope(NodeTraversal t) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,145,@Override
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,146,public void exitScope(NodeTraversal t) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,147,if (t.getScopeDepth() == 2) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,148,aliases.clear();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,152,@Override
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,153,"public final boolean shouldTraverse(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,154,if (n.getType() == Token.FUNCTION && t.inGlobalScope()) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,155,// Do not traverse in to functions except for goog.scope functions.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,156,if (parent == null || !isCallToScopeMethod(parent)) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,157,return false;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,160,return true;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,163,@Override
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,164,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,165,if (isCallToScopeMethod(n)) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,166,// TODO(robbyw): Report an error if the call is not at the root of an
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,167,// expression: NodeUtil.isExpressionNode(parent)
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,168,// TODO(robbyw): Report an error if the parameter is not anonymous
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,169,// or has extra parameters.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,170,// Node firstParam = n.getFirstChild().getNext();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,171,// NodeUtil.isFunction(firstParam);
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,172,// NodeUtil.getFunctionName(firstParam).isEmpty();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,173,// NodeUtil.getFnParameters(firstParam).hasChildren();
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,174,scopeCalls.add(n);
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,177,if (t.getScopeDepth() == 2) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,178,if (n.getType() == Token.NAME && parent.getType() == Token.VAR) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,179,if (n.hasChildren() && n.isQualifiedName()) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,180,// TODO(robbyw): What other checks go here?
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,182,"aliases.put(n.getString(), n.getFirstChild());"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,183,aliasDefinitions.add(n);
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,185,// Undeclare the variable.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,186,t.getScope().undeclare(t.getScope().getVar(n.getString()));
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,188,"// If we found an alias, we are done."
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,189,return;
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,194,if (t.getScopeDepth() >= 2) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,195,if (n.getType() == Token.NAME) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,196,// TODO(robbyw): Check if the name is overridden locally.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,197,// TODO(robbyw): Check if this is a place where the name is being set.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,198,Node aliasedNode = aliases.get(n.getString());
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,199,// The variable should not exist since we undeclared it when we found
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,200,"// it.  If it does exist, it's because it's been overridden."
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,201,if (t.getScope().getVar(n.getString()) == null &&
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,202,aliasedNode != null) {
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,203,"// Note, to support the transitive case, it's important we don't"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,204,"// clone aliasedNode here.  For example,"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,205,// var g = goog; var d = g.dom; d.createElement('DIV');
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,206,"// The node in aliasedNode (which is ""g"") will be replaced in the"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,207,"// changes pass above with ""goog"".  If we cloned here, we'd end up"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,208,// with <code>g.dom.createElement('DIV')</code>.
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,209,"aliasUsages.add(new AliasedNode(n, aliasedNode));"
+True,src/com/google/javascript/jscomp/ScopedAliases.java,src/com/google/javascript/jscomp/ScopedAliases.java,213,// TODO(robbyw): Disallow RETURN nodes and THIS nodes.
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,46,import com.google.javascript.rhino.jstype.JSTypeRegistry.ResolveMode;
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,840,"* Force this type to resolve, even if the registry is in a lazy"
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,841,* resolving mode.
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,842,* @see #resolve
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,844,"public final JSType forceResolve(ErrorReporter t, StaticScope<JSType> scope) {"
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,845,ResolveMode oldResolveMode = registry.getResolveMode();
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,846,registry.setResolveMode(ResolveMode.IMMEDIATE);
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,847,"JSType result = resolve(t, scope);"
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,848,registry.setResolveMode(oldResolveMode);
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,849,return result;
+True,src/com/google/javascript/rhino/jstype/JSType.java,src/com/google/javascript/rhino/jstype/JSType.java,877,resolveResult.setResolvedTypeInternal(resolveResult);
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,205,ResolveMode getResolveMode() {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,206,return resolveMode;
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1243, Creates a RecordType from the nodes representing said record type.
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1244, @param n The node with type info.
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1245, @param sourceName The source file name.
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1246, @param scope A scope for doing type name lookups.
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1248,"ublic JSType createRecordTypeFromNodes(Node n, String sourceName,"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1249,taticScope<JSType> scope) {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1251,ecordTypeBuilder builder = new RecordTypeBuilder(this);
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1253,/ For each of the fields in the record type.
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1254,or (Node fieldTypeNode = n.getFirstChild();
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1255,ieldTypeNode != null;
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1256,ieldTypeNode = fieldTypeNode.getNext()) {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1258,/ Get the property's name.
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1259,ode fieldNameNode = fieldTypeNode;
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1260,oolean hasType = false;
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1262,f (fieldTypeNode.getType() == Token.COLON) {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1263,ieldNameNode = fieldTypeNode.getFirstChild();
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1264,asType = true;
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1267,tring fieldName = fieldNameNode.getString();
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1269,/ TODO(user): Move this into the lexer/parser.
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1270,"/ Remove the string literal characters around a field name,"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1271,/ if any.
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1272,"f (fieldName.startsWith(""'"") || fieldName.startsWith(""\"""")) {"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1273,"ieldName = fieldName.substring(1, fieldName.length() - 1);"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1276,/ Get the property's type.
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1277,SType fieldType = null;
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1279,f (hasType) {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1280,/ We have a declared type.
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1281,ieldType = createFromTypeNodes(
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1282,"ieldTypeNode.getLastChild(), sourceName, scope);"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1283, else {
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1284,"/ Otherwise, the type is UNKNOWN."
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1285,ieldType = getNativeType(JSTypeNative.UNKNOWN_TYPE);
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1288,/ Add the property to the record.
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1289,"uilder.addProperty(fieldName, fieldType);"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1292,eturn builder.build();
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1317,"eturn new UnresolvedTypeExpression(this, n, sourceName, forgiving);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1267,"// If the type expression doesn't contain any names, just"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1268,// resolve it anyway.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1269,boolean hasNames = hasTypeName(n);
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1270,if (hasNames) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1271,"return new UnresolvedTypeExpression(this, n, sourceName, forgiving);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1274,"return createFromTypeNodesInternal(n, sourceName, scope, forgiving);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1277,private boolean hasTypeName(Node n) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1278,if (n.getType() == Token.STRING) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1279,return true;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1282,for (Node child = n.getFirstChild();
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1283,child != null; child = child.getNext()) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1284,if (hasTypeName(child)) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1285,return true;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1289,return false;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1292,"/** @see #createFromTypeNodes(Node, String, StaticScope, boolean) */"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1293,"private JSType createFromTypeNodesInternal(Node n, String sourceName,"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1294,"StaticScope<JSType> scope, boolean forgiving) {"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1322,"eturn createRecordTypeFromNodes(n.getFirstChild(), sourceName, scope);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1297,return createRecordTypeFromNodes(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1298,"n.getFirstChild(), sourceName, scope);"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1325,eturn createFromTypeNodes(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1301,return createFromTypeNodesInternal(
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1335,"reateFromTypeNodes(firstChild, sourceName, scope, forgiving));"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1311,createFromTypeNodesInternal(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1312,"firstChild, sourceName, scope, forgiving));"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1339,"reateFromTypeNodes(n.getFirstChild(), sourceName, scope));"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1316,createFromTypeNodesInternal(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1317,"n.getFirstChild(), sourceName, scope, false));"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1343,"reateFromTypeNodes(n.getFirstChild(), sourceName, scope));"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1321,createFromTypeNodesInternal(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1322,"n.getFirstChild(), sourceName, scope, false));"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1356,"uilder.addAlternate(createFromTypeNodes(child, sourceName, scope));"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1335,builder.addAlternate(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1336,"createFromTypeNodesInternal(child, sourceName, scope, false));"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1382,reateFromTypeNodes(
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1383,"ypeList.getLastChild(), sourceName, scope);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1362,createFromTypeNodesInternal(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1363,"typeList.getLastChild(), sourceName, scope, false);"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1388,reateFromTypeNodes(
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1389,"ypeList.getFirstChild(), sourceName, scope);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1368,createFromTypeNodesInternal(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1369,"typeList.getFirstChild(), sourceName, scope, false);"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1406,"reateFromTypeNodes(thisNode, sourceName, scope)"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1386,createFromTypeNodesInternal(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1387,"thisNode, sourceName, scope, false)"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1428,reateFromTypeNodes(
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1429,"rg.getFirstChild(), sourceName, scope));"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1409,createFromTypeNodesInternal(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1410,"arg.getFirstChild(), sourceName, scope, false));"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1432,"SType type = createFromTypeNodes(arg, sourceName, scope);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1413,JSType type = createFromTypeNodesInternal(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1414,"arg, sourceName, scope, false);"
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1448,"SType returnType = createFromTypeNodes(current, sourceName, scope);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1430,JSType returnType =
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1431,"createFromTypeNodesInternal(current, sourceName, scope, false);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1445,* Creates a RecordType from the nodes representing said record type.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1446,* @param n The node with type info.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1447,* @param sourceName The source file name.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1448,* @param scope A scope for doing type name lookups.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1450,"private JSType createRecordTypeFromNodes(Node n, String sourceName,"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1451,StaticScope<JSType> scope) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1453,RecordTypeBuilder builder = new RecordTypeBuilder(this);
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1455,// For each of the fields in the record type.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1456,for (Node fieldTypeNode = n.getFirstChild();
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1457,fieldTypeNode != null;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1458,fieldTypeNode = fieldTypeNode.getNext()) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1460,// Get the property's name.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1461,Node fieldNameNode = fieldTypeNode;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1462,boolean hasType = false;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1464,if (fieldTypeNode.getType() == Token.COLON) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1465,fieldNameNode = fieldTypeNode.getFirstChild();
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1466,hasType = true;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1469,String fieldName = fieldNameNode.getString();
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1471,// TODO(user): Move this into the lexer/parser.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1472,"// Remove the string literal characters around a field name,"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1473,// if any.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1474,"if (fieldName.startsWith(""'"") || fieldName.startsWith(""\"""")) {"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1475,"fieldName = fieldName.substring(1, fieldName.length() - 1);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1478,// Get the property's type.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1479,JSType fieldType = null;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1481,if (hasType) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1482,// We have a declared type.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1483,fieldType = createFromTypeNodesInternal(
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1484,"fieldTypeNode.getLastChild(), sourceName, scope, false);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1485,} else {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1486,"// Otherwise, the type is UNKNOWN."
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1487,fieldType = getNativeType(JSTypeNative.UNKNOWN_TYPE);
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1490,// Add the property to the record.
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1491,"builder.addProperty(fieldName, fieldType);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,1494,return builder.build();
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,2,* Copyright 2010 Google Inc.
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,17,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,20,* Tests for {@link ScopedAliases}
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,22,* @author robbyw@google.com (Robby Walker)
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,24,public class ScopedAliasesTest extends CompilerTestCase {
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,26,"private static String EXTERNS = ""var window;"";"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,28,public ScopedAliasesTest() {
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,29,super(EXTERNS);
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,32,"private void testScoped(String code, String expected) {"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,33,"test(""goog.scope(function() {"" + code + ""});"", expected);"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,36,"private void testScopedNoChanges(String aliases, String code) {"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,37,"testScoped(aliases + code, code);"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,40,public void testOneLevel() {
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,41,"testScoped(""var g = goog;g.dom.createElement(g.dom.TagName.DIV);"","
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,42,"""goog.dom.createElement(goog.dom.TagName.DIV);"");"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,45,public void testTwoLevel() {
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,46,"testScoped(""var d = goog.dom;d.createElement(d.TagName.DIV);"","
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,47,"""goog.dom.createElement(goog.dom.TagName.DIV);"");"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,50,public void testTransitive() {
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,51,"testScoped(""var d = goog.dom;var DIV = d.TagName.DIV;d.createElement(DIV);"","
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,52,"""goog.dom.createElement(goog.dom.TagName.DIV);"");"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,55,public void testMultipleTransitive() {
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,56,testScoped(
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,57,"""var g=goog;var d=g.dom;var t=d.TagName;var DIV=t.DIV;"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,58,"""d.createElement(DIV);"","
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,59,"""goog.dom.createElement(goog.dom.TagName.DIV);"");"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,63,public void testFourLevel() {
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,64,"testScoped(""var DIV = goog.dom.TagName.DIV;goog.dom.createElement(DIV);"","
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,65,"""goog.dom.createElement(goog.dom.TagName.DIV);"");"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,68,public void testWorksInClosures() {
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,69,testScoped(
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,70,"""var DIV = goog.dom.TagName.DIV;"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,71,"""goog.x = function() {goog.dom.createElement(DIV);};"","
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,72,"""goog.x = function() {goog.dom.createElement(goog.dom.TagName.DIV);};"");"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,75,public void testOverridden() {
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,76,// Test that the alias doesn't get unaliased when it's overriden by a
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,77,// parameter.
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,78,testScopedNoChanges(
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,79,"""var g = goog;"", ""goog.x = function(g) {g.z()};"");"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,80,// Same for a local.
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,81,testScopedNoChanges(
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,82,"""var g = goog;"", ""goog.x = function() {var g = {}; g.z()};"");"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,85,public void testTwoScopes() {
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,86,test(
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,87,"""goog.scope(function() {var g = goog;g.method()});"" +"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,88,"""goog.scope(function() {g.method();});"","
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,90,"""goog.method();g.method();"");"
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,93,// TODO(robbyw): Test JsDoc aliasing.
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,94,// TODO(robbyw): What if it's recursive?  var goog = goog.dom;
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,96,@Override
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,97,protected ScopedAliases getProcessor(Compiler compiler) {
+True,test/com/google/javascript/jscomp/ScopedAliasesTest.java,test/com/google/javascript/jscomp/ScopedAliasesTest.java,98,return new ScopedAliases(compiler);
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,187,public void testForceResolve() {
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,188,SimpleErrorReporter reporter = new SimpleErrorReporter();
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,190,JSTypeRegistry lazyExprRegistry = new JSTypeRegistry(reporter);
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,191,lazyExprRegistry.setResolveMode(ResolveMode.LAZY_EXPRESSIONS);
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,193,"Node expr = new Node(Token.QMARK, Node.newString(""foo""));"
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,194,StaticScope<JSType> empty = new EmptyScope();
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,196,JSType type = lazyExprRegistry.createFromTypeNodes(
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,197,"expr, ""source.js"", empty);"
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,198,assertFalse(type.isResolved());
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,199,"assertTrue(type.forceResolve(reporter, empty).isResolved());"
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,200,"assertEquals(""Expected warnings"", 1, reporter.warnings().size());"
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,203,public void testAllTypeResolvesImmediately() {
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,204,JSTypeRegistry lazyExprRegistry = new JSTypeRegistry(
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,205,new SimpleErrorReporter());
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,206,lazyExprRegistry.setResolveMode(ResolveMode.LAZY_EXPRESSIONS);
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,208,Node expr = new Node(Token.STAR);
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,209,JSType type = lazyExprRegistry.createFromTypeNodes(
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,210,"expr, ""source.js"", new EmptyScope());"
+True,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java,211,assertTrue(type instanceof AllType);

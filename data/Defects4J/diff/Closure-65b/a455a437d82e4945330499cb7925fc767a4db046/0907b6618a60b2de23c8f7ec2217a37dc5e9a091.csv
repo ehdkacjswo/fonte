@@ -1,0 +1,24 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,42,case Token.ASSIGN:
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,43,return tryFoldAssignment(subtree);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,75,* Try removing identity assignments
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,76,"* @return the replacement node, if changed, or the original if not"
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,78,private Node tryFoldAssignment(Node subtree) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,79,Preconditions.checkState(subtree.getType() == Token.ASSIGN);
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,80,Node left = subtree.getFirstChild();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,81,Node right = subtree.getLastChild();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,82,// Only names
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,83,if (left.getType() == Token.NAME
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,84,&& right.getType() == Token.NAME
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,85,&& left.getString().equals(right.getString())) {
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,86,"subtree.getParent().replaceChild(subtree, right.detachFromParent());"
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,87,reportCodeChange();
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,88,return right;
+True,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java,90,return subtree;
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,592,public void testFoldAssign() {
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,593,"test(""x=x"", """");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,594,"testSame(""x=xy"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,595,"testSame(""x=x + 1"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,596,"testSame(""x.a=x.a"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,597,"test(""var y=(x=x)"", ""var y=x"");"
+True,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java,598,"test(""y=1 + (x=x)"", ""y=1 + x"");"

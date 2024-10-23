@@ -1,0 +1,15 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,95,// there are times where there is a spurious byte-order-mark at the start of the text. Shouldn't be present
+True,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,96,"// in utf-8. If after decoding, there is a BOM, strip it; otherwise will cause the parser to go straight"
+True,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,97,// into head mode
+True,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,98,if (docData.charAt(0) == 65279)
+True,src/main/java/org/jsoup/helper/DataUtil.java,src/main/java/org/jsoup/helper/DataUtil.java,99,docData = docData.substring(1);
+True,src/test/java/org/jsoup/helper/DataUtilTest.java,src/test/java/org/jsoup/helper/DataUtilTest.java,5,import org.jsoup.nodes.Document;
+True,src/test/java/org/jsoup/helper/DataUtilTest.java,src/test/java/org/jsoup/helper/DataUtilTest.java,6,import org.jsoup.parser.Parser;
+True,src/test/java/org/jsoup/helper/DataUtilTest.java,src/test/java/org/jsoup/helper/DataUtilTest.java,9,import java.nio.ByteBuffer;
+True,src/test/java/org/jsoup/helper/DataUtilTest.java,src/test/java/org/jsoup/helper/DataUtilTest.java,10,import java.nio.charset.Charset;
+True,src/test/java/org/jsoup/helper/DataUtilTest.java,src/test/java/org/jsoup/helper/DataUtilTest.java,28,@Test public void discardsSpuriousByteOrderMark() {
+True,src/test/java/org/jsoup/helper/DataUtilTest.java,src/test/java/org/jsoup/helper/DataUtilTest.java,29,"String html = ""\uFEFF<html><head><title>One</title></head><body>Two</body></html>"";"
+True,src/test/java/org/jsoup/helper/DataUtilTest.java,src/test/java/org/jsoup/helper/DataUtilTest.java,30,"ByteBuffer buffer = Charset.forName(""UTF-8"").encode(html);"
+True,src/test/java/org/jsoup/helper/DataUtilTest.java,src/test/java/org/jsoup/helper/DataUtilTest.java,31,"Document doc = DataUtil.parseByteData(buffer, ""UTF-8"", ""http://foo.com/"", Parser.htmlParser());"
+True,src/test/java/org/jsoup/helper/DataUtilTest.java,src/test/java/org/jsoup/helper/DataUtilTest.java,32,"assertEquals(""One"", doc.head().text());"

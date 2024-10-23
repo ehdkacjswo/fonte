@@ -1,0 +1,20 @@
+
+Add half-assed support for late-resolved typedefs of union types.
+The fundamental issue is that NamedType is a proxy wrapper around
+ObjectTypes, but has always been used for non-object types (like
+typedef'd unions.
+I eventually want to move towards the using UnresolvedTypes for type
+resolution. Under that system, the proxy wrapper gets thrown away.
+UnresolveTypes would also solve this issue. But that system breaks
+a whole bunch of assumptions about hash codes and referential
+transparency, so we're not ready for it yet.
+
+R=johnlenz
+DELTA=116  (75 added, 0 deleted, 41 changed)
+
+
+Revision created by MOE tool push_codebase.
+MOE_MIGRATION=304858
+
+
+git-svn-id: https://closure-compiler.googlecode.com/svn/trunk@482 b0f006be-c8cd-11de-a2e8-8d36a3108c74

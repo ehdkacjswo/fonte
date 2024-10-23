@@ -1,0 +1,105 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1441,"eturn containsType(n, Token.THIS, new MatchNotFunction());"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1441,Node start = (isFunction(n)) ? n.getLastChild() : n;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1442,"return containsType(start, Token.THIS, new MatchNotFunction());"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1550,if (left.getType() == Token.OBJECTLIT) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1551,"return tryFoldObjectPropAccess(n, left, right);"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1603,if (left.getType() == Token.OBJECTLIT) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1604,"return tryFoldObjectPropAccess(n, left, right);"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1637,"private Node tryFoldObjectPropAccess(Node n, Node left, Node right) {"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1638,Preconditions.checkArgument(NodeUtil.isGet(n));
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1640,if (left.getType() != Token.OBJECTLIT || right.getType() != Token.STRING) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1641,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1644,Node parent = n.getParent();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1645,if ((NodeUtil.isAssignmentOp(parent) && parent.getFirstChild() == n)
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1646,|| parent.getType() == Token.INC
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1647,|| parent.getType() == Token.DEC) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1648,// If GETPROP/GETELEM is used as assignment target the object literal is
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1649,// acting as a temporary we can't fold it here:
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1650,"//    ""{a:x}.a += 1"" is not ""x += 1"""
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1651,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1654,// find the last definition in the object literal
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1655,Node key = null;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1656,Node value = null;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1657,for (Node c = left.getFirstChild(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1658,if (c.getString().equals(right.getString())) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1659,switch (c.getType()) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1660,case Token.SET:
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1661,continue;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1662,case Token.GET:
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1663,case Token.STRING:
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1664,if (value != null && mayHaveSideEffects(value)) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1665,// The previously found value had side-effects
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1666,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1668,key = c;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1669,value = key.getFirstChild();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1670,break;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1671,default:
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1672,throw new IllegalStateException();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1674,} else if (mayHaveSideEffects(c.getFirstChild())) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1675,// We don't handle the side-effects here as they might need a temporary
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1676,// or need to be reordered.
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1677,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1681,"// Didn't find a definition of the name in the object literal, it might"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1682,// be coming from the Object prototype
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1683,if (value == null) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1684,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1687,if (value.getType() == Token.FUNCTION && NodeUtil.referencesThis(value)) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1688,// 'this' may refer to the object we are trying to remove
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1689,return n;
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1692,Node replacement = value.detachFromParent();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1693,if (key.getType() == Token.GET){
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1694,"replacement = new Node(Token.CALL, replacement);"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1697,"n.getParent().replaceChild(n, replacement);"
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1698,reportCodeChange();
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1699,return n;
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,621,ssertTrue(NodeUtil.referencesThis(
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,622,"arse(""function foo(){}(this)"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,621,// Don't descend into functions (starts at the script node)
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,622,assertFalse(NodeUtil.referencesThis(
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,623,"parse(""function foo(){this}"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,624,// But starting with a function properly check for 'this'
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,625,"Node n = parse(""function foo(){this}"").getFirstChild();"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,626,"assertEquals(n.getType(), Token.FUNCTION);"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,627,assertTrue(NodeUtil.referencesThis(n));
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,628,ssertFalse(NodeUtil.referencesThis(
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,629,"arse(""function foo(){}"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,633,"n = parse(""function foo(){}"").getFirstChild();"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,634,"assertEquals(n.getType(), Token.FUNCTION);"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,635,assertFalse(NodeUtil.referencesThis(n));
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,991,public void testFoldObjectLiteralRef() {
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,992,// Leave extra side-effects in place
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,993,"testSame(""var x = ({a:foo(),b:bar()}).a"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,994,"testSame(""var x = ({a:1,b:bar()}).a"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,995,"testSame(""function f() { return {b:foo(), a:2}.a; }"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,997,// on the LHS the object act as a temporary leave it in place.
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,998,"testSame(""({a:x}).a = 1"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,999,"testSame(""({a:x}).a += 1"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1000,"testSame(""({a:x}).a ++"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1001,"testSame(""({a:x}).a --"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1003,// functions can't reference the object through 'this'.
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1004,"testSame(""({a:function(){return this}}).a"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1005,"testSame(""({get a() {return this}}).a"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1006,"testSame(""({set a(b) {return this}}).a"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1008,"// Leave unknown props alone, the might be on the prototype"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1009,"testSame(""({}).a"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1011,// setters by themselves don't provide a definition
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1012,"testSame(""({}).a"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1013,"testSame(""({set a(b) {}}).a"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1014,// sets don't hide other definitions.
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1015,"test(""({a:1,set a(b) {}}).a"", ""1"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1017,// get is transformed to a call (gets don't have self referential names)
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1018,"test(""({get a() {}}).a"", ""(function (){})()"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1019,// sets don't hide other definitions.
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1020,"test(""({get a() {},set a(b) {}}).a"", ""(function (){})()"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1022,// a function remains a function not a call.
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1023,"test(""var x = ({a:function(){return 1}}).a"","
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1024,"""var x = function(){return 1}"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1026,"test(""var x = ({a:1}).a"", ""var x = 1"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1027,"test(""var x = ({a:1, a:2}).a"", ""var x = 2"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1028,"test(""var x = ({a:1, a:foo()}).a"", ""var x = foo()"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1029,"test(""var x = ({a:foo()}).a"", ""var x = foo()"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1031,"test(""function f() { return {a:1, b:2}.a; }"","
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1032,"""function f() { return 1; }"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1034,// GETELEM is handled the same way.
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,1035,"test(""var x = ({'a':1})['a']"", ""var x = 1"");"

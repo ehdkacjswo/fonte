@@ -1,0 +1,201 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,1,package org.apache.commons.math3.genetics;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,3,import java.util.ArrayList;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,4,import java.util.HashSet;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,5,import java.util.List;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,6,import java.util.Set;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,8,import org.apache.commons.math3.exception.DimensionMismatchException;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,9,import org.apache.commons.math3.exception.MathIllegalArgumentException;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,10,import org.apache.commons.math3.exception.util.LocalizedFormats;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,13,* Cycle Crossover [CX] builds offspring from <b>ordered</b> chromosomes by identifying cycles
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,14,"* between two parent chromosomes. To form the children, the cycles are copied from the"
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,15,* respective parents.
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,16,* <p>
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,17,* To form a cycle the following procedure is applied:
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,18,* <ol>
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,19,*   <li>start with the first gene of parent 1</li>
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,20,*   <li>look at the gene at the same position of parent 2</li>
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,21,*   <li>go to the position with the same gene in parent 1</li>
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,22,*   <li>add this gene index to the cycle</li>
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,23,*   <li>repeat the steps 2-5 until we arrive at the starting gene of this cycle</li>
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,24,* </ol>
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,25,"* The indices that form a cycle are then used to form the children in alternating order, i.e."
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,26,"* in cycle 1, the genes of parent 1 are copied to child 1, while in cycle 2 the genes of parent 1"
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,27,"* are copied to child 2, and so forth ..."
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,28,* </p>
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,30,* Example (zero-start cycle):
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,31,* <pre>
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,32,* p1 = (8 4 7 3 6 2 5 1 9 0)    X   c1 = (8 1 2 3 4 5 6 7 9 0)
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,33,* p2 = (0 1 2 3 4 5 6 7 8 9)    X   c2 = (0 4 7 3 6 2 5 1 8 9)
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,35,* cycle 1: 8 0 9
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,36,* cycle 2: 4 1 7 2 5 6
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,37,* cycle 3: 3
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,38,* </pre>
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,40,"* This policy works only on {@link AbstractListChromosome}, and therefore it"
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,41,"* is parameterized by T. Moreover, the chromosomes must have same lengths."
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,43,"* @see <a href=""http://www.rubicite.com/Tutorials/GeneticAlgorithms/CrossoverOperators/CycleCrossoverOperator.aspx"""
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,44,* Cycle Crossover Operator</a>
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,46,* @param <T> generic type of the {@link AbstractListChromosome}s for crossover
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,47,* @since 3.1
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,48,* @version $Id$
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,50,public class CycleCrossover<T> implements CrossoverPolicy {
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,52,/** If the start index shall be chosen randomly. */
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,53,private final boolean randomStart;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,56,* Creates a new {@link CycleCrossover} policy.
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,58,public CycleCrossover() {
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,59,this(false);
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,63,* Creates a new {@link CycleCrossover} policy using the given {@code randomStart} behavior.
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,65,* @param randomStart whether the start index shall be chosen randomly or be set to 0
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,67,public CycleCrossover(final boolean randomStart) {
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,68,this.randomStart = randomStart;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,72,* Returns whether the starting index is chosen randomly or set to zero.
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,74,"* @return {@code true} if the starting index is chosen randomly, {@code false} otherwise"
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,76,public boolean isRandomStart() {
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,77,return randomStart;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,81,* {@inheritDoc}
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,83,"@SuppressWarnings(""unchecked"")"
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,84,"public ChromosomePair crossover(final Chromosome first, final Chromosome second) {"
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,85,if (!(first instanceof AbstractListChromosome<?> && second instanceof AbstractListChromosome<?>)) {
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,86,throw new MathIllegalArgumentException(LocalizedFormats.INVALID_FIXED_LENGTH_CHROMOSOME);
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,88,"return mate((AbstractListChromosome<T>) first, (AbstractListChromosome<T>) second);"
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,92,"* Helper for {@link #crossover(Chromosome, Chromosome)}. Performs the actual crossover."
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,94,* @param first the first chromosome
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,95,* @param second the second chromosome
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,96,* @return the pair of new chromosomes that resulted from the crossover
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,97,* @throws DimensionMismatchException if the length of the two chromosomes is different
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,99,"protected ChromosomePair mate(final AbstractListChromosome<T> first, final AbstractListChromosome<T> second) {"
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,100,final int length = first.getLength();
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,101,if (length != second.getLength()) {
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,102,"throw new DimensionMismatchException(second.getLength(), length);"
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,105,// array representations of the parents
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,106,final List<T> parent1Rep = first.getRepresentation();
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,107,final List<T> parent2Rep = second.getRepresentation();
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,108,// and of the children: do a crossover copy to simplify the later processing
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,109,final List<T> child1Rep = new ArrayList<T>(second.getRepresentation());
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,110,final List<T> child2Rep = new ArrayList<T>(first.getRepresentation());
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,112,// the set of all visited indices so far
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,113,final Set<Integer> visitedIndices = new HashSet<Integer>(length);
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,114,// the indices of the current cycle
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,115,final List<Integer> indices = new ArrayList<Integer>(length);
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,117,// determine the starting index
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,118,int idx = randomStart ? GeneticAlgorithm.getRandomGenerator().nextInt(length) : 0;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,119,int cycle = 1;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,121,while (visitedIndices.size() < length) {
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,122,indices.add(idx);
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,124,T item = parent2Rep.get(idx);
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,125,idx = parent1Rep.indexOf(item);
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,127,while (idx != indices.get(0)) {
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,128,// add that index to the cycle indices
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,129,indices.add(idx);
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,130,// get the item in the second parent at that index
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,131,item = parent2Rep.get(idx);
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,132,// get the index of that item in the first parent
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,133,idx = parent1Rep.indexOf(item);
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,136,// for even cycles: swap the child elements on the indices found in this cycle
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,137,if (cycle++ % 2 != 0) {
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,138,for (int i : indices) {
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,139,T tmp = child1Rep.get(i);
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,140,"child1Rep.set(i, child2Rep.get(i));"
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,141,"child2Rep.set(i, tmp);"
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,145,visitedIndices.addAll(indices);
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,146,// find next starting index: last one + 1 until we find an unvisited index
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,147,idx = (indices.get(0) + 1) % length;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,148,while (visitedIndices.contains(idx) && visitedIndices.size() < length) {
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,149,idx++;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,150,if (idx >= length) {
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,151,idx = 0;
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,154,indices.clear();
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,157,"return new ChromosomePair(first.newFixedLengthChromosome(child1Rep),"
+True,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,src/main/java/org/apache/commons/math3/genetics/CycleCrossover.java,158,second.newFixedLengthChromosome(child2Rep));
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,1,package org.apache.commons.math3.genetics;
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,3,import org.apache.commons.math3.exception.DimensionMismatchException;
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,4,import org.apache.commons.math3.exception.MathIllegalArgumentException;
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,5,import org.junit.Assert;
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,6,import org.junit.Test;
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,8,public class CycleCrossoverTest {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,10,@Test
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,11,public void testCrossoverExample() {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,12,// taken from http://www.rubicite.com/Tutorials/GeneticAlgorithms/CrossoverOperators/CycleCrossoverOperator.aspx
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,13,"final Integer[] p1 = new Integer[] { 8, 4, 7, 3, 6, 2, 5, 1, 9, 0 };"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,14,"final Integer[] p2 = new Integer[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,15,final DummyListChromosome p1c = new DummyListChromosome(p1);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,16,final DummyListChromosome p2c = new DummyListChromosome(p2);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,18,final CrossoverPolicy cp = new CycleCrossover<Integer>();
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,19,"final ChromosomePair pair = cp.crossover(p1c, p2c);"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,21,final Integer[] c1 = ((DummyListChromosome) pair.getFirst()).getRepresentation().toArray(new Integer[p1.length]);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,22,final Integer[] c2 = ((DummyListChromosome) pair.getSecond()).getRepresentation().toArray(new Integer[p2.length]);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,24,"final Integer[] c1e = new Integer[] { 8, 1, 2, 3, 4, 5, 6, 7, 9, 0 };"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,25,"final Integer[] c2e = new Integer[] { 0, 4, 7, 3, 6, 2, 5, 1, 8, 9 };"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,27,"Assert.assertArrayEquals(c1e, c1);"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,28,"Assert.assertArrayEquals(c2e, c2);"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,31,@Test
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,32,public void testCrossoverExample2() {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,33,// taken from http://www.scribd.com/doc/54206412/32/Cycle-crossover
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,34,"final Integer[] p1 = new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,35,"final Integer[] p2 = new Integer[] { 9, 3, 7, 8, 2, 6, 5, 1, 4};"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,36,final DummyListChromosome p1c = new DummyListChromosome(p1);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,37,final DummyListChromosome p2c = new DummyListChromosome(p2);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,39,final CrossoverPolicy cp = new CycleCrossover<Integer>();
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,40,"final ChromosomePair pair = cp.crossover(p1c, p2c);"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,42,final Integer[] c1 = ((DummyListChromosome) pair.getFirst()).getRepresentation().toArray(new Integer[p1.length]);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,43,final Integer[] c2 = ((DummyListChromosome) pair.getSecond()).getRepresentation().toArray(new Integer[p2.length]);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,45,"final Integer[] c1e = new Integer[] { 1, 3, 7, 4, 2, 6, 5, 8, 9 };"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,46,"final Integer[] c2e = new Integer[] { 9, 2, 3, 8, 5, 6, 7, 1, 4 };"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,48,"Assert.assertArrayEquals(c1e, c1);"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,49,"Assert.assertArrayEquals(c2e, c2);"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,52,@Test
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,53,public void testCrossover() {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,54,"final Integer[] p1 = new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,55,"final Integer[] p2 = new Integer[] { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,56,final DummyListChromosome p1c = new DummyListChromosome(p1);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,57,final DummyListChromosome p2c = new DummyListChromosome(p2);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,59,final CrossoverPolicy cp = new CycleCrossover<Integer>(true);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,61,for (int i = 0; i < 20; i++) {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,62,"final ChromosomePair pair = cp.crossover(p1c, p2c);"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,64,final Integer[] c1 = ((DummyListChromosome) pair.getFirst()).getRepresentation().toArray(new Integer[p1.length]);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,65,final Integer[] c2 = ((DummyListChromosome) pair.getSecond()).getRepresentation().toArray(new Integer[p2.length]);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,67,int index = 0;
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,68,"// Determine if it is in the same spot as in the first parent, if"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,69,// not it comes from the second parent.
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,70,for (final Integer j : c1) {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,71,if (!p1[index].equals(j)) {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,72,"Assert.assertEquals(j, p2[index]);"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,73,} else {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,74,"Assert.assertEquals(j, p1[index]);"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,76,index++;
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,79,// Same as above only for the second parent.
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,80,index = 0;
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,81,for (final Integer k : c2) {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,82,if (p2[index] != k) {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,83,"Assert.assertEquals(k, p1[index]);"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,84,} else {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,85,"Assert.assertEquals(k, p2[index]);"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,87,index++;
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,92,@Test(expected = DimensionMismatchException.class)
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,93,public void testCrossoverDimensionMismatchException() {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,94,"final Integer[] p1 = new Integer[] { 1, 0, 1, 0, 0, 1, 0, 1, 1 };"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,95,"final Integer[] p2 = new Integer[] { 0, 1, 1, 0, 1 };"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,97,final BinaryChromosome p1c = new DummyBinaryChromosome(p1);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,98,final BinaryChromosome p2c = new DummyBinaryChromosome(p2);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,100,final CrossoverPolicy cp = new CycleCrossover<Integer>();
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,101,"cp.crossover(p1c, p2c);"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,104,@Test(expected = MathIllegalArgumentException.class)
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,105,public void testCrossoverInvalidFixedLengthChromosomeFirst() {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,106,"final Integer[] p1 = new Integer[] { 1, 0, 1, 0, 0, 1, 0, 1, 1 };"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,107,final BinaryChromosome p1c = new DummyBinaryChromosome(p1);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,108,final Chromosome p2c = new Chromosome() {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,109,public double fitness() {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,110,// Not important
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,111,return 0;
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,115,final CrossoverPolicy cp = new CycleCrossover<Integer>();
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,116,"cp.crossover(p1c, p2c);"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,119,@Test(expected = MathIllegalArgumentException.class)
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,120,public void testCrossoverInvalidFixedLengthChromosomeSecond() {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,121,"final Integer[] p1 = new Integer[] { 1, 0, 1, 0, 0, 1, 0, 1, 1 };"
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,122,final BinaryChromosome p2c = new DummyBinaryChromosome(p1);
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,123,final Chromosome p1c = new Chromosome() {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,124,public double fitness() {
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,125,// Not important
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,126,return 0;
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,130,final CrossoverPolicy cp = new CycleCrossover<Integer>();
+True,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,src/test/java/org/apache/commons/math3/genetics/CycleCrossoverTest.java,131,"cp.crossover(p1c, p2c);"

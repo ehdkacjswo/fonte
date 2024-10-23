@@ -1,0 +1,10 @@
+Modified ZipOutputStream to be able to avoid seeking and rewriting headers
+when operating through addRaw.
+
+The basic idea is that an entry added through addRaw is fully known at the
+time we call add, so we do not need to go back in the file to rewrite fields.
+
+Adding this third mode increases the pain of multiple code paths, and
+we should probably consider a ground-up rewrite at some point.
+
+git-svn-id: https://svn.apache.org/repos/asf/commons/proper/compress/trunk@1650166 13f79535-47bb-0310-9956-ffa450edef68

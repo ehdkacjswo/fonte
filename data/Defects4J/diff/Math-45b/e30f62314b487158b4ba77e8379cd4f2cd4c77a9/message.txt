@@ -1,0 +1,36 @@
+Phil Steitz wrote:
+
+This commit contains the suite of random data generation utilities that
+I originally
+proposed as extensions to lang.math.  There is some functional overlap
+with lang.math, but the contract and intention of this implementation is
+different in several significant ways.
+
+* the lang implementation maintains "immutability" of the underlying
+   random number generator (emulating Math). The RandomData
+   implementation allows users to reseed the random number generator(s)
+   (this is in effect possible in the recent extensions to lang.math by
+   passing in a user-supplied random as an actual parameter to the
+   next() methods) Users can also reset the PRNG algorithm and provider
+   used by the "secure" methods.
+
+* RandomData includes "secure" methods (delegating to SecureRandom)
+
+* RandomData will generate random deviates from exponential and poisson,
+   as well as Gaussian and Uniform distributions.  These are useful in
+   simulation applications.
+
+* Overlapping somewhat with lang.StringUtils, RandomData will generate
+   random hex strings.  There is a nextSecureHexString method that will
+   (I claim :-) generate cryptographically secure string identifiers. I
+   would appreciate feedback on this algorithm, which I have seen used
+   elsewhere (similar to what tomcat does to generate session ids); but
+   not documented as a standard.
+
+PR: Bugzilla 20013
+Obtained from: Phil S.
+Submitted by: Phil S.
+Reviewed by: Tim O.
+
+
+git-svn-id: https://svn.apache.org/repos/asf/jakarta/commons/proper/math/trunk@140838 13f79535-47bb-0310-9956-ffa450edef68

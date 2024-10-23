@@ -1,0 +1,6 @@
+Don't register unknown tags.
+
+Unknown tags created with Tags.valueOf(String) were being registered, so that further
+.valueOf()s would return an == tag. But that's a potential memory leak, particularly with
+malicious input HTML, and serves no real purpose (as .equals() still works), so that
+functionality has been removed.

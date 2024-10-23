@@ -1,0 +1,57 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,25,import com.google.common.collect.Ordering;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,141,* Gets the 'natural' ordering of symbols.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,143,"* Right now, we only guarantee that symbols in the global scope will come"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,144,"* before symbols in local scopes. After that, the order is deterministic but"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,145,* undefined.
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,147,public Ordering<Symbol> getNaturalSymbolOrdering() {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,148,return SYMBOL_ORDERING;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,831,private final int scopeDepth;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,840,this.scopeDepth = parent == null ? 0 : (parent.getScopeDepth() + 1);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,897,public int getScopeDepth() {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,898,return scopeDepth;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1069,// Comparators
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1070,private final Ordering<String> SOURCE_NAME_ORDERING =
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1071,Ordering.natural().nullsFirst();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1073,private final Ordering<Node> NODE_ORDERING = new Ordering<Node>() {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1074,@Override
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1075,"public int compare(Node a, Node b) {"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1076,"int result = SOURCE_NAME_ORDERING.compare(a.getSourceFileName(), b.getSourceFileName());"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1077,if (result != 0) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1078,return result;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1081,return a.getSourcePosition() - b.getSourcePosition();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1085,private final Ordering<Symbol> SYMBOL_ORDERING = new Ordering<Symbol>() {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1086,@Override
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1087,"public int compare(Symbol a, Symbol b) {"
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1088,SymbolScope scopeA = getScope(a);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1089,SymbolScope scopeB = getScope(b);
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1090,int result = scopeA.getScopeDepth() - scopeB.getScopeDepth();
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1091,if (result != 0) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1092,return result;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1095,if (scopeA.isLexicalScope() && !scopeB.isLexicalScope()) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1096,return -1;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1099,if (scopeB.isLexicalScope() && !scopeA.isLexicalScope()) {
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1100,return 1;
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1103,return NODE_ORDERING.compare(
+True,src/com/google/javascript/jscomp/SymbolTable.java,src/com/google/javascript/jscomp/SymbolTable.java,1104,"a.getDeclaration().getNode(),  b.getDeclaration().getNode());"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,21,import com.google.common.collect.Ordering;
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,453,public void testNaturalSymbolOrdering() {
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,454,SymbolTable table = createSymbolTable(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,455,"""/** @const */ var a = {};"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,456,"""/** @const */ a.b = {};"" +"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,457,"""/** @param {number} x */ function f(x) {}"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,458,"Symbol a = getGlobalVar(table, ""a"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,459,"Symbol ab = getGlobalVar(table, ""a.b"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,460,"Symbol f = getGlobalVar(table, ""f"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,461,"Symbol x = getLocalVar(table, ""x"");"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,462,Ordering<Symbol> ordering = table.getNaturalSymbolOrdering();
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,463,"assertSymmetricOrdering(ordering, a, ab);"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,464,"assertSymmetricOrdering(ordering, a, f);"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,465,"assertSymmetricOrdering(ordering, ab, f);"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,466,"assertSymmetricOrdering(ordering, f, x);"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,469,private void assertSymmetricOrdering(
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,470,"Ordering<Symbol> ordering, Symbol first, Symbol second) {"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,471,"assertTrue(ordering.compare(first, first) == 0);"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,472,"assertTrue(ordering.compare(second, second) == 0);"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,473,"assertTrue(ordering.compare(first, second) < 0);"
+True,test/com/google/javascript/jscomp/SymbolTableTest.java,test/com/google/javascript/jscomp/SymbolTableTest.java,474,"assertTrue(ordering.compare(second, first) > 0);"

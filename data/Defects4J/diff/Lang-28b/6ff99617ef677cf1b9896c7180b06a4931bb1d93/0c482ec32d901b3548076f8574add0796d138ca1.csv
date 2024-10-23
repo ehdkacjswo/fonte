@@ -1,0 +1,53 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,21,* <p>Currently <em>private high surrogate</em> characters are ignored.
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,22,* These are unicode characters that fall between the values 56192 (db80)
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,23,* and 56319 (dbff) as we don't know how to handle them.
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,24,* High and low surrogates are correctly dealt with - that is if a
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,25,"* high surrogate is randomly chosen, 55296 (d800) to 56191 (db7f)"
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,26,"* then it is followed by a low surrogate. If a low surrogate is chosen,"
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,27,* 56320 (dc00) to 57343 (dfff) then it is placed after a randomly
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,28,* chosen high surrogate. </p>
+False,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,246,| (!letters && !numbers)) {
+False,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,247,uffer[count] = ch;
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,254,|| (!letters && !numbers))
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,256,if(ch >= 56320 && ch <= 57343) {
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,257,if(count == 0) {
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,258,count++;
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,259,} else {
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,260,"// low surrogate, insert high surrogate after putting it in"
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,261,buffer[count] = ch;
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,262,count--;
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,263,buffer[count] = (char) (55296 + random.nextInt(128));
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,265,} else if(ch >= 55296 && ch <= 56191) {
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,266,if(count == 0) {
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,267,count++;
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,268,} else {
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,269,"// high surrogate, insert low surrogate before putting it in"
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,270,buffer[count] = (char) (56320 + random.nextInt(128));
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,271,count--;
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,272,buffer[count] = ch;
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,274,} else if(ch >= 56192 && ch <= 56319) {
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,275,"// private high surrogate, no effing clue, so skip it"
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,276,count++;
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,277,} else {
+True,src/java/org/apache/commons/lang/RandomStringUtils.java,src/java/org/apache/commons/lang/RandomStringUtils.java,278,buffer[count] = ch;
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,320,* Checks if the string got by {@link RandomStringUtils#random(int)}
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,321,* can be converted to UTF-8 and back without loss.
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,323,* @author stefanhoehne@fastmail.fm
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,324,* @throws Exception
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,326,public void testLang100() throws Exception {
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,327,int size = 5000;
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,328,"String encoding = ""UTF-8"";"
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,329,String orig = RandomStringUtils.random(size);
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,330,byte[] bytes = orig.getBytes(encoding);
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,331,"String copy = new String(bytes, encoding);"
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,333,// for a verbose compare:
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,334,for (int i=0; i < orig.length() && i < copy.length(); i++) {
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,335,char o = orig.charAt(i);
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,336,char c = copy.charAt(i);
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,337,"assertEquals(""differs at "" + i + ""("" + Integer.toHexString((new Character(o)).hashCode()) + "","" +"
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,338,"Integer.toHexString((new Character(c)).hashCode()) + "")"", o, c);"
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,340,// compare length also
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,341,"assertEquals(orig.length(), copy.length());"
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,342,// just to be complete
+True,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,src/test/org/apache/commons/lang/RandomStringUtilsTest.java,343,"assertEquals(orig, copy);"

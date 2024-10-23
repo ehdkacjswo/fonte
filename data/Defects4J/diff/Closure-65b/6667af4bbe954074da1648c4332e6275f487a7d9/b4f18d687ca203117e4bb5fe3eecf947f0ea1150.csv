@@ -1,0 +1,726 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,2, Copyright 2009 Google Inc.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,4," Licensed under the Apache License, Version 2.0 (the ""License"");"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,5, you may not use this file except in compliance with the License.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,6, You may obtain a copy of the License at
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,8,     http://www.apache.org/licenses/LICENSE-2.0
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,10," Unless required by applicable law or agreed to in writing, software"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,11," distributed under the License is distributed on an ""AS IS"" BASIS,"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,12," WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,13, See the License for the specific language governing permissions and
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,14, limitations under the License.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,17,ackage com.google.javascript.jscomp;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,19,mport com.google.common.base.Preconditions;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,20,mport com.google.common.collect.Lists;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,21,mport com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,22,mport com.google.javascript.rhino.Node;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,23,mport com.google.javascript.rhino.Token;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,25,mport java.util.HashMap;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,26,mport java.util.HashSet;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,27,mport java.util.Iterator;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,28,mport java.util.LinkedList;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,29,mport java.util.List;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,30,mport java.util.ListIterator;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,31,mport java.util.Map;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,32,mport java.util.Map.Entry;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,33,mport java.util.Set;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,36, Optimize function calls and function signatures.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,38, <ul>
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,39, <li>Removes optional parameters if no caller specifies it as argument.</li>
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,40, <li>Removes arguments at call site to function that
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,41,     ignores the parameter. (Not implemented) </li>
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,42, <li>Inline a parameter if the function is always called with that constant.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,43,     </li>
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,44, </ul>
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,46, There are some constraints on when a function may be optmized.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,47, Only functions which are declared in one of the following forms:<br>
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,48, <ul>
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,49, <li>function foo() {}</li>
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,50, <li>var foo = function() {}</li>
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,51, <li>var foo = function bar() {}</li>
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,52, </ul>
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,53," Also, functions are identified by their names. Therefore, if a name is not"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,54," used in a way that we know that is safe, it is blacklisted. A function whose"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,55, name is on the list cannot be optimized.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,58,lass OptimizeParametersAlt extends AbstractPostOrderCallback
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,59,"mplements CompilerPass, SpecializationAwareCompilerPass {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,61,rivate final AbstractCompiler compiler;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,63,/ maps names with declarations; sometimes more than one name might refer
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,64,"/ to a single declaration, i.e. var foo = function f() {}"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,65,"rivate Map<String, Map<Scope, Declaration>> mappings ="
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,66,"ew HashMap<String, Map<Scope, Declaration>>();"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,68,/ list of all declarations
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,69,rivate Set<Declaration> decls = new HashSet<Declaration>();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,71,/ list of all function calls
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,72,rivate List<Call> calls = new LinkedList<Call>();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,74,/ list of all names which are not supposed to be optimized
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,75,rivate Set<String> blacklist = new HashSet<String>();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,77,rivate SpecializeModule.SpecializationState specializationState;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,79,ublic void enableSpecialization(
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,80,pecializeModule.SpecializationState state) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,81,his.specializationState = state;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,84,ptimizeParametersAlt(AbstractCompiler compiler) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,85,his.compiler = compiler;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,88,Override
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,89,"ublic void process(Node externs, Node root) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,90,/TODO (dhans): consider either switching to call graph and give up
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,91,/ support for local scopes - depending on actual test results.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,92,"odeTraversal.traverse(compiler, root, this);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,93,rocessCalls();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,94,emoveUnsafeDeclarations();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,95,ptimizeParameters();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,99, Represents a declared function.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,101,rivate class Declaration {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,104, AST node associated with the declaration.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,106,ublic Node node;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,109, List of formal parameters that defined for the function.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,111,ublic LinkedList<FormalParameter> parameters;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,114, List of function calls that refer to this declaration. This list may
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,115," be not exhaustive, but in this case doNotOptimize should be set to true."
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,117,ublic List<Call> calls;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,120, Number of format parameters which are always passed actual values
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,121," for example, for the given function:"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,122," function foo(a, b, c, d, e) {}; f(1, 3, 2); f(2, 3); f(1, 3, 4, 5)"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,123, minParams = 2
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,124," All parameters up to this one can be inlined, provided the same value"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,125, is passed in each call:
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,126," function foo(a, c, d, e) {var b = 3;}; f(1, 2); f(2); f(1, 4, 5)"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,128,ublic int minParams;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,131, Number of format parameters which are passed a value at least once
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,132," for example, for the given function:"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,133," function foo(a, b, c, d, e) {}; f(1, 3, 2); f(2, 3); f(1, 3, 4, 5)"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,134, maxParams = 4
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,135," All parameters after this number are never passed any values,"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,136, so there can be inlined:
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,137," function foo(a, b, c, d) {var e}; f(1, 3, 2); f(2, 3); f(1, 3, 4, 5)"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,139,ublic int maxParams;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,142, Boolean property which indicates whether there is a reason not to
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,143, optimize this declaration.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,145,ublic boolean doNotOptimize;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,147,"eclaration(Node node, LinkedList<FormalParameter> parameters,"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,148,oolean doNotOptimize) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,149,his.node = node;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,150,his.parameters = parameters;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,151,his.doNotOptimize = doNotOptimize;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,152,his.calls = new LinkedList<Call>();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,153,his.maxParams = 0;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,154,his.minParams = parameters.size();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,159, Represents a formal parameter of a function.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,161,rivate class FormalParameter {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,162,rivate final Node arg;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,163,rivate boolean manyValues;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,164,rivate Node initialValue;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,166,ormalParameter(Node arg) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,167,his.arg = arg;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,168,his.initialValue = null;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,169,his.manyValues = false;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,174, Represents an actual parameter passed to a function call.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,176,rivate class ActualParameter {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,177,rivate final Node value;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,179,ctualParameter(Node value) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,180,his.value = value;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,185, Represents a call.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,187,rivate static class Call {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,188,rivate String name;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,189,rivate Node callSide;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,191,/ Scope which the actual function is defined in
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,192,rivate Scope scope;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,193,rivate List<ActualParameter> parameters;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,195,"all(String name, Node callSide, Scope scope,"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,196,ist<ActualParameter> parameters) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,197,his.name = name;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,198,his.callSide = callSide;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,199,his.scope = scope;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,200,his.parameters = parameters;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,205, Adds a new call to the list of all calls which should be taken into
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,206, account.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,208, @param name name of the function that is called
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,209, @param node AST node which represents the call or new node
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,210, @param scope scope that the function which is called belongs to
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,212,"rivate void registerCall(String name, Node node, Scope scope) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,213,reconditions.checkState(NodeUtil.isCall(node) || NodeUtil.isNew(node));
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,214,reconditions.checkNotNull(node.getFirstChild());
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,216,ist<ActualParameter> params = Lists.newLinkedList();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,217,ode child = node.getFirstChild();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,219,f (NodeUtil.isFunctionObjectCall(node)) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,220,"/ the first parameter is a ""this"" object"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,221,/ which is to be passed to the function
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,222,/ the rest of them represent actual parameters
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,223,hild = child.getNext();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,226,/ collect all actual parameters passed to the call
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,227,hile (child != null && (child = child.getNext()) != null) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,228,arams.add(new ActualParameter(child));
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,231,"alls.add(new Call(name, node, scope, params));"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,235, This function is called when all declarations and calls are gathered.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,236, It iterates through all the calls and two important things happen
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,237, for each one:
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,238, - a corresponding Declaration instance is found
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,239, - all actual parameters of the call are processed
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,240," After all calls are processed, there is enough information to decide if"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,241, a particular formal parameter may be optimized.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,243,rivate void processCalls() {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,244,or (Call call : calls) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,245,/ unqualified name of the function which is called
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,246,tring name = call.name;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,248,/ get all function definitions with the name
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,249,"ap<Scope, Declaration> declarations = mappings.get(name);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,251,/ function is not defined the the current module or should not
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,252,/ be optimized anyway
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,253,f (declarations == null) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,254,ontinue;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,257,/ find scope that the declaration belongs to
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,258,cope scope = call.scope;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,259,hile (scope != null && !declarations.containsKey(scope)) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,260,cope = scope.getParent();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,262,eclaration declaration = declarations.get(scope);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,264,f (declaration == null) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,265,ontinue;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,268,/ process parameters based on actual values passed as parameters
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,269,"rocessParameters(declaration, call);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,271,eclaration.calls.add(call);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,276, This function makes sure that functions with names that are
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,277, blacklisted are not optimized.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,279,rivate void removeUnsafeDeclarations() {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,280,/ do not optimize any functions whose names are blacklisted
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,281,"or (Entry<String, Map<Scope, Declaration>> entry : mappings.entrySet()) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,282,tring name = entry.getKey();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,283,f (blacklist.contains(name)) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,284,or (Declaration declaration : entry.getValue().values()) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,285,eclaration.doNotOptimize = true;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,292, This function iterates through a list of all actual parameters that
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,293, were passed to the corresponding declaration. It updates minParams
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,294, and maxParams values for the declaration and sets manyValues property
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,295, for a formal parameter.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,297,"rivate void processParameters(Declaration declaration, Call call) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,298,ist<FormalParameter> params = declaration.parameters;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,299,ist<ActualParameter> actParams = call.parameters;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,301,nt index = 0;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,302,istIterator<FormalParameter> it = params.listIterator();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,303,istIterator<ActualParameter> actIt = actParams.listIterator();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,304,hile (it.hasNext() && actIt.hasNext()) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,305,+index;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,306,ormalParameter param = it.next();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,308,f (param.manyValues) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,309,/ do not bother to check anything if we already know that
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,310,/ the parameter cannot be optimized
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,311,ontinue;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,313,ode actValue = actIt.next().value;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,315,f (param.initialValue == null) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,316,/ this is the first call which passes a value to the parameter
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,317,aram.initialValue = actValue;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,318," else if (!nodesAreEqual(param.initialValue, actValue)) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,319,/ this call passes a different value: the parameter cannot be touched
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,320,aram.manyValues = true;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,324,nt maxParams = declaration.maxParams;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,325,eclaration.maxParams = index > maxParams ? index : maxParams;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,326,nt minParams = declaration.minParams;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,327,eclaration.minParams = index < minParams ? index : minParams;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,330,rivate void optimizeParameters() {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,332,or (Declaration decl : decls) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,333,f (decl.doNotOptimize) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,334,ontinue;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,337,f (specializationState != null &&
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,338,pecializationState.canFixupFunction(decl.node)) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,339,pecializationState.reportSpecializedFunctionContainingNode(decl.node);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,341,ryEliminateOptionalArgs(decl);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,342,ryEliminateConstantArgs(decl);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,346,"oid addDeclaration(String name, Scope scope, Declaration declaration) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,347,/ do not optimize anonymous function expressions or exported names
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,348,/ other cases when a function may be exported are covered as well
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,349,/ for example:
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,350,/ function foo() {}
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,351,/ tee(foo)
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,352,"/ foo will not be aliased, as it is used in an unsafe way, as parameter"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,353,f (name.isEmpty() || compiler.getCodingConvention().isExported(name)) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,354,eturn;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,357,"ap<Scope, Declaration> declarations;"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,358,f (!mappings.containsKey(name)) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,359,"eclarations = new HashMap<Scope, Declaration>();"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,360,"appings.put(name, declarations);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,361, else {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,362,eclarations = mappings.get(name);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,365,f (!declarations.containsKey(scope)) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,366,"eclarations.put(scope, declaration);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,367,ecls.add(declaration);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,368, else {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,369,"/ if one scope has more than one function with the same name,"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,370,/ do not optimize any of them
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,371,eclarations.get(scope).doNotOptimize = true;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,375,"rivate boolean checkIfFunctionCannotBeOptimized(Node node, Node parent) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,376,reconditions.checkState(node.getType() == Token.FUNCTION);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,378,/ check if function is defined in an array or an object
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,379,f (parent.getType() == Token.ARRAYLIT ||
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,380,arent.getType() == Token.OBJECTLIT) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,381,eturn true;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,384,eturn false;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,387,Override
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,388,"ublic void visit(NodeTraversal t, Node n, Node parent) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,389,/ get current scope
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,390,cope scope = t.getScope();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,391,tring name = null;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,392,witch (n.getType()) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,393,ase Token.FUNCTION:
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,394,"heckIfFunctionIsSafe(t, n, parent);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,395,reak;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,396,ase Token.NAME:
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,397,"heckIfNameIsSafe(t, n, parent);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,398,reak;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,399,ase Token.STRING:
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,400,"heckIfStringIsSafe(t, n, parent);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,401,reak;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,405,"rivate void checkIfFunctionIsSafe(NodeTraversal t, Node node, Node parent) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,406,tring name = null;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,407,cope scope = t.getScope();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,409,/ some functions are not optimized
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,410,/ what with something like:
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,411,/ array = [function foo() {}]
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,412,/ can this function be called by foo() ANYWHERE?
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,413,"f (checkIfFunctionCannotBeOptimized(node, parent)) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,414,eturn;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,416,/ get function name
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,417,ode child = node.getFirstChild();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,418,ame = child.getString();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,420,/ construct list of parameters
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,421,inkedList<FormalParameter> parameters =
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,422,ew LinkedList<FormalParameter>();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,423,ode paramNode = child.getNext().getFirstChild();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,424,hile (paramNode != null) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,425,arameters.add(new FormalParameter(paramNode));
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,426,aramNode = paramNode.getNext();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,429,"/ even if we already know that we will not optimize this function,"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,430,"/ we want to save it, because if we encounter another function with"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,431,"/ the same name, we want to know that we are dealing with a duplicate"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,432,oolean doNotOptimize = parameters.isEmpty();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,433,"eclaration declaration = new Declaration(node, parameters,"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,434,oNotOptimize);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,436,"ddDeclaration(name, scope, declaration);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,438,/ check if this function is a part of a VAR declaration
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,439,/ or a simple assignment
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,440,f (parent != null) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,441,ode grandparent = parent.getParent();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,442,f (grandparent != null && NodeUtil.isVar(grandparent)) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,443,ame = grandparent.getFirstChild().getString();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,444,"ddDeclaration(name, scope, declaration);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,447,f (NodeUtil.isAssign(parent) && parent.getLastChild() == node) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,448,/ support only simple assignments - foo = function () {}
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,449,f (NodeUtil.isName(parent.getFirstChild())) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,450,ame = parent.getFirstChild().getString();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,451,"ddDeclaration(name, scope, declaration);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,457,"rivate void checkIfNameIsSafe(NodeTraversal t, Node node, Node parent) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,458,reconditions.checkState(node.getType() == Token.NAME);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,459,oolean isSafe = false;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,460,tring name = node.getString();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,461,cope scope = t.getScope();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,463,/ check if the name is a part of a simple function call: f()
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,464,f (parent.getType() == Token.CALL && parent.getFirstChild() == node) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,465,/ register new call
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,466,"egisterCall(name, parent, scope);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,467,eturn;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,470,/ check if the name is a part of a new expression: new f()
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,471,f (parent.getType() == Token.NEW && parent.getFirstChild() == node) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,472,"egisterCall(name, parent, scope);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,473,eturn;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,476,/ check if the name is a part of a simple call expression: f.call()
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,477,nt type = parent.getType();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,478,f (NodeUtil.isGet(parent) && parent.getFirstChild() == node) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,479,reconditions.checkNotNull(node.getNext());
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,480,ode grandparent = parent.getParent();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,481,ode prop = node.getNext();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,482,"f (NodeUtil.isString(prop) && prop.getString().equals(""call"") &&"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,483,odeUtil.isCall(grandparent)) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,484,"egisterCall(name, grandparent, scope);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,485,eturn;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,489,/ check if the name is a part of a function declaration/expression
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,490,/ it is checked by another function
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,491,f (NodeUtil.isFunction(parent) && parent.getFirstChild() == node) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,492,/ it represents function name
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,493,eturn;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,495,f (parent.getType() == Token.LP &&
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,496,odeUtil.isFunction(parent.getParent()) &&
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,497,arent.getFirstChild().getNext() == node) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,498,/ it represents one of its formal parameters
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,499,eturn;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,502,/ check if the name is a left side of var declaration
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,503,f (NodeUtil.isVarDeclaration(node)) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,504,eturn;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,507,/ check if the name is a left side of assign expression
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,508,f (NodeUtil.isAssign(parent) && parent.getFirstChild() == node) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,509,eturn;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,512,"/ if we encountered ""arguments"", the enclosing"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,513,/ function should not be optimized
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,514,"f (name.equals(""arguments"")) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,515,"/ function which uses ""arguments"" variable should not be optimized"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,516,ode function = t.getEnclosingFunction();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,517,f (function != null) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,518,/ check if it is a named function
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,519,/ function foo() {}
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,520,ame = function.getFirstChild().getString();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,521,f (!name.isEmpty()) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,522,lacklist.add(name);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,525,/ check if function is assigned to a variable
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,526,/ var foo = function() {}
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,527,ode fparent = function.getParent();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,528,f (NodeUtil.isVarDeclaration(fparent)) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,529,ame = fparent.getString();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,530,lacklist.add(name);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,533,eturn;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,536,/ the name is potentially unsafe
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,537,lacklist.add(node.getString());
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,541,"rivate void checkIfStringIsSafe(NodeTraversal t, Node node, Node parent) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,542,reconditions.checkState(node.getType() == Token.STRING);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,544,/ do not consider empty strings
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,545,f (node.getString().isEmpty()) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,546,eturn;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,549,/ a string node is only safe when it is used to invoke a method for
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,550,"/ the current object, like this.foo() or this['foo']()"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,551,/ like obj['foo']() or obj.foo()
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,552,f (NodeUtil.isGet(parent)) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,553,ode obj = parent.getFirstChild();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,554,ode grandparent = parent.getParent();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,555,f (obj.getNext() == node &&
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,556,odeUtil.isThis(obj) &&
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,557,odeUtil.isCall(grandparent) &&
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,558,randparent.getFirstChild() == parent) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,559,"egisterCall(node.getString(), grandparent, t.getScope());"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,560,eturn;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,564,lacklist.add(node.getString());
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,568, Removes any optional parameters if no callers specifies it as an argument.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,569, @param declaration function to optimize
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,571,rivate void tryEliminateOptionalArgs(Declaration declaration) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,572,ode formalArgs = declaration.node.getFirstChild().getNext();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,573,ode body = formalArgs.getNext();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,574,terator<FormalParameter> it = declaration.parameters.descendingIterator();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,576,/ parameters which still does not have initial values assigned by any
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,577,/ calls can be safely removed
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,578,nt index = declaration.parameters.size() - 1;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,579,hile (index >= declaration.maxParams) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,580,ormalParameter param = it.next();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,582,/ this parameter has a value - it cannot be eliminated
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,583,/ the rest of parameters cannot be eliminated as well
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,584,f (param.initialValue != null) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,585,reak;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,588,"/ no call specifies a value for this parameter, thus it can be removed"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,589,/ from the list of local parameters and replaced by a local var.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,590,ormalArgs.removeChild(param.arg);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,591,"ode var = new Node(Token.VAR, param.arg);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,592,ody.addChildToFront(var);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,594,/ this parameter should not be optimized again
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,595,aram.manyValues = true;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,596,ompiler.reportCodeChange();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,597,-index;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,602, Eliminate parameters if they are always constant.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,604," function foo(a, b) {...}"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,605," foo(1,2);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,606," foo(1,3)"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,607, becomes
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,608, function foo(b) { var a = 1 ... }
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,609, foo(2);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,610, foo(3);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,612, @param declaration function to optimize
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,614,rivate void tryEliminateConstantArgs(Declaration declaration) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,615,ode formalArgs = declaration.node.getFirstChild().getNext();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,616,ode body = formalArgs.getNext();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,617,terator<FormalParameter> it = declaration.parameters.descendingIterator();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,619,nt index = declaration.parameters.size();//formalArgs.getChildCount();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,620,inkedList<Integer> indexes = new LinkedList<Integer>();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,621,/ parameters which are not marked with cannotRemove property
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,622,/ have the same initial value assigned in all calls
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,623,hile (it.hasNext()) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,624,ormalParameter param = it.next();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,625,-index;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,627,/ optimize only parameters which are passed a value in each call
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,628,f (index >= declaration.minParams) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,629,ontinue;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,632,/ check if this parameter can be removed
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,633,f (param.manyValues) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,634,ontinue;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,637,f (!checkIsSafeToRemove(param)) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,638,ontinue;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,641,"/ there is exactly one value assigned to this parameters, thus it"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,642,/ can be removed from the list of formal parameters and replaced by
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,643,/ a local var
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,644,ormalArgs.removeChild(param.arg);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,646,"ode newVar = NodeUtil.newVarNode(param.arg.getQualifiedName(),"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,647,aram.initialValue.cloneTree());
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,648,ody.addChildToFront(newVar);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,649,ompiler.reportCodeChange();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,651,ndexes.push(index);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,654,/ Remove actual parameters from all the calls
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,655,or (Call call : declaration.calls) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,656,nt currentArg = 0;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,657,ode arg = call.callSide.getFirstChild().getNext();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,658,istIterator<Integer> itr = indexes.listIterator();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,660,"/ in forms foo.call(this, a, b) do not consider the first parameter"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,661,nt rsh = NodeUtil.isFunctionObjectCall(call.callSide) ? 1 : 0;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,663,hile (itr.hasNext() && arg != null) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,664,ndex = itr.next() + rsh;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,665,hile (currentArg < index && arg != null) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,666,rg = arg.getNext();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,667,+currentArg;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,670,f (arg != null) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,671,ode temp = arg.getNext();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,672,all.callSide.removeChild(arg);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,673,ompiler.reportCodeChange();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,674,+currentArg;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,675,rg = temp;
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,682, Only certain values may be removed. For example it is not safe to change:
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,683, var foo = function (a) {};
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,684, foo(bar);
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,685, into:
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,686, var foo - function () {var a = bar};
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,687, foo();
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,689,rivate boolean checkIsSafeToRemove(FormalParameter parameter) {
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,690,"eturn NodeUtil.isLiteralValue(parameter.initialValue, false);"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,694, Node equality as intended by the this pass.
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,695, @param n1 A node
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,696, @param n2 A node
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,697, @return true if both node are considered equal for the purposes of this
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,698," class, false otherwise."
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,700,"rivate boolean nodesAreEqual(Node n1, Node n2) {"
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,701,eturn NodeUtil.isImmutableValue(n1) && NodeUtil.isImmutableValue(n2) &&
+False,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,src/com/google/javascript/jscomp/OptimizeParametersAlt.java,702,1.checkTreeEqualsSilent(n2);
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,2, Copyright 2009 Google Inc.
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,4," Licensed under the Apache License, Version 2.0 (the ""License"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,5, you may not use this file except in compliance with the License.
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,6, You may obtain a copy of the License at
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,8,     http://www.apache.org/licenses/LICENSE-2.0
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,10," Unless required by applicable law or agreed to in writing, software"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,11," distributed under the License is distributed on an ""AS IS"" BASIS,"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,12," WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,13, See the License for the specific language governing permissions and
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,14, limitations under the License.
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,18,ackage com.google.javascript.jscomp;
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,19,/ TODO(dhans): Tests which does not work are commented out
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,20,"/ Some of them may indicate bugs, but some are not supposed to work with"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,21,/ the new implementation
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,23, Tests for {@link OptimizeParameters}
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,26,ublic class OptimizeParametersAltTest extends CompilerTestCase {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,27,Override
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,28,ublic CompilerPass getProcessor(Compiler compiler) {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,29,eturn new OptimizeParametersAlt(compiler);
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,32,Override
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,33,ublic void setUp() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,34,uper.enableLineNumberCheck(false);
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,37,ublic void testNoRemoval() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,38,"estSame(""function foo(p1) { } foo(1); foo(2)"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,39,"estSame(""function foo(p1) { } foo(1,2); foo(3,4)"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,42,ublic void testNotAFunction() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,43,"estSame(""var x = 1; x; x = 2"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,46,ublic void testRemoveOneOptionalNamedFunction() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,47,"est(""function foo(p1) { } foo()"", ""function foo() {var p1} foo()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,50,/ TODO(dhans): add more test cases for that
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,51,ublic void testDifferentScopesDoesNotInterfere() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,52,"est(""function f(a, b) {} f(1, 2); f(1, 3); "" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,53,"function h() {function f(a) {} f(4); f(5);} f(1, 2);"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,54,"function f(b) {var a = 1} f(2); f(3); "" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,55,"function h() {function f(a) {} f(4); f(5);} f(2);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,58,ublic void testOptimizeOnlyImmutableValues() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,59,"est(""function foo(a) {}; foo(undefined);"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,60,"function foo() {var a = undefined}; foo()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,61,"est(""function foo(a) {}; foo(null);"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,62,"function foo() {var a = null}; foo()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,63,"est(""function foo(a) {}; foo(1);"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,64,"function foo() {var a = 1}; foo()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,65,"est(""function foo(a) {}; foo('abc');"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,66,"function foo() {var a = 'abc'}; foo()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,68,"est(""var foo = function(a) {}; foo(undefined);"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,69,"var foo = function() {var a = undefined}; foo()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,70,"est(""var foo = function(a) {}; foo(null);"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,71,"var foo = function() {var a = null}; foo()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,72,"est(""var foo = function(a) {}; foo(1);"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,73,"var foo = function() {var a = 1}; foo()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,74,"est(""var foo = function(a) {}; foo('abc');"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,75,"var foo = function() {var a = 'abc'}; foo()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,78,ublic void testRemoveOneOptionalVarAssignment() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,79,"est(""var foo = function (p1) { }; foo()"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,80,"var foo = function () {var p1}; foo()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,83,ublic void testDoOptimizeCall() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,84,"estSame(""var foo = function () {}; foo(); foo.call();"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,85,"estSame(""var foo = function () {}; foo(); foo.call(this);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,86,"est(""var foo = function (a, b) {}; foo(1); foo.call(this, 1);"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,87,"var foo = function () {var a = 1; var b;}; foo(); foo.call(this)"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,90,ublic void testRemoveOneOptionalExpressionAssign() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,91,"est(""var foo; foo = function (p1) { }; foo()"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,92,"var foo; foo = function () {var p1}; foo()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,95,ublic void testRemoveOneOptionalOneRequired() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,96,"est(""function foo(p1, p2) { } foo(1); foo(2)"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,97,"function foo(p1) {var p2} foo(1); foo(2)"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,100,ublic void testRemoveOneOptionalMultipleCalls() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,101,"est( ""function foo(p1, p2) { } foo(1); foo(2); foo()"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,102,"function foo(p1) {var p2} foo(1); foo(2); foo()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,105,ublic void testConstructorOptArgsNotRemoved() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,106,tring src =
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,107,"/** @constructor */"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,108,"var goog = function(){};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,109,"goog.prototype.foo = function(a,b) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,110,"goog.prototype.bar = function(a) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,111,"goog.bar.inherits(goog.foo);"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,112,"new goog.foo(2,3);"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,113,"new goog.foo(1,2);"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,114,estSame(src);
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,117,ublic void testRemoveVarArg() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,118,"est(""function foo(p1, var_args) { } foo(1); foo(2)"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,119,"function foo(p1) { var var_args } foo(1); foo(2)"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,122,ublic void testAliasMethodsDontGetOptimize() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,123,tring src =
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,124,"var foo = function(a, b) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,125,"var goog = {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,126,"goog.foo = foo;"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,127,"goog.prototype.bar = goog.foo;"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,128,"new goog().bar(1,2);"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,129,"foo(2);"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,130,estSame(src);
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,133,ublic void testAliasMethodsDontGetOptimize2() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,134,tring src =
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,135,"var foo = function(a, b) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,136,"var bar = foo;"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,137,"foo(1);"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,138,"bar(2,3);"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,139,estSame(src);
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,142,ublic void testAliasMethodsDontGetOptimize3() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,143,tring src =
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,144,"var array = {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,145,"array[0] = function(a, b) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,146,"var foo = array[0];"" + // foo should be marked as aliased."
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,147,"foo(1);"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,148,estSame(src);
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,151,ublic void testAliasMethodsDontGetOptimize4() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,152,tring src =
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,153,"function foo(bar) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,154,"baz = function(a) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,155,"baz(1);"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,156,"foo(baz);""; // Baz should be aliased."
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,157,estSame(src);
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,160,ublic void testMethodsDefinedInArraysDontGetOptimized() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,161,tring src =
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,162,"var array = [true, function (a) {}];"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,163,"array[1](1)"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,164,estSame(src);
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,167,ublic void testMethodsDefinedInObjectDontGetOptimized() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,168,tring src =
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,169,"var object = { foo: function bar() {} };"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,170,"object.foo(1)"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,171,estSame(src);
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,172,rc =
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,173,"var object = { foo: function bar() {} };"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,174,"object['foo'](1)"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,175,estSame(src);
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,178,ublic void testRemoveConstantArgument() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,179,/ Remove only one parameter
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,180,"est(""function foo(p1, p2) {}; foo(1,2); foo(2,2);"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,181,"function foo(p1) {var p2 = 2}; foo(1); foo(2)"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,183,/ Remove nothing
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,184,"estSame(""function foo(p1, p2) {}; foo(1); foo(2,3);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,186,/ Remove middle parameter
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,187,"est(""function foo(a,b,c){}; foo(1, 2, 3); foo(1, 2, 4); foo(2, 2, 3)"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,188,"function foo(a,c){var b=2}; foo(1, 3); foo(1, 4); foo(2, 3)"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,190,/ Number are equals
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,191,"est(""function foo(a) {}; foo(1); foo(1.0);"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,192,"function foo() {var a = 1;}; foo(); foo();"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,195,ublic void testCanDeleteArgumentsAtAnyPosition() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,196,/ Argument removed in middle and end
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,197,tring src =
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,198,"function foo(a,b,c,d,e) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,199,"foo(1,2,3,4,5);"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,200,"foo(2,2,4,4,5);"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,201,tring expected =
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,202,"function foo(a,c) {var b=2; var d=4; var e=5;};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,203,"foo(1,3);"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,204,"foo(2,4);"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,205,"est(src, expected);"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,208,ublic void testNoOptimizationForExternsFunctions() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,209,"estSame(""function _foo(x, y, z){}; _foo(1);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,212,ublic void testNoOptimizationForGoogExportSymbol() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,213,"estSame(""goog.exportSymbol('foo', foo);"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,214,"function foo(x, y, z){}; foo(1);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,217,ublic void testNoArgumentRemovalNonEqualNodes() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,218,"estSame(""function foo(a){}; foo('bar'); foo('baz');"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,219,"estSame(""function foo(a){}; foo(1.0); foo(2.0);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,220,"estSame(""function foo(a){}; foo(true); foo(false);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,221,"estSame(""var a = 1, b = 2; function foo(a){}; foo(a); foo(b);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,222,"estSame(""function foo(a){}; foo(/&/g); foo(/</g);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,225,ublic void testCallIsIgnore() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,226,"estSame(""var goog;"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,227,"goog.foo = function(a, opt) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,228,"var bar = function(){goog.foo.call(this, 1)};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,229,"goog.foo(1);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,232,ublic void testApplyIsIgnore() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,233,"estSame(""var goog;"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,234,"goog.foo = function(a, opt) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,235,"var bar = function(){goog.foo.apply(this, 1)};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,236,"goog.foo(1);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,239,ublic void testFunctionWithReferenceToArgumentsShouldNotBeOptimize() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,240,"estSame(""function foo(a,b,c) { return arguments.size; };"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,241,"foo(1);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,242,"estSame(""var foo = function(a,b,c) { return arguments.size }; foo(1);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,243,"estSame(""var foo = function bar(a,b,c) { return arguments.size }; "" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,244,"foo(2); bar(2);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,247,ublic void testFunctionWithTwoNames() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,248,"est(""var foo = function bar(a,b) {};"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,249,"var foo = function bar() {var a; var b;}"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,250,"est(""var foo = function bar(a,b) {}; foo(1)"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,251,"var foo = function bar() {var a = 1; var b;}; foo()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,252,"est(""var foo = function bar(a,b) {}; bar(1);"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,253,"var foo = function bar() {var a = 1; var b;}; bar()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,254,"est(""var foo = function bar(a,b) {}; foo(1); foo(2)"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,255,"var foo = function bar(a) {var b}; foo(1); foo(2)"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,256,"est(""var foo = function bar(a,b) {}; foo(1); bar(1)"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,257,"var foo = function bar() {var a = 1; var b}; foo(); bar()"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,258,"est(""var foo = function bar(a,b) {}; foo(1); bar(2)"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,259,"var foo = function bar(a) {var b}; foo(1); bar(2)"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,260,"estSame(""var foo = function bar(a,b) {}; foo(1,2); bar(2,1)"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,262,ublic void testConstantArgumentsToConstructorCanBeOptimized() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,263,"tring src = ""function foo(a) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,264,"var bar = new foo(1);"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,265,"tring expected = ""function foo() {var a=1;};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,266,"var bar = new foo();"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,267,"est(src, expected);"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,270,ublic void testOptionalArgumentsToConstructorCanBeOptimized() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,271,"tring src = ""function foo(a) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,272,"var bar = new foo();"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,273,"tring expected = ""function foo() {var a;};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,274,"var bar = new foo();"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,275,"est(src, expected);"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,278,ublic void testRegexesCanBeInlined() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,279,"est(""function foo(a) {}; foo(/abc/);"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,280,"function foo() {var a = /abc/}; foo();"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,283,ublic void testConstructorUsedAsFunctionCanBeOptimized() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,284,"tring src = ""function foo(a) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,285,"var bar = new foo(1);"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,286,"foo(1);"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,287,"tring expected = ""function foo() {var a=1;};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,288,"var bar = new foo();"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,289,"foo();"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,290,"est(src, expected);"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,293,ublic void testDoNotOptimizeConstructorWhenArgumentsAreNotEqual() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,294,"estSame(""function Foo(a) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,295,"var bar = new Foo(1);"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,296,"var baz = new Foo(2);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,299,ublic void testDoNotOptimizeArrayElements() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,300,"estSame(""var array = [function (a, b) {}];"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,301,"estSame(""var array = [function f(a, b) {}]"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,303,"estSame(""var array = [function (a, b) {}];"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,304,"array[0](1, 2);"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,305,"array[0](1);"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,307,"estSame(""var array = [];"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,308,"function foo(a, b) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,309,"array[0] = foo;"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,312,ublic void testOptimizeThis() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,313,"tring src = ""function foo() {"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,314,"var bar = function (a, b) {};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,315,"this.bar(2);"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,316,"bar(2);}"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,317,"tring expected = ""function foo() {"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,318,"var bar = function () {var a = 2; var b};"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,319,"this.bar();"" +"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,320,"bar();}"";"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,321,"est(src, expected);"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,324,ublic void testDoNotOptimizeWhenArgumentsPassedAsParameter() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,325,"estSame(""function foo(a) {}; foo(arguments)"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,326,"estSame(""function foo(a) {}; foo(arguments[0])"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,328,"est(""function foo(a, b) {}; foo(arguments, 1)"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,329,"function foo(a) {var b = 1}; foo(arguments)"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,331,"est(""function foo(a, b) {}; foo(arguments)"","
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,332,"function foo(a) {var b}; foo(arguments)"");"
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,335,ublic void testDoNotOptimizeGoogExportFunctions() {
+False,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,test/com/google/javascript/jscomp/OptimizeParametersAltTest.java,336,"estSame(""function foo(a, b) {}; foo(); goog.export_function(foo);"");"

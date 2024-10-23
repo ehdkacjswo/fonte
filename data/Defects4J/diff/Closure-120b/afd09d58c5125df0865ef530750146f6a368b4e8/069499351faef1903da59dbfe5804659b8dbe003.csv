@@ -1,0 +1,491 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,48, This compiler pass uses the inferred types and hence either type checking or
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,49, type inference needs to be enabled. The set of eventful objects is initialized
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,50," to {goog.events.Eventful} and, if the ""aggressive"" mode is set, expanded to a"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,51, larger class using the eventize relationship (see http://research.google.com/pubs/pub40738.html).
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,48,* An eventful class is any class that derives from goog.events.EventHandler
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,49,* or (in aggressive mode) is disposable and disposes of an eventful class when
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,50,* it is disposed (see http://research.google.com/pubs/pub40738.html).
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,54, of pass/fail testing.
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,53,* of pass/fail testing. The pass traverses the AST and marks as errors
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,54,* cases where an eventful object is allocated but a dispose call is not found.
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,55,"* It only tracks eventful objects that has a easily identifiable static name,"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,56,"* i.e., objects assigned to arrays, returned from functions or captured in"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,57,* closures are not considered. It simply tries to see if there exists a call to
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,58,* a dispose method in the AST for every object seen as eventful.
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,56, This check is performed interprocedurally but in a flow and path
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,57, insensitive manner.
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,60,* This compiler pass uses the inferred types and hence either type checking or
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,61,* type inference needs to be enabled.
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,61,/ TODO(user) Pass needs to be updated for listenable interfaces.
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,65,// TODO(user): Pass needs to be updated for listenable interfaces.
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,64,/ Error messages returned
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,65,tatic final DiagnosticType EVENTFUL_OBJECT_NOT_DISPOSED = DiagnosticType.error(
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,66,"JSC_EVENTFUL_OBJECT_NOT_DISPOSED"","
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,67,"eventful object created should be\n"" +"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,68,"  * registered as disposable, or\n"" +"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,69,"  * explicitly disposed of"");"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,70,tatic final DiagnosticType EVENTFUL_OBJECT_PURELY_LOCAL = DiagnosticType.error(
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,71,"JSC_EVENTFUL_OBJECT_PURELY_LOCAL"","
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,72,"a purely local eventful object cannot be disposed of later"");"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,73,tatic final DiagnosticType OVERWRITE_PRIVATE_EVENTFUL_OBJECT = DiagnosticType.error(
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,74,"JSC_OVERWRITE_PRIVATE_EVENTFUL_OBJECT"","
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,75,"private eventful object overwritten in subclass cannot be properly disposed of"");"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,76,tatic final DiagnosticType UNLISTEN_WITH_ANONBOUND = DiagnosticType.error(
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,77,"JSC_UNLISTEN_WITH_ANONBOUND"","
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,78,"an unlisten call with an anonymous or bound function does not result in "" +"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,79,"the event being unlisted to"");"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,68,static final DiagnosticType EVENTFUL_OBJECT_NOT_DISPOSED =
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,69,DiagnosticType.error(
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,70,"""JSC_EVENTFUL_OBJECT_NOT_DISPOSED"","
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,71,"""eventful object created should be\n"" +"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,72,"""  * registered as disposable, or\n"" +"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,73,"""  * explicitly disposed of"");"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,74,static final DiagnosticType EVENTFUL_OBJECT_PURELY_LOCAL =
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,75,DiagnosticType.error(
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,76,"""JSC_EVENTFUL_OBJECT_PURELY_LOCAL"","
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,77,"""a purely local eventful object cannot be disposed of later"");"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,78,static final DiagnosticType OVERWRITE_PRIVATE_EVENTFUL_OBJECT =
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,79,DiagnosticType.error(
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,80,"""JSC_OVERWRITE_PRIVATE_EVENTFUL_OBJECT"","
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,81,"""private eventful object overwritten in subclass cannot be properly """
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,82,"+ ""disposed of"");"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,83,static final DiagnosticType UNLISTEN_WITH_ANONBOUND =
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,84,DiagnosticType.error(
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,85,"""JSC_UNLISTEN_WITH_ANONBOUND"","
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,86,"""an unlisten call with an anonymous or bound function does not result """
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,87,"+ ""in the event being unlisted to"");"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,102,"rivate static final String DISPOSABLE_TYPE_NAME = ""goog.Disposable"";"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,103,"rivate static final String EVENT_HANDLER_TYPE_NAME = ""goog.events.EventHandler"";"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,104,rivate JSType googDisposableType;
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,110,private static final String DISPOSABLE_INTERFACE_TYPE_NAME =
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,111,"""goog.disposable.IDisposable"";"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,112,private static final String EVENT_HANDLER_TYPE_NAME =
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,113,"""goog.events.EventHandler"";"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,114,private JSType googDisposableInterfaceType;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,111, Dispose methods is a map from regex to argument disposed/all arguments disposed.
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,112, Note: it is assumed that at most one regex match will occur per disposeMethod call.
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,121,* Dispose methods is a map of types to maps from property/function name
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,122,* to argument disposed/all arguments disposed. The key is used to filter
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,123,"* the dispose calls checked against. That is, the pass considers all dispose"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,124,* calls of classes a class is derived from and not merely those in the map
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,125,* of its given type.
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,126,* Note: it is assumed that at most one string match will occur per
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,127,* disposeMethod call.
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,129,"private Map<JSType, Map<String, List<Integer>>> disposeCalls;"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,132,* Constant used to signify all arguments of method/function
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,133,* should be marked as disposed.
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,114,"rivate Map<String, List<Integer>> disposeMethods;"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,115,/ Member used to signify all arguments should be disposed.
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,138,"*  Constant used to signify that object on which this method is called,"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,139,*  will itself get disposed of.
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,141,public static final int DISPOSE_SELF = -2;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,135,rivate DisposalCheckingPolicy checkingPolicy;
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,160,private final DisposalCheckingPolicy checkingPolicy;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,159, @param pattern A regular expression that matches the function used to dispose of/register
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,160,   an object as disposable
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,161, @param argumentsThatAreDisposed An array of integers (ideally sorted) that specifies
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,162,   the arguments of the function being disposed
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,184,* @param functionOrMethodName The name or suffix of a function or method
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,185,*  that disposes of/registers an object as disposable
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,186,* @param argumentsThatAreDisposed An array of integers (ideally sorted) that
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,187,*   specifies the arguments of the function being disposed
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,164,"rivate void addDisposeCall(String pattern, List<Integer> argumentsThatAreDisposed) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,165,"his.disposeMethods.put(pattern, argumentsThatAreDisposed);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,189,"private void addDisposeCall(String functionOrMethodName,"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,190,List<Integer> argumentsThatAreDisposed) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,191,"String potentiallyTypeName, propertyName;"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,192,JSType objectType = null;
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,194,int lastPeriod = functionOrMethodName.lastIndexOf('.');
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,195,// If function call has a period it is potentially a method function.
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,196,if (lastPeriod >= 0) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,197,"potentiallyTypeName = functionOrMethodName.substring(0, lastPeriod);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,198,propertyName = functionOrMethodName.substring(lastPeriod);
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,199,objectType = compiler.getTypeRegistry().getType(potentiallyTypeName);
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,200,} else {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,201,propertyName = functionOrMethodName;
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,204,// Find or create property map for object type
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,205,"Map<String, List<Integer>> map = this.disposeCalls.get(objectType);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,206,if (map == null) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,207,map = Maps.newHashMap();
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,208,"this.disposeCalls.put(objectType, map);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,212,"* If this is a static function call store the full function name,"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,213,* else only the method of the object.
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,215,if (objectType == null) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,216,"map.put(functionOrMethodName, argumentsThatAreDisposed);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,217,} else {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,218,"map.put(propertyName, argumentsThatAreDisposed);"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,173,his.disposeMethods = Maps.newHashMap();
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,227,this.disposeCalls = Maps.newHashMap();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,175,/ Initialize disposeMethods hashmap
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,176,"his.addDisposeCall(""goog.dispose"", new ArrayList<Integer>(Arrays.asList(0)));"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,177,"his.addDisposeCall(""goog.disposeAll"", new ArrayList<Integer>(Arrays.asList(DISPOSE_ALL)));"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,178,"his.addDisposeCall("".push"", new ArrayList<Integer>(Arrays.asList(0)));"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,179,"his.addDisposeCall("".add"", new ArrayList<Integer>(Arrays.asList(DISPOSE_ALL)));"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,230,* Initialize dispose calls map. Checks for:
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,231,*    - Y.registerDisposable(X)
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,232,*      (Y has to be of type goog.Disposable)
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,233,*    - X.dispose()
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,234,*    - goog.dispose(X)
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,235,*    - goog.disposeAll(X...)
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,236,*    - X.removeAll() (X is of type goog.events.EventHandler)
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,237,*    - Y.add(X...) or Y.push(X)
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,239,"this.addDisposeCall(""goog.dispose"","
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,240,new ArrayList<Integer>(Arrays.asList(0)));
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,241,"this.addDisposeCall(""goog.Disposable.registerDisposable"","
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,242,new ArrayList<Integer>(Arrays.asList(0)));
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,243,"this.addDisposeCall(""goog.disposeAll"","
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,244,new ArrayList<Integer>(Arrays.asList(DISPOSE_ALL)));
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,245,"this.addDisposeCall(""goog.events.EventHandler.removeAll"","
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,246,new ArrayList<Integer>(Arrays.asList(DISPOSE_SELF)));
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,247,"this.addDisposeCall("".dispose"","
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,248,new ArrayList<Integer>(Arrays.asList(DISPOSE_SELF)));
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,249,"this.addDisposeCall("".push"","
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,250,new ArrayList<Integer>(Arrays.asList(0)));
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,251,"this.addDisposeCall("".add"","
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,252,new ArrayList<Integer>(Arrays.asList(DISPOSE_ALL)));
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,289,*  @param thisType the JSType being tested
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,290,*  @param thatType the JSType that is possibly a base of thisType
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,291,*  @return whether thisType is possibly subtype of thatType
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,266,"rivate static String generateKey(NodeTraversal t, Node n, boolean noLocalVariables) {"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,343,"private static String generateKey(NodeTraversal t, Node n,"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,344,boolean noLocalVariables) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,321,"ey = t.getScope().getParentScope().getTypeOfThis().toString() + ""~"" + key;"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,399,"key = t.getScope().getParentScope().getTypeOfThis().toString() + ""~"""
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,400,+ key;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,363,oogDisposableType = compiler.getTypeRegistry().getType(DISPOSABLE_TYPE_NAME);
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,364,oogEventsEventHandlerType = compiler.getTypeRegistry().getType(EVENT_HANDLER_TYPE_NAME);
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,442,googDisposableInterfaceType =
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,443,compiler.getTypeRegistry().getType(DISPOSABLE_INTERFACE_TYPE_NAME);
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,444,googEventsEventHandlerType = compiler.getTypeRegistry()
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,445,.getType(EVENT_HANDLER_TYPE_NAME);
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,370,f (googEventsEventHandlerType == null || googDisposableType == null) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,451,if (googEventsEventHandlerType == null ||
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,452,googDisposableInterfaceType == null) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,396, had no free/dispose/eventlistener-removal call.
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,478,* had no dispose calls.
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,401,"ompiler.report(JSError.make(n.getSourceFileName(), n, EVENTFUL_OBJECT_NOT_DISPOSED));"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,402, else if (e.seen == SeenType.ALLOCATED_LOCALLY) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,403,"ompiler.report(JSError.make(n.getSourceFileName(), n, EVENTFUL_OBJECT_PURELY_LOCAL));"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,483,"compiler.report(JSError.make(n.getSourceFileName(), n,"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,484,EVENTFUL_OBJECT_NOT_DISPOSED));
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,485,} else if (e.seen == SeenType.ALLOCATED_LOCALLY &&
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,486,checkingPolicy == DisposalCheckingPolicy.AGGRESSIVE) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,487,"compiler.report(JSError.make(n.getSourceFileName(), n,"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,488,EVENTFUL_OBJECT_PURELY_LOCAL));
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,497,"f (baseType == null || !isPossiblySubtype(baseType, googDisposableType)) {"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,582,if (baseType == null ||
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,583,"!isPossiblySubtype(baseType, googDisposableInterfaceType)) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,566,"isPossiblySubtype(type, googDisposableType)) {"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,652,"!isPossiblySubtype(type, googDisposableInterfaceType)) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,636,f (t.getScope() != null && t.getScope().getTypeOfThis() != null) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,637,bjectType objectType = ObjectType.cast(t.getScope().getTypeOfThis().dereference());
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,722,if (t.getScope() != null &&
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,723,t.getScope().getTypeOfThis() != null) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,724,ObjectType objectType = ObjectType.cast(t.getScope()
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,725,.getTypeOfThis().dereference());
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,653,"ddEventize(compiler.getTypeRegistry().getType(functionName), objectType);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,741,"addEventize(compiler.getTypeRegistry().getType(functionName),"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,742,objectType);
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,704,"ompiler.report(JSError.make(n.getSourceFileName(), n, UNLISTEN_WITH_ANONBOUND));"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,793,"compiler.report(JSError.make(n.getSourceFileName(), n,"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,794,UNLISTEN_WITH_ANONBOUND));
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,710,"ompiler.report(JSError.make(n.getSourceFileName(), n, UNLISTEN_WITH_ANONBOUND));"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,711," else if (listener.getFirstChild().getQualifiedName().equals(""goog.bind"")) {"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,800,"compiler.report(JSError.make(n.getSourceFileName(), n,"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,801,UNLISTEN_WITH_ANONBOUND));
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,802,} else if (listener.getFirstChild().getQualifiedName()
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,803,".equals(""goog.bind"")) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,715,"ompiler.report(JSError.make(n.getSourceFileName(), n, UNLISTEN_WITH_ANONBOUND));"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,807,"compiler.report(JSError.make(n.getSourceFileName(), n,"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,808,UNLISTEN_WITH_ANONBOUND));
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,721,"rivate void isCalled(NodeTraversal t, Node n) {"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,814,"private void visitCall(NodeTraversal t, Node n) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,764,"sCalled(t, n);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,857,"visitCall(t, n);"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,772,rivate class Traversal extends AbstractPostOrderCallback  implements ScopedCallback {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,865,private class Traversal extends AbstractPostOrderCallback
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,866,implements ScopedCallback {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,827,f (propertyNode.getQualifiedName().equals(assign.getLastChild().getQualifiedName())) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,921,if (propertyNode.getQualifiedName().equals(assign.getLastChild()
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,922,.getQualifiedName())) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,867,"rivate void isNew(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,962,"private void visitNew(NodeTraversal t, Node n, Node parent) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,891, Only perform checks for locally defined eventful objects in aggressive
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,892, mode to reduce false positives.
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,894,f (propertyNode.isName() &&
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,895,heckingPolicy != DisposalCheckingPolicy.AGGRESSIVE) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,896,eturn;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,936,rivate List<Node> maybeGetValueNodesFromCall(Node n) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,938, Checks for:
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,939,    - Y.registerDisposable(X)
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,940,      (Y has to be of type goog.Disposable)
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,941,    - X.dispose()
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,942,    - goog.dispose(X)
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,943,    - goog.disposeAll(X...)
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,944,    - X.removeAll() (X is of type goog.events.EventHandler)
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,945,    - <array>.add*(X...) or Y.push(X)
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,947,ist<Node> ret = Lists.newArrayList();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,948,ode first = n.getFirstChild();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,950,f (first == null || !first.isQualifiedName()) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,951,eturn ret;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,953,tring property = first.getQualifiedName();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,955,"f (property.endsWith("".registerDisposable""))  {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,957,  Ensure object is of type disposable
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,959,ode base = first.getFirstChild();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,960,SType baseType = base.getJSType();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,962,"f (baseType != null && isPossiblySubtype(baseType, googDisposableType)) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,963,et.add(n.getLastChild());
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,967,/ Call to function known to dispose arguments
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,968,or (String disposeMethod : disposeMethods.keySet()) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,969,f (property.matches(disposeMethod)) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,970,ist<Integer> disposeArguments = disposeMethods.get(disposeMethod);
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1022,"private void addDisposeArgumentsMatched(Map<String, List<Integer>> map,"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1023,"Node n, String property, List<Node> foundDisposeCalls) {"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1024,for (String disposeMethod : map.keySet()) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1025,if (property.endsWith(disposeMethod)) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1026,List<Integer> disposeArguments = map.get(disposeMethod);
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,973,ode t = first.getNext();
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1029,Node t = n.getNext();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,976,/ Dispose all arguments?
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,977,f (disposeArgument == DISPOSE_ALL) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,978,or (Node tt = first.getNext(); tt != null; tt = tt.getNext()) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,979,et.add(tt);
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,981,reak;
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1032,switch (disposeArgument) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1033,// Dispose all arguments
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1034,case DISPOSE_ALL:
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1035,for (Node tt = n.getNext(); tt != null; tt = tt.getNext()) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1036,foundDisposeCalls.add(tt);
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1038,break;
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1039,// Dispose objects called on
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1040,case DISPOSE_SELF:
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1041,Node calledOn = n.getFirstChild();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,984,/ The current item pointed to by t is beyond that requested in
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,985,/ current array element.
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,986,f (tsArgument > disposeArgument) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,987, = first.getNext();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,988,sArgument = 0;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,990,or (; tsArgument < disposeArgument && t != null; ++tsArgument) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,991, = t.getNext();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,993,f (tsArgument == disposeArgument && t != null) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,994,et.add(t);
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1043,foundDisposeCalls.add(calledOn);
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1044,break;
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1045,default:
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1046,// The current item pointed to by t is beyond that requested in
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1047,// current array element.
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1048,if (tsArgument > disposeArgument) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1049,t = n.getNext();
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1050,tsArgument = 0;
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1052,for (; tsArgument < disposeArgument && t != null;
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1053,++tsArgument) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1054,t = t.getNext();
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1056,if (tsArgument == disposeArgument && t != null) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1057,foundDisposeCalls.add(t);
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1059,break;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,998,eturn ret;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1003, n -> call
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1004,"   n.firstChild -> ""dispose"" | ""removeAll"""
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1005,   n.firstChild.firstChild -> object
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1007,ode calledOn = n.getFirstChild().getFirstChild();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1008,"f (property.endsWith("".dispose"")) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1009,et.add(calledOn);
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1066,private List<Node> maybeGetValueNodesFromCall(Node n) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1067,List<Node> ret = Lists.newArrayList();
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1068,Node first = n.getFirstChild();
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1070,if (first == null || !first.isQualifiedName()) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1071,return ret;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1011,"f (property.endsWith("".removeAll"")) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1012,f (calledOn != null) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1013,SType calledOnType = calledOn.getJSType();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1014,f (calledOnType != null &&
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1015,calledOnType.isEmptyType() &&
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1016,calledOnType.isUnknownType() &&
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1017,"sPossiblySubtype(calledOnType, googEventsEventHandlerType)) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1018,et.add(calledOn);
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1073,String property = first.getQualifiedName();
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1075,Node base = first.getFirstChild();
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1076,JSType baseType = null;
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1077,if (base != null) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1078,baseType = base.getJSType();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1023,ode possiblyArray = first.getFirstChild();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1024,f (possiblyArray != null) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1025,SType possiblyArrayType = possiblyArray.getJSType();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1026,f (possiblyArrayType != null && possiblyArrayType.isArrayType()) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1027,et.add(n.getLastChild());
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1081,for (JSType key : disposeCalls.keySet()) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1082,if (key == null ||
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1083,"(baseType != null && isPossiblySubtype(baseType, key))) {"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1084,"addDisposeArgumentsMatched(disposeCalls.get(key), first, property,"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1085,ret);
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1039,"rivate void isCall(NodeTraversal t, Node n) {"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1097,"private void visitCall(NodeTraversal t, Node n) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1078,"ublic void isFunction(NodeTraversal t, Node n) {"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1136,"public void visitFunction(NodeTraversal t, Node n) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1096,/ Param types
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1154,// Parameter types
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1110,"ddDisposeCall(NodeUtil.getFunctionName(n), positionalDisposedParameters);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1168,"addDisposeCall(NodeUtil.getFunctionName(n),"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1169,positionalDisposedParameters);
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1121,"ublic void isAssign(NodeTraversal t, Node n) {"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1180,"public void visitAssign(NodeTraversal t, Node n) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1142,bjectType.cast(dereference(n.getFirstChild().getFirstChild().getJSType()));
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1201,ObjectType.cast(dereference(n.getFirstChild().getFirstChild()
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1202,.getJSType()));
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1188,"rivate void isReturn(NodeTraversal t, Node n) {"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1248,"private void visitReturn(NodeTraversal t, Node n) {"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1193,SType type = variableNode.getJSType();
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1194,f (type == null || type.isEmptyType()) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1195,eturn;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1198,oolean isTrackedReturn = false;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1199,or (JSType disposalType : eventfulTypes) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1200,f (type.isSubtype(disposalType)) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1201,sTrackedReturn = true;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1202,reak;
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1254,if (!variableNode.isArrayLit()) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1255,"eventfulObjectDisposed(t, variableNode);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1256,} else {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1257,for (Node child : variableNode.children()) {
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1258,"eventfulObjectDisposed(t, child);"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1205,f (!isTrackedReturn) {
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1206,eturn;
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1209,"ventfulObjectDisposed(t, variableNode);"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1253,"sAssign(t, n);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1304,"visitAssign(t, n);"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1256,"sCall(t, n);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1307,"visitCall(t, n);"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1259,"sFunction(t, n);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1310,"visitFunction(t, n);"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1262,"sNew(t, n, parent);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1313,"visitNew(t, n, parent);"
+False,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1265,"sReturn(t, n);"
+True,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,src/com/google/javascript/jscomp/CheckEventfulObjectDisposal.java,1316,"visitReturn(t, n);"
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,29,"tatic final String CLOSURE_DEFS = ""var goog = {};"" + ""goog.inherits = function(x, y) {};"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,29,"static final String CLOSURE_DEFS = ""var goog = {};"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,30,"+ ""goog.inherits = function(x, y) {};"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,39,"+ ""goog.disposable = {};"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,41,"+ ""goog.disposable.IDisposable = function() {};"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,42,"+ ""goog.disposable.IDisposable.prototype.dispose;"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,43,"+ ""/** @implements {goog.disposable.IDisposable}\n * @constructor */\n"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,45,"+ ""/** @override */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,43," ""/** @implements {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,44," ""goog.SubDisposable = function() {};"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,45," ""/** @inheritDoc */ """
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,46," ""goog.SubDisposable.prototype.dispose = function() {};"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,47," ""/** @inheritDoc */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,48," ""goog.SubDisposable.prototype.registerDisposable = function() {};"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,50," ""/** @extends {goog.SubDisposable}\n *  @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,50,"+ ""/** @extends {goog.Disposable}\n *  @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,63,"heckEventfulObjectDisposal compilerPass = new CheckEventfulObjectDisposal(compiler, policy);"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,63,CheckEventfulObjectDisposal compilerPass =
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,64,"new CheckEventfulObjectDisposal(compiler, policy);"
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,70," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,71,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,79," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,80,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,83,"estSame(js, CheckEventfulObjectDisposal.EVENTFUL_OBJECT_NOT_DISPOSED, true);"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,84,"testSame(js, CheckEventfulObjectDisposal.EVENTFUL_OBJECT_NOT_DISPOSED,"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,85,true);
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,88," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,90,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,99," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,101,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,104,"estSame(js, CheckEventfulObjectDisposal.EVENTFUL_OBJECT_PURELY_LOCAL, true);"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,106,"testSame(js, CheckEventfulObjectDisposal.EVENTFUL_OBJECT_PURELY_LOCAL,"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,107,true);
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,110," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,113,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,121,public void testEventhandlerRemoveAll1() {
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,122,policy = CheckEventfulObjectDisposal.DisposalCheckingPolicy.AGGRESSIVE;
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,123,String js = CLOSURE_DEFS
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,124,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,125,"+ ""var test = function() { this.eh = new goog.events.EventHandler(); };"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,126,"+ ""test.prototype.free = function() { this.eh.removeAll(); };"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,127,"+ ""goog.inherits(test, goog.Disposable);"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,128,"+ ""var testObj = new test();"";"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,129,testSame(js);
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,132,public void testEventhandlerRemoveAll2() {
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,133,policy = CheckEventfulObjectDisposal.DisposalCheckingPolicy.AGGRESSIVE;
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,134,String js = CLOSURE_DEFS
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,135,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,136,"+ ""var test = function() { var eh = new goog.events.EventHandler();"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,137,"+ ""eh.removeAll(); };"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,138,"+ ""goog.inherits(test, goog.Disposable);"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,139,"+ ""var testObj = new test();"";"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,140,testSame(js);
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,120," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,145,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,131," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,156,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,136,"estSame(js, CheckEventfulObjectDisposal.EVENTFUL_OBJECT_PURELY_LOCAL, true);"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,161,"testSame(js, CheckEventfulObjectDisposal.EVENTFUL_OBJECT_PURELY_LOCAL,"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,162,true);
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,142," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,168,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,154," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,180,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,170," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,196,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,182," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,208,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,192," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,218,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,202," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,228,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,209,"estSame(js, CheckEventfulObjectDisposal.EVENTFUL_OBJECT_NOT_DISPOSED, true);"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,235,"testSame(js, CheckEventfulObjectDisposal.EVENTFUL_OBJECT_NOT_DISPOSED,"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,236,true);
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,214," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,241,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,226," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,253,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,236," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,263,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,246," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,273,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,257,"estSame(js, CheckEventfulObjectDisposal.OVERWRITE_PRIVATE_EVENTFUL_OBJECT, true);"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,284,"testSame(js, CheckEventfulObjectDisposal.OVERWRITE_PRIVATE_EVENTFUL_OBJECT,"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,285,true);
+False,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,297,"estSame(js, CheckEventfulObjectDisposal.EVENTFUL_OBJECT_PURELY_LOCAL, true);"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,325,"testSame(js, CheckEventfulObjectDisposal.EVENTFUL_OBJECT_PURELY_LOCAL,"
+True,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,test/com/google/javascript/jscomp/CheckEventfulObjectDisposalTest.java,326,true);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,180,"+ ""goog.disposable = {};"""
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,181," ""goog.Disposable = function() {};"""
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,182," ""goog.Disposable.prototype.dispose = function() {};"""
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,182,"+ ""goog.disposable.IDisposable = function() {};"""
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,183,"+ ""goog.disposable.IDisposable.prototype.dispose;"""
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,184,"+ ""/** @implements {goog.disposable.IDisposable}\n * @constructor */\n"""
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,185,"+ ""goog.Disposable = goog.abstractMethod;"""
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,186,"+ ""/** @override */"""
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,187,"+ ""goog.Disposable.prototype.dispose = goog.abstractMethod;"""
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,184," ""goog.Disposable.prototype.registerDisposable = function(fn) {};"""
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,185," ""/** @implements {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,186," ""goog.SubDisposable = function() {};"""
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,187," ""/** @inheritDoc */ """
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,188," ""goog.SubDisposable.prototype.dispose = function() {};"""
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,189," ""/** @inheritDoc */"""
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,190," ""goog.SubDisposable.prototype.registerDisposable = function() {};"""
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,189,"+ ""goog.Disposable.prototype.registerDisposable = goog.abstractMethod;"""
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,192," ""/** @extends {goog.SubDisposable}\n *  @constructor */"""
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,191,"+ ""/** @extends {goog.Disposable}\n *  @constructor */"""
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,194," ""goog.events.EventHandler.prototype.removeAll = function() {};"""
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,195," ""/** @extends {goog.SubDisposable}\n * @constructor */"""
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,193,"+ ""/** @extends {goog.Disposable}\n * @constructor */"""
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,202,"ptions.setWarningLevel(DiagnosticGroups.CHECK_EVENTFUL_OBJECT_DISPOSAL, CheckLevel.OFF);"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,200,"options.setWarningLevel(DiagnosticGroups.CHECK_EVENTFUL_OBJECT_DISPOSAL,"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,201,CheckLevel.OFF);
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1771,xterns = ImmutableList.of(
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1772,"ourceFile.fromCode(""externs"","
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1773,"var externs = {}; /** @suppress {duplicate} */ var externs = {};""));"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1770,"externs = ImmutableList.of(SourceFile.fromCode(""externs"","
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,1771,"""var externs = {}; /** @suppress {duplicate} */ var externs = {};""));"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2235,"ptions.setWarningLevel(DiagnosticGroups.CHECK_PROVIDES, CheckLevel.WARNING);"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2233,"options.setWarningLevel(DiagnosticGroups.CHECK_PROVIDES,"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2234,CheckLevel.WARNING);
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2240,"iagnosticType.warning(""JSC_MISSING_PROVIDE"", ""missing goog.provide(''{0}'')""));"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2239,DiagnosticType
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2240,".warning(""JSC_MISSING_PROVIDE"", ""missing goog.provide(''{0}'')""));"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2245,"ptions.setWarningLevel(DiagnosticGroups.CHECK_PROVIDES, CheckLevel.WARNING);"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2245,"options.setWarningLevel(DiagnosticGroups.CHECK_PROVIDES,"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2246,CheckLevel.WARNING);

@@ -1,0 +1,28 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,244,/ Random tidbit: A recursive function should not block movement.
+False,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,245,"/ If the inlineName matches the scope function which contains it,"
+False,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,246,/ we can ignore the module [this one time].
+True,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,244,// A name is recursively defined if:
+True,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,245,//   1: It is calling itself.
+True,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,246,//   2: One of its property calls itself.
+True,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,247,// Recursive definition should not block movement.
+True,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,253,// CASE #1:
+True,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,259,// CASE #2:
+True,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,260,Node rootParent = rootNode.getParent();
+True,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,261,if (rootParent.getType() == Token.ASSIGN) {
+True,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,262,Node owner = rootParent.getFirstChild();
+True,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,263,while (owner.getType() == Token.GETPROP) {
+True,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,264,owner = owner.getFirstChild();
+True,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,266,if (owner.getType() == Token.NAME && owner.getString().equals(name)) {
+True,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,src/com/google/javascript/jscomp/CrossModuleCodeMotion.java,267,recursive = true;
+True,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,621,public void testRecursiveReference() {
+True,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,622,test(createModuleChain(
+True,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,623,// m1
+True,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,624,"""function f(){} f.prototype.clone = function() { return new f };"","
+True,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,625,// m2
+True,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,626,"""var a = (new f).clone();""),"
+True,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,627,new String[] {
+True,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,628,// m1
+True,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,630,"""function f(){} f.prototype.clone = function() { return new f() };"" +"
+True,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,631,// m2
+True,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java,632,"""var a = (new f).clone();"""

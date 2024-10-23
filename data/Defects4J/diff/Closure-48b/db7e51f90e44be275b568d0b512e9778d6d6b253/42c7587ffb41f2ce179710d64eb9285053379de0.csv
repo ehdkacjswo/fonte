@@ -1,0 +1,143 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,155,"/ TODO(user): Convert constant array, object, and regex literals as well."
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,155,// TODO(user): regex literals as well.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,195,case Token.ARRAYLIT:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,196,return arrayToString(n);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,198,case Token.OBJECTLIT:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,199,"return ""[object Object]"";"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,205,* When converting arrays to string using Array.prototype.toString or
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,206,"* Array.prototype.join, the rules for conversion to String are different"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,207,"* than converting each element individually.  Specifically, ""null"" and"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,208,"* ""undefined"" are converted to an empty string."
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,209,* @param n A node that is a member of an Array.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,210,* @return The string representation.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,212,static String getArrayElementStringValue(Node n) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,213,"return NodeUtil.isNullOrUndefined(n) ? """" : getStringValue(n);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,216,static String arrayToString(Node literal) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,217,Node first = literal.getFirstChild();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,218,int[] skipIndexes = (int[]) literal.getProp(Node.SKIP_INDEXES_PROP);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,219,StringBuilder result = new StringBuilder();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,220,int nextSlot = 0;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,221,int nextSkipSlot = 0;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,222,for (Node n = first; n != null; n = n.getNext()) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,223,while (skipIndexes != null && nextSkipSlot < skipIndexes.length) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,224,if (nextSlot == skipIndexes[nextSkipSlot]) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,225,"result.append(',');"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,226,nextSlot++;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,227,nextSkipSlot++;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,228,} else {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,229,break;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,232,String childValue = getArrayElementStringValue(n);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,233,if (childValue == null) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,234,return null;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,236,if (n != first) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,237,"result.append(',');"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,239,result.append(childValue);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,241,nextSlot++;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,243,return result.toString();
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,251,tring s = trimJsWhiteSpace(n.getString());
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,252,/ return ScriptRuntime.toNumber(s);
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,253,f (s.length() == 0) {
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,254,eturn 0.0;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,299,return getStringNumberValue(n.getString());
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,257,f (s.length() > 2
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,258,& s.charAt(0) == '0'
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,259,& (s.charAt(1) == 'x' || s.charAt(1) == 'X')) {
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,260,/ Attempt to convert hex numbers.
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,261,ry {
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,262,"eturn Double.valueOf(Integer.parseInt(s.substring(2), 16));"
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,263, catch (NumberFormatException e) {
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,264,eturn Double.NaN;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,301,case Token.ARRAYLIT:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,302,case Token.OBJECTLIT:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,303,String value = getStringValue(n);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,304,return value != null ? getStringNumberValue(value) : null;
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,268,f (s.length() > 3
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,269,& (s.charAt(0) == '-' || s.charAt(0) == '+')
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,270,& s.charAt(1) == '0'
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,271,& (s.charAt(2) == 'x' || s.charAt(2) == 'X')) {
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,272,/ hex numbers with explicit signs vary between browsers.
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,273,eturn null;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,307,return null;
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,276,"/ FireFox and IE treat the ""Infinity"" differently. FireFox is case"
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,277,"/ insensitive, but IE treats ""infinity"" as NaN.  So leave it alone."
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,278,"f (s.equals(""infinity"")"
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,279,"| s.equals(""-infinity"")"
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,280,"| s.equals(""+infinity"")) {"
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,281,eturn null;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,310,static Double getStringNumberValue(String rawJsString) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,311,String s = trimJsWhiteSpace(rawJsString);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,312,// return ScriptRuntime.toNumber(s);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,313,if (s.length() == 0) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,314,return 0.0;
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,284,ry {
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,285,eturn Double.parseDouble(s);
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,286, catch (NumberFormatException e) {
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,287,eturn Double.NaN;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,317,if (s.length() > 2
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,318,&& s.charAt(0) == '0'
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,319,&& (s.charAt(1) == 'x' || s.charAt(1) == 'X')) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,320,// Attempt to convert hex numbers.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,321,try {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,322,"return Double.valueOf(Integer.parseInt(s.substring(2), 16));"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,323,} catch (NumberFormatException e) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,324,return Double.NaN;
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,291,eturn null;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,328,if (s.length() > 3
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,329,&& (s.charAt(0) == '-' || s.charAt(0) == '+')
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,330,&& s.charAt(1) == '0'
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,331,&& (s.charAt(2) == 'x' || s.charAt(2) == 'X')) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,332,// hex numbers with explicit signs vary between browsers.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,333,return null;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,336,"// FireFox and IE treat the ""Infinity"" differently. FireFox is case"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,337,"// insensitive, but IE treats ""infinity"" as NaN.  So leave it alone."
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,338,"if (s.equals(""infinity"")"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,339,"|| s.equals(""-infinity"")"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,340,"|| s.equals(""+infinity"")) {"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,341,return null;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,344,try {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,345,return Double.parseDouble(s);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,346,} catch (NumberFormatException e) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,347,return Double.NaN;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1283,static boolean isNullOrUndefined(Node n) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,1284,return isNull(n) || isUndefined(n);
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2435,"/ TODO(johnlenz): Why this instead of the more common ""undefined""?"
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1293,f (callTarget == null) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1293,if (callTarget == null || !NodeUtil.isGetProp(callTarget)) {
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1299,f (right == null) {
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1300,eturn n;
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1303,f (!NodeUtil.isGetProp(callTarget) || !NodeUtil.isImmutableValue(right)) {
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1298,if (right != null && !NodeUtil.isImmutableValue(right)) {
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1315,tring joinString = NodeUtil.getStringValue(right);
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1310,// TODO(johnlenz): handle sparse arrays
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1312,"String joinString = (right == null) ? "","" : NodeUtil.getStringValue(right);"
+False,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1329,b.append(NodeUtil.getStringValue(elem));
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1326,sb.append(NodeUtil.getArrayElementStringValue(elem));
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1513,// TODO(johnlenz): handle sparse arrays
+True,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,1563,// TODO(johnlenz): handle sparse arrays
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,201,"ssertEquals(null, NodeUtil.getStringValue(getNode(""{}"")));"
+False,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,202,"ssertEquals(null, NodeUtil.getStringValue(getNode(""[]"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,201,"assertEquals(""[object Object]"", NodeUtil.getStringValue(getNode(""{}"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,202,"assertEquals("""", NodeUtil.getStringValue(getNode(""[]"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,216,public void testGetArrayStringValue() {
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,217,"assertEquals("""", NodeUtil.getStringValue(getNode(""[]"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,218,"assertEquals("""", NodeUtil.getStringValue(getNode(""['']"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,219,"assertEquals("""", NodeUtil.getStringValue(getNode(""[null]"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,220,"assertEquals("""", NodeUtil.getStringValue(getNode(""[undefined]"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,221,"assertEquals("""", NodeUtil.getStringValue(getNode(""[void 0]"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,222,"assertEquals(""NaN"", NodeUtil.getStringValue(getNode(""[NaN]"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,223,"assertEquals("","", NodeUtil.getStringValue(getNode(""[,'']"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,224,"assertEquals("",,"", NodeUtil.getStringValue(getNode(""[[''],[''],['']]"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,225,"assertEquals(""1,2"", NodeUtil.getStringValue(getNode(""[[1.0],[2.0]]"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,226,"assertEquals(null, NodeUtil.getStringValue(getNode(""[a]"")));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,227,"assertEquals(null, NodeUtil.getStringValue(getNode(""[1,a]"")));"
+False,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,425,"old(""x = '' + []"", ""x = \""\""+[]"");      // cannot fold (but nice if we can)"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,425,"fold(""x = '' + []"", ""x = ''"");      // cannot fold (but nice if we can)"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,509,"fold(""x = [1,2].join()"", ""x = '1,2'"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,510,"fold(""x = [null,undefined,''].join(',')"", ""x = ',,'"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,511,"fold(""x = [null,undefined,0].join(',')"", ""x = ',,0'"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,512,// This can be folded but we don't currently.
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,513,"foldSame(""x = [[1,2],[3,4]].join()""); // would like: ""x = '1,2,3,4'"""
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,927,public void testFoldMixed() {
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,928,"fold(""''+[1]"", ""'1'"");"
+True,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java,929,"foldSame(""false+[]""); // would like: ""\""false\"""""

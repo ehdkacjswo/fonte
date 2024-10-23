@@ -1,0 +1,161 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,2,* Copyright 2011 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,19,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,20,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,21,import com.google.javascript.rhino.Token;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,24,* Tries to fuse all the statements in a block into a one statement by using
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,25,* COMMAs.
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,27,"* Because COMMAs has the lowest precedence, we never need to insert"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,28,"* extra () around. Once we have only one statement in a block, we can then"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,29,"* eliminate a pair of {}'s. Further more, we can also fold a single"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,30,* statement IF into && or create further opportunities for all the other
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,31,* goodies in {@link PeepholeSubstituteAlternateSyntax}.
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,34,public class StatementFusion extends AbstractPeepholeOptimization {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,36,@Override
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,37,Node optimizeSubtree(Node n) {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,38,// The block of a function body always need { }.
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,39,if (!NodeUtil.isFunction(n.getParent()) && canFuseIntoOneStatement(n)) {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,40,fuseIntoOneStatement(n);
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,41,reportCodeChange();
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,43,return n;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,46,private static boolean canFuseIntoOneStatement(Node block) {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,47,// Fold only statement block. NOT scripts block.
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,48,if (block.getType() != Token.BLOCK) {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,49,return false;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,52,// Nothing to do here.
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,53,if (!block.hasChildren() || block.hasOneChild()) {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,54,return false;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,57,Node last = block.getLastChild();
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,59,for (Node c = block.getFirstChild(); c != null; c = c.getNext()) {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,60,if (!NodeUtil.isExpressionNode(c) && c != last) {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,61,return false;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,65,// TODO(user): Support more control statement for fusion.
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,66,"// FOR, FOR-IN"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,67,switch(last.getType()) {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,68,case Token.IF:
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,69,case Token.THROW:
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,70,case Token.SWITCH:
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,71,case Token.EXPR_RESULT:
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,72,return true;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,73,case Token.RETURN:
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,74,// We don't want to add a new return value.
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,75,return last.hasChildren();
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,78,return false;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,81,private void fuseIntoOneStatement(Node block) {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,82,Node cur = block.removeFirstChild();
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,84,// Starts building a tree.
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,85,Node commaTree = cur.removeFirstChild();
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,88,while (block.hasMoreThanOneChild()) {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,89,Node next = block.removeFirstChild().removeFirstChild();
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,90,"commaTree = fuseExpressionIntoExpression(commaTree, next);"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,93,Preconditions.checkState(block.hasOneChild());
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,94,Node last = block.getLastChild();
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,96,// Now we are just left with two statements. The comma tree of the first
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,97,// n - 1 statements (which can be used in an expression) and the last
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,98,// statement. We perform specific fusion based on the last statement's type.
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,99,switch(last.getType()) {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,100,case Token.IF:
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,101,case Token.RETURN:
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,102,case Token.THROW:
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,103,case Token.SWITCH:
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,104,case Token.EXPR_RESULT:
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,105,"fuseExpresssonIntoFirstChild(commaTree, last);"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,106,return;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,107,default:
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,108,"throw new IllegalStateException(""Statement fusion missing."");"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,112,"// exp1, exp1"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,113,"private static Node fuseExpressionIntoExpression(Node exp1, Node exp2) {"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,114,"Node comma = new Node(Token.COMMA, exp1);"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,115,comma.copyInformationFrom(exp2);
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,117,// We can just join the new comma expression with another comma but
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,118,// lets keep all the comma's in a straight line. That way we can use
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,119,// tree comparison.
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,120,if (exp2.getType() == Token.COMMA) {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,121,Node leftMostChild = exp2;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,122,while(leftMostChild.getType() == Token.COMMA) {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,123,leftMostChild = leftMostChild.getFirstChild();
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,125,Node parent = leftMostChild.getParent();
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,126,comma.addChildToBack(leftMostChild.detachFromParent());
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,127,parent.addChildToFront(comma);
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,128,return exp2;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,129,} else {
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,130,comma.addChildToBack(exp2);
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,131,return comma;
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,135,"private static void fuseExpresssonIntoFirstChild(Node exp, Node stmt) {"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,136,Node val = stmt.removeFirstChild();
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,137,"Node comma = fuseExpressionIntoExpression(exp, val);"
+True,src/com/google/javascript/jscomp/StatementFusion.java,src/com/google/javascript/jscomp/StatementFusion.java,138,stmt.addChildToFront(comma);
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,2,* Copyright 2011 The Closure Compiler Authors.
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,17,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,20,* Unit tests for {@link StatementFusion}.
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,23,public class StatementFusionTest extends CompilerTestCase  {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,25,@Override
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,26,public void setUp() throws Exception {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,27,super.setUp();
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,28,enableLineNumberCheck(true);
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,31,@Override
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,32,public CompilerPass getProcessor(final Compiler compiler) {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,33,PeepholeOptimizationsPass peepholePass =
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,34,"new PeepholeOptimizationsPass(compiler, new StatementFusion());"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,36,return peepholePass;
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,39,public void testNothingToDo() {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,40,"fuseSame("""");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,41,"fuseSame(""a"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,42,"fuseSame(""a()"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,43,"fuseSame(""if(a()){}"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,46,public void testFoldBlockWithStatements() {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,47,"fuse(""a;b;c"", ""a,b,c"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,48,"fuse(""a();b();c();"", ""a(),b(),c()"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,49,"fuse(""a(),b();c(),d()"", ""a(),b(),c(),d()"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,50,"fuse(""a();b(),c(),d()"", ""a(),b(),c(),d()"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,51,"fuse(""a(),b(),c();d()"", ""a(),b(),c(),d()"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,54,public void testFoldBlockIntoIf() {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,55,"fuse(""a;b;c;if(x){}"", ""if(a,b,c,x){}"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,56,"fuse(""a;b;c;if(x,y){}else{}"", ""if(a,b,c,x,y){}else{}"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,57,"fuse(""a;b;c;if(x,y){}"", ""if(a,b,c,x,y){}"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,58,"fuse(""a;b;c;if(x,y,z){}"", ""if(a,b,c,x,y,z){}"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,60,// Can't fuse if there are statements after the IF.
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,61,"fuseSame(""a();if(a()){}a()"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,64,public void testFoldBlockReturn() {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,65,"fuse(""a;b;c;return x"", ""return a,b,c,x"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,66,"fuse(""a;b;c;return x+y"", ""return a,b,c,x+y"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,68,// DeadAssignmentElimination would have cleaned it up anyways.
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,69,"fuseSame(""a;b;c;return x;a;b;c"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,72,public void testFoldBlockThrow() {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,73,"fuse(""a;b;c;throw x"", ""throw a,b,c,x"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,74,"fuse(""a;b;c;throw x+y"", ""throw a,b,c,x+y"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,75,"fuseSame(""a;b;c;throw x;a;b;c"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,78,public void testFoldSwitch() {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,79,"fuse(""a;b;c;switch(x){}"", ""switch(a,b,c,x){}"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,82,public void testNoFuseIntoWhile() {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,83,"fuseSame(""a;b;c;while(x){}"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,86,public void testNoFuseIntoDo() {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,87,"fuseSame(""a;b;c;do{}while(x)"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,90,public void testNoGlobalSchopeChanges() {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,91,"testSame(""a,b,c"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,94,public void testNoFunctionBlockChanges() {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,95,"testSame(""function foo() { a,b,c }"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,98,"private void fuse(String before, String after) {"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,99,"test(""function F(){if(CONDITION){"" + before + ""}}"","
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,100,"""function F(){if(CONDITION){"" + after + ""}}"");"
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,103,private void fuseSame(String code) {
+True,test/com/google/javascript/jscomp/StatementFusionTest.java,test/com/google/javascript/jscomp/StatementFusionTest.java,104,"fuse(code, code);"

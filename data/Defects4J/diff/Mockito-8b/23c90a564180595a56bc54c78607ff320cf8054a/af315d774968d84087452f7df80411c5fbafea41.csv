@@ -1,0 +1,39 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/org/mockito/internal/creation/MethodInterceptorFilter.java,src/org/mockito/internal/creation/MethodInterceptorFilter.java,9,import org.mockito.internal.creation.cglib.CGLIBHacker;
+True,src/org/mockito/internal/creation/MethodInterceptorFilter.java,src/org/mockito/internal/creation/MethodInterceptorFilter.java,37,//TODO check if this is any useful
+True,src/org/mockito/internal/creation/MethodInterceptorFilter.java,src/org/mockito/internal/creation/MethodInterceptorFilter.java,48,new CGLIBHacker().setMockitoNamingPolicy(methodProxy);
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,1,package org.mockito.internal.creation.cglib;
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,3,import java.lang.reflect.Field;
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,5,import net.sf.cglib.proxy.MethodProxy;
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,7,public class CGLIBHacker {
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,9,public void setMockitoNamingPolicy(MethodProxy methodProxy) {
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,10,try {
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,11,"Field createInfoField = methodProxy.getClass().getDeclaredField(""createInfo"");"
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,12,createInfoField.setAccessible(true);
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,13,Object createInfo = createInfoField.get(methodProxy);
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,14,"Field namingPolicyField = createInfo.getClass().getDeclaredField(""namingPolicy"");"
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,15,namingPolicyField.setAccessible(true);
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,16,if (namingPolicyField.get(createInfo) == null) {
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,17,"namingPolicyField.set(createInfo, MockitoNamingPolicy.INSTANCE);"
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,19,} catch (Exception e) {
+True,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,src/org/mockito/internal/creation/cglib/CGLIBHacker.java,20,"throw new RuntimeException(""Unable to set MockitoNamingPolicy on cglib generator which creates FastClasses"", e);"
+True,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,1,package org.mockito.internal.creation.cglib;
+True,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,3,import net.sf.cglib.core.DefaultNamingPolicy;
+True,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,5,public class MockitoNamingPolicy extends DefaultNamingPolicy {
+True,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,7,public static final MockitoNamingPolicy INSTANCE = new MockitoNamingPolicy();
+True,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,9,@Override
+True,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,10,protected String getTag() {
+True,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java,11,"return ""ByMockitoWithCGLIB"";"
+False,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,9,mport net.sf.cglib.core.DefaultNamingPolicy;
+True,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,18,import org.mockito.internal.creation.cglib.MockitoNamingPolicy;
+False,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,32,rivate static final NamingPolicy NAMING_POLICY_THAT_ALLOWS_IMPOSTERISATION_OF_CLASSES_IN_SIGNED_PACKAGES = new DefaultNamingPolicy() {
+True,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,32,private static final NamingPolicy NAMING_POLICY_THAT_ALLOWS_IMPOSTERISATION_OF_CLASSES_IN_SIGNED_PACKAGES = new MockitoNamingPolicy() {
+False,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,38,Override
+False,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,39,rotected String getTag() {
+False,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,40,"eturn ""ByMockitoWithCGLIB"";"
+False,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,44,rivate static final NamingPolicy MOCKITO_NAMING_POLICY = new DefaultNamingPolicy() {
+False,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,45,Override
+False,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,46,rotected String getTag() {
+False,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,47,"eturn ""ByMockitoWithCGLIB"";"
+False,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,102,nhancer.setNamingPolicy(MOCKITO_NAMING_POLICY);
+True,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,src/org/mockito/internal/creation/jmock/ClassImposterizer.java,90,enhancer.setNamingPolicy(MockitoNamingPolicy.INSTANCE);

@@ -1,0 +1,19 @@
+
+Fixes issue 370
+http://code.google.com/p/closure-compiler/issues/detail?id=370
+Warn when comparing the result of a TYPEOF to a string that does not correspond to a type name.
+Note that the TYPEOF can be arbitrarily far from the mistyped string, and in this case we won't emit a warning, eg,
+var s = typeof 123;
+if (s == 'numbr') ...
+
+The earliest this error can be detected is in caseTypeof in SemanticReverseAbstractInterpreter.java. However, all warnings are emitted during the type-checking phase, so I perform the test there in order to have access to the validator.
+
+R=nicksantos,johnlenz
+DELTA=37  (32 added, 1 deleted, 4 changed)
+
+
+Revision created by MOE tool push_codebase.
+MOE_MIGRATION=5284
+
+
+git-svn-id: https://closure-compiler.googlecode.com/svn/trunk@2115 b0f006be-c8cd-11de-a2e8-8d36a3108c74

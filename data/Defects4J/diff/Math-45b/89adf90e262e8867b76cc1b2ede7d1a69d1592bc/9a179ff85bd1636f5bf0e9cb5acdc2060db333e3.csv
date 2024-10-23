@@ -1,0 +1,462 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,74, @version $Revision: 1.5 $ $Date: 2003/06/16 14:29:30 $
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,74,* @version $Revision: 1.6 $ $Date: 2003/06/16 20:42:24 $
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,77,"ublic class UnivariateImpl implements Univariate, Serializable {"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,79,** hold the window size **/
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,80,rivate int windowSize = Univariate.INFINITE_WINDOW;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,82,"** Just in case the windowSize is not infinite, we need to"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,83,  keep an array to remember values 0 to N
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,85,rivate DoubleArray doubleArray;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,87,** count of values that have been added */
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,88,rivate int n = 0;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,90,** min of values that have been added */
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,91,rivate double min = Double.MAX_VALUE;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,93,** max of values that have been added */
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,94,rivate double max = Double.MIN_VALUE;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,96,** product of values that have been added */
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,97,rivate double product = Double.NaN;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,99,** mean of values that have been added */
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,100,rivate double mean = Double.NaN ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,102,** running ( variance * (n - 1) ) of values that have been added */
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,103,rivate double pre_variance = Double.NaN ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,105,** variance of values that have been added */
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,106,rivate double variance = Double.NaN ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,108,** running sum of values that have been added */
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,109,rivate double sum = 0.0;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,111,** running sum of squares that have been added */
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,112,rivate double sumsq = 0.0;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,114,** running sum of 3rd powers that have been added */
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,115,rivate double sumCube = 0.0;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,117,** running sum of 4th powers that have been added */
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,118,rivate double sumQuad = 0.0;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,120,** Creates new univariate with an infinite window */
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,121,ublic UnivariateImpl() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,122,lear();
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,125,** Creates a new univariate with a fixed window **/
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,126,ublic UnivariateImpl(int window) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,127,indowSize = window;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,128,oubleArray = new FixedDoubleArray( window );
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,132, @see org.apache.commons.math.stat.Univariate#addValue(double)
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,134,ublic void addValue(double v) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,135,nsertValue(v);
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,139, @see org.apache.commons.math.stat.Univariate#getMean()
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,141,ublic double getMean() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,142,eturn mean ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,146, @see org.apache.commons.math.stat.Univariate#getGeometricMean()
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,148,ublic double getGeometricMean() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,149,f ((product <= 0.0) || (n == 0)) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,150,eturn Double.NaN;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,151, else {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,152,"eturn Math.pow(product,( 1.0 / (double) n ) );"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,157, @see org.apache.commons.math.stat.Univariate#getProduct()
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,159,ublic double getProduct() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,160,eturn product;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,164, @see org.apache.commons.math.stat.Univariate#getStandardDeviation()
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,166,ublic double getStandardDeviation() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,167,ouble variance = getVariance();
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,169,f ((variance == 0.0) || (variance == Double.NaN)) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,170,eturn variance;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,171, else {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,172,eturn Math.sqrt(variance);
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,177, Returns the variance of the values that have been added via West's
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,178, algorithm as described by
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,179," <a href=""http://doi.acm.org/10.1145/359146.359152"">Chan, T. F. and"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,180," J. G. Lewis 1979, <i>Communications of the ACM</i>,"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,181," vol. 22 no. 9, pp. 526-531.</a>."
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,183, @return The variance of a set of values.  Double.NaN is returned for
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,184,         an empty set of values and 0.0 is returned for a &lt;= 1 value set.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,186,ublic double getVariance() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,187,eturn variance ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,191, Returns the skewness of the values that have been added as described by
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,192," <a href=""http://mathworld.wolfram.com/k-Statistic.html"">Equation (6) for k-Statistics</a>."
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,194, @return The skew of a set of values.  Double.NaN is returned for
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,195,         an empty set of values and 0.0 is returned for a &lt;= 2 value set.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,197,ublic double getSkewness() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,199,f( n < 1) return Double.NaN;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,200,f( n <= 2 ) return 0.0;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,202,"eturn ( 2 * Math.pow(sum, 3) - 3 * sum * sumsq + ((double) (n * n)) * sumCube ) /"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,203, (double) (n * (n - 1) * (n - 2)) ) ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,207, Returns the kurtosis of the values that have been added as described by
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,208," <a href=""http://mathworld.wolfram.com/k-Statistic.html"">Equation (7) for k-Statistics</a>."
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,210, @return The kurtosis of a set of values.  Double.NaN is returned for
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,211,         an empty set of values and 0.0 is returned for a &lt;= 3 value set.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,213,ublic double getKurtosis() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,215,f( n < 1) return Double.NaN;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,216,f( n <= 3 ) return 0.0;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,218,"ouble x1 = -6 * Math.pow(sum, 4);"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,219,"ouble x2 = 12 * ((double) n) * Math.pow(sum, 2) * sumsq;"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,220,"ouble x3 = -3 * ((double) (n * (n - 1))) * Math.pow(sumsq,2);"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,221,ouble x4 = -4 * ((double) (n * (n + 1))) * sum * sumCube;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,222,"ouble x5 = Math.pow(((double) n),2) * ((double) (n+1)) * sumQuad;"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,224,eturn (x1 + x2 + x3 + x4 + x5) /
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,225, (double) (n * (n - 1) * (n - 2) * (n - 3)) );
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,229," Called in ""addValue"" to insert a new value into the statistic."
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,230, @param v The value to be added.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,232,rivate void insertValue(double v) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,233,"/ The default value of product is NaN, if you"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,234,/ try to retrieve the product for a univariate with
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,235,"/ no values, we return NaN."
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,237,"/ If this is the first call to insertValue, we want"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,238,"/ to set product to 1.0, so that our first element"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,239,"/ is not ""cancelled"" out by the NaN."
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,241,"/ For the first value added, the mean is that value,"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,242,/ and the variance is zero.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,243,f( n == 0 ) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,244,roduct = 1.0 ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,245,ean = v ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,246,re_variance = 0.0 ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,247,ariance = 0.0 ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,250,f( windowSize != Univariate.INFINITE_WINDOW ) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,251,f( windowSize == n ) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,252,ouble discarded = doubleArray.addElementRolling( v );
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,254,/ Remove the influence of the discarded
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,255,um -= discarded;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,256,umsq -= discarded * discarded;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,257,"umCube -= Math.pow(discarded, 3);"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,258,"umQuad -= Math.pow(discarded, 4);"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,260,f(discarded == min) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,261,in = doubleArray.getMin();
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,262, else if(discarded == max){
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,263,ax = doubleArray.getMax();
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,266,f(product != 0.0){
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,267,/ can safely remove discarded value
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,268,roduct *= v / discarded;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,269, else if(discarded == 0.0){
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,270,/ need to recompute product
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,271,roduct = 1.0;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,272,ouble[] elements = doubleArray.getElements();
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,273,or( int i = 0; i < elements.length; i++ ) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,274,roduct *= elements[i];
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,276, // else product = 0 and will still be 0 after discard
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,278, else {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,279,oubleArray.addElement( v );
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,280, += 1 ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,281,f (v < min) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,282,in = v;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,284,f (v > max) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,285,ax = v;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,287,roduct *= v;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,289, else {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,290,/ If the windowSize is infinite please don't take the time to
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,291,/ worry about storing any values.  We don't need to discard the
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,292,/ influence of any single item.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,293, += 1 ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,294,f (v < min) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,295,in = v;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,297,f (v > max) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,298,ax = v;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,300,roduct *= v;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,302,f ( n > 1 )
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,304,ouble deviationFromMean = v - mean ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,305,ouble deviationFromMean_overN = deviationFromMean / n ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,306,ean += deviationFromMean_overN ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,307,re_variance += (n - 1) * deviationFromMean * deviationFromMean_overN ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,308,ariance = pre_variance / (n - 1) ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,312,um += v;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,313,umsq += v * v;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,314,"umCube += Math.pow(v,3);"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,315,"umQuad += Math.pow(v,4);"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,318,** Getter for property max.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,319, @return Value of property max.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,321,ublic double getMax() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,322,f (n == 0) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,323,eturn Double.NaN;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,324, else {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,325,eturn max;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,329,** Getter for property min.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,330, @return Value of property min.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,332,ublic double getMin() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,333,f (n == 0) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,334,eturn Double.NaN;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,335, else {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,336,eturn min;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,340,** Getter for property n.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,341, @return Value of property n.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,343,ublic int getN() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,344,eturn n;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,347,** Getter for property sum.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,348, @return Value of property sum.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,350,ublic double getSum() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,351,eturn sum;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,354,** Getter for property sumsq.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,355, @return Value of property sumsq.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,357,ublic double getSumsq() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,358,eturn sumsq;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,361,** Getter for property sumCube.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,362, @return Value of property sumCube.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,364,ublic double getSumCube() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,365,eturn sumCube;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,368,** Getter for property sumQuad.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,369, @return Value of property sumQuad.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,371,ublic double getSumQuad() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,372,eturn sumQuad;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,376, Generates a text report displaying
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,377, univariate statistics from values that
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,378, have been added.
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,379, @return String with line feeds displaying statistics
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,381,ublic String toString() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,382,tringBuffer outBuffer = new StringBuffer();
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,383,"utBuffer.append(""UnivariateImpl:\n"");"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,384,"utBuffer.append(""n: "" + n + ""\n"");"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,385,"utBuffer.append(""min: "" + min + ""\n"");"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,386,"utBuffer.append(""max: "" + max + ""\n"");"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,387,"utBuffer.append(""mean: "" + getMean() + ""\n"");"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,388,"utBuffer.append(""std dev: "" + getStandardDeviation() + ""\n"");"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,389,"utBuffer.append(""skewness: "" + getSkewness() + ""\n"");"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,390,"utBuffer.append(""kurtosis: "" + getKurtosis() + ""\n"");"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,391,eturn outBuffer.toString();
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,395," Resets all sums, product, mean, and variance to 0; resets min and max."
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,397,ublic void clear() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,398,his.sum = this.sumsq = this.sumCube = this.sumQuad = 0.0;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,399,his.n = 0;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,400,his.min = Double.MAX_VALUE;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,401,his.max = Double.MIN_VALUE;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,402,his.product = Double.NaN;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,403,his.mean = Double.NaN ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,404,his.variance = this.pre_variance = Double.NaN ;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,407,* (non-Javadoc)
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,408, @see org.apache.commons.math.Univariate#getWindowSize()
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,410,ublic int getWindowSize() {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,411,eturn windowSize;
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,414,* (non-Javadoc)
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,415, @see org.apache.commons.math.Univariate#setWindowSize(int)
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,417,ublic void setWindowSize(int windowSize) {
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,418,"tring msg = ""A fixed window size must be set via the "" +"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,419,"UnivariateImpl constructor"";"
+False,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,420,hrow new RuntimeException( msg );
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,77,public class UnivariateImpl
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,78,extends AbstractStoreUnivariate
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,79,"implements Univariate, Serializable {"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,81,/** hold the window size **/
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,82,private int windowSize = Univariate.INFINITE_WINDOW;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,84,"/** Just in case the windowSize is not infinite, we need to"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,85,*  keep an array to remember values 0 to N
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,87,private DoubleArray doubleArray;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,89,/** count of values that have been added */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,90,private int n = 0;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,92,/** sum of values that have been added */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,93,private double sum = Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,95,/** sum of the square of each value that has been added */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,96,private double sumsq = Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,98,/** sum of the Cube of each value that has been added */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,99,private double sumCube = Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,101,/** sum of the Quadrate of each value that has been added */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,102,private double sumQuad = Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,104,/** min of values that have been added */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,105,private double min = Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,107,/** max of values that have been added */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,108,private double max = Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,110,/** product of values that have been added */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,111,private double product = Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,113,/** mean of values that have been added */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,114,private double mean = Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,116,/** running ( variance * (n - 1) ) of values that have been added */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,117,private double pre_variance = Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,119,/** variance of values that have been added */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,120,private double variance = Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,122,/** Creates new univariate with an infinite window */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,123,public UnivariateImpl() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,124,super();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,127,/** Creates a new univariate with a fixed window **/
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,128,public UnivariateImpl(int window) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,129,super();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,130,setWindowSize(window);
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,133,/** Getter for property n.
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,134,* @return Value of property n.
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,136,public int getN() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,137,return n;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,141,* Returns the sum of all values contained herein
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,142,* @see org.apache.commons.math.stat.Univariate#getSum()
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,144,public double getSum() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,145,if (windowSize != Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,146,return super.getSum();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,149,return sum;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,153,* Returns the sun of the squares of all values contained herein
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,154,* @see org.apache.commons.math.stat.Univariate#getSumsq()
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,156,public double getSumsq() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,157,if (windowSize != Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,158,return super.getSumsq();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,161,return sumsq;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,165,* @see org.apache.commons.math.stat.Univariate#getMean()
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,167,public double getMean() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,168,if (windowSize != Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,169,return super.getMean();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,172,return mean;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,176,* Returns the variance of the values that have been added via West's
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,177,* algorithm as described by
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,178,"* <a href=""http://doi.acm.org/10.1145/359146.359152"">Chan, T. F. and"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,179,"* J. G. Lewis 1979, <i>Communications of the ACM</i>,"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,180,"* vol. 22 no. 9, pp. 526-531.</a>."
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,182,* @return The variance of a set of values.  Double.NaN is returned for
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,183,*         an empty set of values and 0.0 is returned for a &lt;= 1 value set.
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,185,public double getVariance() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,186,if (windowSize != Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,187,return super.getVariance();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,190,return variance;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,194,* Returns the skewness of the values that have been added as described by
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,195,"* <a href=""http://mathworld.wolfram.com/k-Statistic.html"">Equation (6) for k-Statistics</a>."
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,197,* @return The skew of a set of values.  Double.NaN is returned for
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,198,*         an empty set of values and 0.0 is returned for a &lt;= 2 value set.
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,200,public double getSkewness() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,201,if (windowSize != Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,202,return super.getSkewness();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,205,if (n == 0) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,206,return Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,209,if (n <= 2) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,210,"/* if n <= 2, skewness to 0.0 */"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,211,return 0.0;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,212,} else {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,213,/* else calc the skewness */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,214,return (
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,215,"2 * Math.pow(sum, 3)"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,216,- 3 * sum * sumsq
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,217,+ ((double) (n * n)) * sumCube)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,218,/ ((double) (n * (n - 1) * (n - 2)));
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,223,* Returns the kurtosis of the values that have been added as described by
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,224,"* <a href=""http://mathworld.wolfram.com/k-Statistic.html"">Equation (7) for k-Statistics</a>."
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,226,* @return The kurtosis of a set of values.  Double.NaN is returned for
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,227,*         an empty set of values and 0.0 is returned for a &lt;= 3 value set.
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,229,public double getKurtosis() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,230,if (windowSize != Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,231,return super.getKurtosis();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,234,if (n == 0) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,235,return Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,238,if (n <= 3) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,239,"/* if n <= 3, kurtosis to 0.0 */"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,240,return 0.0;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,241,} else {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,242,/* calc the kurtosis */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,243,"double x1 = -6 * Math.pow(sum, 4);"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,244,"double x2 = 12 * ((double) n) * Math.pow(sum, 2) * sumsq;"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,245,"double x3 = -3 * ((double) (n * (n - 1))) * Math.pow(sumsq, 2);"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,246,double x4 = -4 * ((double) (n * (n + 1))) * sum * sumCube;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,247,double x5 =
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,248,"Math.pow(((double) n), 2) * ((double) (n + 1)) * sumQuad;"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,250,return (x1 + x2 + x3 + x4 + x5)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,251,/ ((double) (n * (n - 1) * (n - 2) * (n - 3)));
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,255,/** Getter for property max.
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,256,* @return Value of property max.
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,258,public double getMax() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,259,if (windowSize != Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,260,return super.getMax();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,263,return max;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,266,/** Getter for property min.
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,267,* @return Value of property min.
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,269,public double getMin() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,270,if (windowSize != Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,271,return super.getMin();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,274,return min;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,278,* @see org.apache.commons.math.stat.Univariate#getProduct()
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,280,public double getProduct() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,281,if (windowSize != Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,282,return super.getProduct();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,285,return product;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,289,* @see org.apache.commons.math.stat.Univariate#getGeometricMean()
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,291,public double getGeometricMean() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,293,if (windowSize != Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,294,return super.getGeometricMean();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,297,if ((product <= 0.0) || (n == 0)) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,298,return Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,299,} else {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,300,"return Math.pow(product, (1.0 / (double) n));"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,304,/* (non-Javadoc)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,305,* @see org.apache.commons.math.stat.StoreUnivariate#getMode()
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,307,public double getMode() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,308,if (windowSize == Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,309,"throw new RuntimeException(""Mode is only available if windowSize is fixed"");"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,312,return super.getMode();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,315,/* (non-Javadoc)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,316,* @see org.apache.commons.math.stat.StoreUnivariate#getPercentile(double)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,318,public double getPercentile(double p) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,319,if (windowSize == Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,320,"throw new RuntimeException(""Percentiles are only available if windowSize is fixed"");"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,323,return super.getPercentile(p);
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,328,* @see org.apache.commons.math.stat.Univariate#addValue(double)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,330,public void addValue(double v) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,332,if (windowSize != Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,333,/* then all getters deligate to AbstractStoreUnivariate
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,334,* and this clause simply adds/rolls a value in the storage array
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,336,if (windowSize == n) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,337,doubleArray.addElementRolling(v);
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,338,} else {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,339,n++;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,340,doubleArray.addElement(v);
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,343,} else {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,344,/* If the windowSize is infinite don't store any values and there
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,345,* is no need to discard the influence of any single item.
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,347,n++;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,349,if (n <= 1) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,350,"/* if n <= 1, initialize the product, min, max, mean, variance and pre-variance */"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,351,product = 1.0;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,352,sum = min = max = mean = v;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,353,"sumsq = Math.pow(v, 2);"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,354,"sumCube = Math.pow(v, 3);"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,355,"sumQuad = Math.pow(v, 4);"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,356,variance = pre_variance = 0.0;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,357,} else {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,358,/* otherwise calc these values */
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,359,product *= v;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,360,sum += v;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,361,"sumsq += Math.pow(v, 2);"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,362,"sumCube += Math.pow(v, 3);"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,363,"sumQuad += Math.pow(v, 4);"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,364,"min = Math.min(min, v);"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,365,"max = Math.max(max, v);"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,367,double deviationFromMean = v - mean;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,368,double deviationFromMean_overN = deviationFromMean / n;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,369,mean += deviationFromMean_overN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,370,pre_variance += (n - 1)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,371,* deviationFromMean
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,372,* deviationFromMean_overN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,373,variance = pre_variance / (n - 1);
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,379,* Generates a text report displaying
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,380,* univariate statistics from values that
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,381,* have been added.
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,382,* @return String with line feeds displaying statistics
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,384,public String toString() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,385,StringBuffer outBuffer = new StringBuffer();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,386,"outBuffer.append(""UnivariateImpl:\n"");"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,387,"outBuffer.append(""n: "" + n + ""\n"");"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,388,"outBuffer.append(""min: "" + min + ""\n"");"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,389,"outBuffer.append(""max: "" + max + ""\n"");"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,390,"outBuffer.append(""mean: "" + getMean() + ""\n"");"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,391,"outBuffer.append(""std dev: "" + getStandardDeviation() + ""\n"");"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,392,"outBuffer.append(""skewness: "" + getSkewness() + ""\n"");"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,393,"outBuffer.append(""kurtosis: "" + getKurtosis() + ""\n"");"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,394,return outBuffer.toString();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,398,* Resets all stats to NaN. Reinitializes the Double Array
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,400,public void clear() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,401,this.n = 0;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,402,this.min = this.max = Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,403,this.product = this.mean = Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,404,this.variance = this.pre_variance = Double.NaN;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,406,if (doubleArray != null)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,407,doubleArray = new FixedDoubleArray(windowSize);
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,410,/* (non-Javadoc)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,411,* @see org.apache.commons.math.Univariate#getWindowSize()
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,413,public int getWindowSize() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,414,return windowSize;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,417,/* (non-Javadoc)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,418,* @see org.apache.commons.math.Univariate#setWindowSize(int)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,420,public void setWindowSize(int windowSize) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,421,clear();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,422,this.windowSize = windowSize;
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,423,doubleArray = new FixedDoubleArray(windowSize);
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,426,/* (non-Javadoc)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,427,* @see org.apache.commons.math.stat.StoreUnivariate#getValues()
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,429,public double[] getValues() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,430,if (windowSize == Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,431,"throw new RuntimeException(""Values are only available if windowSize is fixed"");"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,434,return this.doubleArray.getElements();
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,437,/* (non-Javadoc)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,438,* @see org.apache.commons.math.stat.StoreUnivariate#getElement(int)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,440,public double getElement(int index) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,441,if (windowSize == Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,442,"throw new RuntimeException(""Elements are only available if windowSize is fixed"");"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,445,return this.doubleArray.getElement(index);
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,448,/* (non-Javadoc)
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,449,* @see org.apache.commons.math.stat.StoreUnivariate#getSortedValues()
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,451,public double[] getSortedValues() {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,452,if (windowSize == Univariate.INFINITE_WINDOW) {
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,453,"throw new RuntimeException(""SortedValues are only available if windowSize is fixed"");"
+True,src/java/org/apache/commons/math/stat/UnivariateImpl.java,src/java/org/apache/commons/math/stat/UnivariateImpl.java,456,return super.getSortedValues();

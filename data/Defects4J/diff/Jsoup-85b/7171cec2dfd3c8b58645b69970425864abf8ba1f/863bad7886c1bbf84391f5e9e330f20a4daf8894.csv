@@ -1,0 +1,32 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,55,private boolean preserveRelativeLinks; // option to preserve relative links
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,175,preserveRelativeLinks = false;
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,255,"* Configure this Whitelist to preserve relative links in an element's URL attribute, or convert them to absolute"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,256,"* links. By default, this is <b>false</b>: URLs will be  made absolute (e.g. start with an allowed protocol, like"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,257,* e.g. {@code http://}.
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,258,* <p />
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,259,"* Note that when handling relative links, the input document must have an appropriate {@code base URI} set when"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,260,"* parsing, so that the link's protocol can be confirmed. Regardless of the setting of the {@code preserve relative"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,261,"* links} option, the link must be resolvable against the base URI to an allowed protocol; otherwise the attribute"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,262,* will be removed.
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,264,"* @param preserve {@code true} to allow relative links, {@code false} (default) to deny"
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,265,"* @return this Whitelist, for chaining."
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,266,* @see #addProtocols
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,268,public Whitelist preserveRelativeLinks(boolean preserve) {
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,269,preserveRelativeLinks = preserve;
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,270,return this;
+False,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,318,"/ resolve relative urls to abs, and update the attribute so output html has abs."
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,339,"// resolve relative urls to abs, and optionally update the attribute so output html has abs."
+False,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,321,ttr.setValue(value);
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,342,if (!preserveRelativeLinks)
+True,src/main/java/org/jsoup/safety/Whitelist.java,src/main/java/org/jsoup/safety/Whitelist.java,343,attr.setValue(value);
+False,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,100,"tring html = ""<a href='/foo'>Link</a>"";"
+False,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,101,"tring clean = Jsoup.clean(html, ""http://example.com/"", Whitelist.basic());"
+False,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,102,"ssertEquals(""<a href=\""http://example.com/foo\"" rel=\""nofollow\"">Link</a>"", clean);"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,100,"String html = ""<a href='/foo'>Link</a><img src='/bar'>"";"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,101,"String clean = Jsoup.clean(html, ""http://example.com/"", Whitelist.basicWithImages());"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,102,"assertEquals(""<a href=\""http://example.com/foo\"" rel=\""nofollow\"">Link</a>\n<img src=\""http://example.com/bar\"" />"", clean);"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,105,@Test public void preservesRelatedLinksIfConfigured() {
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,106,"String html = ""<a href='/foo'>Link</a><img src='/bar'> <img src='javascript:alert()'>"";"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,107,"String clean = Jsoup.clean(html, ""http://example.com/"", Whitelist.basicWithImages().preserveRelativeLinks(true));"
+True,src/test/java/org/jsoup/safety/CleanerTest.java,src/test/java/org/jsoup/safety/CleanerTest.java,108,"assertEquals(""<a href=\""/foo\"" rel=\""nofollow\"">Link</a>\n<img src=\""/bar\"" /> \n<img />"", clean);"

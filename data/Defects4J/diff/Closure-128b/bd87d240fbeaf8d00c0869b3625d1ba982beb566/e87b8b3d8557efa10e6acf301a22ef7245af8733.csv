@@ -1,0 +1,194 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,554,Nullable JSDocInfo info) {
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,554,"@Nullable JSDocInfo info, JSType ownerType) {"
+False,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,564,ypeRegistry.setTemplateTypeNames(templateTypeNames);
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,565,ImmutableList<TemplateType> keys = templateTypeNames;
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,566,if (ownerType != null) {
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,567,ImmutableList<TemplateType> ownerTypeKeys =
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,568,ownerType.getTemplateTypeMap().getTemplateKeys();
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,569,if (!ownerTypeKeys.isEmpty()) {
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,570,ImmutableList.Builder<TemplateType> builder = ImmutableList.builder();
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,571,builder.addAll(templateTypeNames);
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,572,builder.addAll(ownerTypeKeys);
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,573,keys = builder.build();
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,577,if (!keys.isEmpty()) {
+True,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,src/com/google/javascript/jscomp/FunctionTypeBuilder.java,578,typeRegistry.setTemplateTypeNames(keys);
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1161,private static class TemplateTypeMapReplacer extends ModificationVisitor {
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1162,private final TemplateTypeMap replacements;
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1163,boolean madeChanges = false;
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1165,TemplateTypeMapReplacer(
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1166,"JSTypeRegistry registry, TemplateTypeMap replacements) {"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1167,super(registry);
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1168,this.replacements = replacements;
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1171,@Override
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1172,public JSType caseTemplateType(TemplateType type) {
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1173,if (replacements.hasTemplateKey(type)) {
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1174,madeChanges = true;
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1175,JSType replacement = replacements.getTemplateType(type);
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1176,return replacements.getTemplateType(type);
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1177,} else {
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1178,return type;
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1344,if (propertyType != null && objType != null) {
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1345,JSType restrictedObjType = objType.restrictByNotNullOrUndefined();
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1346,if (restrictedObjType.isTemplatizedType()
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1347,&& propertyType.hasAnyTemplateTypes()) {
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1348,TemplateTypeMap typeMap = restrictedObjType.getTemplateTypeMap();
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1349,TemplateTypeMapReplacer replacer = new TemplateTypeMapReplacer(
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1350,"registry, typeMap);"
+True,src/com/google/javascript/jscomp/TypeInference.java,src/com/google/javascript/jscomp/TypeInference.java,1351,propertyType = propertyType.visit(replacer);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,76,import com.google.javascript.rhino.jstype.TemplateType;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,709,ImmutableList<TemplateType> ownerTypeKeys = ImmutableList.of();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,710,Node ownerNode = NodeUtil.getBestLValueOwner(node);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,711,String ownerName = NodeUtil.getBestLValueName(ownerNode);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,712,ObjectType ownerType = null;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,713,if (ownerName != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,714,Var ownerVar = scope.getVar(ownerName);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,715,if (ownerVar != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,716,ownerType = getPrototypeOwnerType(
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,717,ObjectType.cast(ownerVar.getType()));
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,718,if (ownerType != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,719,ownerTypeKeys =
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,720,ownerType.getTemplateTypeMap().getTemplateKeys();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,725,if (!ownerTypeKeys.isEmpty()) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,726,typeRegistry.setTemplateTypeNames(ownerTypeKeys);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,731,if (!ownerTypeKeys.isEmpty()) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,732,typeRegistry.clearTemplateTypeNames();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,935,ObjectType prototypeOwner = getPrototypeOwnerType(ownerType);
+False,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,914,inferTemplateTypeName(info)
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,942,".inferTemplateTypeName(info, prototypeOwner)"
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,980,private ObjectType getPrototypeOwnerType(ObjectType ownerType) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,981,if (ownerType != null && ownerType.isFunctionPrototypeType()) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,982,return ownerType.getOwnerFunction();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,984,return null;
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1794,// TODO: We are evaluating these values in the wrong scope:
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1795,// https://code.google.com/p/closure-compiler/issues/detail?id=926
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1796,JSType thisObjectType = thisType.toObjectType();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1797,if (thisObjectType != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1798,ImmutableList<TemplateType> keys =
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1799,thisObjectType.getTemplateTypeMap().getTemplateKeys();
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1800,typeRegistry.setTemplateTypeNames(keys);
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1805,if (thisObjectType != null) {
+True,src/com/google/javascript/jscomp/TypedScopeCreator.java,src/com/google/javascript/jscomp/TypedScopeCreator.java,1806,typeRegistry.clearTemplateTypeNames();
+False,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,964,SType type = getType(jsTypeName);
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,964,// Resolve template type names
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,965,JSType type = null;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,966,JSType thisType = null;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,967,if (scope != null && scope.getTypeOfThis() != null) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,968,thisType = scope.getTypeOfThis().toObjectType();
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,970,if (thisType != null) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,971,type = thisType.getTemplateTypeMap().getTemplateTypeKeyByName(jsTypeName);
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,972,if (type != null) {
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,973,"Preconditions.checkState(type.isTemplateType(), ""expected:"" + type);"
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,974,return type;
+True,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,src/com/google/javascript/rhino/jstype/JSTypeRegistry.java,978,type = getType(jsTypeName);
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1221,public void testClassTemplateType1() {
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1222,// Verify that template types used in method signature are resolved.
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1223,testSame(
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1224,"""/**\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1225,""" * @constructor\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1226,""" * @classTemplate T\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1227,""" */\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1228,"""function C() {};\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1230,"""/** @return {T} */\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1231,"""C.prototype.method = function() {}\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1233,"""/** @type {C.<string>} */ var x = new C();\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1234,"""var result = x.method();\n"");"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1235,"assertEquals(""string"", findNameType(""result"", globalScope).toString());"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1238,public void testClassTemplateType2() {
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1239,// Verify that template types used in method signature on namespaced
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1240,// objects are resolved.
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1241,testSame(
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1242,"""/** @const */ var ns = {};"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1243,"""/**\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1244,""" * @constructor\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1245,""" * @classTemplate T\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1246,""" */\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1247,"""ns.C = function() {};\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1249,"""/** @return {T} */\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1250,"""ns.C.prototype.method = function() {}\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1252,"""/** @type {ns.C.<string>} */ var x = new ns.C();\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1253,"""var result = x.method();\n"");"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1254,"assertEquals(""string"", findNameType(""result"", globalScope).toString());"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1257,public void testClassTemplateType3() {
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1258,// Verify that template types used for instance properties are recognized.
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1259,testSame(
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1260,"""/**\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1261,""" * @constructor\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1262,""" * @classTemplate T\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1263,""" */\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1264,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1265,"""  /** @type {T} */\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1266,"""  this.foo;"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1267,"""};\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1269,"""/** @type {C.<string>} */ var x = new C();\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1270,"""var result = x.foo;\n"");"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1271,"assertEquals(""string"", findNameType(""result"", globalScope).toString());"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1274,public void testClassTemplateType4() {
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1275,// Verify that template types used for instance properties are recognized.
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1276,testSame(
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1277,"""/** @const */ var ns = {};"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1278,"""/**\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1279,""" * @constructor\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1280,""" * @classTemplate T\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1281,""" */\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1282,"""ns.C = function() {\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1283,"""  /** @type {T} */\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1284,"""  this.foo;"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1285,"""};\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1287,"""/** @type {ns.C.<string>} */ var x = new ns.C();\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1288,"""var result = x.foo;\n"");"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1289,"assertEquals(""string"", findNameType(""result"", globalScope).toString());"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1292,public void testClassTemplateType5() {
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1293,// Verify that template types used for prototype properties in stub
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1294,// declarations are recognized.
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1295,testSame(
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1296,"""/**\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1297,""" * @constructor\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1298,""" * @classTemplate T\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1299,""" */\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1300,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1301,"""};\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1303,"""/** @type {T} */"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1304,"""C.prototype.foo;\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1306,"""/** @type {C.<string>} */ var x = new C();\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1307,"""var result = x.foo;\n"");"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1308,"assertEquals(""string"", findNameType(""result"", globalScope).toString());"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1311,public void testClassTemplateType6() {
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1312,// Verify that template types used for prototype properties in assignment
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1313,// expressions are recognized.
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1314,testSame(
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1315,"""/**\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1316,""" * @constructor\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1317,""" * @classTemplate T\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1318,""" */\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1319,"""function C() {\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1320,"""};\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1322,"""/** @type {T} */"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1323,"""C.prototype.foo = 1;\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1325,"""/** @type {C.<string>} */ var x = new C();\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1326,"""var result = x.foo;\n"");"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1327,"assertEquals(""string"", findNameType(""result"", globalScope).toString());"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1330,public void testClassTemplateType7() {
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1331,// Verify that template types used in prototype methods are recognized.
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1332,testSame(
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1333,"""/**\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1334,""" * @constructor\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1335,""" * @classTemplate T\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1336,""" */\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1337,"""function C() {};\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1339,"""C.prototype.method = function() {\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1340,"""  /** @type {T} */ var local;"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1341,"""}\n"");"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1342,"assertEquals(""T"", findNameType(""local"", lastLocalScope).toString());"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1345,public void testClassTemplateType8() {
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1346,// Verify that template types used in casts are recognized.
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1347,testSame(
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1348,"""/**\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1349,""" * @constructor\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1350,""" * @classTemplate T\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1351,""" */\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1352,"""function C() {};\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1354,"""C.prototype.method = function() {\n"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1355,"""  var local = /** @type {T} */ (x);"" +"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1356,"""}\n"");"
+True,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,test/com/google/javascript/jscomp/TypedScopeCreatorTest.java,1357,"assertEquals(""T"", findNameType(""local"", lastLocalScope).toString());"

@@ -1,0 +1,120 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,47,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,76,// Every UnionType may have at most one structural function in it.
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,78,// NOTE(nicksantos): I've read some literature that says that type-inferenced
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,79,// languages are fundamentally incompatible with union types. I refuse
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,80,// to believe this. But they do make the type lattice much more complicated.
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,82,"// For this reason, when we deal with function types, we actually merge some"
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,83,"// nodes on the lattice, and treat them as fundamentally equivalent."
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,84,"// For example, we treat"
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,85,// function(): string | function(): number
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,86,// as equivalent to
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,87,// function(): (string|number)
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,88,// and normalize the first type into the second type.
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,90,"// To perform this normalization, we've modified UnionTypeBuilder to disallow"
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,91,// multiple structural functions in a union. We always delegate to
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,92,"// FunctionType::getLeastSupertype, which either merges the functions into"
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,93,"// one structural function, or just bails out and uses the top function type."
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,94,private int functionTypePosition = -1;
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,149,int i = 0;
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,172,if (i == functionTypePosition) {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,173,functionTypePosition = -1;
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,177,i++;
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,180,if (alternate.isFunctionType()) {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,181,// See the comments on functionTypePosition above.
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,182,if (functionTypePosition == -1) {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,183,functionTypePosition = alternates.size();
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,184,alternates.add(alternate);
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,185,} else {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,186,JSType supremum = alternate.toMaybeFunctionType().getLeastSupertype(
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,187,alternates.get(functionTypePosition).toMaybeFunctionType());
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,188,Preconditions.checkState(supremum.isFunctionType());
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,189,"alternates.set(functionTypePosition, supremum);"
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,191,} else {
+True,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,192,alternates.add(alternate);
+False,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,src/com/google/javascript/rhino/jstype/UnionTypeBuilder.java,153,lternates.add(alternate);
+False,test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java,test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java,372,"(function (this:Date): ?|function (this:String): number)"");"
+True,test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java,test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java,372,"""Function"");"
+False,test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java,test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java,379,"(function (...[function (number): boolean]): number|"" +"
+False,test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java,test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java,380,"function (this:String, string): number)"");"
+True,test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java,test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java,379,"""Function"");"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4658,* Tests that Proxied FunctionTypes behave the same over getLeastSupertype and
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4659,* getGreatestSubtype as non proxied FunctionTypes
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4661,public void testSupertypeOfProxiedFunctionTypes() {
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4662,ObjectType fn1 =
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4663,new FunctionBuilder(registry)
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4664,.withParamsNode(new Node(Token.LP))
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4665,.withReturnType(NUMBER_TYPE)
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4666,.build();
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4667,ObjectType fn2 =
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4668,new FunctionBuilder(registry)
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4669,.withParamsNode(new Node(Token.LP))
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4670,.withReturnType(STRING_TYPE)
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4671,.build();
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4672,"ObjectType p1 = new ProxyObjectType(registry, fn1);"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4673,"ObjectType p2 = new ProxyObjectType(registry, fn2);"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4674,ObjectType supremum =
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4675,new FunctionBuilder(registry)
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4676,.withParamsNode(new Node(Token.LP))
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4677,".withReturnType(registry.createUnionType(STRING_TYPE, NUMBER_TYPE))"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4678,.build();
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4680,"assertTypeEquals(fn1.getLeastSupertype(fn2), p1.getLeastSupertype(p2));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4681,"assertTypeEquals(supremum, fn1.getLeastSupertype(fn2));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4682,"assertTypeEquals(supremum, fn1.getLeastSupertype(p2));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4683,"assertTypeEquals(supremum, p1.getLeastSupertype(fn2));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4684,"assertTypeEquals(supremum, p1.getLeastSupertype(p2));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4950,public void testFunctionUnionSubtypeChain() throws Exception {
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4951,List<JSType> typeChain = Lists.newArrayList(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4952,createUnionType(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4953,"OBJECT_TYPE,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4954,"STRING_TYPE),"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4955,createUnionType(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4956,"GREATEST_FUNCTION_TYPE,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4957,"googBarInst,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4958,"STRING_TYPE),"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4959,createUnionType(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4960,"STRING_TYPE,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4961,registry.createFunctionType(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4962,"createUnionType(STRING_TYPE, NUMBER_TYPE)),"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4963,"googBarInst),"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4964,createUnionType(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4965,"registry.createFunctionType(NUMBER_TYPE),"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4966,"googSubBarInst),"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4967,"LEAST_FUNCTION_TYPE,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4968,"NO_OBJECT_TYPE,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4969,NO_TYPE);
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,4970,verifySubtypeChain(typeChain);
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5079,// Ugh. This wouldn't require so much copy-and-paste if we had a functional
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5080,// programming language.
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5088,"JSType proxyTypeI = new ProxyObjectType(registry, typeI);"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5089,"JSType proxyTypeJ = new ProxyObjectType(registry, typeJ);"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5096,"assertTrue(""Proxy "" + typeI + "" should equal itself"","
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5097,proxyTypeI.isEquivalentTo(proxyTypeI));
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5103,"assertFalse(""Proxy "" + typeI + "" should not equal "" + typeJ,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5104,proxyTypeI.isEquivalentTo(proxyTypeJ));
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5114,// TODO(nicksantos): Should these tests pass?
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5115,//assertTrue(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5116,"//    ""Proxy "" + typeJ + "" should be a subtype of Proxy "" + typeI,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5117,//    proxyTypeJ.isSubtype(proxyTypeI));
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5124,// TODO(nicksantos): Should these tests pass?
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5125,//assertFalse(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5126,"//    ""Named "" + typeJ + "" should not be a subtype of Named "" + typeI,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5127,//    proxyTypeJ.isSubtype(proxyTypeI));
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5138,// TODO(nicksantos): Should these tests pass?
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5139,//assertTypeEquals(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5140,"//    expectedSupremum + "" should be the least supertype of Named "" +"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5141,"//    typeI + "" and Named "" + typeJ,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5142,"//    expectedSupremum, namedTypeI.getLeastSupertype(namedTypeJ));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5143,//assertTypeEquals(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5144,"//    expectedSupremum + "" should be the least supertype of Proxy "" +"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5145,"//    typeI + "" and Proxy "" + typeJ,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5146,"//    expectedSupremum, proxyTypeI.getLeastSupertype(proxyTypeJ));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5153,// TODO(nicksantos): Should these tests pass?
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5154,//assertTypeEquals(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5155,"//    expectedInfimum + "" should be the greatest subtype of Named "" +"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5156,"//    typeI + "" and Named "" + typeJ,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5157,"//    expectedInfimum, namedTypeI.getGreatestSubtype(namedTypeJ));"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5158,//assertTypeEquals(
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5159,"//    expectedInfimum + "" should be the greatest subtype of Proxy "" +"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5160,"//    typeI + "" and Proxy "" + typeJ,"
+True,test/com/google/javascript/rhino/jstype/JSTypeTest.java,test/com/google/javascript/rhino/jstype/JSTypeTest.java,5161,"//    expectedInfimum, proxyTypeI.getGreatestSubtype(proxyTypeJ));"

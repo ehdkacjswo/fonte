@@ -1,0 +1,13 @@
+Update angular.js externs to show angular.bootstrap returns an angular.$injector.
+
+Also update get and invoke to return {?} instead of {*}, since the ALL type is type-checked. In other words, this would cause a problem:
+
+var injector = angular.bootstrap(blah);
+injector.get('myFactory').newInstance();
+
+Since the ALL type may represent a non-function type, so it can't be gauranteed to be a callable expression. On the other hand, {?} is never type checked, and allows callers to cast the return value.
+
+Maybe if AngularJS team does closer integration with Closure compiler in the future they can map these to concrete types :)
+-------------
+Created by MOE: http://code.google.com/p/moe-java
+MOE_MIGRATED_REVID=49116170

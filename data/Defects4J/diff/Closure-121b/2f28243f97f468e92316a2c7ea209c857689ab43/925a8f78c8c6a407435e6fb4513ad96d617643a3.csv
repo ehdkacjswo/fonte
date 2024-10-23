@@ -1,0 +1,380 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,3,* ***** BEGIN LICENSE BLOCK *****
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,4,* Version: MPL 1.1/GPL 2.0
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,6,* The contents of this file are subject to the Mozilla Public License Version
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,7,"* 1.1 (the ""License""); you may not use this file except in compliance with"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,8,* the License. You may obtain a copy of the License at
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,9,* http://www.mozilla.org/MPL/
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,11,"* Software distributed under the License is distributed on an ""AS IS"" basis,"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,12,"* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,13,* for the specific language governing rights and limitations under the
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,14,* License.
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,16,"* The Original Code is Rhino code, released"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,17,"* May 6, 1999."
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,19,* The Initial Developer of the Original Code is
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,20,* Netscape Communications Corporation.
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,21,* Portions created by the Initial Developer are Copyright (C) 1997-1999
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,22,* the Initial Developer. All Rights Reserved.
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,24,* Contributor(s):
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,25,*   John Lenz
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,27,"* Alternatively, the contents of this file may be used under the terms of"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,28,"* the GNU General Public License Version 2 or later (the ""GPL""), in which"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,29,* case the provisions of the GPL are applicable instead of those above. If
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,30,* you wish to allow use of your version of this file only under the terms of
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,31,* the GPL and not to allow others to use your version of this file under the
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,32,"* MPL, indicate your decision by deleting the provisions above and replacing"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,33,* them with the notice and other provisions required by the GPL. If you do
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,34,"* not delete the provisions above, a recipient may use your version of this"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,35,* file under either the MPL or the GPL.
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,37,* ***** END LICENSE BLOCK ***** */
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,39,package com.google.javascript.rhino;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,41,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,44,* An AST construction helper class
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,45,* @author johnlenz@google.com (John Lenz)
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,47,public class IR {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,49,private IR() {}
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,51,public static Node empty() {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,52,return new Node(Token.EMPTY);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,55,"public static Node function(Node name, Node params, Node body) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,56,Preconditions.checkState(name.isName());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,57,Preconditions.checkState(params.isParamList());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,58,Preconditions.checkState(body.isBlock());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,59,"return new Node(Token.FUNCTION, name, params, body);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,62,public static Node paramList() {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,63,return new Node(Token.PARAM_LIST);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,66,public static Node paramList(Node param) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,67,Preconditions.checkState(param.isName());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,68,"return new Node(Token.PARAM_LIST, param);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,71,public static Node paramList(Node ... params) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,72,Node paramList = new Node(Token.PARAM_LIST);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,73,for (Node param : params) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,74,Preconditions.checkState(param.isName());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,75,paramList.addChildToBack(param);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,77,return paramList;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,80,public static Node block() {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,81,Node block = new Node(Token.BLOCK);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,82,return block;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,85,public static Node block(Node stmt) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,86,Preconditions.checkState(mayBeStatement(stmt));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,87,"Node block = new Node(Token.BLOCK, stmt);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,88,return block;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,91,public static Node block(Node ... stmts) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,92,Node block = new Node(Token.BLOCK);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,93,for (Node stmt : stmts) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,94,Preconditions.checkState(mayBeStatement(stmt));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,95,block.addChildToBack(stmt);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,97,return block;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,100,public static Node script(Node ... stmts) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,101,// TODO(johnlenz): finish setting up the SCRIPT node
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,102,Node block = new Node(Token.SCRIPT);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,103,for (Node stmt : stmts) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,104,Preconditions.checkState(mayBeStatement(stmt));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,105,block.addChildToBack(stmt);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,107,return block;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,110,"public static Node var(Node name, Node value) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,111,Preconditions.checkState(name.isName() && !name.hasChildren());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,112,Preconditions.checkState(mayBeExpression(value));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,113,name.addChildToFront(value);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,114,return var(name);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,117,public static Node var(Node name) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,118,Preconditions.checkState(name.isName());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,119,"return new Node(Token.VAR, name);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,122,public static Node returnNode() {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,123,return new Node(Token.RETURN);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,126,public static Node returnNode(Node expr) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,127,Preconditions.checkState(mayBeExpression(expr));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,128,"return new Node(Token.RETURN, expr);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,131,public static Node throwNode(Node expr) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,132,Preconditions.checkState(mayBeExpression(expr));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,133,"return new Node(Token.THROW, expr);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,136,public static Node exprResult(Node expr) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,137,Preconditions.checkState(mayBeExpression(expr));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,138,"return new Node(Token.EXPR_RESULT, expr);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,141,"public static Node ifNode(Node cond, Node then) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,142,Preconditions.checkState(mayBeExpression(cond));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,143,Preconditions.checkState(then.isBlock());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,144,"return new Node(Token.IF, cond, then);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,147,"public static Node ifNode(Node cond, Node then, Node elseNode) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,148,Preconditions.checkState(mayBeExpression(cond));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,149,Preconditions.checkState(then.isBlock());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,150,Preconditions.checkState(elseNode.isBlock());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,151,"return new Node(Token.IF, cond, then, elseNode);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,154,"public static Node doNode(Node body, Node cond) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,155,Preconditions.checkState(body.isBlock());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,156,Preconditions.checkState(mayBeExpression(cond));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,157,"return new Node(Token.DO, body, cond);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,160,"public static Node forIn(Node target, Node cond, Node body) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,161,Preconditions.checkState(target.isVar() || mayBeExpression(target));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,162,Preconditions.checkState(mayBeExpression(cond));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,163,Preconditions.checkState(body.isBlock());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,164,"return new Node(Token.FOR, target, cond, body);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,167,"public static Node forNode(Node init, Node cond, Node incr, Node body) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,168,Preconditions.checkState(init.isVar() || mayBeExpressionOrEmpty(init));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,169,Preconditions.checkState(mayBeExpressionOrEmpty(cond));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,170,Preconditions.checkState(mayBeExpressionOrEmpty(incr));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,171,Preconditions.checkState(body.isBlock());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,172,"return new Node(Token.FOR, init, cond, incr, body);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,175,"public static Node switchNode(Node cond, Node ... cases) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,176,Preconditions.checkState(mayBeExpression(cond));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,177,"Node switchNode = new Node(Token.SWITCH, cond);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,178,for (Node caseNode : cases) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,179,Preconditions.checkState(caseNode.isCase() || caseNode.isDefaultCase());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,180,switchNode.addChildToBack(caseNode);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,182,return switchNode;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,185,"public static Node caseNode(Node expr, Node body) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,186,Preconditions.checkState(mayBeExpression(expr));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,187,Preconditions.checkState(body.isBlock());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,188,"body.putBooleanProp(Node.SYNTHETIC_BLOCK_PROP, true);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,189,"return new Node(Token.CASE, expr, body);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,192,public static Node defaultCase(Node body) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,193,Preconditions.checkState(body.isBlock());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,194,"body.putBooleanProp(Node.SYNTHETIC_BLOCK_PROP, true);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,195,"return new Node(Token.DEFAULT_CASE, body);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,198,"public static Node label(Node name, Node stmt) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,199,// TODO(johnlenz): additional validation here.
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,200,Preconditions.checkState(name.isLabelName());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,201,Preconditions.checkState(mayBeStatement(stmt));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,202,"Node block = new Node(Token.LABEL, name, stmt);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,203,return block;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,206,public static Node labelName(String name) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,207,Preconditions.checkState(!name.isEmpty());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,208,"return Node.newString(Token.LABEL_NAME, name);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,211,"public static Node tryFinally(Node tryBody, Node finallyBody) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,212,Preconditions.checkState(tryBody.isLabelName());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,213,Preconditions.checkState(finallyBody.isLabelName());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,214,Node catchBody = block().copyInformationFrom(tryBody);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,215,"return new Node(Token.TRY, tryBody, catchBody, finallyBody);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,218,"public static Node tryCatch(Node tryBody, Node catchNode) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,219,Preconditions.checkState(tryBody.isBlock());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,220,Preconditions.checkState(catchNode.isCatch());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,221,Node catchBody = block(catchNode).copyInformationFrom(catchNode);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,222,"return new Node(Token.TRY, tryBody, catchBody);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,225,"public static Node tryCatchFinally(Node tryBody, Node catchNode, Node finallyBody) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,226,Preconditions.checkState(finallyBody.isBlock());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,227,"Node tryNode = tryCatch(tryBody, catchNode);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,228,tryNode.addChildToBack(finallyBody);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,229,return tryNode;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,232,"public static Node catchNode(Node expr, Node body) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,233,Preconditions.checkState(expr.isName());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,234,Preconditions.checkState(body.isBlock());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,235,"return new Node(Token.CATCH, expr, body);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,238,public static Node breakNode() {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,239,return new Node(Token.BREAK);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,242,public static Node breakNode(Node name) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,243,// TODO(johnlenz): additional validation here.
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,244,Preconditions.checkState(name.isLabelName());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,245,"return new Node(Token.BREAK, name);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,248,public static Node continueNode() {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,249,return new Node(Token.CONTINUE);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,252,public static Node continueNode(Node name) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,253,// TODO(johnlenz): additional validation here.
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,254,Preconditions.checkState(name.isLabelName());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,255,"return new Node(Token.CONTINUE, name);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,261,"public static Node call(Node target, Node ... args) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,262,"Node call = new Node(Token.CALL, target);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,263,for (Node arg : args) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,264,Preconditions.checkState(mayBeExpression(arg));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,265,call.addChildToBack(arg);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,267,return call;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,270,"public static Node newNode(Node target, Node ... args) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,271,"Node newcall = new Node(Token.NEW, target);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,272,for (Node arg : args) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,273,Preconditions.checkState(mayBeExpression(arg));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,274,newcall.addChildToBack(arg);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,276,return newcall;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,279,public static Node name(String name) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,280,"return Node.newString(Token.NAME, name);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,283,"public static Node getprop(Node target, Node prop) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,284,Preconditions.checkState(mayBeExpression(target));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,285,Preconditions.checkState(prop.isString());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,286,"return new Node(Token.GETPROP, target, prop);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,289,"public static Node getelem(Node target, Node elem) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,290,Preconditions.checkState(mayBeExpression(target));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,291,Preconditions.checkState(mayBeExpression(elem));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,292,"return new Node(Token.GETELEM, target, elem);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,295,"public static Node assign(Node target, Node expr) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,296,Preconditions.checkState(isAssignmentTarget(target));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,297,Preconditions.checkState(mayBeExpression(expr));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,298,"return new Node(Token.ASSIGN, target, expr);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,301,"public static Node hook(Node cond, Node trueval, Node falseval) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,302,Preconditions.checkState(mayBeExpression(cond));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,303,Preconditions.checkState(mayBeExpression(trueval));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,304,Preconditions.checkState(mayBeExpression(falseval));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,305,"return new Node(Token.HOOK, cond, trueval, falseval);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,308,"public static Node comma(Node expr1, Node expr2) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,309,"return binaryOp(Token.COMMA, expr1, expr2);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,312,"public static Node and(Node expr1, Node expr2) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,313,"return binaryOp(Token.AND, expr1, expr2);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,316,"public static Node or(Node expr1, Node expr2) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,317,"return binaryOp(Token.OR, expr1, expr2);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,320,public static Node not(Node expr1) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,321,"return unaryOp(Token.NOT, expr1);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,327,"public static Node eq(Node expr1, Node expr2) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,328,"return binaryOp(Token.EQ, expr1, expr2);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,334,"public static Node sheq(Node expr1, Node expr2) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,335,"return binaryOp(Token.SHEQ, expr1, expr2);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,338,public static Node voidNode(Node expr1) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,339,"return unaryOp(Token.VOID, expr1);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,342,public static Node neg(Node expr1) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,343,"return unaryOp(Token.NEG, expr1);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,346,public static Node pos(Node expr1) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,347,"return unaryOp(Token.POS, expr1);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,350,"public static Node add(Node expr1, Node expr2) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,351,"return binaryOp(Token.ADD, expr1, expr2);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,354,"public static Node sub(Node expr1, Node expr2) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,355,"return binaryOp(Token.SUB, expr1, expr2);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,358,// TODO(johnlenz): the rest of the ops
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,360,// literals
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,361,public static Node objectlit(Node ... propdefs) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,362,Node objectlit = new Node(Token.OBJECTLIT);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,363,for (Node propdef : propdefs) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,364,Preconditions.checkState(
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,365,propdef.isString() || propdef.isGetterDef() || propdef.isSetterDef());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,366,Preconditions.checkState(propdef.hasOneChild());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,367,objectlit.addChildToBack(propdef);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,369,return objectlit;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,372,// TODO(johnlenz): quoted props
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,374,"public static Node propdef(Node string, Node value) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,375,Preconditions.checkState(!string.isString());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,376,Preconditions.checkState(!string.hasChildren());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,377,Preconditions.checkState(mayBeExpression(value));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,378,string.addChildToFront(value);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,379,return string;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,382,public static Node arraylit(Node ... exprs) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,383,Node arraylit = new Node(Token.ARRAYLIT);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,384,for (Node expr : exprs) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,385,Preconditions.checkState(mayBeExpressionOrEmpty(expr));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,386,arraylit.addChildToBack(expr);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,388,return arraylit;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,391,public static Node regexp(Node expr) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,392,Preconditions.checkState(expr.isString());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,393,"return new Node(Token.REGEXP, expr);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,396,"public static Node regexp(Node expr, Node flags) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,397,Preconditions.checkState(expr.isString());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,398,Preconditions.checkState(flags.isString());
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,399,"return new Node(Token.REGEXP, expr, flags);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,402,public static Node string(String s) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,403,return Node.newString(s);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,406,public static Node number(double d) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,407,return Node.newNumber(d);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,410,public static Node trueNode() {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,411,return new Node(Token.TRUE);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,414,public static Node falseNode() {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,415,return new Node(Token.FALSE);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,418,public static Node nullNode() {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,419,return new Node(Token.NULL);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,422,// helper methods
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,424,"private static Node binaryOp(int token, Node expr1, Node expr2) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,425,Preconditions.checkState(mayBeExpression(expr1));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,426,Preconditions.checkState(mayBeExpression(expr2));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,427,"return new Node(token, expr1, expr2);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,430,"private static Node unaryOp(int token, Node expr) {"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,431,Preconditions.checkState(mayBeExpression(expr));
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,432,"return new Node(token, expr);"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,435,private static boolean mayBeExpressionOrEmpty(Node n) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,436,return n.isEmpty() || mayBeExpression(n);
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,439,private static boolean isAssignmentTarget(Node n) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,440,return n.isName() || n.isGetProp() || n.isGetElem();
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,443,// NOTE: some nodes are neither statements nor expression nodes:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,444,"//   SCRIPT, LABEL_NAME, PARAM_LIST, CASE, DEFAULT_CASE, CATCH"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,445,"//   GETTER_DEF, SETTER_DEF"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,448,"* It isn't possible to always determine if a detached node is a expression,"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,449,* so make a best guess.
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,451,private static boolean mayBeStatement(Node n) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,452,switch (n.getType()) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,453,case Token.EMPTY:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,454,case Token.FUNCTION:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,455,// EMPTY and FUNCTION are used both in expression and statement
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,456,// contexts
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,457,return true;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,459,case Token.BLOCK:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,460,case Token.BREAK:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,461,case Token.CONST:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,462,case Token.CONTINUE:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,463,case Token.DEBUGGER:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,464,case Token.DO:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,465,case Token.EXPR_RESULT:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,466,case Token.FOR:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,467,case Token.IF:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,468,case Token.LABEL:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,469,case Token.RETURN:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,470,case Token.SWITCH:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,471,case Token.THROW:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,472,case Token.TRY:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,473,case Token.VAR:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,474,case Token.WHILE:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,475,case Token.WITH:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,476,return true;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,478,default:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,479,return false;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,484,"* It isn't possible to always determine if a detached node is a expression,"
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,485,* so make a best guess.
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,487,private static boolean mayBeExpression(Node n) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,488,switch (n.getType()) {
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,489,case Token.FUNCTION:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,490,// FUNCTION is used both in expression and statement
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,491,// contexts.
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,492,return true;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,494,case Token.ADD:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,495,case Token.AND:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,496,case Token.ARRAYLIT:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,497,case Token.ASSIGN:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,498,case Token.ASSIGN_BITOR:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,499,case Token.ASSIGN_BITXOR:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,500,case Token.ASSIGN_BITAND:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,501,case Token.ASSIGN_LSH:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,502,case Token.ASSIGN_RSH:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,503,case Token.ASSIGN_URSH:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,504,case Token.ASSIGN_ADD:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,505,case Token.ASSIGN_SUB:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,506,case Token.ASSIGN_MUL:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,507,case Token.ASSIGN_DIV:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,508,case Token.ASSIGN_MOD:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,509,case Token.BITAND:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,510,case Token.BITOR:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,511,case Token.BITNOT:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,512,case Token.BITXOR:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,513,case Token.CALL:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,514,case Token.COMMA:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,515,case Token.DEC:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,516,case Token.DELPROP:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,517,case Token.DIV:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,518,case Token.EQ:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,519,case Token.FALSE:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,520,case Token.GE:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,521,case Token.GETPROP:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,522,case Token.GETELEM:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,523,case Token.GT:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,524,case Token.HOOK:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,525,case Token.IN:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,526,case Token.INC:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,527,case Token.INSTANCEOF:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,528,case Token.LE:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,529,case Token.LSH:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,530,case Token.LT:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,531,case Token.MOD:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,532,case Token.MUL:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,533,case Token.NAME:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,534,case Token.NE:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,535,case Token.NEG:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,536,case Token.NEW:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,537,case Token.NOT:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,538,case Token.NUMBER:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,539,case Token.NULL:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,540,case Token.OBJECTLIT:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,541,case Token.OR:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,542,case Token.POS:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,543,case Token.REGEXP:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,544,case Token.RSH:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,545,case Token.SHEQ:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,546,case Token.SHNE:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,547,case Token.STRING:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,548,case Token.SUB:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,549,case Token.THIS:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,550,case Token.TYPEOF:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,551,case Token.TRUE:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,552,case Token.URSH:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,553,case Token.VOID:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,554,return true;
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,556,default:
+True,src/com/google/javascript/rhino/IR.java,src/com/google/javascript/rhino/IR.java,557,return false;

@@ -1,0 +1,21 @@
+COMPRESS-271 test files for lz4
+
+bla.tar.block_lz4 uses the "block" format and has been created with
+
+https://github.com/gray/compress-lz4
+
+and
+
+```
+use Compress::LZ4;
+
+open(my $in, '<:raw', 'bla.tar') or die "Unable to open: $!";
+my $bytes = do { local $/; <$in> };
+close($in);
+my $compressed = compress($bytes);
+open(my $out, '>:raw', 'bla.tar.block_lz4') or die "Unable to open: $!";
+syswrite $out, $compressed, length($compressed) - 4, 4;
+close($out);
+```
+
+bla.tar.lz4 the "frame" format and has been created with the lz4 CLI tool.

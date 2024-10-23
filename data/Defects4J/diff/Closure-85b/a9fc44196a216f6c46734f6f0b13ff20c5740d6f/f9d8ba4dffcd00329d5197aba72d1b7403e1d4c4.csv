@@ -1,0 +1,320 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,2, Copyright 2009 Google Inc.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,4," Licensed under the Apache License, Version 2.0 (the ""License"");"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,5, you may not use this file except in compliance with the License.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,6, You may obtain a copy of the License at
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,8,     http://www.apache.org/licenses/LICENSE-2.0
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,10," Unless required by applicable law or agreed to in writing, software"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,11," distributed under the License is distributed on an ""AS IS"" BASIS,"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,12," WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,13, See the License for the specific language governing permissions and
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,14, limitations under the License.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,17,ackage com.google.javascript.jscomp;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,19,mport com.google.common.collect.Lists;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,20,mport com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,21,mport com.google.javascript.jscomp.ParallelCompilerPass.Result;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,22,mport com.google.javascript.rhino.Node;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,23,mport com.google.javascript.rhino.Token;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,25,mport java.util.List;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,28, Pass that simplifies expression statements by replacing the
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,29, expression with the portions that have side effects.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,31, <p>This pass will rewrite:
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,32, <pre>
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,33,   1 + foo() + bar()
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,34, </pre>
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,35, as:
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,36, <pre>
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,37,   foo();bar()
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,38, </pre>
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,41,inal class RemoveConstantExpressions implements CompilerPass {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,42,rivate final AbstractCompiler compiler;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,44,emoveConstantExpressions(AbstractCompiler compiler) {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,45,his.compiler = compiler;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,48,Override
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,49,"ublic void process(Node externs, Node root) {"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,50,emoveConstantRValuesCallback cb = new RemoveConstantRValuesCallback();
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,51,"odeTraversal.traverse(null, root, cb);"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,52,b.getResult().notifyCompiler(compiler);
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,56, Used to simplify expressions by removing subexpressions that have
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,57, no side effects which are not inputs to expressions with side
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,58, effects.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,60,tatic class RemoveConstantRValuesCallback extends AbstractPostOrderCallback {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,61,rivate final AstChangeProxy changeProxy;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,62,rivate final Result result = new Result();
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,65, Instantiates AstChangeProxy and registers ChangeListener to
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,66, report ast changes to the compiler.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,68,emoveConstantRValuesCallback() {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,69,his.changeProxy = new AstChangeProxy();
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,70,his.changeProxy.registerListener(
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,71,ew ReportCodeHasChangedListener(result));
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,74,Override
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,75,"ublic void visit(NodeTraversal traversal, Node node, Node parent) {"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,76,"rySimplify(parent, node);"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,80, Attempts to replace the input node with a simpler but functionally
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,81, equivalent set of nodes.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,83,"rivate void trySimplify(Node parent, Node node) {"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,84,f (node.getType() != Token.EXPR_RESULT) {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,85,eturn;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,88,ode exprBody = node.getFirstChild();
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,89,f (!NodeUtil.nodeTypeMayHaveSideEffects(exprBody)
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,90,| exprBody.getType() == Token.NEW
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,91,| exprBody.getType() == Token.CALL) {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,92,"hangeProxy.replaceWith(parent, node, getSideEffectNodes(exprBody));"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,97, Extracts a list of replacement nodes to use.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,99,rivate List<Node> getSideEffectNodes(Node node) {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,100,ist<Node> subexpressions = Lists.newArrayList();
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,101,odeTraversal.traverse(
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,102,"ull, node,"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,103,ew GatherSideEffectSubexpressionsCallback(
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,104,"ull,"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,105,ew GatherSideEffectSubexpressionsCallback.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,106,"opySideEffectSubexpressions(null, subexpressions)));"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,108,ist<Node> replacements = Lists.newArrayList();
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,109,or (Node subexpression : subexpressions) {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,110,eplacements.add(NodeUtil.newExpr(subexpression));
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,112,eturn replacements;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,115,ublic Result getResult() {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,116,eturn result;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,121, Used to reports code changes to the compiler as they happen.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,123,rivate static class ReportCodeHasChangedListener
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,124,mplements AstChangeProxy.ChangeListener {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,125,rivate final Result result;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,127,rivate ReportCodeHasChangedListener(Result result) {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,128,his.result = result;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,130,Override
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,131,ublic void nodeRemoved(Node node) {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,src/com/google/javascript/jscomp/RemoveConstantExpressions.java,132,esult.changed = true;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,2, Copyright 2009 Google Inc.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,4," Licensed under the Apache License, Version 2.0 (the ""License"");"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,5, you may not use this file except in compliance with the License.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,6, You may obtain a copy of the License at
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,8,     http://www.apache.org/licenses/LICENSE-2.0
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,10," Unless required by applicable law or agreed to in writing, software"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,11," distributed under the License is distributed on an ""AS IS"" BASIS,"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,12," WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,13, See the License for the specific language governing permissions and
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,14, limitations under the License.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,17,ackage com.google.javascript.jscomp;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,19,mport com.google.common.base.Supplier;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,20,mport com.google.javascript.jscomp.ParallelCompilerPass.Result;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,21,mport com.google.javascript.jscomp.ParallelCompilerPass.Task;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,22,mport com.google.javascript.jscomp.RemoveConstantExpressions.RemoveConstantRValuesCallback;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,23,mport com.google.javascript.rhino.Node;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,26, Execute {@link RemoveConstantExpressions} in parallel.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,29,inal class RemoveConstantExpressionsParallel implements CompilerPass {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,31,rivate final AbstractCompiler compiler;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,33,rivate final int numThreads;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,35,"emoveConstantExpressionsParallel(AbstractCompiler compiler, int numThreads) {"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,36,his.compiler = compiler;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,37,his.numThreads = numThreads;
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,40,emoveConstantExpressionsParallel(AbstractCompiler compiler) {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,41,"his(compiler, Runtime.getRuntime().availableProcessors());"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,44,Override
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,45,"ublic void process(Node externs, Node root) {"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,46,/ Estimate the number of CPU needed.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,47,stParallelizer splitter = AstParallelizer
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,48,createNewFileLevelAstParallelizer(root);
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,50,/ Clean supply of RemoveConstantRValuesCallback.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,51,upplier<Task> supplier = new Supplier<Task>() {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,52,Override
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,53,ublic Task get() {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,54,eturn new Task() {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,55,Override
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,56,ublic Result processSubtree(Node subtree) {
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,57,emoveConstantRValuesCallback cb =
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,58,ew RemoveConstantRValuesCallback();
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,59,"odeTraversal.traverse(null, subtree, cb);"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,60,eturn cb.getResult();
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,66,/ Execute in parallel.
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,67,"new ParallelCompilerPass(compiler, splitter, supplier, numThreads))"
+False,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,src/com/google/javascript/jscomp/RemoveConstantExpressionsParallel.java,68,"process(externs, root);"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,2, Copyright 2009 Google Inc.
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,4," Licensed under the Apache License, Version 2.0 (the ""License"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,5, you may not use this file except in compliance with the License.
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,6, You may obtain a copy of the License at
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,8,     http://www.apache.org/licenses/LICENSE-2.0
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,10," Unless required by applicable law or agreed to in writing, software"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,11," distributed under the License is distributed on an ""AS IS"" BASIS,"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,12," WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,13, See the License for the specific language governing permissions and
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,14, limitations under the License.
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,17,ackage com.google.javascript.jscomp;
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,20, Unit test for {@linke RemoveConstantExpressionsParallel}. It does not verify
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,21, the correctness of {@link RemoveConstantExpressions} since that's the job
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,22, of {@link RemoveConstantExpressionsTest}.
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,25,ublic class RemoveConstantExpressionsParallelTest extends CompilerTestCase {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,27,Override
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,28,rotected CompilerPass getProcessor(Compiler compiler) {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,29,"eturn new RemoveConstantExpressionsParallel(compiler, 4);"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,32,ublic void testOneFile() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,33,unInParallel(1);
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,36,ublic void testTwoFiles() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,37,unInParallel(2);
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,40,ublic void testFourFiles() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,41,unInParallel(4);
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,44,ublic void testManyFiles() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,45,unInParallel(100);
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,48,rivate void runInParallel(int numFiles) {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,49,"tring input = ""1 + (x.a = 2)"";"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,50,"tring expected = ""x.a = 2"";"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,51,tring[] inputFiles = new String[numFiles];
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,52,tring[] expectedFiles = new String[numFiles];
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,53,or (int i = 0; i < numFiles; i++) {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,54,nputFiles[i] = input;
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,55,xpectedFiles[i] = expected;
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsParallelTest.java,57,"est(inputFiles, expectedFiles);"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,2, Copyright 2009 Google Inc.
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,4," Licensed under the Apache License, Version 2.0 (the ""License"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,5, you may not use this file except in compliance with the License.
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,6, You may obtain a copy of the License at
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,8,     http://www.apache.org/licenses/LICENSE-2.0
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,10," Unless required by applicable law or agreed to in writing, software"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,11," distributed under the License is distributed on an ""AS IS"" BASIS,"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,12," WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,13, See the License for the specific language governing permissions and
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,14, limitations under the License.
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,17,ackage com.google.javascript.jscomp;
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,20, Tests for {@link RemoveConstantExpressions}
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,23,ublic class RemoveConstantExpressionsTest extends CompilerTestCase {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,25,Override
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,26,rotected RemoveConstantExpressions getProcessor(Compiler compiler) {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,27,eturn new RemoveConstantExpressions(compiler);
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,30,Override
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,31,ublic void setUp() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,32,uper.enableLineNumberCheck(true);
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,35,Override
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,36,rotected int getNumRepetitions() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,37,/ Pass reaches steady state after just 1 iteration
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,38,eturn 1;
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,41,ublic void testRemoveNumber() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,42,"est(""3"", """");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,45,ublic void testRemoveVarGet1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,46,"est(""a"", """");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,49,ublic void testRemoveVarGet2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,50,"est(""var a = 1;a"", ""var a = 1"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,53,ublic void testRemoveNamespaceGet1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,54,"est(""var a = {};a.b"", ""var a = {}"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,57,ublic void testRemoveNamespaceGet2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,58,"est(""var a = {};a.b=1;a.b"", ""var a = {};a.b=1"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,61,ublic void testRemovePrototypeGet1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,62,"est(""var a = {};a.prototype.b"", ""var a = {}"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,65,ublic void testRemovePrototypeGet2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,66,"est(""var a = {};a.prototype.b = 1;a.prototype.b"","
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,67,"var a = {};a.prototype.b = 1"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,70,ublic void testRemoveAdd1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,71,"est(""1 + 2"", """");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,74,ublic void testNoRemoveVar1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,75,"estSame(""var a = 1"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,78,ublic void testNoRemoveVar2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,79,"estSame(""var a = 1, b = 2"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,82,ublic void testNoRemoveAssign1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,83,"estSame(""a = 1"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,86,ublic void testNoRemoveAssign2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,87,"estSame(""a = b = 1"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,90,ublic void testNoRemoveAssign3() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,91,"est(""1 + (a = 2)"", ""a = 2"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,94,ublic void testNoRemoveAssign4() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,95,"estSame(""x.a = 1"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,98,ublic void testNoRemoveAssign5() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,99,"estSame(""x.a = x.b = 1"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,102,ublic void testNoRemoveAssign6() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,103,"est(""1 + (x.a = 2)"", ""x.a = 2"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,106,ublic void testNoRemoveCall1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,107,"estSame(""a()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,110,ublic void testNoRemoveCall2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,111,"est(""a()+b()"", ""a();b()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,114,ublic void testNoRemoveCall3() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,115,"estSame(""a() && b()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,118,ublic void testNoRemoveCall4() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,119,"estSame(""a() || b()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,122,ublic void testNoRemoveCall5() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,123,"est(""a() || 1"", ""a()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,126,ublic void testNoRemoveCall6() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,127,"estSame(""1 || a()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,130,ublic void testNoRemoveThrow1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,131,"estSame(""function f(){throw a()}"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,134,ublic void testNoRemoveThrow2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,135,"estSame(""function f(){throw a}"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,138,ublic void testNoRemoveThrow3() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,139,"estSame(""function f(){throw 10}"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,142,ublic void testRemoveInControlStructure1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,143,"est(""if(2) 1"", ""if(2);"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,146,ublic void testRemoveInControlStructure2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,147,"est(""while(2) 1"", ""while(2);"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,150,ublic void testRemoveInControlStructure3() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,151,"est(""for(1;2;3) 4"", ""for(1;2;3);"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,154,ublic void testHook1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,155,"est(""1 ? 2 : 3"", """");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,158,ublic void testHook2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,159,"est(""1 ? a() : 3"", ""1 && a()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,162,ublic void testHook3() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,163,"est(""1 ? 2 : a()"", ""1 || a()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,166,ublic void testHook4() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,167,"estSame(""1 ? a() : b()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,170,ublic void testHook5() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,171,"est(""a() ? 1 : 2"", ""a()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,174,ublic void testHook6() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,175,"est(""a() ? b() : 2"", ""a() && b()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,178,ublic void testHook7() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,179,"est(""a() ? 1 : b()"", ""a() || b()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,182,ublic void testHook8() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,183,"estSame(""a() ? b() : c()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,186,ublic void testShortCircuit1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,187,"estSame(""1 && a()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,190,ublic void testShortCircuit2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,191,"est(""1 && a() && 2"", ""1 && a()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,194,ublic void testShortCircuit3() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,195,"est(""a() && 1 && 2"", ""a()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,198,ublic void testComma1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,199,"est(""1, 2"", """");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,202,ublic void testComma2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,203,"est(""1, a()"", ""a()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,206,ublic void testComma3() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,207,"est(""1, a(), b()"", ""a();b()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,210,ublic void testComma4() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,211,"est(""a(), b()"", ""a();b()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,214,ublic void testComma5() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,215,"est(""a(), b(), 1"", ""a();b()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,218,ublic void testComplex1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,219,"est(""1 && a() + b() + c()"", ""1 && (a(), b(), c())"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,222,ublic void testComplex2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,223,"est(""1 && (a() ? b() : 1)"", ""1 && a() && b()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,226,ublic void testComplex3() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,227,"est(""1 && (a() ? b() : 1 + c())"", ""1 && (a() ? b() : c())"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,230,ublic void testComplex4() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,231,"est(""1 && (a() ? 1 : 1 + c())"", ""1 && (a() || c())"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,234,ublic void testComplex5() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,235,/ can't simplify lhs of short circuit statements with side effects
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,236,"estSame(""(a() ? 1 : 1 + c()) && foo()"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,239,ublic void testNoRemoveFunctionDeclaration1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,240,"estSame(""function foo(){}"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,243,ublic void testNoRemoveFunctionDeclaration2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,244,"estSame(""var foo = function (){}"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,247,ublic void testNoSimplifyFunctionArgs1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,248,"estSame(""f(1 + 2, 3 + g())"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,251,ublic void testNoSimplifyFunctionArgs2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,252,"estSame(""1 && f(1 + 2, 3 + g())"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,255,ublic void testNoSimplifyFunctionArgs3() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,256,"estSame(""1 && foo(a() ? b() : 1 + c())"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,259,ublic void testNoRemoveInherits1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,260,"estSame(""var a = {}; this.b = {}; var goog = {}; goog.inherits(b, a)"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,263,ublic void testNoRemoveInherits2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,264,"est(""var a = {}; this.b = {}; var goog = {}; goog.inherits(b, a) + 1"","
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,265,"var a = {}; this.b = {}; var goog = {}; goog.inherits(b, a)"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,268,ublic void testNoRemoveInherits3() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,269,"estSame(""this.a = {}; var b = {}; b.inherits(a);"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,272,ublic void testNoRemoveInherits4() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,273,"est(""this.a = {}; var b = {}; b.inherits(a) + 1;"","
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,274,"this.a = {}; var b = {}; b.inherits(a)"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,277,ublic void testRemoveFromLabel1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,278,"est(""LBL: void 0"", ""LBL: {}"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,281,ublic void testRemoveFromLabel2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,282,"est(""LBL: foo() + 1 + bar()"", ""LBL: {foo();bar()}"");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,285,ublic void testCall1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,286,"est(""Math.sin(0);"", """");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,289,ublic void testCall2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,290,"est(""1 + Math.sin(0);"", """");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,293,ublic void testNew1() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,294,"est(""new Date;"", """");"
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,297,ublic void testNew2() {
+False,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java,298,"est(""1 + new Date;"", """");"

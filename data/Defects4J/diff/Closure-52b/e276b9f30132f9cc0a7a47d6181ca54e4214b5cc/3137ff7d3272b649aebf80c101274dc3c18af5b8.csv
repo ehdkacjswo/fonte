@@ -1,0 +1,59 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,117,// Don't modify unused definitions for two reasons:
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,118,// 1) It causes unnecessary churn
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,119,// 2) Other definitions might be used to reflect on this one using
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,120,//    goog.reflect.object (the check for definitions with uses is below).
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,121,if (useSites.isEmpty()) {
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,122,return true;
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,126,// This catches the case where an object literal in goog.reflect.object
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,127,// and a prototype method have the same property name.
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,129,// TODO(johnlenz): The keys of one object can be used to reflect on
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,130,"// another using ""goog.reflect.object"" or similar.  It seems like this"
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,131,// should be prohibited but TrogEdit uses this.
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,133,Node nameNode = site.node;
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,134,Collection<Definition> singleSiteDefinitions =
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,135,defFinder.getDefinitionsReferencedAt(nameNode);
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,136,if (singleSiteDefinitions.size() > 1) {
+True,src/com/google/javascript/jscomp/OptimizeReturns.java,src/com/google/javascript/jscomp/OptimizeReturns.java,137,return true;
+False,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,194,"a()"");"
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,194,"""a.b()"");"
+False,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,202,"a()"");"
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,202,"""a.b()"");"
+False,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,209,"(a[0])();"","
+False,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,210,"a()"");"
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,209,"""(a[0])();"");"
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,213,public void testPrototypeMethod1() throws Exception {
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,214,String source = newlineJoin(
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,215,"""function c(){}"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,216,"""c.prototype.a = function(){return 1}"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,217,"""var x = new c;"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,218,"""x.a()"");"
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,219,String result = newlineJoin(
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,220,"""function c(){}"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,221,"""c.prototype.a = function(){return}"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,222,"""var x = new c;"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,223,"""x.a()"");"
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,224,"test(source, result);"
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,227,public void testPrototypeMethod2() throws Exception {
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,228,String source = newlineJoin(
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,229,"""function c(){}"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,230,"""c.prototype.a = function(){return 1}"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,231,"""goog.reflect.object({a: 'v'})"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,232,"""var x = new c;"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,233,"""x.a()"");"
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,234,testSame(source);
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,237,public void testPrototypeMethod3() throws Exception {
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,238,String source = newlineJoin(
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,239,"""function c(){}"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,240,"""c.prototype.a = function(){return 1}"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,241,"""var x = new c;"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,242,"""for(var key in goog.reflect.object({a: 'v'})){ x[key](); }"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,243,"""x.a()"");"
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,244,testSame(source);
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,247,public void testPrototypeMethod4() throws Exception {
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,248,String source = newlineJoin(
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,249,"""function c(){}"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,250,"""c.prototype.a = function(){return 1}"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,251,"""var x = new c;"","
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,252,"""for(var key in goog.reflect.object({a: 'v'})){ x[key](); }"");"
+True,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,test/com/google/javascript/jscomp/OptimizeReturnsTest.java,253,testSame(source);

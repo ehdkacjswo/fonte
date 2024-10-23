@@ -1,0 +1,298 @@
+is_addition,old_file_path,new_file_path,line_num,content
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,2, Copyright (C) 2008 Google Inc.
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,4," Licensed under the Apache License, Version 2.0 (the ""License"");"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,5, you may not use this file except in compliance with the License.
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,6, You may obtain a copy of the License at
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,8, http://www.apache.org/licenses/LICENSE-2.0
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,10," Unless required by applicable law or agreed to in writing, software"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,11," distributed under the License is distributed on an ""AS IS"" BASIS,"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,12," WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,13, See the License for the specific language governing permissions and
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,14, limitations under the License.
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,17,ackage com.google.gson;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,19,mport java.io.IOException;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,20,mport java.util.Collections;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,21,mport java.util.HashSet;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,22,mport java.util.Set;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,25," A utility class that is used to perform JSON escaping so that "", <, >, etc. characters are"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,26, properly encoded in the JSON string representation before returning to the client code.
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,28, <p>This class contains a single method to escape a passed in string value:
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,29, <pre>
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,30,"   String jsonStringValue = ""beforeQuote\""afterQuote"";"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,31,   String escapedValue = Escaper.escapeJsonString(jsonStringValue);
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,32, </pre></p>
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,34, @author Inderjeet Singh
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,35, @author Joel Leitch
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,37,inal class Escaper {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,39,rivate static final char[] HEX_CHARS = {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,40,"0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,43,rivate static final Set<Character> JS_ESCAPE_CHARS;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,44,rivate static final Set<Character> HTML_ESCAPE_CHARS;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,46,tatic {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,47,et<Character> mandatoryEscapeSet = new HashSet<Character>();
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,48,"andatoryEscapeSet.add('""');"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,49,andatoryEscapeSet.add('\\');
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,50,S_ESCAPE_CHARS = Collections.unmodifiableSet(mandatoryEscapeSet);
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,52,et<Character> htmlEscapeSet = new HashSet<Character>();
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,53,tmlEscapeSet.add('<');
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,54,tmlEscapeSet.add('>');
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,55,tmlEscapeSet.add('&');
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,56,tmlEscapeSet.add('=');
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,57,tmlEscapeSet.add('\'');
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,58,/    htmlEscapeSet.add('/');  -- Removing slash for now since it causes some incompatibilities
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,59,TML_ESCAPE_CHARS = Collections.unmodifiableSet(htmlEscapeSet);
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,62,rivate final boolean escapeHtmlCharacters;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,64,scaper(boolean escapeHtmlCharacters) {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,65,his.escapeHtmlCharacters = escapeHtmlCharacters;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,68,ublic String escapeJsonString(CharSequence plainText) {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,69,tringBuilder escapedString = new StringBuilder(plainText.length() + 20);
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,70,ry {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,71,"scapeJsonString(plainText, escapedString);"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,72, catch (IOException e) {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,73,hrow new RuntimeException(e);
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,75,eturn escapedString.toString();
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,78,"rivate void escapeJsonString(CharSequence plainText, StringBuilder out) throws IOException {"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,79,nt pos = 0;  // Index just past the last char in plainText written to out.
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,80,nt len = plainText.length();
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,82,"or (int charCount, i = 0; i < len; i += charCount) {"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,83,"nt codePoint = Character.codePointAt(plainText, i);"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,84,harCount = Character.charCount(codePoint);
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,86,f (!isControlCharacter(codePoint) && !mustEscapeCharInJsString(codePoint)) {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,87,ontinue;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,90,"ut.append(plainText, pos, i);"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,91,os = i + charCount;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,92,witch (codePoint) {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,93,ase '\b':
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,94,"ut.append(""\\b"");"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,95,reak;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,96,ase '\t':
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,97,"ut.append(""\\t"");"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,98,reak;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,99,ase '\n':
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,100,"ut.append(""\\n"");"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,101,reak;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,102,ase '\f':
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,103,"ut.append(""\\f"");"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,104,reak;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,105,ase '\r':
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,106,"ut.append(""\\r"");"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,107,reak;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,108,ase '\\':
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,109,"ut.append(""\\\\"");"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,110,reak;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,111,ase '/':
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,112,"ut.append(""\\/"");"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,113,reak;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,114,"ase '""':"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,115,"ut.append(""\\\"""");"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,116,reak;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,117,efault:
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,118,"ppendHexJavaScriptRepresentation(codePoint, out);"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,119,reak;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,122,"ut.append(plainText, pos, len);"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,125,rivate boolean mustEscapeCharInJsString(int codepoint) {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,126,f (!Character.isSupplementaryCodePoint(codepoint)) {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,127,har c = (char) codepoint;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,128,eturn JS_ESCAPE_CHARS.contains(c)
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,129,| (escapeHtmlCharacters && HTML_ESCAPE_CHARS.contains(c));
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,131,eturn false;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,134,rivate static boolean isControlCharacter(int codePoint) {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,135,"/ JSON spec defines these code points as control characters, so they must be escaped"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,136,eturn codePoint < 0x20
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,137,| codePoint == 0x2028  // Line separator
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,138,| codePoint == 0x2029  // Paragraph separator
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,139,| (codePoint >= 0x7f && codePoint <= 0x9f);
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,142,"rivate static void appendHexJavaScriptRepresentation(int codePoint, Appendable out)"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,143,hrows IOException {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,144,f (Character.isSupplementaryCodePoint(codePoint)) {
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,145,/ Handle supplementary unicode values which are not representable in
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,146,/ javascript.  We deal with these by escaping them as two 4B sequences
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,147,/ so that they will round-trip properly when sent from java to javascript
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,148,/ and back.
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,149,har[] surrogates = Character.toChars(codePoint);
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,150,"ppendHexJavaScriptRepresentation(surrogates[0], out);"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,151,"ppendHexJavaScriptRepresentation(surrogates[1], out);"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,152,eturn;
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,154,"ut.append(""\\u"")"
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,155,append(HEX_CHARS[(codePoint >>> 12) & 0xf])
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,156,append(HEX_CHARS[(codePoint >>> 8) & 0xf])
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,157,append(HEX_CHARS[(codePoint >>> 4) & 0xf])
+False,gson/src/main/java/com/google/gson/Escaper.java,gson/src/main/java/com/google/gson/Escaper.java,158,append(HEX_CHARS[codePoint & 0xf]);
+False,gson/src/main/java/com/google/gson/JsonArray.java,gson/src/main/java/com/google/gson/JsonArray.java,19,mport java.io.IOException;
+False,gson/src/main/java/com/google/gson/JsonArray.java,gson/src/main/java/com/google/gson/JsonArray.java,320,Override
+False,gson/src/main/java/com/google/gson/JsonArray.java,gson/src/main/java/com/google/gson/JsonArray.java,321,"rotected void toString(Appendable sb, Escaper escaper) throws IOException {"
+False,gson/src/main/java/com/google/gson/JsonArray.java,gson/src/main/java/com/google/gson/JsonArray.java,322,b.append('[');
+False,gson/src/main/java/com/google/gson/JsonArray.java,gson/src/main/java/com/google/gson/JsonArray.java,323,oolean first = true;
+False,gson/src/main/java/com/google/gson/JsonArray.java,gson/src/main/java/com/google/gson/JsonArray.java,324,or (JsonElement element : elements) {
+False,gson/src/main/java/com/google/gson/JsonArray.java,gson/src/main/java/com/google/gson/JsonArray.java,325,f (first) {
+False,gson/src/main/java/com/google/gson/JsonArray.java,gson/src/main/java/com/google/gson/JsonArray.java,326,irst = false;
+False,gson/src/main/java/com/google/gson/JsonArray.java,gson/src/main/java/com/google/gson/JsonArray.java,327, else {
+False,gson/src/main/java/com/google/gson/JsonArray.java,gson/src/main/java/com/google/gson/JsonArray.java,328,"b.append(',');"
+False,gson/src/main/java/com/google/gson/JsonArray.java,gson/src/main/java/com/google/gson/JsonArray.java,330,"lement.toString(sb, escaper);"
+False,gson/src/main/java/com/google/gson/JsonArray.java,gson/src/main/java/com/google/gson/JsonArray.java,332,b.append(']');
+True,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,19,import com.google.gson.stream.JsonWriter;
+True,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,21,import java.io.StringWriter;
+False,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,31,rivate static final Escaper BASIC_ESCAPER = new Escaper(false);
+False,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,329, @return String the string representation of this element.
+False,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,334,tringBuilder sb = new StringBuilder();
+False,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,335,"oString(sb, BASIC_ESCAPER);"
+False,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,336,eturn sb.toString();
+True,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,332,StringWriter stringWriter = new StringWriter();
+True,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,333,JsonWriter jsonWriter = new JsonWriter(stringWriter);
+True,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,334,jsonWriter.setLenient(true);
+True,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,335,"Streams.write(this, true, jsonWriter);"
+True,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,336,return stringWriter.toString();
+False,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,338,hrow new RuntimeException(e);
+True,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,338,throw new AssertionError(e);
+False,gson/src/main/java/com/google/gson/JsonElement.java,gson/src/main/java/com/google/gson/JsonElement.java,342,"rotected abstract void toString(Appendable sb, Escaper escaper) throws IOException;"
+False,gson/src/main/java/com/google/gson/JsonNull.java,gson/src/main/java/com/google/gson/JsonNull.java,19,mport java.io.IOException;
+False,gson/src/main/java/com/google/gson/JsonNull.java,gson/src/main/java/com/google/gson/JsonNull.java,49,Override
+False,gson/src/main/java/com/google/gson/JsonNull.java,gson/src/main/java/com/google/gson/JsonNull.java,50,"rotected void toString(Appendable sb, Escaper escaper) throws IOException {"
+False,gson/src/main/java/com/google/gson/JsonNull.java,gson/src/main/java/com/google/gson/JsonNull.java,51,"b.append(""null"");"
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,21,mport java.io.IOException;
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,214,Override
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,215,"rotected void toString(Appendable sb, Escaper escaper) throws IOException {"
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,216,b.append('{');
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,217,oolean first = true;
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,218,"or (Map.Entry<String, JsonElement> entry : members.entrySet()) {"
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,219,f (first) {
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,220,irst = false;
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,221, else {
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,222,"b.append(',');"
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,224,"b.append('\""');"
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,225,b.append(escaper.escapeJsonString(entry.getKey()));
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,226,"b.append(""\"":"");"
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,227,"ntry.getValue().toString(sb, escaper);"
+False,gson/src/main/java/com/google/gson/JsonObject.java,gson/src/main/java/com/google/gson/JsonObject.java,229,b.append('}');
+False,gson/src/main/java/com/google/gson/JsonPrimitive.java,gson/src/main/java/com/google/gson/JsonPrimitive.java,21,mport java.io.IOException;
+False,gson/src/main/java/com/google/gson/JsonPrimitive.java,gson/src/main/java/com/google/gson/JsonPrimitive.java,297,Override
+False,gson/src/main/java/com/google/gson/JsonPrimitive.java,gson/src/main/java/com/google/gson/JsonPrimitive.java,298,"rotected void toString(Appendable sb, Escaper escaper) throws IOException {"
+False,gson/src/main/java/com/google/gson/JsonPrimitive.java,gson/src/main/java/com/google/gson/JsonPrimitive.java,299,f (isString()) {
+False,gson/src/main/java/com/google/gson/JsonPrimitive.java,gson/src/main/java/com/google/gson/JsonPrimitive.java,300,"b.append('""');"
+False,gson/src/main/java/com/google/gson/JsonPrimitive.java,gson/src/main/java/com/google/gson/JsonPrimitive.java,301,b.append(escaper.escapeJsonString(value.toString()));
+False,gson/src/main/java/com/google/gson/JsonPrimitive.java,gson/src/main/java/com/google/gson/JsonPrimitive.java,302,"b.append('""');"
+False,gson/src/main/java/com/google/gson/JsonPrimitive.java,gson/src/main/java/com/google/gson/JsonPrimitive.java,303, else {
+False,gson/src/main/java/com/google/gson/JsonPrimitive.java,gson/src/main/java/com/google/gson/JsonPrimitive.java,304,b.append(value.toString());
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,2, Copyright (C) 2008 Google Inc.
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,4," Licensed under the Apache License, Version 2.0 (the ""License"");"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,5, you may not use this file except in compliance with the License.
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,6, You may obtain a copy of the License at
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,8, http://www.apache.org/licenses/LICENSE-2.0
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,10," Unless required by applicable law or agreed to in writing, software"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,11," distributed under the License is distributed on an ""AS IS"" BASIS,"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,12," WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,13, See the License for the specific language governing permissions and
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,14, limitations under the License.
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,17,ackage com.google.gson;
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,19,mport junit.framework.TestCase;
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,22, Performs some unit testing for the {@link Escaper} class.
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,24, @author Joel Leitch
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,26,ublic class EscaperTest extends TestCase {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,28,rivate Escaper escapeHtmlChar;
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,29,rivate Escaper noEscapeHtmlChar;
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,31,Override
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,32,rotected void setUp() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,33,uper.setUp();
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,34,scapeHtmlChar = new Escaper(true);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,35,oEscapeHtmlChar = new Escaper(false);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,38,ublic void testNoSpecialCharacters() {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,39,"tring value = ""Testing123"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,40,tring escapedString = escapeHtmlChar.escapeJsonString(value);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,41,"ssertEquals(value, escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,44,ublic void testNewlineEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,45,"tring containsNewline = ""123\n456"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,46,tring escapedString = escapeHtmlChar.escapeJsonString(containsNewline);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,47,"ssertEquals(""123\\n456"", escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,50,ublic void testCarrageReturnEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,51,"tring containsCarrageReturn = ""123\r456"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,52,tring escapedString = escapeHtmlChar.escapeJsonString(containsCarrageReturn);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,53,"ssertEquals(""123\\r456"", escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,56,ublic void testTabEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,57,"tring containsTab = ""123\t456"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,58,tring escapedString = escapeHtmlChar.escapeJsonString(containsTab);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,59,"ssertEquals(""123\\t456"", escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,62,ublic void testDoubleQuoteEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,63,"tring containsQuote = ""123\""456"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,64,tring escapedString = escapeHtmlChar.escapeJsonString(containsQuote);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,65,"ssertEquals(""123\\\""456"", escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,68,ublic void testSingleQuoteEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,69,"tring containsQuote = ""123'456"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,70,tring escapedString = escapeHtmlChar.escapeJsonString(containsQuote);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,71,"ssertEquals(""123\\u0027456"", escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,74,ublic void testLineSeparatorEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,75,"tring src = ""123\u2028 456"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,76,tring escapedString = escapeHtmlChar.escapeJsonString(src);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,77,"ssertEquals(""123\\u2028 456"", escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,80,ublic void testParagraphSeparatorEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,81,"tring src = ""123\u2029 456"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,82,tring escapedString = escapeHtmlChar.escapeJsonString(src);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,83,"ssertEquals(""123\\u2029 456"", escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,86,ublic void testControlCharBlockEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,87,or (char c = '\u007f'; c <= '\u009f'; ++c) {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,88,"tring src = ""123 "" + c + "" 456"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,89,tring escapedString = escapeHtmlChar.escapeJsonString(src);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,90,ssertFalse(src.equals(escapedString));
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,94,ublic void testEqualsEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,95,"tring containsEquals = ""123=456"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,96,nt index = containsEquals.indexOf('=');
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,97,"tring unicodeValue = convertToUnicodeString(Character.codePointAt(containsEquals, index));"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,98,tring escapedString = escapeHtmlChar.escapeJsonString(containsEquals);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,99,"ssertEquals(""123"" + unicodeValue + ""456"", escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,101,scapedString = noEscapeHtmlChar.escapeJsonString(containsEquals);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,102,"ssertEquals(containsEquals, escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,105,ublic void testGreaterThanAndLessThanEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,106,"tring containsLtGt = ""123>456<"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,107,nt gtIndex = containsLtGt.indexOf('>');
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,108,nt ltIndex = containsLtGt.indexOf('<');
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,109,"tring gtAsUnicode = convertToUnicodeString(Character.codePointAt(containsLtGt, gtIndex));"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,110,"tring ltAsUnicode = convertToUnicodeString(Character.codePointAt(containsLtGt, ltIndex));"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,112,tring escapedString = escapeHtmlChar.escapeJsonString(containsLtGt);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,113,"ssertEquals(""123"" + gtAsUnicode + ""456"" + ltAsUnicode, escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,115,scapedString = noEscapeHtmlChar.escapeJsonString(containsLtGt);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,116,"ssertEquals(containsLtGt, escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,119,ublic void testAmpersandEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,120,"tring containsAmp = ""123&456"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,121,nt ampIndex = containsAmp.indexOf('&');
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,122,"tring ampAsUnicode = convertToUnicodeString(Character.codePointAt(containsAmp, ampIndex));"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,124,tring escapedString = escapeHtmlChar.escapeJsonString(containsAmp);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,125,"ssertEquals(""123"" + ampAsUnicode + ""456"", escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,127,scapedString = noEscapeHtmlChar.escapeJsonString(containsAmp);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,128,"ssertEquals(containsAmp, escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,130,har ampCharAsUnicode = '\u0026';
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,131,"tring containsAmpUnicode = ""123"" + ampCharAsUnicode + ""456"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,132,scapedString = escapeHtmlChar.escapeJsonString(containsAmpUnicode);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,133,"ssertEquals(""123"" + ampAsUnicode + ""456"", escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,135,scapedString = noEscapeHtmlChar.escapeJsonString(containsAmpUnicode);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,136,"ssertEquals(containsAmp, escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,139,ublic void testSlashEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,140,"tring containsSlash = ""123\\456"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,141,tring escapedString = escapeHtmlChar.escapeJsonString(containsSlash);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,142,"ssertEquals(""123\\\\456"", escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,145,ublic void testSingleQuoteNotEscaped() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,146,"tring containsSingleQuote = ""123'456"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,147,tring escapedString = noEscapeHtmlChar.escapeJsonString(containsSingleQuote);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,148,"ssertEquals(containsSingleQuote, escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,151,ublic void testRequiredEscapingUnicodeCharacter() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,152,har unicodeChar = '\u2028';
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,153,"tring unicodeString = ""Testing"" + unicodeChar;"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,155,tring escapedString = escapeHtmlChar.escapeJsonString(unicodeString);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,156,ssertFalse(unicodeString.equals(escapedString));
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,157,"ssertEquals(""Testing\\u2028"", escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,160,ublic void testUnicodeCharacterStringNoEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,161,"tring unicodeString = ""\u0065\u0066"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,163,tring escapedString = escapeHtmlChar.escapeJsonString(unicodeString);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,164,"ssertEquals(unicodeString, escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,168,ublic void testChineseCharacterEscaping() throws Exception {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,169,"tring unicodeString = ""\u597d\u597d\u597d"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,170,"tring chineseString = ""好好好"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,171,"ssertEquals(unicodeString, chineseString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,173,"tring expectedEscapedString = ""\\u597d\\u597d\\u597d"";"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,174,tring escapedString = Escaper.escapeJsonString(chineseString);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,175,"ssertEquals(expectedEscapedString, escapedString);"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,179,rivate String convertToUnicodeString(int codepoint) {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,180,tring hexValue = Integer.toHexString(codepoint);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,181,"tringBuilder sb = new StringBuilder(""\\u"");"
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,182,or (int i = 0; i < 4 - hexValue.length(); i++) {
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,183,b.append(0);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,185,b.append(hexValue);
+False,gson/src/test/java/com/google/gson/EscaperTest.java,gson/src/test/java/com/google/gson/EscaperTest.java,187,eturn sb.toString().toLowerCase();

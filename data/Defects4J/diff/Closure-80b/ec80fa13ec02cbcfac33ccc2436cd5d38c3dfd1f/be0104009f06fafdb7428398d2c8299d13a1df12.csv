@@ -1,0 +1,32 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,982,* Replace a source input dynamically. Intended for incremental
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,983,* re-compilation.
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,985,"* If the new source input doesn't parse, then keep the old input"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,986,* in the AST and return false.
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,988,* @return Whether the new AST was attached successfully.
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,990,boolean replaceIncrementalSourceAst(JsAst ast) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,991,String sourceName = ast.getSourceFile().getName();
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,992,CompilerInput oldInput =
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,993,Preconditions.checkNotNull(
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,994,"getInput(sourceName),"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,995,"""No input to replace: "" + sourceName);"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,996,Node newRoot = ast.getAstRoot(this);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,997,if (newRoot == null) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,998,return false;
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1001,Node oldRoot = oldInput.getAstRoot(this);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1002,if (oldRoot != null) {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1003,"oldRoot.getParent().replaceChild(oldRoot, newRoot);"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1004,} else {
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1005,getRoot().getLastChild().addChildToBack(newRoot);
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1008,"inputsByName.put(sourceName, new CompilerInput(ast));"
+True,src/com/google/javascript/jscomp/Compiler.java,src/com/google/javascript/jscomp/Compiler.java,1009,return true;
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1054,ypedScopeCreator =
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1055,ew MemoizedScopeCreator(new TypedScopeCreator(compiler));
+False,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1056,"opScope = typedScopeCreator.createScope(root.getParent(), null);"
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,1054,"regenerateGlobalTypedScope(compiler, root.getParent());"
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,22,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,54,* Regenerates the top scope.
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,56,"void regenerateGlobalTypedScope(AbstractCompiler compiler, Node root) {"
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,57,typedScopeCreator =
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,58,new MemoizedScopeCreator(new TypedScopeCreator(compiler));
+True,src/com/google/javascript/jscomp/PassConfig.java,src/com/google/javascript/jscomp/PassConfig.java,59,"topScope = typedScopeCreator.createScope(root, null);"

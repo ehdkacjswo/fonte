@@ -1,0 +1,141 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,975,//     * Checks if the given {@link LocalDateTime} is within an overlap.
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,976,//     * <p>
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,977,//     * When switching from Daylight Savings Time to standard time there is
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,978,//     * typically an overlap where the same clock hour occurs twice. This
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,979,//     * method identifies whether the local datetime refers to such an overlap.
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,981,"//     * @param localDateTime  the time to check, not null"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,982,//     * @return true if the given datetime refers to an overlap
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,984,//    public boolean isLocalDateTimeOverlap(LocalDateTime localDateTime) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,985,//        if (isFixed()) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,986,//            return false;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,988,//        long instantLocal = localDateTime.toDateTime(DateTimeZone.UTC).getMillis();
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,989,//        // get the offset at instantLocal (first estimate)
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,990,//        int offsetLocal = getOffset(instantLocal);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,991,//        // adjust instantLocal using the estimate and recalc the offset
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,992,//        int offset = getOffset(instantLocal - offsetLocal);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,993,"//        // if the offsets differ, we must be near a DST boundary"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,994,//        if (offsetLocal != offset) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,995,//            long nextLocal = nextTransition(instantLocal - offsetLocal);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,996,//            long nextAdjusted = nextTransition(instantLocal - offset);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,997,//            if (nextLocal != nextAdjusted) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,998,//                // in DST gap
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,999,//                return false;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1001,//            long diff = Math.abs(offset - offsetLocal);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1002,//            DateTime dateTime = localDateTime.toDateTime(this);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1003,//            DateTime adjusted = dateTime.plus(diff);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1004,//            if (dateTime.getHourOfDay() == adjusted.getHourOfDay() &&
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1005,//                    dateTime.getMinuteOfHour() == adjusted.getMinuteOfHour() &&
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1006,//                    dateTime.getSecondOfMinute() == adjusted.getSecondOfMinute()) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1007,//                return true;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1009,//            adjusted = dateTime.minus(diff);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1010,//            if (dateTime.getHourOfDay() == adjusted.getHourOfDay() &&
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1011,//                    dateTime.getMinuteOfHour() == adjusted.getMinuteOfHour() &&
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1012,//                    dateTime.getSecondOfMinute() == adjusted.getSecondOfMinute()) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1013,//                return true;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1015,//            return false;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1017,//        return false;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1021,//        DateTime dateTime = null;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1022,//        try {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1023,//            dateTime = localDateTime.toDateTime(this);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1024,//        } catch (IllegalArgumentException ex) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1025,"//            return false;  // it is a gap, not an overlap"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1027,//        long offset1 = Math.abs(getOffset(dateTime.getMillis() + 1) - getStandardOffset(dateTime.getMillis() + 1));
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1028,//        long offset2 = Math.abs(getOffset(dateTime.getMillis() - 1) - getStandardOffset(dateTime.getMillis() - 1));
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1029,"//        long offset = Math.max(offset1, offset2);"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1030,//        if (offset == 0) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1031,//            return false;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1033,//        DateTime adjusted = dateTime.plus(offset);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1034,//        if (dateTime.getHourOfDay() == adjusted.getHourOfDay() &&
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1035,//                dateTime.getMinuteOfHour() == adjusted.getMinuteOfHour() &&
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1036,//                dateTime.getSecondOfMinute() == adjusted.getSecondOfMinute()) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1037,//            return true;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1039,//        adjusted = dateTime.minus(offset);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1040,//        if (dateTime.getHourOfDay() == adjusted.getHourOfDay() &&
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1041,//                dateTime.getMinuteOfHour() == adjusted.getMinuteOfHour() &&
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1042,//                dateTime.getSecondOfMinute() == adjusted.getSecondOfMinute()) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1043,//            return true;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1045,//        return false;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1047,//        long millis = dateTime.getMillis();
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1048,//        long nextTransition = nextTransition(millis);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1049,//        long previousTransition = previousTransition(millis);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1050,//        long deltaToPreviousTransition = millis - previousTransition;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1051,//        long deltaToNextTransition = nextTransition - millis;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1052,//        if (deltaToNextTransition < deltaToPreviousTransition) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1053,//            int offset = getOffset(nextTransition);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1054,//            int standardOffset = getStandardOffset(nextTransition);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1055,//            if (Math.abs(offset - standardOffset) >= deltaToNextTransition) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1056,//                return true;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1058,//        } else  {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1059,//            int offset = getOffset(previousTransition);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1060,//            int standardOffset = getStandardOffset(previousTransition);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1061,//            if (Math.abs(offset - standardOffset) >= deltaToPreviousTransition) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1062,//                return true;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1065,//        return false;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1069,* Checks if the given {@link LocalDateTime} is within a gap.
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1070,* <p>
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1071,* When switching from standard time to Daylight Savings Time there is
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1072,* typically a gap where a clock hour is missing. This method identifies
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1073,* whether the local datetime refers to such a gap.
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1075,"* @param localDateTime  the time to check, not null"
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1076,* @return true if the given datetime refers to a gap
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1078,public boolean isLocalDateTimeGap(LocalDateTime localDateTime) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1079,if (isFixed()) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1080,return false;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1082,try {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1083,localDateTime.toDateTime(this);
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1084,return false;
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1085,} catch (IllegalArgumentException ex) {
+True,JodaTime/src/java/org/joda/time/DateTimeZone.java,JodaTime/src/java/org/joda/time/DateTimeZone.java,1086,return true;
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,740,//    public void testIsLocalDateTimeOverlap_Berlin() {
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,741,"//        DateTimeZone zone = DateTimeZone.forID(""Europe/Berlin"");"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,742,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 10, 28, 1, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,743,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 10, 28, 1, 59, 59, 99)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,744,"//        assertEquals(true, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 10, 28, 2, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,745,"//        assertEquals(true, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 10, 28, 2, 30)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,746,"//        assertEquals(true, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 10, 28, 2, 59, 59, 99)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,747,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 10, 28, 3, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,748,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 10, 28, 4, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,750,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 3, 25, 1, 30)));  // before gap"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,751,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 3, 25, 2, 30)));  // gap"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,752,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 3, 25, 3, 30)));  // after gap"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,753,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 12, 24, 12, 34)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,757,//    public void testIsLocalDateTimeOverlap_NewYork() {
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,758,"//        DateTimeZone zone = DateTimeZone.forID(""America/New_York"");"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,759,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 11, 4, 0, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,760,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 11, 4, 0, 59, 59, 99)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,761,"//        assertEquals(true, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 11, 4, 1, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,762,"//        assertEquals(true, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 11, 4, 1, 30)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,763,"//        assertEquals(true, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 11, 4, 1, 59, 59, 99)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,764,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 11, 4, 2, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,765,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 11, 4, 3, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,767,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 3, 11, 1, 30)));  // before gap"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,768,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 3, 11, 2, 30)));  // gap"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,769,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 3, 11, 3, 30)));  // after gap"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,770,"//        assertEquals(false, zone.isLocalDateTimeOverlap(new LocalDateTime(2007, 12, 24, 12, 34)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,774,public void testIsLocalDateTimeGap_Berlin() {
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,775,"DateTimeZone zone = DateTimeZone.forID(""Europe/Berlin"");"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,776,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 25, 1, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,777,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 25, 1, 59, 59, 99)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,778,"assertEquals(true, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 25, 2, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,779,"assertEquals(true, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 25, 2, 30)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,780,"assertEquals(true, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 25, 2, 59, 59, 99)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,781,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 25, 3, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,782,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 25, 4, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,784,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 10, 28, 1, 30)));  // before overlap"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,785,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 10, 28, 2, 30)));  // overlap"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,786,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 10, 28, 3, 30)));  // after overlap"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,787,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 12, 24, 12, 34)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,791,public void testIsLocalDateTimeGap_NewYork() {
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,792,"DateTimeZone zone = DateTimeZone.forID(""America/New_York"");"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,793,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 11, 1, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,794,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 11, 1, 59, 59, 99)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,795,"assertEquals(true, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 11, 2, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,796,"assertEquals(true, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 11, 2, 30)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,797,"assertEquals(true, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 11, 2, 59, 59, 99)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,798,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 11, 3, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,799,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 3, 11, 4, 0)));"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,801,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 11, 4, 0, 30)));  // before overlap"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,802,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 11, 4, 1, 30)));  // overlap"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,803,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 11, 4, 2, 30)));  // after overlap"
+True,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,JodaTime/src/test/org/joda/time/TestDateTimeZone.java,804,"assertEquals(false, zone.isLocalDateTimeGap(new LocalDateTime(2007, 12, 24, 12, 34)));"

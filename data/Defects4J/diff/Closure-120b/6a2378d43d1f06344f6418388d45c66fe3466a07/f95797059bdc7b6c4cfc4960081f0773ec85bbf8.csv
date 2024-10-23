@@ -1,0 +1,455 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,533,Node assignTarget = n.getFirstChild();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,534,if (isName(assignTarget)) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,535,return true;
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,544,ode current = n.getFirstChild();
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,545,or (;
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,546,urrent.getType() == Token.GETPROP ||
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,547,urrent.getType() == Token.GETELEM;
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,548,urrent = current.getFirstChild()) { }
+False,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,550,"eturn !isLiteralValue(current, true);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,549,if (isGet(assignTarget)) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,550,"// If the object being assigned to is a local object, don't"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,551,// consider this a side-effect as it can't be referenced
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,552,// elsewhere.  Don't do this recursively as the property might
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,553,"// be an alias of another object, unlike a literal below."
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,554,Node current = assignTarget.getFirstChild();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,555,if (evaluatesToLocalValue(current)) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,556,return false;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,559,"// A literal value as defined by ""isLiteralValue"" is guaranteed"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,560,"// not to be an alias, or any components which are aliases of"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,561,// other objects.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,562,// If the root object is a literal don't consider this a
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,563,// side-effect.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,564,while (isGet(current)) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,565,current = current.getFirstChild();
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,568,"return !isLiteralValue(current, true);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,569,} else {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,570,// TODO(johnlenz): remove this code and make this an exception. This
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,571,"// is here only for legacy reasons, the AST is not valid but"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,572,// preserve existing behavior.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,573,"return !isLiteralValue(assignTarget, true);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,664,if (callNode.isOnlyModifiesThisCall()
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,665,&& evaluatesToLocalValue(nameNode.getFirstChild())) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,666,return false;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2247,* @return Whether the node is known to be a value that is not referenced
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2248,* elsewhere.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2250,static boolean evaluatesToLocalValue(Node value) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2251,"return evaluatesToLocalValue(value, Predicates.<Node>alwaysFalse());"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2255,* @param locals A predicate to apply to unknown local values.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2256,* @return Whether the node is known to be a value that is not a reference
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2257,*     outside the expression scope.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2259,"static boolean evaluatesToLocalValue(Node value, Predicate<Node> locals) {"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2260,switch (value.getType()) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2261,case Token.ASSIGN:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2262,"// A result that is aliased by a non-local name, is the effectively the"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2263,"// same as returning a non-local name, but this doesn't matter if the"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2264,// value is immutable.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2265,return NodeUtil.isImmutableValue(value.getLastChild())
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2266,|| (locals.apply(value)
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2267,"&& evaluatesToLocalValue(value.getLastChild(), locals));"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2268,case Token.COMMA:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2269,"return evaluatesToLocalValue(value.getLastChild(), locals);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2270,case Token.AND:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2271,case Token.OR:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2272,"return evaluatesToLocalValue(value.getFirstChild(), locals)"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2273,"&& evaluatesToLocalValue(value.getLastChild(), locals);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2274,case Token.HOOK:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2275,"return evaluatesToLocalValue(value.getFirstChild().getNext(), locals)"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2276,"&& evaluatesToLocalValue(value.getLastChild(), locals);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2277,case Token.INC:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2278,case Token.DEC:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2279,if (value.getBooleanProp(Node.INCRDECR_PROP)) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2280,"return evaluatesToLocalValue(value.getFirstChild(), locals);"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2281,} else {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2282,return true;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2284,case Token.THIS:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2285,return locals.apply(value);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2286,case Token.NAME:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2287,return isImmutableValue(value) || locals.apply(value);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2288,case Token.GETELEM:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2289,case Token.GETPROP:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2290,// There is no information about the locality of object properties.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2291,return locals.apply(value);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2292,case Token.CALL:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2293,return callHasLocalResult(value) || locals.apply(value);
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2294,case Token.NEW:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2295,return true;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2296,case Token.FUNCTION:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2297,case Token.REGEXP:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2298,case Token.ARRAYLIT:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2299,case Token.OBJECTLIT:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2300,// Literals objects with non-literal children are allowed.
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2301,return true;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2302,case Token.IN:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2303,// TODO(johnlenz): should IN operator be included in #isSimpleOperator?
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2304,return true;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2305,default:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2306,// Other op force a local value:
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2307,//  x = '' + g (x is now an local string)
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2308,//  x -= g (x is now an local number)
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2309,if (isAssignmentOp(value)
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2310,|| isSimpleOperator(value)
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2311,|| isImmutableValue(value)) {
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2312,return true;
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2315,throw new IllegalStateException(
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2316,"""Unexpected expression node"" + value +"
+True,src/com/google/javascript/jscomp/NodeUtil.java,src/com/google/javascript/jscomp/NodeUtil.java,2317,"""\n parent:"" + value.getParent());"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,19,mport com.google.common.annotations.VisibleForTesting;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,21,import com.google.common.base.Predicate;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,310,ideEffectFlags flags = new SideEffectFlags();
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,310,Node.SideEffectFlags flags = new Node.SideEffectFlags();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,364,rivate static class SideEffectFlags {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,365,rivate int value = Node.SIDE_EFFECTS_ALL;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,367,nt valueOf() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,368,eturn value;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,371,** All side-effect occur and the returned results are non-local. */
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,372,oid setAllFlags() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,373,alue = Node.SIDE_EFFECTS_ALL;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,376,** No side-effects occur and the returned results are local. */
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,377,oid clearAllFlags() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,378,alue = Node.NO_SIDE_EFFECTS | Node.FLAG_LOCAL_RESULTS;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,381,oolean areAllFlagsSet() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,382,eturn value == Node.SIDE_EFFECTS_ALL;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,386," Preserve the return result flag, but clear the others:"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,387,"   no global state change, no throws, no this change, no arguments change"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,389,oid clearSideEffectFlags() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,390,alue |= Node.NO_SIDE_EFFECTS;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,393,oid setMutatesGlobalState() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,394,/ Modify global means everything must be assumed to be modified.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,395,emoveFlag(Node.FLAG_GLOBAL_STATE_UNMODIFIED);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,396,emoveFlag(Node.FLAG_ARGUMENTS_UNMODIFIED);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,397,emoveFlag(Node.FLAG_THIS_UNMODIFIED);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,400,oid setThrows() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,401,emoveFlag(Node.FLAG_NO_THROWS);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,404,oid setMutatesThis() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,405,emoveFlag(Node.FLAG_THIS_UNMODIFIED);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,408,oid setMutatesArguments() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,409,emoveFlag(Node.FLAG_ARGUMENTS_UNMODIFIED);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,412,oid setReturnsTainted() {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,413,emoveFlag(Node.FLAG_LOCAL_RESULTS);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,416,rivate void removeFlag(int flag) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,417,alue &= ~flag;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,499,f (value != null && !isKnownLocalValue(value)) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,442,if (value != null && !NodeUtil.evaluatesToLocalValue(value)) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,510,& !isKnownLocalValue(node.getFirstChild())) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,453,&& !NodeUtil.evaluatesToLocalValue(node.getFirstChild())) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,597,f (rhs != null && NodeUtil.isAssign(op) && !isKnownLocalValue(rhs)) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,540,if (rhs != null
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,541,&& NodeUtil.isAssign(op)
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,542,&& !NodeUtil.evaluatesToLocalValue(rhs)) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,607,if (inExterns) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,608,// TODO(johnlenz): determine the locality of the results of extern
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,609,// functions.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,610,sideEffectInfo.setTaintsReturn();
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,766,VisibleForTesting
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,767,tatic boolean isKnownLocalValue(Node value) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,768,/ TODO(johnlenz): traverse into expression.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,769,"/ return NodeUtil.isNew(value) || NodeUtil.isLiteralValue(value, true);"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,770,witch (value.getType()) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,771,ase Token.ASSIGN:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,772,ase Token.COMMA:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,773,eturn isKnownLocalValue(value.getLastChild());
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,774,ase Token.AND:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,775,ase Token.OR:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,776,eturn isKnownLocalValue(value.getFirstChild()) &&
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,777,sKnownLocalValue(value.getLastChild());
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,778,ase Token.HOOK:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,779,eturn isKnownLocalValue(value.getFirstChild().getNext()) &&
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,780,sKnownLocalValue(value.getLastChild());
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,781,ase Token.INC:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,782,ase Token.DEC:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,783,f (value.getBooleanProp(Node.INCRDECR_PROP)) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,784,eturn isKnownLocalValue(value.getFirstChild());
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,785, else {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,786,eturn true;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,717,private static boolean isKnownLocalValue(Node value) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,718,Predicate<Node> taintingPredicate = new Predicate<Node>() {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,719,@Override
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,720,public boolean apply(Node value) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,721,switch (value.getType()) {
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,722,case Token.THIS:
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,723,// TODO(johnlenz): maybe redirect this to be a tainting list for 'this'.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,724,return false;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,725,case Token.NAME:
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,726,"// TODO(johnlenz): add to local tainting list, if the NAME"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,727,// is known to be a local.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,729,return false;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,730,case Token.GETELEM:
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,731,case Token.GETPROP:
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,732,// There is no information about the locality of object properties.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,733,return false;
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,734,case Token.CALL:
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,735,"// TODO(johnlenz): add to local tainting list, if the call result"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,736,// is not known to be a local result.
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,737,return false;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,788,ase Token.THIS:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,789,/ TODO(johnlenz): maybe redirect this to be a tainting list for 'this'.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,790,eturn false;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,791,ase Token.NAME:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,792,"/ TODO(johnlenz): add to local tainting list, if the NAME"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,793,/ is known to be a local.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,795,"/ ""undefined"", ""NaN"" and ""Infinity"" are allowed."
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,796,eturn NodeUtil.isImmutableValue(value);
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,797,ase Token.GETELEM:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,798,ase Token.GETPROP:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,799,/ There is no information about the locality of object properties.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,800,eturn false;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,801,ase Token.CALL:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,802,"/ TODO(johnlenz): add to local tainting list, if the call result"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,803,/ is not known to be a local result.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,805,ase Token.NEW:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,806,eturn true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,807,ase Token.FUNCTION:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,808,ase Token.REGEXP:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,809,ase Token.ARRAYLIT:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,810,ase Token.OBJECTLIT:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,811,/ Literals objects with non-literal children are allowed.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,812,eturn true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,813,ase Token.IN:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,814,/ The IN operator is not include in NodeUtil#isSimpleOperator.
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,815,eturn true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,816,efault:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,817,/ Other op force a local value:
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,818,/  x = '' + g (x is now an local string)
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,819,/  x -= g (x is now an local number)
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,820,f (NodeUtil.isAssignmentOp(value)
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,821,| NodeUtil.isSimpleOperator(value)
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,822,| NodeUtil.isImmutableValue(value)) {
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,823,eturn true;
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,826,hrow new IllegalStateException(
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,827,"Unexpected expression node"" + value +"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,828,"\n parent:"" + value.getParent());"
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,743,"return NodeUtil.evaluatesToLocalValue(value, taintingPredicate);"
+False,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,877, else if (objectNode != null && isKnownLocalValue(objectNode)
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,791,} else if (objectNode != null
+True,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,src/com/google/javascript/jscomp/PureFunctionIdentifier.java,792,&& NodeUtil.evaluatesToLocalValue(objectNode)
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2103,public void setSideEffectFlags(SideEffectFlags flags) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2104,setSideEffectFlags(flags.valueOf());
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2115,* A helper class for getting and setting the side-effect flags.
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2116,* @author johnlenz@google.com (John Lenz)
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2118,public static class SideEffectFlags {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2119,private int value = Node.SIDE_EFFECTS_ALL;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2121,public SideEffectFlags() {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2124,public SideEffectFlags(int value) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2125,this.value = value;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2128,public int valueOf() {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2129,return value;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2132,/** All side-effect occur and the returned results are non-local. */
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2133,public void setAllFlags() {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2134,value = Node.SIDE_EFFECTS_ALL;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2137,/** No side-effects occur and the returned results are local. */
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2138,public void clearAllFlags() {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2139,value = Node.NO_SIDE_EFFECTS | Node.FLAG_LOCAL_RESULTS;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2142,public boolean areAllFlagsSet() {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2143,return value == Node.SIDE_EFFECTS_ALL;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2147,"* Preserve the return result flag, but clear the others:"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2148,"*   no global state change, no throws, no this change, no arguments change"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2150,public void clearSideEffectFlags() {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2151,value |= Node.NO_SIDE_EFFECTS;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2154,public void setMutatesGlobalState() {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2155,// Modify global means everything must be assumed to be modified.
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2156,removeFlag(Node.FLAG_GLOBAL_STATE_UNMODIFIED);
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2157,removeFlag(Node.FLAG_ARGUMENTS_UNMODIFIED);
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2158,removeFlag(Node.FLAG_THIS_UNMODIFIED);
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2161,public void setThrows() {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2162,removeFlag(Node.FLAG_NO_THROWS);
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2165,public void setMutatesThis() {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2166,removeFlag(Node.FLAG_THIS_UNMODIFIED);
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2169,public void setMutatesArguments() {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2170,removeFlag(Node.FLAG_ARGUMENTS_UNMODIFIED);
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2173,public void setReturnsTainted() {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2174,removeFlag(Node.FLAG_LOCAL_RESULTS);
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2177,private void removeFlag(int flag) {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2178,value &= ~flag;
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2183,"* @return Whether the only side-effect is ""modifies this"""
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2185,public boolean isOnlyModifiesThisCall() {
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2186,return areBitFlagsSet(
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2187,"getSideEffectFlags() & Node.NO_SIDE_EFFECTS,"
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2188,Node.FLAG_GLOBAL_STATE_UNMODIFIED
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2189,| Node.FLAG_ARGUMENTS_UNMODIFIED
+True,src/com/google/javascript/rhino/Node.java,src/com/google/javascript/rhino/Node.java,2190,| Node.FLAG_NO_THROWS);
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,19,import com.google.common.base.Preconditions;
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,345,"assertSideEffect(false, ""({}||[]).foo = 2;"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,346,"assertSideEffect(false, ""(true ? {} : []).foo = 2;"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,347,"assertSideEffect(false, ""({},[]).foo = 2;"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,967,public void testLocalValue1() throws Exception {
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,968,// Names are not known to be local.
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,969,"assertFalse(testLocalValue(""x""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,970,"assertFalse(testLocalValue(""x()""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,971,"assertFalse(testLocalValue(""this""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,972,"assertFalse(testLocalValue(""arguments""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,974,// new objects are local
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,975,"assertTrue(testLocalValue(""new x()""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,977,// property references are assume to be non-local
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,978,"assertFalse(testLocalValue(""(new x()).y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,979,"assertFalse(testLocalValue(""(new x())['y']""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,981,// Primitive values are local
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,982,"assertTrue(testLocalValue(""null""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,983,"assertTrue(testLocalValue(""undefined""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,984,"assertTrue(testLocalValue(""Infinity""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,985,"assertTrue(testLocalValue(""NaN""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,986,"assertTrue(testLocalValue(""1""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,987,"assertTrue(testLocalValue(""'a'""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,988,"assertTrue(testLocalValue(""true""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,989,"assertTrue(testLocalValue(""false""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,990,"assertTrue(testLocalValue(""[]""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,991,"assertTrue(testLocalValue(""{}""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,993,// The contents of arrays and objects don't matter
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,994,"assertTrue(testLocalValue(""[x]""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,995,"assertTrue(testLocalValue(""{'a':x}""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,997,// Pre-increment results in primitive number
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,998,"assertTrue(testLocalValue(""++x""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,999,"assertTrue(testLocalValue(""--x""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1001,"// Post-increment, the previous value matters."
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1002,"assertFalse(testLocalValue(""x++""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1003,"assertFalse(testLocalValue(""x--""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1005,// The left side of an only assign matters if it is an alias or mutable.
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1006,"assertTrue(testLocalValue(""x=1""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1007,"assertFalse(testLocalValue(""x=[]""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1008,"assertFalse(testLocalValue(""x=y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1009,"// The right hand side of assignment opts don't matter, as they force"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1010,// a local result.
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1011,"assertTrue(testLocalValue(""x+=y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1012,"assertTrue(testLocalValue(""x*=y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1013,"// Comparisons always result in locals, as they force a local boolean"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1014,// result.
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1015,"assertTrue(testLocalValue(""x==y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1016,"assertTrue(testLocalValue(""x!=y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1017,"assertTrue(testLocalValue(""x>y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1018,// Only the right side of a comma matters
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1019,"assertTrue(testLocalValue(""(1,2)""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1020,"assertTrue(testLocalValue(""(x,1)""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1021,"assertFalse(testLocalValue(""(x,y)""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1023,// Both the operands of OR matter
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1024,"assertTrue(testLocalValue(""1||2""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1025,"assertFalse(testLocalValue(""x||1""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1026,"assertFalse(testLocalValue(""x||y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1027,"assertFalse(testLocalValue(""1||y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1029,// Both the operands of AND matter
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1030,"assertTrue(testLocalValue(""1&&2""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1031,"assertFalse(testLocalValue(""x&&1""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1032,"assertFalse(testLocalValue(""x&&y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1033,"assertFalse(testLocalValue(""1&&y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1035,// Only the results of HOOK matter
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1036,"assertTrue(testLocalValue(""x?1:2""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1037,"assertFalse(testLocalValue(""x?x:2""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1038,"assertFalse(testLocalValue(""x?1:x""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1039,"assertFalse(testLocalValue(""x?x:y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1041,// Results of ops are local values
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1042,"assertTrue(testLocalValue(""!y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1043,"assertTrue(testLocalValue(""~y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1044,"assertTrue(testLocalValue(""y + 1""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1045,"assertTrue(testLocalValue(""y + z""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1046,"assertTrue(testLocalValue(""y * z""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1048,"assertTrue(testLocalValue(""'a' in x""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1049,"assertTrue(testLocalValue(""typeof x""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1050,"assertTrue(testLocalValue(""x instanceof y""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1052,"assertTrue(testLocalValue(""void x""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1053,"assertTrue(testLocalValue(""void 0""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1055,"assertFalse(testLocalValue(""{}.x""));"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1058,private boolean testLocalValue(String js) {
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1059,"Node script = parse(""var test = "" + js +"";"");"
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1060,Preconditions.checkState(script.getType() == Token.SCRIPT);
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1061,Node var = script.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1062,Preconditions.checkState(var.getType() == Token.VAR);
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1063,Node name = var.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1064,Preconditions.checkState(name.getType() == Token.NAME);
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1065,Node value = name.getFirstChild();
+True,test/com/google/javascript/jscomp/NodeUtilTest.java,test/com/google/javascript/jscomp/NodeUtilTest.java,1067,return NodeUtil.evaluatesToLocalValue(value);
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,19,mport com.google.common.base.Preconditions;
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,204,/ TODO(johnlenz): We would like the entire expression containing
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,205,"/ ""externObjSEThisMethod"" to be considered side-effect free"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,206,"/ in this context, but not yet, and maybe not here."
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,203,"// The entire expression containing ""externObjSEThisMethod"" is considered"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,204,// side-effect free in this context.
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,208,"mmutableList.<String>of(""externObjSEThis""));"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,206,ImmutableList.<String>of(
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,207,"""externObjSEThis"", ""NEW STRING externObjSEThisMethod""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,227,"mmutableList.<String>of(""externObjSEThis"", ""f""));"
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,226,ImmutableList.<String>of(
+True,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,227,"""externObjSEThis"", ""NEW STRING externObjSEThisMethod"", ""f""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1141,ublic void testLocalValue1() throws Exception {
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1142,/ Names are not known to be local.
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1143,"ssertFalse(testLocalValue(""x""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1144,"ssertFalse(testLocalValue(""x()""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1145,"ssertFalse(testLocalValue(""this""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1146,"ssertFalse(testLocalValue(""arguments""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1148,/ new objects are local
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1149,"ssertTrue(testLocalValue(""new x()""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1151,/ property references are assume to be non-local
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1152,"ssertFalse(testLocalValue(""(new x()).y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1153,"ssertFalse(testLocalValue(""(new x())['y']""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1155,/ Primitive values are local
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1156,"ssertTrue(testLocalValue(""null""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1157,"ssertTrue(testLocalValue(""undefined""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1158,"ssertTrue(testLocalValue(""Infinity""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1159,"ssertTrue(testLocalValue(""NaN""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1160,"ssertTrue(testLocalValue(""1""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1161,"ssertTrue(testLocalValue(""'a'""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1162,"ssertTrue(testLocalValue(""true""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1163,"ssertTrue(testLocalValue(""false""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1164,"ssertTrue(testLocalValue(""[]""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1165,"ssertTrue(testLocalValue(""{}""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1167,/ The contents of arrays and objects don't matter
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1168,"ssertTrue(testLocalValue(""[x]""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1169,"ssertTrue(testLocalValue(""{'a':x}""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1171,/ Pre-increment results in primitive number
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1172,"ssertTrue(testLocalValue(""++x""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1173,"ssertTrue(testLocalValue(""--x""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1175,"/ Post-increment, the previous value matters."
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1176,"ssertFalse(testLocalValue(""x++""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1177,"ssertFalse(testLocalValue(""x--""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1179,/ Only the right side of an assign matters
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1180,"ssertTrue(testLocalValue(""x=1""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1181,"ssertFalse(testLocalValue(""x=y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1182,"/ The right hand side of assignment opts don't matter, as they force"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1183,/ a local result.
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1184,"ssertTrue(testLocalValue(""x+=y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1185,"ssertTrue(testLocalValue(""x*=y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1186,"/ Comparisons always result in locals, as they force a local boolean"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1187,/ result.
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1188,"ssertTrue(testLocalValue(""x==y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1189,"ssertTrue(testLocalValue(""x!=y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1190,"ssertTrue(testLocalValue(""x>y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1191,/ Only the right side of a comma matters
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1192,"ssertTrue(testLocalValue(""(1,2)""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1193,"ssertTrue(testLocalValue(""(x,1)""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1194,"ssertFalse(testLocalValue(""(x,y)""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1196,/ Both the operands of OR matter
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1197,"ssertTrue(testLocalValue(""1||2""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1198,"ssertFalse(testLocalValue(""x||1""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1199,"ssertFalse(testLocalValue(""x||y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1200,"ssertFalse(testLocalValue(""1||y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1202,/ Both the operands of AND matter
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1203,"ssertTrue(testLocalValue(""1&&2""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1204,"ssertFalse(testLocalValue(""x&&1""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1205,"ssertFalse(testLocalValue(""x&&y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1206,"ssertFalse(testLocalValue(""1&&y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1208,/ Only the results of HOOK matter
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1209,"ssertTrue(testLocalValue(""x?1:2""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1210,"ssertFalse(testLocalValue(""x?x:2""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1211,"ssertFalse(testLocalValue(""x?1:x""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1212,"ssertFalse(testLocalValue(""x?x:y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1214,/ Results of ops are local values
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1215,"ssertTrue(testLocalValue(""!y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1216,"ssertTrue(testLocalValue(""~y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1217,"ssertTrue(testLocalValue(""y + 1""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1218,"ssertTrue(testLocalValue(""y + z""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1219,"ssertTrue(testLocalValue(""y * z""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1221,"ssertTrue(testLocalValue(""'a' in x""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1222,"ssertTrue(testLocalValue(""typeof x""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1223,"ssertTrue(testLocalValue(""x instanceof y""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1225,"ssertTrue(testLocalValue(""void x""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1226,"ssertTrue(testLocalValue(""void 0""));"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1229,oolean testLocalValue(String js) {
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1230,"ode root = this.parseExpectedJs(""var test = "" + js +"";"");"
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1231,reconditions.checkState(root.getType() == Token.BLOCK);
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1232,ode script = root.getFirstChild();
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1233,reconditions.checkState(script.getType() == Token.SCRIPT);
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1234,ode var = script.getFirstChild();
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1235,reconditions.checkState(var.getType() == Token.VAR);
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1236,ode name = var.getFirstChild();
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1237,reconditions.checkState(name.getType() == Token.NAME);
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1238,ode value = name.getFirstChild();
+False,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java,1240,eturn PureFunctionIdentifier.isKnownLocalValue(value);

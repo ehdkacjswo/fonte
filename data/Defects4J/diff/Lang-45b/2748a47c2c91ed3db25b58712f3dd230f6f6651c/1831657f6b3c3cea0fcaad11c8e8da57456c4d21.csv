@@ -1,0 +1,122 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,1,package org.apache.commons.lang;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,3,"* Copyright 2002,2004 The Apache Software Foundation."
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,5,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,6,* you may not use this file except in compliance with the License.
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,7,* You may obtain a copy of the License at
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,9,*      http://www.apache.org/licenses/LICENSE-2.0
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,11,"* Unless required by applicable law or agreed to in writing, software"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,12,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,13,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,14,* See the License for the specific language governing permissions and
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,15,* limitations under the License.
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,18,import java.text.DateFormat;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,19,import java.text.DateFormatSymbols;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,20,import java.text.ParseException;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,21,import java.util.Calendar;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,22,import java.util.Date;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,23,import java.util.Locale;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,26,* This class was created to hold the parseCVS method extracted from DateUtils in commons-lang.
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,27,* The code was originally submitted by Serge Knystautas sergek@lokitech.com. It was never
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,28,"* fully implemented, and has been moved to the sandbox for further development. Recent discussion"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,29,* from the commons-dev mailing list:
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,30,* http://marc.theaimsgroup.com/?l=jakarta-commons-dev&m=108904098032038&w=2
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,31,* Moving the code to the sandbox satisfies bug is a temporary solution to
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,32,* http://issues.apache.org/bugzilla/show_bug.cgi?id=22172 but this issue needs to be considered
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,33,* when the class/method is further developed.
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,35,public class DateFormatter {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,38,* <p>Parses a date string formatted in CVS format.</p>
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,40,* @param dateStr  the date to parse
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,41,* @return the parsed date
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,42,* @throws IllegalArgumentException if the date cannot be parsed
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,44,public static Calendar parseCVS(String dateStr) {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,45,if (dateStr == null) {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,46,"throw new IllegalArgumentException(""The date must not be null"");"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,48,//Get the symbol names
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,49,DateFormatSymbols symbols = new DateFormatSymbols(Locale.ENGLISH);
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,51,DateFormat[] dateFormats = new DateFormat[0];
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,53,//Prep the string to parse
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,54,String value = dateStr.toLowerCase().trim();
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,56,//Get the current date/time
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,57,Calendar now = Calendar.getInstance();
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,58,"if (value.endsWith("" ago"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,59,"//If this was a date that was ""ago"" the current time..."
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,60,//Strip out the ' ago' part
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,61,"value = value.substring(0, value.length() - 4);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,63,//Split the value and unit
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,64,"int start = value.indexOf("" "");"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,65,if (start < 0) {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,66,"throw new IllegalArgumentException(""Could not find space in between value and unit"");"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,68,String unit = value.substring(start + 1);
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,69,"value = value.substring(0, start);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,70,"//We support ""a week"", so we need to parse the value as ""a"""
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,71,int val = 0;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,72,"if (value.equals(""a"") || value.equals(""an"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,73,val = 1;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,74,} else {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,75,val = Integer.parseInt(value);
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,78,//Determine the unit
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,79,"if (unit.equals(""milliseconds"") || unit.equals(""millisecond"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,80,"now.add(Calendar.MILLISECOND, -val);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,81,"} else if (unit.equals(""seconds"") || unit.equals(""second"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,82,"now.add(Calendar.SECOND, -val);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,83,"} else if (unit.equals(""minutes"") || unit.equals(""minute"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,84,"now.add(Calendar.MINUTE, -val);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,85,"} else if (unit.equals(""hours"") || unit.equals(""hour"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,86,"now.add(Calendar.HOUR, -val);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,87,"} else if (unit.equals(""days"") || unit.equals(""day"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,88,"now.add(Calendar.DATE, -val);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,89,"} else if (unit.equals(""weeks"") || unit.equals(""week"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,90,"now.add(Calendar.DATE, -val * 7);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,91,"} else if (unit.equals(""fortnights"") || unit.equals(""fortnight"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,92,"now.add(Calendar.DATE, -val * 14);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,93,"} else if (unit.equals(""months"") || unit.equals(""month"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,94,"now.add(Calendar.MONTH, -val);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,95,"} else if (unit.equals(""years"") || unit.equals(""year"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,96,"now.add(Calendar.YEAR, -val);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,97,} else {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,98,"throw new IllegalArgumentException(""We do not understand that many units ago"");"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,100,return now;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,101,"} else if (value.startsWith(""last "")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,102,//If this was the last time a certain field was met
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,103,//Strip out the 'last ' part
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,104,value = value.substring(5);
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,105,//Get the current date/time
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,106,String[] strings = symbols.getWeekdays();
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,107,for (int i = 0; i < strings.length; i++) {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,108,if (value.equalsIgnoreCase(strings[i])) {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,109,//How many days after Sunday
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,110,int daysAgo = now.get(Calendar.DAY_OF_WEEK) - i;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,111,if (daysAgo <= 0) {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,112,daysAgo += 7;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,114,"now.add(Calendar.DATE, -daysAgo);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,115,return now;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,118,strings = symbols.getMonths();
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,119,for (int i = 0; i < strings.length; i++) {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,120,if (value.equalsIgnoreCase(strings[i])) {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,121,//How many days after January
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,122,int monthsAgo = now.get(Calendar.MONTH) - i;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,123,if (monthsAgo <= 0) {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,124,monthsAgo += 12;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,126,"now.add(Calendar.MONTH, -monthsAgo);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,127,return now;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,130,"if (value.equals(""week"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,131,"now.add(Calendar.DATE, -7);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,132,return now;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,134,"throw new IllegalArgumentException(""We do not understand that last units"");"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,135,"} else if (value.equals(""yesterday"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,136,"now.add(Calendar.DATE, -1);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,137,return now;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,138,"} else if (value.equals(""tomorrow"")) {"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,139,"now.add(Calendar.DATE, 1);"
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,140,return now;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,142,//Try to parse the date a number of different ways
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,143,for (int i = 0; i < dateFormats.length; i++) {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,144,try {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,145,Date datetime = dateFormats[i].parse(dateStr);
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,146,Calendar cal = Calendar.getInstance();
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,147,cal.setTime(datetime);
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,148,return cal;
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,149,} catch (ParseException pe) {
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,150,//we ignore this and just keep trying
+True,src/pending/DateFormatter.java,src/pending/DateFormatter.java,154,"throw new IllegalArgumentException(""Unable to parse '"" + dateStr + ""'."");"

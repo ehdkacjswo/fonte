@@ -1,0 +1,21 @@
+
+handle the case where an @enum is aliased.
+this caused a compiler crash because CollapseProperties happens
+in two steps:
+1) Collapse all references
+2) Collapse all declarations
+Sometimes, during step (2), we need to create aliases to object
+literal keys. Introducing these new aliases changes whether
+or not a property should be collapsed. So we need to modify
+the predicate for deciding whether a property should be collapsed
+so that it is consistent over the life of the pass.
+
+R=acleung
+DELTA=71  (61 added, 5 deleted, 5 changed)
+
+
+Revision created by MOE tool push_codebase.
+MOE_MIGRATION=372006
+
+
+git-svn-id: https://closure-compiler.googlecode.com/svn/trunk@500 b0f006be-c8cd-11de-a2e8-8d36a3108c74

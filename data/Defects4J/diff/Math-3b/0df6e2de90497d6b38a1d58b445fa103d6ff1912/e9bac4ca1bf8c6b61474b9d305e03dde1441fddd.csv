@@ -1,0 +1,93 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,47,import org.apache.commons.math.util.ResizableDoubleArray;
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,111,/** Used when generating Exponential samples
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,112,* [1] writes:
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,113,* One table containing the constants
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,114,* q_i = sum_{j=1}^i (ln 2)^j/j! = ln 2 + (ln 2)^2/2 + ... + (ln 2)^i/i!
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,115,* until the largest representable fraction below 1 is exceeded.
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,117,* Note that
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,118,* 1 = 2 - 1 = exp(ln 2) - 1 = sum_{n=1}^infty (ln 2)^n / n!
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,119,"* thus q_i -> 1 as i -> infty,"
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,120,"* so the higher 1, the closer to one we get (the series is not alternating)."
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,122,"* By trying, n = 16 in Java is enough to reach 1.0."
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,124,private static double[] EXPONENTIAL_SA_QI = null;
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,133,* Initialize tables
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,135,static {
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,137,* Filling EXPONENTIAL_SA_QI table.
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,138,* Note that we don't want qi = 0 in the table.
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,140,final double LN2 = FastMath.log(2);
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,141,double qi = 0;
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,142,int i = 1;
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,145,"* MathUtils provides factorials up to 20, so let's use that limit together"
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,146,"* with MathUtils.EPSILON to generate the following code (a priori, we know that"
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,147,"* there will be 16 elements, but instead of hardcoding that, this is"
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,148,* prettier):
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,150,final ResizableDoubleArray ra = new ResizableDoubleArray(20);
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,152,while (qi < 1) {
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,153,"qi += FastMath.pow(LN2, i) / MathUtils.factorial(i);"
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,154,ra.addElement(qi);
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,155,++i;
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,158,EXPONENTIAL_SA_QI = ra.getElements();
+False,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,472, <strong>Algorithm Description</strong>: Uses the <a
+False,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,473," href=""http://www.jesus.ox.ac.uk/~clifford/a5/chap1/node5.html""> Inversion"
+False,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,474, Method</a> to generate exponentially distributed random values from
+False,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,475, uniform deviates.
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,517,* <strong>Algorithm Description</strong>: Uses the Algorithm SA (Ahrens)
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,518,* from p. 876 in:
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,519,"* [1]: Ahrens, J. H. and Dieter, U. (1972). Computer methods for"
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,520,* sampling from the exponential and normal distributions.
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,521,"* Communications of the ACM, 15, 873-882."
+False,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,486,inal RandomGenerator generator = getRan();
+False,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,487,ouble unif = generator.nextDouble();
+False,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,488,hile (unif == 0.0d) {
+False,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,489,nif = generator.nextDouble();
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,533,// Step 1:
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,534,double a = 0;
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,535,"double u = this.nextUniform(0, 1);"
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,537,// Step 2 and 3:
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,538,while (u < 0.5) {
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,539,a += EXPONENTIAL_SA_QI[0];
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,540,u *= 2;
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,543,// Step 4 (now u >= 0.5):
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,544,u += u - 1;
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,546,// Step 5:
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,547,if (u <= EXPONENTIAL_SA_QI[0]) {
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,548,return mean * (a + u);
+False,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,491,eturn -mean * FastMath.log(unif);
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,551,// Step 6:
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,552,"int i = 0; // Should be 1, be we iterate before it in while using 0"
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,553,"double u2 = this.nextUniform(0, 1);"
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,554,double umin = u2;
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,556,// Step 7 and 8:
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,557,do {
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,558,++i;
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,559,"u2 = this.nextUniform(0, 1);"
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,561,if (u2 < umin) {
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,562,umin = u2;
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,565,// Step 8:
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,566,} while (u > EXPONENTIAL_SA_QI[i]); // Ensured to exit since EXPONENTIAL_SA_QI[MAX] = 1
+True,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,src/main/java/org/apache/commons/math/random/RandomDataImpl.java,568,return mean * (a + umin * EXPONENTIAL_SA_QI[0]);
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,33,import org.apache.commons.math.distribution.ExponentialDistributionImpl;
+False,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,250,andomData.reSeed(1000);
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,251,randomData.reSeed(1000);
+False,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,584,ublic void testNextExponential() {
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,585,public void testNextExponential() throws Exception {
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,615,* Proposal on improving the test of generating exponentials
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,617,double[] quartiles;
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,618,long[] counts;
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,620,// Mean 1
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,621,quartiles = TestUtils.getDistributionQuartiles(new ExponentialDistributionImpl(1));
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,622,counts = new long[4];
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,623,randomData.reSeed(1000);
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,624,for (int i = 0; i < 1000; i++) {
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,625,double value = randomData.nextExponential(1);
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,626,"TestUtils.updateCounts(value, counts, quartiles);"
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,628,"TestUtils.assertChiSquareAccept(expected, counts, 0.001);"
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,630,// Mean 5
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,631,quartiles = TestUtils.getDistributionQuartiles(new ExponentialDistributionImpl(5));
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,632,counts = new long[4];
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,633,randomData.reSeed(1000);
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,634,for (int i = 0; i < 1000; i++) {
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,635,double value = randomData.nextExponential(5);
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,636,"TestUtils.updateCounts(value, counts, quartiles);"
+True,src/test/java/org/apache/commons/math/random/RandomDataTest.java,src/test/java/org/apache/commons/math/random/RandomDataTest.java,638,"TestUtils.assertChiSquareAccept(expected, counts, 0.001);"

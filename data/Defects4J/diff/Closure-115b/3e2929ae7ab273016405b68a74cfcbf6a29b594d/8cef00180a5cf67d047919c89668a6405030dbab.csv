@@ -1,0 +1,643 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,1,/* -*- Mode: java; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,3,* This Source Code Form is subject to the terms of the Mozilla Public
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,4,"* License, v. 2.0. If a copy of the MPL was not distributed with this"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,5,"* file, You can obtain one at http://mozilla.org/MPL/2.0/. */"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,7,package org.mozilla.javascript;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,9,import org.mozilla.javascript.ast.*;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,11,import java.util.List;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,14,"* After parsing is done and the jsdocs are collected, this class takes the AST"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,15,* and the jsdocs and attaches the jsdocs to the appropriate AST nodes.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,16,* <p>
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,17,"* The jsdoc comments are not part of the syntax of JavaScript, so we cannot"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,18,* give parse errors for misplaced jsdocs. We should not modify the grammar
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,19,* recognized by the parser in order to attach jsdocs.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,20,"* On the other hand, in Closure-style JavaScript the placement of jsdocs is"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,21,* syntax-driven; there is intuitively some grammar that dictates where in the
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,22,"* AST each comment should be attached. In most cases, a comment C should be"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,23,* attached to the topmost AST node that follows C in the source program.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,24,"* For example, in this code:"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,25,* some_jsdoc bar(baz);
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,26,"* the comment gets attached to the call node, not to bar."
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,27,"* There are some exceptions, eg, some infix expressions such as +:"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,28,* some_jsdoc 2 + 3;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,29,"* In this code, the comment gets attached to 2, not to +."
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,30,* <p>
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,31,"* For legacy reasons, we distinguish between two operators with different"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,32,* precedence rules.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,33,* CAST: a jsdoc followed by a left paren
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,34,* JSDOC: a jsdoc not followed by a left paren
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,35,* Some operators have higher precedence than JSDOC but lower than CAST;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,36,* see the method betweenJsdocAndCast.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,37,"* For example, in this code"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,38,* some_jsdoc obj.exp
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,39,"* the jsdoc is attached to GETPROP, and in this code"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,40,* some_jsdoc (obj).exp
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,41,* the jsdoc is attached to obj.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,42,* <p>
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,43,"* Algorithmically, we want to make a single pass over the AST and attach all"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,44,"* comments, not start from the root and search for each comment."
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,45,* This is possible b/c the parser hands us the list of comments sorted by their
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,46,"* starting position. So, when we attach a comment C, we know that the next one"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,47,* can't go to the nodes we already rejected for C.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,50,public class AttachJsDocs {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,52,private Comment currentJsdoc;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,53,private int capos; // The absolute (starting) position of currentJsdoc
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,54,private boolean attachOnlyToParen = false;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,55,// In some cases we recur to the left child of a node N looking for a paren.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,56,"// If we don't find a paren, we save N's info here to attach the jsdoc to N."
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,57,private AstNode possibleJsdocTarget;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,58,private int possibleApos;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,60,// A pair of a node and its absolute position
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,61,private static class NodePos {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,62,AstNode n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,63,int apos;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,65,"NodePos(AstNode n, int apos) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,66,this.n = n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,67,this.apos = apos;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,71,/** @param napos The absolute position of n. */
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,72,"private boolean finishesAfterJsdoc(AstNode n, int napos) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,73,return capos < napos + n.getLength() - 1;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,77,"* Returns the leftmost right sibling of n that satisfies finishesAfterJsdoc,"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,78,* o/w null.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,79,* @param parapos The absolute position of n's parent.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,81,"private AstNode siblingFinishesAfterJsdoc(AstNode n, int parapos) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,82,AstNode next = (AstNode) n.getNext();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,83,while (next != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,84,"if (finishesAfterJsdoc(next, parapos + next.getPosition())) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,85,break;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,87,next = (AstNode) next.getNext();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,89,return next;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,92,/** Attaches the comments to the AST. */
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,93,"public void attachComments(AstRoot root, List<Comment> comments) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,94,if (comments == null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,95,return;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,98,AstNode n = root;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,99,int napos = root.getPosition();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,100,int parapos = 0;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,101,int lastcapos = -1;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,103,"// At each loop entry, n is some AST node, napos is its absolute position,"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,104,// and parapos is the absolute position of its parent.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,105,for (Comment c : comments) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,106,currentJsdoc = c;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,107,"// The parser doesn't attach comments to nodes, so this call isn't slow."
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,108,capos = currentJsdoc.getAbsolutePosition();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,109,// The list of comments should be sorted.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,110,if (capos <= lastcapos) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,111,"throw new RuntimeException(""The list of jsdoc comments isn't sorted."");"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,113,lastcapos = capos;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,115,while (n != root) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,116,// Check if the next comment should be attached to n.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,117,"if (finishesAfterJsdoc(n, napos)) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,118,break;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,120,"// Check if n's parent contains the comment. If so, check if it can be"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,121,// attached to one of n's right siblings.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,122,AstNode tmp;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,123,tmp = n.getParent();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,124,"if (tmp != null && finishesAfterJsdoc(tmp, parapos)) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,125,"tmp = siblingFinishesAfterJsdoc(n, parapos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,126,if (tmp != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,127,n = tmp;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,128,break;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,131,"// Otherwise, go to n's parent and keep looking."
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,132,n = n.getParent();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,133,napos = parapos;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,134,parapos = n == root ? 0 : napos - n.getPosition();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,136,"// At this point, n satisfies finishesAfterJsdoc, so the comment should be"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,137,// attached to n or its descendants. This call never returns null.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,138,"NodePos np = attachComment(n, parapos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,139,n = np.n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,140,napos = np.apos;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,141,parapos = n == root ? 0 : napos - n.getPosition();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,146,* Tries to attach currentJsdoc to n or one of its descendants.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,147,"* If the jsdoc starts after n, we return null."
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,148,"* If the jsdoc is attached, we return the node on which it was attached."
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,149,"* Last, if it was contained in n but didn't get attached, we return some node"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,150,* close to where the comment would get attached.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,152,* The node that gets returned from this function is where the search for
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,153,* attaching the next comment will start from.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,155,* A comment never gets attached to a node that appears before it in the code.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,157,* @param parapos n's parent's absolute position; we calculate it manually
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,158,*        b/c it's slow to call getAbsolutePosition for every node.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,160,"private NodePos attachComment(AstNode n, int parapos) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,161,int napos = parapos + n.getPosition();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,163,"if (finishesAfterJsdoc(n, napos)) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,164,"if (capos < napos && !attachToChildren(n, napos)) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,165,"return setJsdoc(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,167,"// n contains the jsdoc, recur to the children"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,168,} else {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,169,return null;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,172,int ntype = n.getType();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,173,NodePos res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,175,"// All the cases can assume that the jsdoc appears inside or before n,"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,176,"// not after n, so they all return a non-null result."
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,177,switch (ntype) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,178,"// Statements first, then expressions."
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,180,// We don't need to handle nodes that don't contain other nodes here; they
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,181,// can't contain a jsdoc.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,182,"// These are: FALSE, NAME, NULL, NUMBER, REGEXP, STRING, THIS, TRUE."
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,184,case Token.BREAK:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,185,case Token.CONTINUE:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,186,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,188,case Token.CASE:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,189,SwitchCase cas = (SwitchCase) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,190,if (!cas.isDefault()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,191,"res = attachComment(cas.getExpression(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,192,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,193,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,196,if (cas.getStatements() != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,197,for (AstNode stm : cas.getStatements()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,198,"res = attachComment(stm, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,199,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,200,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,204,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,206,case Token.DO:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,207,DoLoop dl = (DoLoop) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,208,"res = attachComment(dl.getBody(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,209,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,210,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,212,if (capos < dl.getWhilePosition()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,213,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,215,"res = attachComment(dl.getCondition(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,216,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,217,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,219,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,221,case Token.EXPR_RESULT:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,222,case Token.EXPR_VOID:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,223,if (n instanceof ExpressionStatement) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,224,"res = attachComment(((ExpressionStatement) n).getExpression(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,225,} else /* instanceof LabeledStatement */ {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,226,"res = attachComment(((LabeledStatement) n).getStatement(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,228,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,229,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,231,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,233,case Token.FOR:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,234,Loop loop = (Loop) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,235,if (n instanceof ForInLoop) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,236,"res = attachForInHeader((ForInLoop) loop, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,237,} else {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,238,"res = attachForLoopHeader((ForLoop) loop, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,240,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,241,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,243,"res = attachComment(loop.getBody(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,244,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,245,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,247,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,249,case Token.IF:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,250,IfStatement ifstm = (IfStatement) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,251,"res = attachComment(ifstm.getCondition(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,252,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,253,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,255,"res = attachComment(ifstm.getThenPart(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,256,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,257,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,259,if (capos < ifstm.getElsePosition()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,260,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,262,"res = attachComment(ifstm.getElsePart(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,263,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,264,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,266,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,268,case Token.FUNCTION:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,269,FunctionNode fun = (FunctionNode) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,270,Name nam = fun.getFunctionName();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,271,if (nam != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,272,"res = attachComment(nam, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,273,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,274,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,277,for (AstNode param : fun.getParams()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,278,"res = attachComment(param, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,279,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,280,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,283,"res = attachComment(fun.getBody(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,284,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,285,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,287,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,289,case Token.RETURN:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,290,"res = attachComment(((ReturnStatement) n).getReturnValue(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,291,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,292,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,294,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,296,case Token.SWITCH:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,297,SwitchStatement sw = (SwitchStatement) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,298,"res = attachComment(sw.getExpression(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,299,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,300,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,302,for (SwitchCase c : sw.getCases()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,303,"res = attachComment(c, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,305,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,307,case Token.THROW:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,308,"res = attachComment(((ThrowStatement ) n).getExpression(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,309,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,310,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,312,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,314,case Token.TRY:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,315,TryStatement t = (TryStatement) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,316,"res = attachComment(t.getTryBlock(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,317,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,318,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,320,for (CatchClause cc : t.getCatchClauses()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,321,int catchstart = napos + cc.getPosition();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,322,if (capos < catchstart) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,323,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,325,"res = attachComment(cc.getVarName(), catchstart);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,326,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,327,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,329,"res = attachComment(cc.getBody(), catchstart);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,330,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,331,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,334,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,336,case Token.VAR:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,337,if (n instanceof VariableDeclaration) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,338,for (VariableInitializer vi :
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,339,((VariableDeclaration) n).getVariables()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,340,"res = attachComment(vi, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,341,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,342,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,345,} else /* n instanceof VariableInitializer */{
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,346,"res = attachComment(((VariableInitializer) n).getInitializer(),"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,347,napos);
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,348,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,349,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,352,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,354,case Token.WHILE:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,355,WhileLoop wh = (WhileLoop) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,356,"res = attachComment(wh.getCondition(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,357,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,358,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,360,if (capos < wh.getRp()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,361,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,363,"res = attachComment(wh.getBody(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,364,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,365,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,367,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,369,case Token.WITH:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,370,WithStatement w = (WithStatement) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,371,"res = attachComment(w.getExpression(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,372,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,373,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,375,if (capos < w.getRp()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,376,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,378,"res = attachComment(w.getStatement(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,379,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,380,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,382,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,384,case Token.ADD:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,385,case Token.AND:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,386,case Token.ASSIGN:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,387,case Token.ASSIGN_ADD:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,388,case Token.ASSIGN_BITAND:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,389,case Token.ASSIGN_BITOR:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,390,case Token.ASSIGN_BITXOR:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,391,case Token.ASSIGN_DIV:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,392,case Token.ASSIGN_LSH:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,393,case Token.ASSIGN_MOD:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,394,case Token.ASSIGN_MUL:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,395,case Token.ASSIGN_RSH:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,396,case Token.ASSIGN_SUB:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,397,case Token.ASSIGN_URSH:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,398,case Token.BITAND:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,399,case Token.BITOR:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,400,case Token.BITXOR:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,401,case Token.COLON:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,402,case Token.COMMA:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,403,case Token.DIV:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,404,case Token.EQ:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,405,case Token.GE:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,406,case Token.GET:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,407,case Token.GETPROP:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,408,case Token.GT:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,409,case Token.IN:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,410,case Token.INSTANCEOF:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,411,case Token.LE:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,412,case Token.LSH:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,413,case Token.LT:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,414,case Token.MOD:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,415,case Token.MUL:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,416,case Token.NE:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,417,case Token.OR:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,418,case Token.RSH:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,419,case Token.SET:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,420,case Token.SHEQ:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,421,case Token.SHNE:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,422,case Token.SUB:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,423,case Token.URSH:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,424,InfixExpression ie = (InfixExpression) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,425,"res = attachComment(ie.getLeft(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,426,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,427,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,429,if (capos < ie.getOperatorPosition()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,430,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,432,"res = attachComment(ie.getRight(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,433,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,434,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,436,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,438,case Token.ARRAYLIT:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,439,for (AstNode elm : ((ArrayLiteral) n).getElements()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,440,"res = attachComment(elm, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,441,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,442,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,445,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,447,case Token.BITNOT:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,448,case Token.DEC:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,449,case Token.DELPROP:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,450,case Token.INC:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,451,case Token.NEG:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,452,case Token.NOT:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,453,case Token.POS:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,454,case Token.TYPEOF:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,455,case Token.VOID:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,456,UnaryExpression ue = (UnaryExpression) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,457,"res = attachComment(ue.getOperand(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,458,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,459,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,461,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,463,case Token.CALL:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,464,case Token.NEW:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,465,FunctionCall call = (FunctionCall) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,466,"res = attachComment(call.getTarget(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,467,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,468,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,470,if (capos < call.getLp()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,471,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,473,for (AstNode param : call.getArguments()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,474,"res = attachComment(param, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,475,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,476,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,479,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,481,case Token.GETELEM:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,482,ElementGet elm = (ElementGet) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,483,"res = attachComment(elm.getTarget(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,484,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,485,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,487,if (capos < elm.getLb()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,488,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,490,"res = attachComment(elm.getElement(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,491,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,492,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,494,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,496,case Token.HOOK:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,497,ConditionalExpression hook = (ConditionalExpression) n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,498,"res = attachComment(hook.getTestExpression(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,499,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,500,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,502,if (capos < hook.getQuestionMarkPosition()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,503,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,505,"res = attachComment(hook.getTrueExpression(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,506,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,507,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,509,if (capos < hook.getColonPosition()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,510,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,512,"res = attachComment(hook.getFalseExpression(), napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,513,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,514,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,516,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,518,case Token.LP:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,519,"res = attachComment(((ParenthesizedExpression) n).getExpression(),"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,520,napos);
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,521,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,522,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,524,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,526,case Token.OBJECTLIT:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,527,for (InfixExpression prop : ((ObjectLiteral) n).getElements()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,528,"res = attachComment(prop, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,529,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,530,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,533,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,535,case Token.BLOCK:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,536,case Token.SCRIPT:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,537,AstNode kid = (AstNode) n.getFirstChild();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,538,while (kid != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,539,"res = attachComment(kid, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,540,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,541,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,543,kid = (AstNode) kid.getNext();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,545,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,547,default:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,548,throw new RuntimeException(
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,549,"""Can't attach jsdoc to unknown node: "" + ntype);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,553,"private NodePos attachForInHeader(ForInLoop fi, int fipos) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,554,if (capos < fi.getLp()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,555,"return new NodePos(fi, fipos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,557,"NodePos res = attachComment(fi.getIterator(), fipos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,558,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,559,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,561,if (capos < fi.getInPosition()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,562,"return new NodePos(fi, fipos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,564,"res = attachComment(fi.getIteratedObject(), fipos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,565,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,566,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,568,if (capos < fi.getRp()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,569,"return new NodePos(fi, fipos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,571,return null;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,574,"private NodePos attachForLoopHeader(ForLoop fl, int flpos) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,575,if (capos < fl.getLp()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,576,"return new NodePos(fl, flpos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,578,"NodePos res = attachComment(fl.getInitializer(), flpos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,579,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,580,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,582,"res = attachComment(fl.getCondition(), flpos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,583,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,584,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,586,"res = attachComment(fl.getIncrement(), flpos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,587,if (res != null) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,588,return res;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,590,if (capos < fl.getRp()) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,591,"return new NodePos(fl, flpos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,593,return null;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,596,// Returns true iff n binds tighter than non-cast jsdocs & looser than casts.
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,597,private boolean betweenJsdocAndCast(AstNode n) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,598,int ntype = n.getType();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,599,return (ntype == Token.GETPROP || ntype == Token.GETELEM ||
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,600,ntype == Token.CALL ||
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,601,n instanceof Assignment ||
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,602,((ntype == Token.INC || ntype == Token.DEC) &&
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,603,((UnaryExpression) n).isPostfix()));
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,606,"private boolean attachToChildren(AstNode n, int napos) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,607,int ntype = n.getType();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,608,if (betweenJsdocAndCast(n)) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,609,if (!attachOnlyToParen) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,610,attachOnlyToParen = true;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,611,possibleJsdocTarget = n;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,612,possibleApos = napos;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,614,return true;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,616,if (ntype == Token.SCRIPT ||
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,617,ntype == Token.HOOK ||
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,618,ntype == Token.RETURN ||
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,619,n instanceof ExpressionStatement ||
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,620,n instanceof InfixExpression) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,621,return true;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,623,return false;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,626,"private NodePos setJsdoc(AstNode n, int napos) {"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,627,int ntype = n.getType();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,629,if (attachOnlyToParen) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,630,attachOnlyToParen = false;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,631,if (ntype != Token.LP) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,632,possibleJsdocTarget.setJsDocNode(currentJsdoc);
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,633,"return new NodePos(possibleJsdocTarget, possibleApos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,635,} else {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,636,switch (ntype) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,637,"// For most stms, it doesn't make sense to attach a comment on them."
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,638,case Token.BLOCK:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,639,case Token.CASE:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,640,case Token.DO:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,641,case Token.FOR:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,642,case Token.IF:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,643,case Token.SWITCH:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,644,case Token.THROW:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,645,case Token.WHILE:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,646,"return new NodePos(n, napos);"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,648,case Token.VAR:
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,649,if (n instanceof VariableInitializer) {
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,650,AstNode n2 = ((VariableInitializer) n).getTarget();
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,651,n2.setJsDocNode(currentJsdoc);
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,652,"return new NodePos(n2, napos + n2.getPosition());"
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,654,break;
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,657,n.setJsDocNode(currentJsdoc);
+True,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,lib/rhino/src/org/mozilla/javascript/AttachJsDocs.java,658,"return new NodePos(n, napos);"
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,69,rivate Comment currentJsDocComment;
+True,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,69,private List<Comment> jsdocs;
+True,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,238,jsdocs = new ArrayList<Comment>();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,245,urrentJsDocComment = commentNode;
+True,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,246,jsdocs.add(commentNode);
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,251,rivate Comment getAndResetJsDoc() {
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,252,omment saved = currentJsDocComment;
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,253,urrentJsDocComment = null;
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,254,eturn saved;
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,476,eturn parse();
+True,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,470,AstRoot r = parse();
+True,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,471,"new AttachJsDocs().attachComments(r, jsdocs);"
+True,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,472,return r;
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,500,eturn parse();
+True,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,496,AstRoot r = parse();
+True,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,497,"new AttachJsDocs().attachComments(r, jsdocs);"
+True,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,498,return r;
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,654,etAndResetJsDoc();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,699,ame paramNameNode = createNameNode();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,700,omment jsdocNodeForName = getAndResetJsDoc();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,701,f (jsdocNodeForName != null) {
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,702,aramNameNode.setJsDocNode(jsdocNodeForName);
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,704,nNode.addParam(paramNameNode);
+True,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,696,fnNode.addParam(createNameNode());
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,793,nNode.setJsDocNode(getAndResetJsDoc());
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1360,/ Pull out JSDoc info and reset it before recursing.
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1361,omment jsdocNode = getAndResetJsDoc();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1387,omment jsdocNodeForName = getAndResetJsDoc();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1388,f (jsdocNodeForName != null) {
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1389,arName.setJsDocNode(jsdocNodeForName);
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1451,f (jsdocNode != null) {
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1452,n.setJsDocNode(jsdocNode);
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1577,omment withComment = getAndResetJsDoc();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1591,n.setJsDocNode(withComment);
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1837,omment varjsdocNode = getAndResetJsDoc();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1838,f (varjsdocNode != null) {
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1839,n.setJsDocNode(varjsdocNode);
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1874,omment jsdocNode = getAndResetJsDoc();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,1893,i.setJsDocNode(jsdocNode);
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2046,/ Pull out JSDoc info and reset it before recursing.
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2047,omment jsdocNode = getAndResetJsDoc();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2054,f (jsdocNode != null) {
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2055,n.setJsDocNode(jsdocNode);
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2057, else if (tt == Token.SEMI) {
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2058,"/ This may be dead code added intentionally, for JSDoc purposes."
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2059,/ For example: /** @type Number */ C.prototype.x;
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2060,f (currentJsDocComment != null) {
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2061,n.setJsDocNode(getAndResetJsDoc());
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2856,omment jsdocNode = getAndResetJsDoc();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2863,arenthesizedExpression pn = new ParenthesizedExpression(e);
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2864,f (jsdocNode == null) {
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2865,sdocNode = getAndResetJsDoc();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2867,f (jsdocNode != null) {
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2868,n.setJsDocNode(jsdocNode);
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2871,n.setLength(ts.tokenEnd - pn.getPosition());
+True,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2815,ParenthesizedExpression pn = new ParenthesizedExpression(
+True,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,2816,"begin, ts.tokenEnd - begin, e);"
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,3164,omment objJsdocNode = getAndResetJsDoc();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,3171,omment jsdocNode = getAndResetJsDoc();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,3205,name.setJsDocNode(jsdocNode);
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,3209,ame.setJsDocNode(jsdocNode);
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,3225,name.setJsDocNode(jsdocNode);
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,3256,/ Eat any dangling jsdoc in the property.
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,3257,etAndResetJsDoc();
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,3268,f (objJsdocNode != null) {
+False,lib/rhino/src/org/mozilla/javascript/Parser.java,lib/rhino/src/org/mozilla/javascript/Parser.java,3269,n.setJsDocNode(objJsdocNode);
+False,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,306,/ Object literal properties and catch declarations are valid.
+True,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,306,"// Object literal properties, catch declarations and variable"
+True,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,307,// initializers are valid.
+False,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,308,alid = node.getParent() instanceof ObjectProperty
+False,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,309,| node.getParent() instanceof CatchClause
+False,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,310,| node.getParent() instanceof FunctionNode;
+True,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,309,AstNode parent = node.getParent();
+True,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,310,valid = parent instanceof ObjectProperty
+True,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,311,|| parent instanceof CatchClause
+True,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,312,|| parent instanceof FunctionNode
+True,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,313,|| (parent instanceof VariableInitializer &&
+True,src/com/google/javascript/jscomp/parsing/IRFactory.java,src/com/google/javascript/jscomp/parsing/IRFactory.java,314,node == ((VariableInitializer) parent).getTarget());
+False,test/com/google/javascript/jscomp/ChainCallsTest.java,test/com/google/javascript/jscomp/ChainCallsTest.java,83," ""(/** @type {Foo} */ new Baz()).bar();\n"""
+False,test/com/google/javascript/jscomp/ChainCallsTest.java,test/com/google/javascript/jscomp/ChainCallsTest.java,84," ""(/** @type {Foo} */ new Baz()).bar();\n"");"
+True,test/com/google/javascript/jscomp/ChainCallsTest.java,test/com/google/javascript/jscomp/ChainCallsTest.java,83,"+ ""/** @type {Foo} */ (new Baz()).bar();\n"""
+True,test/com/google/javascript/jscomp/ChainCallsTest.java,test/com/google/javascript/jscomp/ChainCallsTest.java,84,"+ ""/** @type {Foo} */ (new Baz()).bar();\n"");"
+False,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2491,"/** @type {function():!string} */ ((new x())['abc'])() );"";"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,2491,"""/** @type {function():!string} */ ((new x())['abc'])());"";"
+False,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,22,mport com.google.javascript.jscomp.CheckLevel;
+False,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,4400,"var google = {\n""+"
+True,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,4399,"""var google = {\n"" +"
+False,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,5056,"/** @type {Foo} */ var x = (/** @type {Foo} */ y)"");"
+True,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,test/com/google/javascript/jscomp/LooseTypeCheckTest.java,5055,"""/** @type {Foo} */ var x = /** @type {Foo} */ (y)"");"
+False,test/com/google/javascript/jscomp/TightenTypesTest.java,test/com/google/javascript/jscomp/TightenTypesTest.java,645," ""var foo = (/** @type {Foo} */ a[0]);\n"""
+True,test/com/google/javascript/jscomp/TightenTypesTest.java,test/com/google/javascript/jscomp/TightenTypesTest.java,645,"+ ""var foo = /** @type {Foo} */ (a[0]);\n"""
+False,test/com/google/javascript/jscomp/TightenTypesTest.java,test/com/google/javascript/jscomp/TightenTypesTest.java,657," ""var foo = (/** @type {Int} */ a[0]);\n"""
+True,test/com/google/javascript/jscomp/TightenTypesTest.java,test/com/google/javascript/jscomp/TightenTypesTest.java,657,"+ ""var foo = /** @type {Int} */ (a[0]);\n"""
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4402,"var z = /** @type {Foo} */(new Bar)['x'];"");"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,4402,"""var z = /** @type {Foo} */(new Bar())['x'];"");"
+False,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7845,"/** @type {Foo} */ var x = (/** @type {Foo} */ y)"");"
+True,test/com/google/javascript/jscomp/TypeCheckTest.java,test/com/google/javascript/jscomp/TypeCheckTest.java,7845,"""/** @type {Foo} */ var x = /** @type {Foo} */ (y)"");"
+False,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,96,"    EXPR_RESULT 1 [source_file: FileName.js] [length: 10]\n"" +"
+True,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,96,"""    EXPR_RESULT 1 [source_file: FileName.js] [length: 11]\n"" +"
+False,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,107,"    EXPR_RESULT 1 [source_file: FileName.js] [length: 13]\n"" +"
+True,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,107,"""    EXPR_RESULT 1 [source_file: FileName.js] [length: 14]\n"" +"
+False,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,121,"    EXPR_RESULT 1 [source_file: FileName.js] [length: 14]\n"" +"
+True,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,121,"""    EXPR_RESULT 1 [source_file: FileName.js] [length: 15]\n"" +"
+False,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,201,"    EXPR_RESULT 1 [source_file: FileName.js] [length: 13]\n"" +"
+True,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,201,"""    EXPR_RESULT 1 [source_file: FileName.js] [length: 14]\n"" +"
+False,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,214,"    EXPR_RESULT 1 [source_file: FileName.js] [length: 14]\n"" +"
+True,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,214,"""    EXPR_RESULT 1 [source_file: FileName.js] [length: 15]\n"" +"
+False,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,795,"ssertNodePosition(2, 7, orTest);"
+False,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,796,"ssertNodePosition(2, 7, andTest);"
+True,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,795,"assertNodePosition(2, 5, orTest);"
+True,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,796,"assertNodePosition(2, 6, andTest);"
+False,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,830,"ssertNodePosition(2, 8, eqTest);"
+False,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,831,"ssertNodePosition(7, 8, notEqTest);"
+True,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,830,"assertNodePosition(2, 7, eqTest);"
+True,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,test/com/google/javascript/jscomp/parsing/IRFactoryTest.java,831,"assertNodePosition(7, 7, notEqTest);"
+False,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,133,"ssertEquals(2, call.getCharno());"
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,133,"assertEquals(1, call.getCharno());"
+False,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,309,/ ASSIGN
+False,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,318,"var a, /** @define {number} */b = 5;"").getFirstChild();"
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,316,"""var a, /** @define {number} */ b = 5;"").getFirstChild();"
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,480,public void testJSDocAttachment17() {
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,481,Node fn =
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,482,parse(
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,483,"""function f() { "" +"
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,484,"""  return /** @type {string} */ (g(1 /** @desc x */));"" +"
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,485,"""};"").getFirstChild();"
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,486,"assertEquals(Token.FUNCTION, fn.getType());"
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,487,Node cast = fn.getLastChild().getFirstChild().getFirstChild();
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,488,"assertEquals(Token.CAST, cast.getType());"
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,491,public void testJSDocAttachment18() {
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,492,Node fn =
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,493,parse(
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,494,"""function f() { "" +"
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,495,"""  var x = /** @type {string} */ (y);"" +"
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,496,"""};"").getFirstChild();"
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,497,"assertEquals(Token.FUNCTION, fn.getType());"
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,498,Node cast =
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,499,fn.getLastChild().getFirstChild().getFirstChild().getFirstChild();
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,500,"assertEquals(Token.CAST, cast.getType());"
+False,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,1021,/ missing parenthese for the cast.
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,1042,// missing parentheses for the cast.
+False,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,1028,/ missing parenthese for the cast.
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,1049,// missing parentheses for the cast.
+False,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,1035,/ missing parenthese for the cast.
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,1056,// missing parentheses for the cast.
+False,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,1042,/ missing parenthese for the cast.
+True,test/com/google/javascript/jscomp/parsing/ParserTest.java,test/com/google/javascript/jscomp/parsing/ParserTest.java,1063,// missing parentheses for the cast.

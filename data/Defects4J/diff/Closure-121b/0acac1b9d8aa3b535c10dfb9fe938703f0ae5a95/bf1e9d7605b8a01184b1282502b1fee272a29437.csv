@@ -1,0 +1,207 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,640,/** Instrument / Intercept memory allocations. */
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,641,private boolean instrumentMemoryAllocations;
+False,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,968,nstrumentationTemplate = null;
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,983,// Instrumentation
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,984,instrumentationTemplate = null;
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,985,instrumentMemoryAllocations = false;
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,2075,* @return Whether memory allocations are instrumented.
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,2077,public boolean getInstrumentMemoryAllocations() {
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,2078,return instrumentMemoryAllocations;
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,2082,* Sets the option to instrument memory allocations.
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,2084,public void setInstrumentMemoryAllocations(
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,2085,boolean instrumentMemoryAllocations) {
+True,src/com/google/javascript/jscomp/CompilerOptions.java,src/com/google/javascript/jscomp/CompilerOptions.java,2086,this.instrumentMemoryAllocations = instrumentMemoryAllocations;
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,633,// Instrument calls to memory allocations
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,634,if (options.getInstrumentMemoryAllocations()) {
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,635,passes.add(instrumentMemoryAllocations);
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,2198,/** Adds instrumentation for memory allocations. */
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,2199,final PassFactory instrumentMemoryAllocations =
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,2200,"new PassFactory(""instrumentMemoryAllocations"", true) {"
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,2201,@Override
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,2202,protected CompilerPass create(final AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/DefaultPassConfig.java,src/com/google/javascript/jscomp/DefaultPassConfig.java,2203,return new InstrumentMemoryAllocPass(compiler);
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,2,* Copyright 2013 The Closure Compiler Authors.
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,5,* you may not use this file except in compliance with the License.
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,6,* You may obtain a copy of the License at
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,13,* See the License for the specific language governing permissions and
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,14,* limitations under the License.
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,17,package com.google.javascript.jscomp;
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,19,import com.google.common.base.Preconditions;
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,20,import com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback;
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,21,import com.google.javascript.rhino.IR;
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,22,import com.google.javascript.rhino.Node;
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,23,import com.google.javascript.rhino.Token;
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,24,import com.google.javascript.rhino.jstype.JSType;
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,27,* This code implements the instrumentation pass over the AST
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,28,* to instrument all object allocations. This methodology should help
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,29,"* identify allocation hotspots and potential for object reuse, with"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,30,* the goal to reduce memory footprint and GC pressure.
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,32,"* We are tracking object allocations via new(), array literals, object"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,33,"* literals, and function expressions. This does not cover factory methods"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,34,* like Object.create or document.createElement but could be expanded to
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,35,* track those.
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,37,class InstrumentMemoryAllocPass implements CompilerPass {
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,39,final AbstractCompiler compiler;
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,41,private static int newSiteId = 1; // 0 is reserved for 'total'
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,43,static final String JS_INSTRUMENT_ALLOCATION_CODE =
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,44,"""var __allocStats; \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,45,"""var __alloc = function(obj, sourcePosition, id, typeName) { \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,46,"""  if (!__allocStats) { \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,47,"""    __allocStats = { \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,48,"""      reset: function() { \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,49,"""        this.counts = [{ type:typeName, line:'total', count:0 }]; \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,50,"""      }, \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,51,"""      report: function(opt_n) { \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,52,"""        this.counts.filter(function(x) { \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,53,"""          return x; \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,54,"""        }).sort(function(a, b) { \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,55,"""          return b.count - a.count; \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,56,"""        }).splice(0, opt_n || 50).reverse().forEach(function (x) { \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,57,"""          if (window.console) { \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,58,"""            window.console.log(x.count + ' (' + x.type + ') : ' + x.line); \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,59,"""          } \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,60,"""        }); \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,61,"""      } \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,62,"""    }; \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,63,"""    __allocStats.reset(); \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,64,"""    if (window.parent) { \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,65,"""      window.parent['__allocStats'] = __allocStats; \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,66,"""    } \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,67,"""  } \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,68,"""  if (!__allocStats.counts[id]) { \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,69,"""    __allocStats.counts[id] = { type:typeName, line:sourcePosition, count:0 }; \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,70,"""  } \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,71,"""  __allocStats.counts[0].count++; \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,72,"""  __allocStats.counts[id].count++; \n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,73,"""  return obj;\n"" +"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,74,"""}; \n"""
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,78,* @param compiler the compiler which generates the AST.
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,80,public InstrumentMemoryAllocPass(AbstractCompiler compiler) {
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,81,this.compiler = compiler;
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,85,* Creates the library code for this instrumentation - a compiled
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,86,* version of above __alloc implementation.
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,88,private Node getInstrumentAllocationCode() {
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,89,return compiler.parseSyntheticCode(JS_INSTRUMENT_ALLOCATION_CODE);
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,92,@Override
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,93,"public void process(Node externsNode, Node rootNode) {"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,94,if (rootNode.hasChildren()) {
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,95,"NodeTraversal.traverse(compiler, rootNode, new Traversal());"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,96,NodeTraversal.traverse(
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,97,"compiler, rootNode, new PrepareAst.PrepareAnnotations());"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,99,Node firstScript = rootNode.getFirstChild();
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,100,Preconditions.checkState(firstScript.isScript());
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,102,compiler.getNodeForCodeInsertion(null).addChildrenToFront(
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,103,getInstrumentAllocationCode().removeChildren());
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,104,compiler.reportCodeChange();
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,108,private Node getTypeString(Node currentNode){
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,109,if (currentNode.getType() == Token.NEW) {
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,110,JSType type = currentNode.getFirstChild().getJSType();
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,111,"String typeName = (type != null) ? type.getDisplayName() : ""Unknown"";"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,112,"return IR.string(""new "" + typeName);"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,115,return
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,116,"currentNode.getType() == Token.ARRAYLIT ? IR.string(""Array"") :"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,117,"currentNode.getType() == Token.OBJECTLIT ? IR.string(""Object"") :"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,118,"currentNode.getType() == Token.FUNCTION ? IR.string(""Function"") :"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,119,"IR.string(""Unknown"");"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,123,* Find instances of:
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,124,*  - calls to new
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,125,*  - object literals
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,126,*  - array literals
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,127,*  - a function (expression)
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,129,* All of these are known to result in memory allocations.
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,130,"* ""Intercept"" these with a call to our own __alloc for book keeping."
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,132,private class Traversal extends AbstractPostOrderCallback {
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,133,@Override
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,134,"public void visit(NodeTraversal t, Node n, Node parent) {"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,135,if (n.isNew() ||
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,136,n.getType() == Token.ARRAYLIT ||
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,137,n.getType() == Token.OBJECTLIT ||
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,138,NodeUtil.isFunctionExpression(n)) {
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,140,Node instrumentAllocation = IR.call(
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,141,"IR.name(""__alloc""),"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,142,"n.cloneTree(),"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,143,"IR.string(n.getSourceFileName() + "":"" + n.getLineno()),"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,144,"IR.number(newSiteId++),"
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,145,getTypeString(n));
+True,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,src/com/google/javascript/jscomp/InstrumentMemoryAllocPass.java,147,"parent.replaceChild(n, instrumentAllocation);"
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,2,* Copyright 2013 The Closure Compiler Authors.
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,4,"* Licensed under the Apache License, Version 2.0 (the ""License"");"
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,5,* you may not use this file except in compliance with the License.
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,6,* You may obtain a copy of the License at
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,8,*     http://www.apache.org/licenses/LICENSE-2.0
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,10,"* Unless required by applicable law or agreed to in writing, software"
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,11,"* distributed under the License is distributed on an ""AS IS"" BASIS,"
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,12,"* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,13,* See the License for the specific language governing permissions and
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,14,* limitations under the License.
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,17,package com.google.javascript.jscomp;
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,20,* Unit tests for {@link InstrumentMemoryAllocPass}.
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,21,* Note: The order of test execution matters because the instrumentation
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,22,"* uniquely identifies memory allocation sites. Thus, the order is fixed by"
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,23,* combining tests into a single method.
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,25,public class InstrumentMemoryAllocPassTest extends CompilerTestCase {
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,27,public InstrumentMemoryAllocPassTest() {
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,28,super();
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,29,enableLineNumberCheck(false);
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,32,@Override
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,33,protected CompilerPass getProcessor(Compiler compiler) {
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,34,return new InstrumentMemoryAllocPass(compiler);
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,37,@Override
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,38,protected int getNumRepetitions() {
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,39,// This pass is not idempotent so run once.
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,40,return 1;
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,43,@Override
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,44,protected CompilerOptions getOptions() {
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,45,CompilerOptions options = new CompilerOptions();
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,46,options.setInstrumentMemoryAllocations(true);
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,47,return getOptions(options);
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,50,public void testNoAllocation() {
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,51,test(
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,52,"""var v"","
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,53,"InstrumentMemoryAllocPass.JS_INSTRUMENT_ALLOCATION_CODE + ""var v"");"
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,56,public void testNoStringInstrumentation() {
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,57,test(
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,58,"""var s = 'a' + 'b'"","
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,59,InstrumentMemoryAllocPass.JS_INSTRUMENT_ALLOCATION_CODE
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,60,"+ ""var s=\""a\""+\""b\"""");"
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,63,public void testAllocations() {
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,64,test(
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,65,"""var o = {}"","
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,66,InstrumentMemoryAllocPass.JS_INSTRUMENT_ALLOCATION_CODE
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,67,"+ ""var o=__alloc({},\""testcode:1\"",1,\""Object\"")"");"
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,69,test(
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,70,"""var a = []"","
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,71,InstrumentMemoryAllocPass.JS_INSTRUMENT_ALLOCATION_CODE
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,72,"+ ""var a=__alloc([],\""testcode:1\"",2,\""Array\"")"");"
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,74,test(
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,75,"""var f = function() {}"","
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,76,InstrumentMemoryAllocPass.JS_INSTRUMENT_ALLOCATION_CODE
+True,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,test/com/google/javascript/jscomp/InstrumentMemoryAllocPassTest.java,77,"+ ""var f=__alloc(function(){},\""testcode:1\"",3,\""Function\"")"");"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,271,public void testInstrumentMemoryAllocationPassOff() {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,272,"testSame(createCompilerOptions(),"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,273,"""var obj = new Object(); "" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,274,"""var o = {}; "" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,275,"""var a = []; "" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,276,"""var f = function() {};"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,277,"""var s = 'a' + 'b'"");"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,280,public void testInstrumentMemoryAllocationPassOn() {
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,281,CompilerOptions options = createCompilerOptions();
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,282,options.setInstrumentMemoryAllocations(true);
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,283,"test(options,"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,284,"""var obj = new Object(); "" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,285,"""var o = {}; "" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,286,"""var a = []; "" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,287,"""var f = function() {};"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,288,"""var s = 'a' + 'b'"","
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,290,InstrumentMemoryAllocPass.JS_INSTRUMENT_ALLOCATION_CODE +
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,291,"""var obj=__alloc(new Object(),\""i0:1\"",4,\""new Unknown\"");"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,292,"""var o=__alloc({},\""i0:1\"",5,\""Object\"");"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,293,"""var a=__alloc([],\""i0:1\"",6,\""Array\"");"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,294,"""var f=__alloc(function() {},\""i0:1\"",7,\""Function\"");"" +"
+True,test/com/google/javascript/jscomp/IntegrationTest.java,test/com/google/javascript/jscomp/IntegrationTest.java,295,"""var s=\""a\""+\""b\"";"");"

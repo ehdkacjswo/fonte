@@ -1,0 +1,132 @@
+is_addition,old_file_path,new_file_path,line_num,content
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,477,* Get the closest machine representable number
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,478,* from a number in some direction.
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,480,* @param d base number
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,481,* @param direction (the only important thing is whether
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,482,* direction is greater or smaller than d)
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,483,* @return
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,485,"public static double nextAfter(double d, double direction) {"
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,487,// handling of some important special cases
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,488,if (Double.isNaN(d) || Double.isInfinite(d)) {
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,489,return d;
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,490,} else if (d == 0) {
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,491,return (direction < 0) ? -Double.MIN_VALUE : Double.MIN_VALUE;
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,493,// special cases MAX_VALUE to infinity and  MIN_VALUE to 0
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,494,// are handled just as normal numbers
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,496,// split the double in raw components
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,497,long bits     = Double.doubleToLongBits(d);
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,498,long sign     = bits & 0x8000000000000000L;
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,499,long exponent = bits & 0x7ff0000000000000L;
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,500,long mantissa = bits & 0x000fffffffffffffL;
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,502,if (d * (direction - d) >= 0) {
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,503,// we should increase the mantissa
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,504,if (mantissa == 0x000fffffffffffffL) {
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,505,return Double.longBitsToDouble(sign |
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,506,(exponent + 0x0010000000000000L));
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,507,} else {
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,508,return Double.longBitsToDouble(sign |
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,509,exponent | (mantissa + 1));
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,511,} else {
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,512,// we should decrease the mantissa
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,513,if (mantissa == 0L) {
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,514,return Double.longBitsToDouble(sign |
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,515,(exponent - 0x0010000000000000L) |
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,516,0x000fffffffffffffL);
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,517,} else {
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,518,return Double.longBitsToDouble(sign |
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,519,exponent | (mantissa - 1));
+False,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,502,ouble sign = indicator(x);
+False,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,503,"ouble factor = Math.pow(10.0, scale) * sign;"
+False,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,504,"eturn roundUnscaled(x * factor, sign, roundingMethod) / factor;"
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,551,try {
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,552,return (new BigDecimal
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,553,(new Double(x).toString())
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,554,".setScale(scale, roundingMethod))"
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,555,.doubleValue();
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,556,} catch (NumberFormatException ex) {
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,557,if (Double.isInfinite(x)) {
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,558,return x;
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,559,} else {
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,560,return Double.NaN;
+False,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,555,nscaled = Math.floor(unscaled);
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,613,"unscaled = Math.floor(nextAfter(unscaled, Double.NEGATIVE_INFINITY));"
+False,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,557,nscaled = Math.ceil(unscaled);
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,615,"unscaled = Math.ceil(nextAfter(unscaled, Double.POSITIVE_INFINITY));"
+False,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,561,nscaled = Math.floor(unscaled);
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,619,"unscaled = Math.floor(nextAfter(unscaled, Double.NEGATIVE_INFINITY));"
+False,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,565,nscaled = Math.ceil(unscaled);
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,623,"unscaled = Math.ceil(nextAfter(unscaled, Double.POSITIVE_INFINITY));"
+False,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,567,nscaled = Math.floor(unscaled);
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,625,"unscaled = Math.floor(nextAfter(unscaled, Double.NEGATIVE_INFINITY));"
+False,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,571,ouble fraction = Math.abs(unscaled - Math.floor(unscaled));
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,629,"unscaled = nextAfter(unscaled, Double.NEGATIVE_INFINITY);"
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,630,double fraction = unscaled - Math.floor(unscaled);
+False,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,580,ouble fraction = Math.abs(unscaled - Math.floor(unscaled));
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,639,double fraction = unscaled - Math.floor(unscaled);
+False,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,596,ouble fraction = Math.abs(unscaled - Math.floor(unscaled));
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,655,"unscaled = nextAfter(unscaled, Double.POSITIVE_INFINITY);"
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,656,double fraction = unscaled - Math.floor(unscaled);
+False,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,610,nscaled = Math.ceil(unscaled);
+True,src/java/org/apache/commons/math/util/MathUtils.java,src/java/org/apache/commons/math/util/MathUtils.java,670,"unscaled = Math.ceil(nextAfter(unscaled,  Double.POSITIVE_INFINITY));"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,586,public void testNextAfterSpecialCases() {
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,587,"assertTrue(Double.isInfinite(MathUtils.nextAfter(Double.NEGATIVE_INFINITY, 0)));"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,588,"assertTrue(Double.isInfinite(MathUtils.nextAfter(Double.POSITIVE_INFINITY, 0)));"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,589,"assertTrue(Double.isNaN(MathUtils.nextAfter(Double.NaN, 0)));"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,590,"assertTrue(Double.isInfinite(MathUtils.nextAfter( Double.MAX_VALUE, Double.POSITIVE_INFINITY)));"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,591,"assertTrue(Double.isInfinite(MathUtils.nextAfter(-Double.MAX_VALUE, Double.NEGATIVE_INFINITY)));"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,592,"assertEquals( Double.MIN_VALUE, MathUtils.nextAfter(0,  1), 0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,593,"assertEquals(-Double.MIN_VALUE, MathUtils.nextAfter(0, -1), 0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,594,"assertEquals(0, MathUtils.nextAfter( Double.MIN_VALUE, -1), 0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,595,"assertEquals(0, MathUtils.nextAfter(-Double.MIN_VALUE,  1), 0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,598,public void testNextAfter() {
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,599,// 0x402fffffffffffff 0x404123456789abcd -> 4030000000000000
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,600,"assertEquals(16.0, MathUtils.nextAfter(15.999999999999998, 34.27555555555555), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,602,// 0xc02fffffffffffff 0x404123456789abcd -> c02ffffffffffffe
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,603,"assertEquals(-15.999999999999996, MathUtils.nextAfter(-15.999999999999998, 34.27555555555555), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,605,// 0x402fffffffffffff 0x400123456789abcd -> 402ffffffffffffe
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,606,"assertEquals(15.999999999999996, MathUtils.nextAfter(15.999999999999998, 2.142222222222222), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,608,// 0xc02fffffffffffff 0x400123456789abcd -> c02ffffffffffffe
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,609,"assertEquals(-15.999999999999996, MathUtils.nextAfter(-15.999999999999998, 2.142222222222222), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,611,// 0x4020000000000000 0x404123456789abcd -> 4020000000000001
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,612,"assertEquals(8.000000000000002, MathUtils.nextAfter(8.0, 34.27555555555555), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,614,// 0xc020000000000000 0x404123456789abcd -> c01fffffffffffff
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,615,"assertEquals(-7.999999999999999, MathUtils.nextAfter(-8.0, 34.27555555555555), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,617,// 0x4020000000000000 0x400123456789abcd -> 401fffffffffffff
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,618,"assertEquals(7.999999999999999, MathUtils.nextAfter(8.0, 2.142222222222222), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,620,// 0xc020000000000000 0x400123456789abcd -> c01fffffffffffff
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,621,"assertEquals(-7.999999999999999, MathUtils.nextAfter(-8.0, 2.142222222222222), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,623,// 0x3f2e43753d36a223 0x3f2e43753d36a224 -> 3f2e43753d36a224
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,624,"assertEquals(2.308922399667661E-4, MathUtils.nextAfter(2.3089223996676606E-4, 2.308922399667661E-4), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,626,// 0x3f2e43753d36a223 0x3f2e43753d36a223 -> 3f2e43753d36a224
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,627,"assertEquals(2.308922399667661E-4, MathUtils.nextAfter(2.3089223996676606E-4, 2.3089223996676606E-4), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,629,// 0x3f2e43753d36a223 0x3f2e43753d36a222 -> 3f2e43753d36a222
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,630,"assertEquals(2.3089223996676603E-4, MathUtils.nextAfter(2.3089223996676606E-4, 2.3089223996676603E-4), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,632,// 0x3f2e43753d36a223 0xbf2e43753d36a224 -> 3f2e43753d36a222
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,633,"assertEquals(2.3089223996676603E-4, MathUtils.nextAfter(2.3089223996676606E-4, -2.308922399667661E-4), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,635,// 0x3f2e43753d36a223 0xbf2e43753d36a223 -> 3f2e43753d36a222
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,636,"assertEquals(2.3089223996676603E-4, MathUtils.nextAfter(2.3089223996676606E-4, -2.3089223996676606E-4), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,638,// 0x3f2e43753d36a223 0xbf2e43753d36a222 -> 3f2e43753d36a222
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,639,"assertEquals(2.3089223996676603E-4, MathUtils.nextAfter(2.3089223996676606E-4, -2.3089223996676603E-4), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,641,// 0xbf2e43753d36a223 0x3f2e43753d36a224 -> bf2e43753d36a222
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,642,"assertEquals(-2.3089223996676603E-4, MathUtils.nextAfter(-2.3089223996676606E-4, 2.308922399667661E-4), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,644,// 0xbf2e43753d36a223 0x3f2e43753d36a223 -> bf2e43753d36a222
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,645,"assertEquals(-2.3089223996676603E-4, MathUtils.nextAfter(-2.3089223996676606E-4, 2.3089223996676606E-4), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,647,// 0xbf2e43753d36a223 0x3f2e43753d36a222 -> bf2e43753d36a222
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,648,"assertEquals(-2.3089223996676603E-4, MathUtils.nextAfter(-2.3089223996676606E-4, 2.3089223996676603E-4), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,650,// 0xbf2e43753d36a223 0xbf2e43753d36a224 -> bf2e43753d36a224
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,651,"assertEquals(-2.308922399667661E-4, MathUtils.nextAfter(-2.3089223996676606E-4, -2.308922399667661E-4), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,653,// 0xbf2e43753d36a223 0xbf2e43753d36a223 -> bf2e43753d36a224
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,654,"assertEquals(-2.308922399667661E-4, MathUtils.nextAfter(-2.3089223996676606E-4, -2.3089223996676606E-4), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,656,// 0xbf2e43753d36a223 0xbf2e43753d36a222 -> bf2e43753d36a222
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,657,"assertEquals(-2.3089223996676603E-4, MathUtils.nextAfter(-2.3089223996676606E-4, -2.3089223996676603E-4), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,667,// JIRA MATH-151
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,668,"assertEquals(39.25,MathUtils.round(39.245, 2), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,669,"assertEquals(39.24,MathUtils.round(39.245, 2,"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,670,"BigDecimal.ROUND_DOWN), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,671,double xx = 39.0;
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,672,xx = xx + 245d/1000d;
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,673,"assertEquals(39.25,MathUtils.round(xx, 2), 0.0);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,678,"assertEquals(33.1d, MathUtils.round(33.095d, 1), 0.0d);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,679,"assertEquals(33.1d, MathUtils.round(33.095d, 2), 0.0d);"
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,760,// MATH-151
+True,src/test/org/apache/commons/math/util/MathUtilsTest.java,src/test/org/apache/commons/math/util/MathUtilsTest.java,761,"assertEquals(39.25, MathUtils.round(39.245, 2, BigDecimal.ROUND_HALF_UP), 0.0);"
