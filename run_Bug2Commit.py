@@ -66,10 +66,6 @@ def run_bug2commit(pid, vid):
     print(f"{pid}-{vid}b: Collecting query features...........................")
     # get query (bug report) features
     query_features = []
-    with open(os.path.join(baseline_data_dir, "br_long.txt"), "r") as f:
-        query_features.append(f.read().strip()) # 1st bug report feature
-    with open(os.path.join(baseline_data_dir, "br_short.txt"), "r") as f:
-        query_features.append(f.read().strip()) # 2nd bug report feature
     with open(os.path.join(core_data_dir, "failing_tests"), "r") as f:
         query_features.append(f.read().strip()) # 3rd bug report feature
 
@@ -117,10 +113,10 @@ def run_diff_bug2commit(pid, vid):
     baseline_data_dir = os.path.join(BASELINE_DATA_DIR, f"{pid}-{vid}b")
     commit_dir = os.path.join(baseline_data_dir, "commits")
 
-    savepath = os.path.join(baseline_data_dir, "ranking_diff_Bug2Commit.csv")
+    """savepath = os.path.join(baseline_data_dir, "ranking_diff_Bug2Commit.csv")
     if os.path.exists(savepath):
         print(f"{pid}-{vid}b: {savepath} already exists")
-        return
+        return"""
     
     print(f"{pid}-{vid}b: Building BM25 with commit features..........................")
     # get doc (commit) features
@@ -143,17 +139,16 @@ def run_diff_bug2commit(pid, vid):
         commit_hash = filename[2:9]
 
         with open(os.path.join(diff_data_dir, commit_hash + '.pkl'), "rb") as file:
-            commit_vectors[commit_hash] = bm25.vectorize_complex(pickle.load(file).values())
+            val = pickle.load(file).values()
+            commit_vectors[commit_hash] = bm25.vectorize_complex(val)
+            if not commit_vectors[commit_hash].any():
+                print(filename, val)
 
     print(f"{pid}-{vid}b: Collecting and vectorizing query features...........................")
-    # get query (bug report) features
+    # get query (failing test) features
     query_features = []
-    with open(os.path.join(baseline_data_dir, "br_long.txt"), "r") as f:
-        query_features.append(f.read().strip()) # 1st bug report feature
-    with open(os.path.join(baseline_data_dir, "br_short.txt"), "r") as f:
-        query_features.append(f.read().strip()) # 2nd bug report feature
     with open(os.path.join(core_data_dir, "failing_tests"), "r") as f:
-        query_features.append(f.read().strip()) # 3rd bug report feature
+        query_features.append(f.read().strip())
     
     query_vector = bm25.vectorize_complex([bm25.encode(tokenize(feature)) for feature in query_features])
 
@@ -171,7 +166,7 @@ def run_diff_bug2commit(pid, vid):
     score_df.sort_values(by="rank", inplace=True)
     score_df = score_df[["commit_hash", "rank", "score"]]
     if savepath:
-        score_df.to_csv(savepath, index=False, header=None)
+        #score_df.to_csv(savepath, index=False, header=None)
         print(f"{pid}-{vid}b: Saved to {savepath}")
     return score_df
 
@@ -179,7 +174,8 @@ if __name__ == "__main__":
     GT = load_BIC_GT(BIC_GT_DIR)
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
-        try:
+        run_diff_bug2commit(pid, vid)
+        """try:
             run_diff_bug2commit(pid, vid)
         except:
-            print('Error on {}_{}b'.format(pid, vid))
+            print('Error on {}_{}b'.format(pid, vid))"""
