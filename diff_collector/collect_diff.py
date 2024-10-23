@@ -123,13 +123,18 @@ if __name__ == "__main__":
             commit_parents = ['4b825dc642cb6eb9a060e54bf8d69288fbee4904']
         
         for parent in commit.parents:
-            parent_commit = repo.commit(parent)
-            diff = repo.git.diff(parent_commit, commit.hexsha)
-            diff_rows = parse_diff(diff)
+            try:
+                parent_commit = repo.commit(parent)
+                diff = repo.git.diff(parent_commit, commit.hexsha)
+                diff_rows = parse_diff(diff)
             
-            diff_df = pd.DataFrame(diff_rows,columns=index)
-            diff_df = diff_df.set_index(index)
-            diff_df.to_csv(os.path.join(commit_dir, f'{parent}.csv'), errors='ignore')
+                diff_df = pd.DataFrame(diff_rows,columns=index)
+                diff_df = diff_df.set_index(index)
+                diff_df.to_csv(os.path.join(commit_dir, f'{parent}.csv'), errors='ignore')
+            
+            except:
+                with open('/root/workspace/error_list.txt', 'a') as file:
+                    file.write(f'{args.project}-{arg.version}) {commit.hexsha}...{parent}')
         
         #diff.parse_diff(repo.git.diff(commit_logs[i - 1][:-2], commit_logs[i][:-2]))
         #diff.save(os.path.join(output_dir, commit_logs[i][:-2]))
