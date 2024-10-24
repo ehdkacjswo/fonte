@@ -19,7 +19,7 @@ for dir_name in os.listdir(diff_dir):
     
     total_dir = os.path.join(diff_dir, project)
     project_dir = os.path.join(diff_dir, dir_name)
-    os.makedirs(os.path.join(total_dir, project), exist_ok=True)
+    os.makedirs(total_dir, exist_ok=True)
 
     # Get the list of current commits for target version
     for commit in os.listdir(project_dir):
