@@ -140,7 +140,7 @@ def get_style_change_commits(fault_dir, tool, with_Rewrite=True):
     return agg_df.index[agg_df["unchanged"]].tolist()
 
 # Extra score
-def extra_score(data_dir, score=None, norm_mode='rank'):
+def extra_score(data_dir, score=None, norm_mode='score'):
     score_dict = dict()
 
     # Use Bug2Commit
@@ -477,8 +477,8 @@ def fonte(args, HSFL=True, score=None, ignore=[0]):
         [pid, vid] = coredir[20:-1].split("-")
 
         # diff data not fully handled
-        if not os.path.isfile(os.path.join('data/Defects4J/baseline/{}-{}b'.format(pid, vid), 'ranking_diff_Bug2Commit.csv')):
-            continue
+        """if not os.path.isfile(os.path.join('data/Defects4J/baseline/{}-{}b'.format(pid, vid), 'ranking_diff_Bug2Commit.csv')):
+            continue"""
 
         fault = (pid, vid)
         BIC = GT.set_index(["pid", "vid"]).loc[fault, "commit"]

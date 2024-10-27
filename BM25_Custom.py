@@ -5,7 +5,7 @@ from rank_bm25 import BM25Okapi
 
 # BM25Okapi for encoded version
 class BM25_Encode(BM25Okapi):
-    def __init__(self, vocab, k1=1.5, b=0.75, epsilon=0.25):
+    def __init__(self, vocab_size, k1=1.5, b=0.75, epsilon=0.25):
         # BM25 init
         self.corpus_size = 0
 
@@ -15,13 +15,12 @@ class BM25_Encode(BM25Okapi):
         self.epsilon = epsilon
 
         # Additional
-        self.vocab = vocab
-        self.nd = [0] * len(vocab)
+        self.nd = [0] * vocab_size
         self.num_doc = 0
-        self.vocab_size = -1
+        self.vocab_size = vocab_size
     
     # Encode tokenized document
-    def encode(self, document):
+    """def encode(self, document):
         res = [0] * self.vocab_size
 
         for word, cnt in Counter(document).items():
@@ -30,7 +29,7 @@ class BM25_Encode(BM25Okapi):
             except:
                 continue
         
-        return res
+        return res"""
 
     # Vectorize encoded features
     def vectorize_complex(self, features):
@@ -38,7 +37,6 @@ class BM25_Encode(BM25Okapi):
 
         for feature in features:
             doc_len = sum(feature)
-            feature = feature + [0] * (self.vocab_size - len(feature)) # Zero-pad
 
             vector = [self.idf[word] * (feature[word] * (self.k1 + 1) /
                 (self.idf[word] + self.k1 * (1 - self.b + self.b * doc_len / self.avgdl))) for word in range(self.vocab_size)]
@@ -51,15 +49,9 @@ class BM25_Encode(BM25Okapi):
         self.num_doc += sum(document)
         self.corpus_size += 1
 
-        document_max_ind = -1
-
         for ind, cnt in enumerate(document):
             if cnt > 0:
                 self.nd[ind] += 1
-                document_max_ind = ind
-        
-        # Maximum index of word in vocab
-        self.vocab_size = max(self.vocab_size, document_max_ind)
     
     def _calc_idf(self):
         """
@@ -96,10 +88,6 @@ class BM25_Encode(BM25Okapi):
     
     # End initialziation process
     def init_end(self):
-        # Filter out not used vocab
-        self.vocab = {word: ind for word, ind in self.vocab.items() if ind < self.vocab_size}
-        self.nd = self.nd[:self.vocab_size]
-
         self.avgdl = self.num_doc / self.corpus_size
         self._calc_idf()
 

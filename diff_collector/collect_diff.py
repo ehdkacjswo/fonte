@@ -119,7 +119,10 @@ if __name__ == "__main__":
 
         # For initial commit, give empty repo as parent
         if len(commit.parents) == 0:
-            commit.parents = ['4b825dc642cb6eb9a060e54bf8d69288fbee4904']
+            parent = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+        # Else, select first parent
+        else:
+            parent = commit.parents[0]
         
         for parent in commit.parents:
             csv_path = os.path.join(commit_dir, f'{parent}.csv')
