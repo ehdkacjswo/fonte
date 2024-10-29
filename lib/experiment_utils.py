@@ -146,7 +146,7 @@ def extra_score(data_dir, score=None, norm_mode='score'):
     # Use Bug2Commit
     if score == 'bug2commit' or score == 'bug2commit_diff':
         if score == 'bug2commit':
-            df = pd.read_csv(os.path.join(data_dir, 'ranking_Bug2Commit.csv'), names=['commit_hash', 'commit_file', 'rank', 'score'])
+            df = pd.read_csv(os.path.join(data_dir, 'ranking_Bug2Commit_no_br.csv'), names=['commit_hash', 'commit_file', 'rank', 'score'])
         else:
             df = pd.read_csv(os.path.join(data_dir, 'ranking_diff_Bug2Commit.csv'), names=['commit_hash', 'rank', 'score'])
 

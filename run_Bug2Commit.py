@@ -44,7 +44,7 @@ def run_bug2commit(pid, vid):
     baseline_data_dir = os.path.join(BASELINE_DATA_DIR, f"{pid}-{vid}b")
     commit_dir = os.path.join(baseline_data_dir, "commits")
     
-    savepath = os.path.join(baseline_data_dir, "ranking_Bug2Commit.csv")
+    savepath = os.path.join(baseline_data_dir, "ranking_Bug2Commit_no_br.csv")
     if os.path.exists(savepath):
         print(f"{pid}-{vid}b: {savepath} already exists")
         return
@@ -206,15 +206,9 @@ if __name__ == "__main__":
     cont = True
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
-        if pid == 'Math' and vid == '3':
-            print('Found')
-            cont = False
-        
-        if cont:
-            continue
 
         try:
-            run_diff_bug2commit(pid, vid)
+            run_bug2commit(pid, vid)
         except:
             with open('/root/workspace/eror.txt', 'a') as file:
                 file.write(f'Error on {pid}-{vid}b\n')
