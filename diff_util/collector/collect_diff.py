@@ -6,6 +6,7 @@ import re
 import argparse
 import subprocess
 import sys
+import pickle
 
 import pandas as pd
 import git # GitPython
@@ -106,7 +107,28 @@ if __name__ == "__main__":
 
     # Iterate through commits in reverse order
     cnt = 0
-    for commit in repo.iter_commits('HEAD'):
+    commit = repo.head.commit
+    commit_set = set()
+
+    while commit:
+        commit_set.add(commit.hexsha)
+        if commit.parents:
+            commit = commit.parents[0]
+        else:
+            commit = None
+    
+    commit_set2 = set()
+    for filename in os.listdir(f'/root/workspace/data/Defects4J/baseline/{args.project}-{args.version}b/commits'):
+        commit_set2.add(filename[2:-7])
+    
+    com_df = pd.read_pickle(f'/root/workspace/data/Defects4J/core/{args.project}-{args.version}b/git/commits.pkl')
+    for _, row in com_df.iterrows():
+        print(row)
+    
+    print(com_df.columns.values.tolist())
+    #print(commit_set - commit_set2)
+    #print(commit_set2 - commit_set)
+    """for commit in repo.iter_commits('HEAD'):
         # Create target directory if there is none
         commit_dir = os.path.join(output_dir, commit.hexsha)
         os.makedirs(commit_dir, exist_ok=True)
@@ -139,4 +161,4 @@ if __name__ == "__main__":
             
             except:
                 with open('/root/workspace/error_list.txt', 'a') as file:
-                    file.write(f'{args.project}-{arg.version}) {commit.hexsha}...{parent}')
+                    file.write(f'{args.project}-{arg.version}) {commit.hexsha}...{parent}')"""

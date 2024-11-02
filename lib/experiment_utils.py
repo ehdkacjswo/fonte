@@ -148,7 +148,7 @@ def extra_score(data_dir, score=None, norm_mode='score'):
         if score == 'bug2commit':
             df = pd.read_csv(os.path.join(data_dir, 'ranking_Bug2Commit_no_br.csv'), names=['commit_hash', 'commit_file', 'rank', 'score'])
         else:
-            df = pd.read_csv(os.path.join(data_dir, 'ranking_diff_Bug2Commit.csv'), names=['commit_hash', 'rank', 'score'])
+            df = pd.read_csv(os.path.join(data_dir, 'ranking_diff_all_simple_Bug2Commit.csv'), names=['commit_hash', 'rank', 'score'])
 
         # No normalization
         if norm_mode == 'base':

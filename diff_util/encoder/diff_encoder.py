@@ -74,36 +74,20 @@ def encode_pid(pid):
                     content_encode = encoder.encode(str(row['content']))
 
                     if row['is_addition']:
-                        addition_dict[file_path_encode] = sum_encode(addition_dict.get(file_path_encode, []), content_encode)
+                        addition_dict[file_path_encode] = \
+                            sum_encode(addition_dict.get(file_path_encode, []), content_encode)
                     
                     else:
                         if not file_path.endswith('.java'): # File deleted
-                            file_path_encode = tuple(encoder.encode(str(row['old_file_path'])))
-                        deletion_dict[file_path_encode] = sum_encode(deletion_dict.get(file_path_encode, []), content_encode)
+                            file_path_encode = tuple(encoder.encode(str(row['old_file_path']))) # Use the old path instead
+                        deletion_dict[file_path_encode] = \
+                            sum_encode(deletion_dict.get(file_path_encode, []), content_encode)
                 
-                # Save the encoded data
-                if os.path.exists(os.path.join(commit_dir, 'encode/addition_encode.pkl')):
-                    os.remove(os.path.join(commit_dir, 'encode/addition_encode.pkl'))
-                if os.path.exists(os.path.join(commit_dir, 'encode/deletion_encode.pkl')):
-                    os.remove(os.path.join(commit_dir, 'encode/deletion_encode.pkl'))
-                    
+                # Save the encoded data             
                 with open(os.path.join(commit_dir, 'encode/addition_encode.pkl'), 'wb') as file:
                     pickle.dump(addition_dict, file)    
                 with open(os.path.join(commit_dir, 'encode/deletion_encode.pkl'), 'wb') as file:
                     pickle.dump(deletion_dict, file)
-                
-                if os.path.exists(os.path.join(commit_dir, 'encode/diff_encode.csv')):
-                    os.remove(os.path.join(commit_dir, 'encode/diff_encode.csv'))
-                if os.path.exists(os.path.join(commit_dir, 'encode/encode_res.pkl')):
-                    os.remove(os.path.join(commit_dir, 'encode/encode_res.pkl'))
-                if os.path.exists(os.path.join(commit_dir, 'encode/simple_encode_res.npz')):
-                    os.remove(os.path.join(commit_dir, 'encode/simple_encode_res.npz'))
-                if os.path.exists(os.path.join(commit_dir, 'encode/simple_encode_res.pkl')):
-                    os.remove(os.path.join(commit_dir, 'encode/simple_encode_res.pkl'))
-                if os.path.exists(os.path.join(commit_dir, 'encode/used_set.pkl')):
-                    os.remove(os.path.join(commit_dir, 'encode/used_set.pkl'))
-                if os.path.exists(os.path.join(commit_dir, 'encode/simple_used_set.pkl')):
-                    os.remove(os.path.join(commit_dir, 'encode/simple_used_set.pkl'))
             
             if filename == 'message.txt': # Msg data
                 with open(cur_path, 'r') as file:
@@ -112,14 +96,8 @@ def encode_pid(pid):
                 msg_encode = encoder.encode(msg)
                 with open(os.path.join(commit_dir, 'encode/message_encode.pkl'), 'wb') as file:
                     pickle.dump(msg_encode, file)
-                
-                # Save the encoded data
-                #diff_df.to_csv(os.path.join(commit_dir, 'encode/diff_encode.csv'), errors='ignore')
         
     # Save the vocabulary for each projects
-    if os.path.exists(os.path.join(project_dir, 'vocab.pkl')):
-        os.remove(os.path.join(project_dir, 'vocab.pkl'))
-    
     with open(os.path.join(project_dir, 'vocab.pkl'), 'wb') as file:
         pickle.dump(encoder.vocab, file)
 

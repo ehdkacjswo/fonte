@@ -10,7 +10,6 @@ from lib.experiment_utils import *
 
 from BM25_Custom import BM25_Encode
 from tqdm import tqdm
-from diff_encoder import Encoder
 
 import pickle
 
@@ -18,6 +17,25 @@ CORE_DATA_DIR = "./data/Defects4J/core"
 BIC_GT_DIR = "./data/Defects4J/BIC_dataset"
 BASELINE_DATA_DIR = "./data/Defects4J/baseline"
 DIFF_DATA_DIR = './data/Defects4J/diff'
+
+class Encoder():
+    def __init__(self, vocab={}):
+        self.vocab = vocab # {word : id}
+    
+    # Encode the input and list of used word index and count
+    def encode(self, text):
+        encode_res = []
+        text = ronin.split(text.strip())
+
+        for word, cnt in Counter(text).items():
+            if word in self.vocab: # Word in vocab
+                encode_res.append((self.vocab[word], cnt))
+                
+            else: # New word
+                encode_res.append((len(self.vocab), cnt))
+                self.vocab[word] = len(self.vocab)
+        
+        return encode_res
 
 def tokenize(text):
     return ronin.split(text)
@@ -45,9 +63,9 @@ def run_bug2commit(pid, vid):
     commit_dir = os.path.join(baseline_data_dir, "commits")
     
     savepath = os.path.join(baseline_data_dir, "ranking_Bug2Commit_no_br.csv")
-    if os.path.exists(savepath):
+    """if os.path.exists(savepath):
         print(f"{pid}-{vid}b: {savepath} already exists")
-        return
+        return"""
 
     print(f"{pid}-{vid}b: Collecting commit features..........................")
     # get doc (commit) features
@@ -70,6 +88,8 @@ def run_bug2commit(pid, vid):
         query_features.append(f.read().strip()) # 3rd bug report feature
 
     corpus = sum(commit_features.values(), [])
+    print(corpus)
+    return
     tokenized_corpus = [tokenize(doc) for doc in corpus]
     bm25 = BM25Okapi(tokenized_corpus)
     bm25.vocab = list(set( # collect all words appearning in the corpus
@@ -113,81 +133,65 @@ def run_diff_bug2commit(pid, vid):
     baseline_data_dir = os.path.join(BASELINE_DATA_DIR, f"{pid}-{vid}b")
     commit_dir = os.path.join(baseline_data_dir, "commits")
 
-    savepath = os.path.join(baseline_data_dir, "ranking_diff_Bug2Commit.csv")
+    savepath = os.path.join(baseline_data_dir, "ranking_diff_all_simple_Bug2Commit.csv")
     """if os.path.exists(savepath):
         print(f"{pid}-{vid}b: {savepath} already exists")
         return"""
     
-    print(f"{pid}-{vid}b: Load/update vocab and used set..........................")
+    print(f"{pid}-{vid}b: Encode query feature and build BM25..........................")
     # Load vocab and build encoder
     with open(os.path.join(diff_data_dir, 'vocab.pkl'), 'rb') as file:
         vocab = pickle.load(file)
 
     encoder = Encoder(vocab)
+    bm25 = BM25_Encode()
 
     # Get query features (failing tests)
     with open(os.path.join(core_data_dir, "failing_tests"), "r") as f:
         query_feature = f.read().strip()
     
     # Encode the query feature
-    query_encode, used_set = encoder.encode(query_feature)
+    query_encode = encoder.encode(query_feature)
+    bm25.add_document(query_encode)
 
     # For target list of commits get used set
-    with open(os.path.join(core_data_dir, 'commits.log'), 'r') as file:
-        commit_list = file.readlines()
+    commit_feature_dict = dict()
+    for commit in os.listdir(diff_data_dir):
+        commit_dir = os.path.join(diff_data_dir, commit)
 
-    for commit in commit_list:
-        with open(os.path.join(diff_data_dir, commit.strip(), 'encode/used_set.pkl'), 'rb') as file:
-            commit_used_set = pickle.load(file)
-        used_set = used_set.union(commit_used_set)
-    
-    print(f"{pid}-{vid}b: Remove unused tokens from encoding and build bm25..........................")
-    used_list = list(used_set)
-    bm25 = BM25_Encode(len(used_set))
+        # Skip vocab.pkl
+        if not os.path.isdir(commit_dir):
+            continue
 
-    # Handle query feature
-    new_query_encode = [[query_encode[ind] for ind in used_list]]
-    bm25.add_document(new_query_encode[0])
-    
-    # Handle commit features
-    commit_encode_dict = {}
-    for commit in tqdm(commit_list):
-        commit_hash = commit[:7]
-
-        # Load encoding result for commit
-        with open(os.path.join(diff_data_dir, commit.strip(), 'encode/encode_res.pkl'), 'rb') as file:
-            commit_encode_list = pickle.load(file)
+        with open(os.path.join(commit_dir, 'encode/feature_all_simple.pkl'), 'rb') as file:
+            commit_feature = pickle.load(file)
         
-        # Handle commit features
-        commit_encode_dict[commit_hash] = []
-        for commit_encode in commit_encode_list:
-            new_commit_encode = [(commit_encode[ind] if ind < len(commit_encode) else 0) for ind in used_list]
-            bm25.add_document(new_commit_encode)
-            commit_encode_dict[commit_hash].append(new_commit_encode)
+        for feature in commit_feature:
+            bm25.add_document(feature)
+
+        commit_feature_dict[commit[:7]] = commit_feature
     
-    # Calculate idf for BM25
     bm25.init_end()
     
     print(f"{pid}-{vid}b: Vectorizing features..........................")
     # Handle query features
-    query_vector = bm25.vectorize_complex(new_query_encode)
+    query_vector = bm25.vectorize_complex([query_encode])
 
     if not np.any(query_vector):
         with open('/root/workspace/eror.txt', 'a') as file:
                 file.write(f'Query vector of {pid}-{vid}b is zero\n')
 
     # Handle commit features
-    commit_vectors = {}
-    for commit_hash, commit_encode_list in tqdm(commit_encode_dict.items()):
-        commit_vectors[commit_hash] = bm25.vectorize_complex(commit_encode_list)
+    for commit_hash in tqdm(commit_feature_dict.keys()):
+        commit_feature_dict[commit_hash] = bm25.vectorize_complex(commit_feature_dict[commit_hash])
 
-        if not np.any(commit_vectors[commit_hash]):
+        if not np.any(commit_feature_dict[commit_hash]):
             with open('/root/workspace/eror.txt', 'a') as file:
                 file.write(f'Commit vector of {pid}-{vid}b:{commit_hash} is zero\n')
 
     print(f"{pid}-{vid}b: Calculating the scores of commits...................")
     score_rows = []
-    for commit_hash, vector in commit_vectors.items():
+    for commit_hash, vector in commit_feature_dict.items():
         similarity = 1 - cosine(vector, query_vector)
         score_rows.append([commit_hash, similarity])
 
@@ -208,7 +212,7 @@ if __name__ == "__main__":
         pid, vid = row.pid, row.vid
 
         try:
-            run_bug2commit(pid, vid)
+            run_diff_bug2commit(pid, vid)
         except:
             with open('/root/workspace/eror.txt', 'a') as file:
                 file.write(f'Error on {pid}-{vid}b\n')
