@@ -4,9 +4,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'l
 
 from experiment_utils import *
 
-def get_coverage(fauld_dir, covered_by_failure_only=True,
-    in_class_only=False, use_method_level_score=False):
+def get_coverage(fault_dir, covered_by_failure_only=True, in_class_only=False, use_method_level_score=False):
 
+    print('adsfasdf')
+    print(fault_dir)
     path_to_coverage = os.path.join(fault_dir, "coverage.pkl")
     postfix = "suspicious" if covered_by_failure_only else "all"
     postfix += "_inClassOnly" if in_class_only else ""
@@ -79,13 +80,15 @@ def commit_df_to_evolve (pid, vid, tool, with_Rewrite=True, skip_stage_2=False):
         excluded = get_style_change_commits(fault_dir, tool)
     
     # Get evolve data
-    cov_df = get_coverage()
+    cov_df = get_coverage(fault_dir)
     
     # Get commit history info
     commit_df = load_commit_history(fault_dir, tool)
 
     commit_df["excluded"] = commit_df["commit_hash"].isin(excluded)
     commit_df["new_depth"] = commit_df["depth"]
+
+    print(commit_df)
 
     for _, row in cov_df.reset_index().iterrows():
         print('Target file : {}, line : {}'.format(row.class_file, row.line))
