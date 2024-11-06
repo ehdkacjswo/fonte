@@ -116,9 +116,9 @@ if __name__ == "__main__":
         compare_iters(sbfl, sum_)"""
 
     # Run Fonte with various settings
-    C_BIC_list_base, scores_list_base, BIC_list_base, BIC_rank_list_base = fonte(args, HSFL=False, score=None)
-    C_BIC_list_score_base, scores_list_score_base, BIC_list_score_base, BIC_rank_list_score_base = fonte(args, HSFL=False, score='bug2commit')
-    C_BIC_list_score_diff, scores_list_score_diff, BIC_list_score_diff, BIC_rank_list_score_diff = fonte(args, HSFL=False, score='bug2commit_diff')
+    C_BIC_list_base, scores_list_base, BIC_list_base, BIC_rank_list_base = fonte(args, HSFL=True, score=None)
+    C_BIC_list_score_base, scores_list_score_base, BIC_list_score_base, BIC_rank_list_score_base = fonte(args, HSFL=True, score='bug2commit')
+    C_BIC_list_score_diff, scores_list_score_diff, BIC_list_score_diff, BIC_rank_list_score_diff = fonte(args, HSFL=True, score='bug2commit_diff')
     
     # Analyze ranks
     analyze_ranks(BIC_rank_list_base)

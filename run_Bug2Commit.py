@@ -7,6 +7,8 @@ from rank_bm25 import BM25Okapi
 from collections import Counter
 from scipy.spatial.distance import cosine
 from lib.experiment_utils import *
+from nltk.corpus import stopwords
+import regex as re
 
 from BM25_Custom import BM25_Encode
 from tqdm import tqdm
@@ -18,14 +20,26 @@ BIC_GT_DIR = "./data/Defects4J/BIC_dataset"
 BASELINE_DATA_DIR = "./data/Defects4J/baseline"
 DIFF_DATA_DIR = './data/Defects4J/diff'
 
+# Class that encodes string while expanding the vocabulary
 class Encoder():
     def __init__(self, vocab={}):
         self.vocab = vocab # {word : id}
+        self.stopword_list = stopwords.words('english')
     
+    def tokenize(self, text):
+        text = re.sub(r'[^A-Za-z0-9]', ' ', text) # Remove characters except alphabets and numbers
+        token_list = ronin.split(text) # Split the text
+        token_list = [token.lower() for token in token_list] # Apply lowercase
+        token_list = [token for token in token_list if \
+            (len(token) > 1 and not token.isdigit() and token not in self.stopword_list)]
+            # Remove single character, numbers and stopwords
+
+        return token_list
+
     # Encode the input and list of used word index and count
     def encode(self, text):
         encode_res = []
-        text = ronin.split(text.strip())
+        text = self.tokenize(text)
 
         for word, cnt in Counter(text).items():
             if word in self.vocab: # Word in vocab
@@ -37,8 +51,17 @@ class Encoder():
         
         return encode_res
 
-def tokenize(text):
-    return ronin.split(text)
+# Return the sum of two encoded vectors
+def sum_encode(vec1, vec2):
+    res_dict = dict()
+
+    for id, cnt in vec1:
+        res_dict[id] = cnt
+    
+    for id, cnt in vec2:
+        res_dict[id] = res_dict.get(id, 0) + cnt
+    
+    return list(res_dict.items())
 
 def vectorize_complex(bm25, features):
     vectors = []
@@ -129,7 +152,7 @@ def run_bug2commit(pid, vid):
 # 해당 
 def run_diff_bug2commit(pid, vid):
     core_data_dir = os.path.join(CORE_DATA_DIR, f"{pid}-{vid}b")
-    diff_data_dir = os.path.join(DIFF_DATA_DIR, f"{pid}")
+    diff_data_dir = os.path.join(DIFF_DATA_DIR, f"{pid}-{vid}b")
     baseline_data_dir = os.path.join(BASELINE_DATA_DIR, f"{pid}-{vid}b")
     commit_dir = os.path.join(baseline_data_dir, "commits")
 
@@ -156,20 +179,12 @@ def run_diff_bug2commit(pid, vid):
 
     # For target list of commits get used set
     commit_feature_dict = dict()
-    for commit in os.listdir(diff_data_dir):
-        commit_dir = os.path.join(diff_data_dir, commit)
-
-        # Skip vocab.pkl
-        if not os.path.isdir(commit_dir):
-            continue
-
-        with open(os.path.join(commit_dir, 'encode/feature_all_simple.pkl'), 'rb') as file:
-            commit_feature = pickle.load(file)
-        
-        for feature in commit_feature:
+    with open(os.path.join(diff_data_dir, 'feature/add_simple.pkl'), 'rb') as file:
+        commit_feature_dict = pickle.load(file)
+    
+    for commit_feature_list in commit_feature_dict.values():
+        for feature in commit_feature_list:
             bm25.add_document(feature)
-
-        commit_feature_dict[commit[:7]] = commit_feature
     
     bm25.init_end()
     
@@ -210,9 +225,10 @@ if __name__ == "__main__":
     cont = True
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
+        run_diff_bug2commit(pid, vid)
 
-        try:
+        """try:
             run_diff_bug2commit(pid, vid)
         except:
             with open('/root/workspace/eror.txt', 'a') as file:
-                file.write(f'Error on {pid}-{vid}b\n')
+                file.write(f'Error on {pid}-{vid}b\n')"""

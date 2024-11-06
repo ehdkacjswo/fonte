@@ -43,57 +43,41 @@ def sum_encode(vec1, vec2):
     return list(res_dict.items())
 
 # data : 
-def encode_pid(pid, adddel, encode_type):
-    project_dir = os.path.join(DIFF_DATA_DIR, pid)
+def gen_feature(project, adddel, encode_type):
+    project_dir = os.path.join(DIFF_DATA_DIR, project)
+    feature_dict = dict()
+
+    with open(os.path.join(project_dir, 'diff_encode.pkl'), 'rb') as file:
+        encode_dict = pickle.load(file)
 
     # Iterate through commits
-    for commit in tqdm(os.listdir(project_dir)):
-        commit_dir = os.path.join(project_dir, commit)
+    for commit_hash, [addition_list, deletion_list, msg_encode] in encode_dict.items():
+        feature_list = []
+
+        if encode_type == 'simple':
+            path_encode_sum = []
+            content_encode_sum = []
+
+            if adddel != 'del':
+                for (src_path_encode, encode_sum) in addition_list:
+                    path_encode_sum = sum_encode(path_encode_sum, src_path_encode)
+                    content_encode_sum = sum_encode(content_encode_sum, encode_sum)
+            
+            if adddel != 'add':
+                for (src_path_encode, encode_sum) in deletion_list:
+                    path_encode_sum = sum_encode(path_encode_sum, src_path_encode)
+                    content_encode_sum = sum_encode(content_encode_sum, encode_sum)
+            
+            feature_dict[commit_hash] = [msg_encode, path_encode_sum, content_encode_sum]
         
-        # Consider only commit directories (Possible vocab.pkl)
-        if not os.path.isdir(commit_dir):
+        else:
             continue
+        
+    feature_path = os.path.join(project_dir, 'feature')
+    os.makedirs(feature_path, exist_ok=True)
 
-        feature_dict = dict()
-
-        # Added diff data
-        if adddel != 'del':
-            with open(os.path.join(commit_dir, 'encode/addition_encode.pkl'), 'rb') as file:
-                feature_dict = pickle.load(file)
-        
-        # Deleted diff data
-        if adddel != 'add':
-            with open(os.path.join(commit_dir, 'encode/deletion_encode.pkl'), 'rb') as file:
-                deletion_dict = pickle.load(file)
-            
-            if bool(feature_dict): # Dictionary is empty
-                feature_dict = deletion_dict
-            
-            else: # Dictionary is already filled with data
-                for file_encode, diff_encode in deletion_dict.items():
-                    feature_dict[file_encode] = sum_encode(feature_dict.get(file_encode, []), diff_encode)
-        
-        # Message data
-        with open(os.path.join(commit_dir, 'encode/message_encode.pkl'), 'rb') as file:
-            feature_list = [pickle.load(file)]
-        
-        if encode_type == 'complex':
-            for file_encode, diff_encode in feature_dict.items():
-                feature_list.append(sum_encode(file_encode, diff_encode))
-        
-        elif encode_type == 'simple':
-            file_encode_sum = []
-            for file_encode in feature_dict.keys():
-                file_encode_sum = sum_encode(file_encode_sum, file_encode)
-            feature_list.append(file_encode_sum)
-
-            diff_encode_sum = []
-            for diff_encode in feature_dict.values():
-                diff_encode_sum = sum_encode(diff_encode_sum, diff_encode)
-            feature_list.append(diff_encode_sum)
-        
-        with open(os.path.join(commit_dir, f'encode/feature_{adddel}_{encode_type}.pkl'), 'wb') as file:
-            pickle.dump(feature_list, file)
+    with open(os.path.join(feature_path, f'{adddel}_{encode_type}.pkl'), 'wb') as file:
+        pickle.dump(feature_dict, file)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ensemble encoded data")
@@ -102,19 +86,13 @@ if __name__ == "__main__":
         help='Diff data to use, all, add or del (default: all)')
     # complex : [log, file_path + content...], simple : [log, file_path, content]
     parser.add_argument('--encode_type', '-e', type=str, default='simple', choices=['complex', 'simple'],
-        help='Type of encoding (default: complex)')
-    
-    parser.add_argument('--relevant', '-r', type=bool, default=False,
-        help="To use only relevant diff or not")
-    parser.add_argument('--stopwords', '-s', type=bool, default=False,
-        help="history retrieval tool, git or shovel (default: git)")
-    # Stopwords and special characters?
+        help='Type of encoding (default: simple)')
     args = parser.parse_args()
     
     diff_dir = '/root/workspace/data/Defects4J/diff/'
 
     # Iterate through projects
-    for pid in os.listdir('/root/workspace/data/Defects4J/diff/'):
-        print(f'Working on project {pid}')
-        encode_pid(pid, args.adddel, args.encode_type)
+    for project in os.listdir('/root/workspace/data/Defects4J/diff/'):
+        print(f'Working on project {project}')
+        gen_feature(project, args.adddel, args.encode_type)
         

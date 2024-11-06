@@ -13,11 +13,12 @@ import git # GitPython
 from tabulate import tabulate
 from nltk.corpus import stopwords
 
-"""sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from diff_parser import Diff"""
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from diff import Diff_commit
 
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
 
+# Get range of suspicious parts
 # Return = {src_path : set(line_start, line_end)}
 def get_range_dict(pid, vid, tool='git'):
     commit_path = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b', tool, 'commits.pkl')
@@ -32,65 +33,6 @@ def get_range_dict(pid, vid, tool='git'):
         range_dict[src_path] = range_val
 
     return range_dict
-
-class Diff_commit: # Class containg diff data of commit
-    class Diff_src: # Class containg diff data of source file
-        def __init__(self):
-            self.diff_dict = dict()
-        
-        def add_file_info(self, before_src_path, after_src_path):
-            file_info_key = (before_src_path, after_src_path)
-            if (file_info_key) not in self.diff_dict:
-                self.diff_dict[file_info_key] = [dict(), dict()] # Addition, Deletion {line : content}
-            
-        def add_diff(self, before_src_path, after_src_path, line, content, adddel='add'):
-            file_info_key = (before_src_path, after_src_path)
-            dict_idx = 0 if adddel == 'add' else 1 # Select addition, deletion
-            if line in self.diff_dict[file_info_key][dict_idx]:
-                if self.diff_dict[file_info_key][dict_idx][line] != content: # Same line, but different content
-                    with open('/root/workspace/eror.txt', 'a') as file:
-                        file.write(f'Different diff content for same line num: {before_src_path},{after_src_path}, {line}\n')
-            else:
-                self.diff_dict[file_info_key][dict_idx][line] = content
-        
-        def self_print(self):
-            for (before_src_path, after_src_path) in self.diff_dict.keys():
-                print(f'Before path : {before_src_path}, After path : {after_src_path}')
-
-                addition = self.diff_dict[(before_src_path, after_src_path)][0]
-                deletion = self.diff_dict[(before_src_path, after_src_path)][1]
-
-                print('Addition)')
-                for line, content in addition.items():
-                    print(line, content)
-                print('Deletion)')
-                for line, content in deletion.items():
-                    print(line, content)
-
-
-    def __init__(self):
-        self.diff_dict = dict()
-
-    def add_commit(self, commit, src_path):
-        if commit not in self.diff_dict:
-            self.diff_dict[commit] = dict()
-
-        if src_path not in self.diff_dict[commit]:
-            self.diff_dict[commit][src_path] = self.Diff_src()
-    
-    def add_file_info(self, commit, src_path, before_src_path, after_src_path):
-        self.diff_dict[commit][src_path].add_file_info(before_src_path, after_src_path)
-    
-    def add_diff(self, commit, src_path, before_src_path, after_src_path, line, content, adddel='add'):
-        self.diff_dict[commit][src_path].add_diff(before_src_path, after_src_path, line, content, adddel)
-
-    def self_print(self):
-        for commit in self.diff_dict.keys():
-            print(f'Commit : {commit}')
-
-            for src_path in self.diff_dict[commit].keys():
-                print(f'src_path : {src_path}')
-                self.diff_dict[commit][src_path].self_print()
     
 # Parse the diff text
 # Return format : [[commit, before_src_path, after_src_path, line, content]]
@@ -108,7 +50,7 @@ def parse_diff(diff_txt, dif_commit, scr_path):
     cur_old_line = None
     new_old_line = None
 
-    commit_set = set() # Check multiple commits in one command
+    #commit_set = set() # Check multiple commits in one command
     diff_lines = diff_txt.splitlines()
 
     for line in diff_lines:
@@ -116,16 +58,17 @@ def parse_diff(diff_txt, dif_commit, scr_path):
         commit_match = re.match(commit_regex, line)
         if commit_match:
             commit = commit_match.group(1)
+            diff_commit.add_commit(commit, src_path)
             old_file_path = None
             new_file_path = None
             cur_old_line = None
             new_old_line = None
-            if commit in commit_set: # Duplicate commit in on log cmd
+
+            """if commit in commit_set: # Duplicate commit in on log cmd
                 with open('/root/workspace/eror.txt', 'a') as file:
                     file.write(f'Double commit in one cmd: {commit}\n')
             else:
-                commit_set.add(commit)
-            diff_commit.add_commit(commit, src_path)
+                commit_set.add(commit)"""
             continue
 
         # Commit has to be identified
@@ -212,98 +155,23 @@ if __name__ == "__main__":
     range_dict = get_range_dict(args.project, args.version)
     COMMIT_LOG_CMD = 'git log -M -C -L {0},{1}:{2}'
     diff_commit = Diff_commit()
-    os.makedirs(f'/root/workspace/data/Defects4J/diff/{args.project}-{args.version}b', exist_ok=True)
 
+    # For each change info, run git log and parse the result
     for src_path, ranges in range_dict.items():
         for begin_line, end_line in ranges:
             cmd = COMMIT_LOG_CMD.format(begin_line, end_line, src_path)
-            print(cmd)
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
             stdout, _ = p.communicate()
+
             try:
                 parse_diff(stdout.decode(encoding='utf-8', errors='ignore'), diff_commit, src_path)
             except UnicodeDecodeError as e:
-                with open('/root/workspace/eror.txt', 'a') as file:
-                    file.write('Decoding error\n')
+                print(cmd)
                 raise e
-    with open(os.path.join(f'/root/workspace/data/Defects4J/diff/{args.project}-{args.version}b', 'log.pkl'), 'wb') as file:
+
+    # Save the parsed result
+    savedir = f'/root/workspace/data/Defects4J/diff/{args.project}-{args.version}b'
+    os.makedirs(savedir, exist_ok=True)
+
+    with open(os.path.join(savedir, 'diff.pkl'), 'wb') as file:
         pickle.dump(diff_commit, file)
-
-    """cov_df = pd.read_pickle(f'/root/workspace/data/Defects4J/core/{args.project}-{args.version}b/git/commits.pkl')
-    is_passing = cov_df["result"].values.astype(bool) # test results
-    cov_df.drop("result", axis=1, inplace=True)
-    covered_by_failure_only = True
-    if covered_by_failure_only:
-        cov_df = cov_df.loc[:, cov_df.loc[~is_passing].any(axis=0)]
-    
-    for a, b in cov_df.iterrows():
-        print(b)
-
-    # Print DataFrame as a formatted table
-    print(tabulate(cov_df, headers='keys', tablefmt='grid'))"""
-
-    """# Current working directory has to be the directory of corresponding argument
-    # It's automatically set when it's called by collect_diff.sh
-    repo = git.Repo.init('./')
-
-    # Index of panda dataframe
-    index = ['is_addition', 'old_file_path', 'new_file_path', 'line_num', 'content']
-    output_dir = '/root/workspace/data/Defects4J/diff/{}-{}b/'.format(args.project, args.version)
-
-    # Iterate through commits in reverse order
-    cnt = 0
-    commit = repo.head.commit
-    commit_set = set()
-
-    while commit:
-        commit_set.add(commit.hexsha)
-        if commit.parents:
-            commit = commit.parents[0]
-        else:
-            commit = None
-    
-    commit_set2 = set()
-    for filename in os.listdir(f'/root/workspace/data/Defects4J/baseline/{args.project}-{args.version}b/commits'):
-        commit_set2.add(filename[2:-7])
-    
-    com_df = pd.read_pickle(f'/root/workspace/data/Defects4J/core/{args.project}-{args.version}b/git/commits.pkl')
-    for _, row in com_df.iterrows():
-        print(row)
-    
-    print(com_df.columns.values.tolist())"""
-    #print(commit_set - commit_set2)
-    #print(commit_set2 - commit_set)
-    """for commit in repo.iter_commits('HEAD'):
-        # Create target directory if there is none
-        commit_dir = os.path.join(output_dir, commit.hexsha)
-        os.makedirs(commit_dir, exist_ok=True)
-
-        # Write message
-        msg_path = os.path.join(commit_dir, 'message.txt')
-        if not os.path.exists(msg_path):
-            with open(os.path.join(commit_dir, 'message.txt'), 'w') as file:
-                file.write(commit.message)
-
-        # For initial commit, give empty repo as parent
-        if len(commit.parents) == 0:
-            parent = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
-        # Else, select first parent
-        else:
-            parent = commit.parents[0]
-        
-        for parent in commit.parents:
-            csv_path = os.path.join(commit_dir, f'{parent}.csv')
-            if os.path.exists(csv_path):
-                continue
-
-            try:
-                diff = repo.git.diff(parent, commit.hexsha)
-                diff_rows = parse_diff(diff)
-            
-                diff_df = pd.DataFrame(diff_rows,columns=index)
-                diff_df = diff_df.set_index(index)
-                diff_df.to_csv(os.path.join(commit_dir, f'{parent}.csv'), errors='ignore')
-            
-            except:
-                with open('/root/workspace/error_list.txt', 'a') as file:
-                    file.write(f'{args.project}-{arg.version}) {commit.hexsha}...{parent}')"""
