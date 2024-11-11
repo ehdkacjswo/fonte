@@ -1,7 +1,10 @@
-import os, math, copy, json
+import os, math, copy, json, sys
 import numpy as np
 import pandas as pd
 from sbfl.base import SBFL
+
+sys.path.append('/root/workspace/diff_util/lib/')
+from encoder import savepath_postfix
 
 def load_BIC_GT(dataset_dir):
     def load_BIC_data(filename):
@@ -140,67 +143,58 @@ def get_style_change_commits(fault_dir, tool, with_Rewrite=True):
     return agg_df.index[agg_df["unchanged"]].tolist()
 
 # Extra score
-def extra_score(data_dir, score=None, norm_mode='score'):
+def extra_score(data_dir, use_diff=True, tool='git', skip_stage_2=False, with_Rewrite=True, \
+    use_stopword=True, adddel='all', encode_type='simple', norm_mode='score'):
     score_dict = dict()
 
     # Use Bug2Commit
-    if score == 'bug2commit' or score == 'bug2commit_diff':
-        if score == 'bug2commit':
-            df = pd.read_csv(os.path.join(data_dir, 'ranking_Bug2Commit_no_br.csv'), names=['commit_hash', 'commit_file', 'rank', 'score'])
-        else:
-            df = pd.read_csv(os.path.join(data_dir, 'ranking_diff_all_simple_Bug2Commit.csv'), names=['commit_hash', 'rank', 'score'])
+    file_postfix = savepath_postfix(tool, skip_stage_2, with_Rewrite, use_stopword)
+    diff_prefix = 'diff_' if use_diff else ''
+    savepath = os.path.join(data_dir, f'{diff_prefix}ranking{file_postfix}.csv')
+    df = pd.read_csv(savepath, names=["commit_hash", "rank", "score"])
 
-        # No normalization
-        if norm_mode == 'base':
-            for ind in df.index:
-                score_dict[df['commit_hash'][ind]] = df['score'][ind]
-
-        # Rank
-        elif norm_mode == 'rank':
-            for ind in df.index:
-                score_dict[df['commit_hash'][ind]] = 1 / df['rank'][ind]
-    
-        # Softmax
-        elif norm_mode == 'softmax':
-            score_sum = 0
-
-            for ind in df.index:
-                norm_score = math.exp(df['score'][ind])
-                score_sum = score_sum + norm_score
-                score_dict[df['commit_hash'][ind]] = norm_score
-    
-            if score_sum != 0:
-                for commit_hash, commit_score in score_dict.items():
-                    score_dict[commit_hash] = commit_score / score_sum
-    
-        else:
-            max_score = df['score'].max()
-            for ind in df.index:
-                score_dict[df['commit_hash'][ind]] = math.exp(df['score'][ind] - max_score)
-    
-    # Use FBL-BERT
-    elif score == 'fbl_bert':
-        # load FBL-BERT ranking
-        fbl_bert_file = 'ranking_INDEX_FBLBERT_RN_bertoverflow_QARC_q256_d230_dim128_cosine_q256_d230_dim128_commits_token.tsv'
-        df = pd.read_csv(os.path.join(data_dir, fbl_bert_file), sep="\t", header=None)[[2, 4, 5]]
-        df.columns = ['commit', 'rank', 'score']
-        df['commit'] = df['commit'].apply(lambda x: x[:7])
-
-        max_score = df['score'].max()
-        print('fbl_bert size : {}'.format(df.shape[0]))
+    # No normalization
+    if norm_mode == 'base':
         for ind in df.index:
-            #rank_dict[df['commit'][ind]] = df[score][ind]
-            score_dict[df['commit'][ind]] = math.exp(df['score'][ind] - max_score)
+            score_dict[df['commit_hash'][ind]] = df['score'][ind]
+
+    # Rank
+    elif norm_mode == 'rank':
+        for ind in df.index:
+            score_dict[df['commit_hash'][ind]] = 1 / df['rank'][ind]
+
+    # Softmax
+    elif norm_mode == 'softmax':
+        score_sum = 0
+
+        for ind in df.index:
+            norm_score = math.exp(df['score'][ind])
+            score_sum = score_sum + norm_score
+            score_dict[df['commit_hash'][ind]] = norm_score
+
+        if score_sum != 0:
+            for commit_hash, commit_score in score_dict.items():
+                score_dict[commit_hash] = commit_score / score_sum
+
+    else:
+        max_score = df['score'].max()
+        for ind in df.index:
+            score_dict[df['commit_hash'][ind]] = math.exp(df['score'][ind] - max_score)
     
     return score_dict
 
 # HSFL parameter means the score will be regularized similarly as HSFL
 def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
-    use_method_level_score=False, excluded=[], adjust_depth=True,
-    in_class_only=False, HSFL=True, BIC=None, score=None, beta=0.0):
+    use_method_level_score=False, adjust_depth=True,
+    in_class_only=False, HSFL=True, beta=0.0, \
+    use_diff=True, skip_stage_2=False, with_Rewrite=True, use_stopword=True, adddel='all'):
     
     # Get commit history info
     commit_df = load_commit_history(fault_dir, tool)
+    if skip_stage_2:
+        excluded = []
+    else:
+        excluded = get_style_change_commits(fault_dir, tool, with_Rewrite=with_Rewrite)
 
     commit_df["excluded"] = commit_df["commit_hash"].isin(excluded)
     commit_df["new_depth"] = commit_df["depth"]
@@ -254,7 +248,7 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
     sbfl_df["dense_rank"] = (-sbfl_df["score"]).rank(method="dense")
     sbfl_df["max_rank"] = (-sbfl_df["score"]).rank(method="max")
     
-    extra_score_dict = extra_score(fault_dir.replace('core', 'baseline'), score=score)
+    extra_score_dict = extra_score(fault_dir.replace('core', 'baseline'), use_diff=use_diff, skip_stage_2=skip_stage_2, with_Rewrite=with_Rewrite, use_stopword=use_stopword, adddel=adddel)
     vote_dict = dict()
     vote_rows = []
     total_vote = 0
@@ -457,7 +451,8 @@ voting_functions = {
 
 # Run fonte for every projects
 # [C_BIC], [scores], [BIC], [BIC_rank]
-def fonte(args, HSFL=True, score=None, ignore=[0]):
+def fonte(args, HSFL=True, use_diff=True, skip_stage_2=False, with_Rewrite=True,\
+    use_stopword=True, adddel='all', ignore=[0]):
 
     # Return values
     C_BIC_list = []
@@ -491,8 +486,9 @@ def fonte(args, HSFL=True, score=None, ignore=[0]):
 
         vote_df = vote_for_commits(coredir, args.tool, args.formula,
             args.lamb, voting_functions[(args.alpha, args.tau)],
-            use_method_level_score=False,
-            excluded=style_change_commits, adjust_depth=True, HSFL=HSFL, BIC=BIC, score=score, beta=args.beta)
+            use_method_level_score=False, adjust_depth=True, HSFL=HSFL,
+            use_diff=use_diff, skip_stage_2=args.skip_stage_2, with_Rewrite=with_Rewrite, \
+            use_stopword=use_stopword, adddel=adddel)
     
         # Get the candidate list of commits
         all_commits = get_all_commits(coredir)

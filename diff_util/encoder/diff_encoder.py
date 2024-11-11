@@ -1,61 +1,14 @@
-import os, json, argparse, pickle, sys
-import numpy as np
+import os, json, argparse, pickle, sys, itertools
 import pandas as pd
-import regex as re
-from spiral import ronin
-from collections import Counter
 from tqdm import tqdm
-from nltk.corpus import stopwords
 
-sys.path.append('/root/workspace/diff_util/')
-from diff import Diff_commit
+sys.path.append('/root/workspace/diff_util/lib/')
+from diff import *
+from encoder import *
 
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core'
 BASE_DATA_DIR = '/root/workspace/data/Defects4J/baseline'
-
-# Class that encodes string while expanding the vocabulary
-class Encoder():
-    def __init__(self, vocab={}):
-        self.vocab = vocab # {word : id}
-        self.stopword_list = stopwords.words('english')
-    
-    def tokenize(self, text):
-        text = re.sub(r'[^A-Za-z0-9]', ' ', text) # Remove characters except alphabets and numbers
-        token_list = ronin.split(text) # Split the text
-        token_list = [token.lower() for token in token_list] # Apply lowercase
-        token_list = [token for token in token_list if \
-            (len(token) > 1 and not token.isdigit() and token not in self.stopword_list)]
-            # Remove single character, numbers and stopwords
-
-        return token_list
-
-    # Encode the input and list of used word index and count
-    def encode(self, text):
-        encode_res = []
-        text = self.tokenize(text)
-
-        for word, cnt in Counter(text).items():
-            if word in self.vocab: # Word in vocab
-                encode_res.append((self.vocab[word], cnt))
-                
-            else: # New word
-                encode_res.append((len(self.vocab), cnt))
-                self.vocab[word] = len(self.vocab)
-        
-        return encode_res
-
-# Return the sum of two encoded vectors
-def sum_encode(vec1, vec2):
-    res_dict = dict()
-
-    for id, cnt in vec1:
-        res_dict[id] = cnt
-    
-    for id, cnt in vec2:
-        res_dict[id] = res_dict.get(id, 0) + cnt
-    
-    return list(res_dict.items())
 
 # Get the unchanged file data
 # [(commit, src_path)]
@@ -70,19 +23,20 @@ def get_style_change_data(coredir, tool='git', with_Rewrite=True):
     return list(zip(unchanged_df["commit"], unchanged_df["src_path"]))
 
 # Encode the raw diff data
+# skip_stage_2 = Excluding style change diff, with_Rewrite = , use_stopword
 # Encoded data : {commit_hash : [addition_list, deletion_list, msg_encode]}
 # addition/deletion dict : [(before/after_src_path_encode, content_encode_sum)]
-def encode_pid(pid, vid, skip_stage_2=False, with_Rewrite=True):
+def encode_pid(pid, vid, tool='git', skip_stage_2=False, with_Rewrite=True, use_stopword=True):
     # Load related diff data
-    diff_path = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b/diff.pkl')
-    with open(diff_path, 'rb') as file:
+    diff_data_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
+    with open(os.path.join(diff_data_dir, 'diff.pkl'), 'rb') as file:
         diff_data = pickle.load(file)
     
     # Get list of style change commits
     if skip_stage_2:
         excluded = []
     else:
-        excluded = get_style_change_data(os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b'), 'git', with_Rewrite)
+        excluded = get_style_change_data(os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b'), tool, with_Rewrite)
 
     # Merge the diff data
     diff_dict = dict()
@@ -103,15 +57,15 @@ def encode_pid(pid, vid, skip_stage_2=False, with_Rewrite=True):
                     if line not in addition_content_dict:
                         addition_content_dict[line] = content
                     
-                    """elif content != addition_content_dict[line]: # Different diff data for same source file
-                        print(f'Different addition content!!! {commit_hash} {after_src_path} {line}')"""
+                    elif content != addition_content_dict[line]: # Different diff data for same source file
+                        print(f'Different addition content!!! {commit_hash} {after_src_path} {line}')
                 
                 for line, content in deletion.items():
                     if line not in deletion_content_dict:
                         deletion_content_dict[line] = content
                     
-                    """elif content != deletion_content_dict[line]: # Different diff data for same source file
-                        print(f'Different deletion content!!! {commit_hash} {before_src_path} {line}')"""
+                    elif content != deletion_content_dict[line]: # Different diff data for same source file
+                        print(f'Different deletion content!!! {commit_hash} {before_src_path} {line}')
                 
                 addition_dict[after_src_path] = addition_content_dict
                 deletion_dict[before_src_path] = deletion_content_dict
@@ -129,21 +83,21 @@ def encode_pid(pid, vid, skip_stage_2=False, with_Rewrite=True):
 
         # Encode addition data
         for after_src_path, addition_content_dict in addition_dict.items():
-            after_src_path_encode = encoder.encode(after_src_path)
+            after_src_path_encode = encoder.encode(after_src_path, use_stopword)
             addition_encode_sum = list()
 
             for content in addition_content_dict.values():
-                addition_encode_sum = sum_encode(addition_encode_sum, encoder.encode(content))
+                addition_encode_sum = sum_encode(addition_encode_sum, encoder.encode(content, use_stopword))
             
             addition_list.append((after_src_path_encode, addition_encode_sum))
         
         # Encode deletion data
         for before_src_path, deletion_content_dict in deletion_dict.items():
-            before_src_path_encode = encoder.encode(before_src_path)
+            before_src_path_encode = encoder.encode(before_src_path, use_stopword)
             deletion_encode_sum = list()
 
             for content in deletion_content_dict.values():
-                addition_encode_sum = sum_encode(deletion_encode_sum, encoder.encode(content))
+                addition_encode_sum = sum_encode(deletion_encode_sum, encoder.encode(content, use_stopword))
             
             deletion_list.append((before_src_path_encode, deletion_encode_sum))
         
@@ -152,21 +106,56 @@ def encode_pid(pid, vid, skip_stage_2=False, with_Rewrite=True):
             if filename.startswith(f'c_{commit_hash}'):
                 with open(os.path.join(base_data_dir, filename), "r") as file:
                     data = json.load(file)
-                msg_encode = encoder.encode(data['log'])
+                msg_encode = encoder.encode(data['log'], use_stopword)
                 break
         
         encode_dict[commit_hash] = [addition_list, deletion_list, msg_encode]
-
+    
     # Save encoded data and vocab
-    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b/diff_encode.pkl'), 'wb') as file:
+    diff_encode_dir = os.path.join(diff_data_dir, 'encode')
+    os.makedirs(diff_encode_dir, exist_ok=True)
+
+    save_postfix = savepath_postfix(tool, skip_stage_2, with_Rewrite, use_stopword)
+
+    with open(os.path.join(diff_encode_dir, f'diff_encode{save_postfix}.pkl'), 'wb') as file:
         pickle.dump(encode_dict, file)
-    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b/vocab.pkl'), 'wb') as file:
+    with open(os.path.join(diff_encode_dir, f'vocab{save_postfix}.pkl'), 'wb') as file:
         pickle.dump(encoder.vocab, file)
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Encode diff data")
+    parser.add_argument('--all', action="store_true",
+        help="history retrieval tool, git or shovel (default: git)")
+    parser.add_argument('--tool', type=str, default="git",
+        help="history retrieval tool, git or shovel (default: git)")
+    parser.add_argument('--formula', type=str, default="Ochiai",
+        help="SBFL formula (default: Ochiai)")
+    parser.add_argument('--alpha', type=int, default=0,
+        help="alpha (default: 0)")
+    parser.add_argument('--tau', type=str, default="max",
+        help="tau (default: max)")
+    parser.add_argument('--lamb', type=float, default=0.1,
+        help="lambda (default: 0.1)")
+    parser.add_argument('--skip-stage-2', action="store_true",
+        help="skiping stage 2 (default: False)")
+    parser.add_argument('--no-openrewrite', action="store_true",
+        help="not using openrewrite in Stage 2(default: False)")
+    parser.add_argument('--output', '-o',
+        help="path to output file (example: output.csv)")
+
+    args = parser.parse_args()
+
+    skip_stage_2_list = [True, False]
+    with_Rewrite_list = [True, False]
+    use_stopword_list = [True, False]
+    param_list = list(itertools.product(skip_stage_2_list, with_Rewrite_list, use_stopword_list))
+
     # Iterate through projects
     for project_dir in os.listdir(DIFF_DATA_DIR):
         print(f'Working on project {project_dir}')
         [pid, vid] = project_dir[:-1].split("-")
-        encode_pid(pid, vid)
         
+        for (skip_stage_2, with_Rewrite, use_stopword) in param_list:
+            if skip_stage_2 and with_Rewrite:
+                continue
+            encode_pid(pid, vid, tool='git', skip_stage_2=skip_stage_2, with_Rewrite=with_Rewrite, use_stopword=use_stopword)

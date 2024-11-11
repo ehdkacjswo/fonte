@@ -1,5 +1,6 @@
-import os
+import os, sys, itertools
 import json
+import argparse
 import numpy as np
 import pandas as pd
 from spiral import ronin
@@ -20,48 +21,9 @@ BIC_GT_DIR = "./data/Defects4J/BIC_dataset"
 BASELINE_DATA_DIR = "./data/Defects4J/baseline"
 DIFF_DATA_DIR = './data/Defects4J/diff'
 
-# Class that encodes string while expanding the vocabulary
-class Encoder():
-    def __init__(self, vocab={}):
-        self.vocab = vocab # {word : id}
-        self.stopword_list = stopwords.words('english')
-    
-    def tokenize(self, text):
-        text = re.sub(r'[^A-Za-z0-9]', ' ', text) # Remove characters except alphabets and numbers
-        token_list = ronin.split(text) # Split the text
-        token_list = [token.lower() for token in token_list] # Apply lowercase
-        token_list = [token for token in token_list if \
-            (len(token) > 1 and not token.isdigit() and token not in self.stopword_list)]
-            # Remove single character, numbers and stopwords
-
-        return token_list
-
-    # Encode the input and list of used word index and count
-    def encode(self, text):
-        encode_res = []
-        text = self.tokenize(text)
-
-        for word, cnt in Counter(text).items():
-            if word in self.vocab: # Word in vocab
-                encode_res.append((self.vocab[word], cnt))
-                
-            else: # New word
-                encode_res.append((len(self.vocab), cnt))
-                self.vocab[word] = len(self.vocab)
-        
-        return encode_res
-
-# Return the sum of two encoded vectors
-def sum_encode(vec1, vec2):
-    res_dict = dict()
-
-    for id, cnt in vec1:
-        res_dict[id] = cnt
-    
-    for id, cnt in vec2:
-        res_dict[id] = res_dict.get(id, 0) + cnt
-    
-    return list(res_dict.items())
+sys.path.append('/root/workspace/diff_util/lib/')
+from diff import *
+from encoder import *
 
 def vectorize_complex(bm25, features):
     vectors = []
@@ -80,90 +42,25 @@ def vectorize_complex(bm25, features):
     vectors = np.array(vectors)
     return vectors.mean(axis=0)
 
-def run_bug2commit(pid, vid):
-    core_data_dir = os.path.join(CORE_DATA_DIR, f"{pid}-{vid}b")
-    baseline_data_dir = os.path.join(BASELINE_DATA_DIR, f"{pid}-{vid}b")
-    commit_dir = os.path.join(baseline_data_dir, "commits")
-    
-    savepath = os.path.join(baseline_data_dir, "ranking_Bug2Commit_no_br.csv")
-    """if os.path.exists(savepath):
-        print(f"{pid}-{vid}b: {savepath} already exists")
-        return"""
-
-    print(f"{pid}-{vid}b: Collecting commit features..........................")
-    # get doc (commit) features
-    commit_features = {}
-    for filename in os.listdir(commit_dir):
-        with open(os.path.join(commit_dir, filename), "r") as f:
-            data = json.load(f)
-            commit_message = data["log"].strip() # 1st commit feature
-            modified_files = "\n".join(list(set([  # 2nd commit feature
-                l[6:]
-                for l in data["commit"].strip().split("\n")
-                if l.startswith("+++ ")
-            ])))
-            commit_features[filename] = [commit_message, modified_files]
-
-    print(f"{pid}-{vid}b: Collecting query features...........................")
-    # get query (bug report) features
-    query_features = []
-    with open(os.path.join(core_data_dir, "failing_tests"), "r") as f:
-        query_features.append(f.read().strip()) # 3rd bug report feature
-
-    corpus = sum(commit_features.values(), [])
-    print(corpus)
-    return
-    tokenized_corpus = [tokenize(doc) for doc in corpus]
-    bm25 = BM25Okapi(tokenized_corpus)
-    bm25.vocab = list(set( # collect all words appearning in the corpus
-        sum([list(doc.keys()) for doc in bm25.doc_freqs], [])))
-
-    # vectorize the features (using the vector_complex)
-    print(f"{pid}-{vid}b: Vectorizing the features............................")
-
-    commit_vectors = {
-        filename: vectorize_complex(bm25, commit_features[filename])
-        for filename in commit_features
-    }
-    query_vector = vectorize_complex(bm25, query_features)
-
-    print(f"{pid}-{vid}b: Calculating the scores of commits...................")
-
-    # filename : Name of the file in baseline/{pid}_{vid}b/commits/ (c_{commit_hash})
-    score_rows = []
-    for filename in commit_vectors:
-        commit = filename[2:9]
-        similarity = 1 - cosine(commit_vectors[filename], query_vector)
-        score_rows.append([commit, filename, similarity])
-
-    score_df = pd.DataFrame(data=score_rows,
-        columns=["commit", "filename", "score"])
-    score_df["rank"] = score_df["score"].rank(ascending=False, method="max")
-    score_df["rank"] = score_df["rank"].astype(int)
-    score_df.sort_values(by="rank", inplace=True)
-    score_df = score_df[["commit", "filename", "rank", "score"]]
-    if savepath:
-        score_df.to_csv(savepath, index=False, header=None)
-        print(f"{pid}-{vid}b: Saved to {savepath}")
-    return score_df
-
 # Bug2Commit with diff info
 # 특정 버전에 대하여 vote for commits와 동일한 방법으로 evolve relationship 구축하고
 # 해당 
-def run_diff_bug2commit(pid, vid):
+def run_bug2commit(pid, vid, use_diff=True, tool='git', skip_stage_2=False, with_Rewrite=True, use_stopword=True, adddel='all', encode_type='simple'):
     core_data_dir = os.path.join(CORE_DATA_DIR, f"{pid}-{vid}b")
     diff_data_dir = os.path.join(DIFF_DATA_DIR, f"{pid}-{vid}b")
     baseline_data_dir = os.path.join(BASELINE_DATA_DIR, f"{pid}-{vid}b")
     commit_dir = os.path.join(baseline_data_dir, "commits")
 
-    savepath = os.path.join(baseline_data_dir, "ranking_diff_all_simple_Bug2Commit.csv")
+    file_postfix = savepath_postfix(tool, skip_stage_2, with_Rewrite, use_stopword)
+    diff_prefix = 'diff_' if use_diff else ''
+    savepath = os.path.join(baseline_data_dir, f'{diff_prefix}ranking{file_postfix}.csv')
     """if os.path.exists(savepath):
         print(f"{pid}-{vid}b: {savepath} already exists")
         return"""
     
     print(f"{pid}-{vid}b: Encode query feature and build BM25..........................")
     # Load vocab and build encoder
-    with open(os.path.join(diff_data_dir, 'vocab.pkl'), 'rb') as file:
+    with open(os.path.join(diff_data_dir, f'encode/vocab{file_postfix}.pkl'), 'rb') as file:
         vocab = pickle.load(file)
 
     encoder = Encoder(vocab)
@@ -179,10 +76,12 @@ def run_diff_bug2commit(pid, vid):
 
     # For target list of commits get used set
     commit_feature_dict = dict()
-    with open(os.path.join(diff_data_dir, 'feature/add_simple.pkl'), 'rb') as file:
+    with open(os.path.join(diff_data_dir, f'feature/{adddel}{file_postfix}.pkl'), 'rb') as file:
         commit_feature_dict = pickle.load(file)
     
     for commit_feature_list in commit_feature_dict.values():
+        if not use_diff: # Ignore diff
+            commit_feature_list = commit_feature_list[:2]
         for feature in commit_feature_list:
             bm25.add_document(feature)
     
@@ -208,6 +107,7 @@ def run_diff_bug2commit(pid, vid):
     score_rows = []
     for commit_hash, vector in commit_feature_dict.items():
         similarity = 1 - cosine(vector, query_vector)
+        #print(vector, query_vector, similarity)
         score_rows.append([commit_hash, similarity])
 
     score_df = pd.DataFrame(data=score_rows,
@@ -221,14 +121,33 @@ def run_diff_bug2commit(pid, vid):
         print(f"{pid}-{vid}b: Saved to {savepath}")
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Encode diff data")
+    parser.add_argument('--tool', type=str, default="git",
+        help="history retrieval tool, git or shovel (default: git)")
+    parser.add_argument('--skip-stage-2', action="store_true",
+        help="skiping stage 2 (default: False)")
+    parser.add_argument('--with-Rewrite', action="store_true",
+        help="skiping stage 2 (default: False)")
+    parser.add_argument('--use-stopword', type=int, default=0,
+        help="alpha (default: 0)")
+    parser.add_argument('--adddel', type=str, default="max",
+        help="tau (default: max)")
+
     GT = load_BIC_GT(BIC_GT_DIR)
-    cont = True
+
+    use_diff_list = [True, False]
+    skip_stage_2_list = [True, False]
+    with_Rewrite_list = [True, False]
+    use_stopword_list = [True, False]
+    adddel_list = ['all', 'add', 'del']
+    param_list = list(itertools.product(use_diff_list, skip_stage_2_list, with_Rewrite_list, use_stopword_list, adddel_list))
+
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
-        run_diff_bug2commit(pid, vid)
 
-        """try:
-            run_diff_bug2commit(pid, vid)
-        except:
-            with open('/root/workspace/eror.txt', 'a') as file:
-                file.write(f'Error on {pid}-{vid}b\n')"""
+        for (use_diff, skip_stage_2, with_Rewrite, use_stopword, adddel) in param_list:
+            try:
+                run_bug2commit(pid, vid, use_diff=use_diff, tool='git', skip_stage_2=skip_stage_2, with_Rewrite=with_Rewrite, use_stopword=use_stopword, adddel=adddel, encode_type='simple')
+            except:
+                with open('/root/workspace/eror.txt', 'a') as file:
+                    file.write(f'Error on {pid}-{vid}b {skip_stage_2} {with_Rewrite} {use_stopword} {adddel}\n')

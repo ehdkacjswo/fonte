@@ -1,53 +1,40 @@
-import os, json, argparse, pickle
+import os, sys, json, argparse, pickle, itertools
 import numpy as np
 import pandas as pd
 from spiral import ronin
 from collections import Counter
 from tqdm import tqdm
-from scipy.sparse import csc_array, save_npz
+
+sys.path.append('/root/workspace/diff_util/lib/')
+from diff import *
+from encoder import *
 
 CORE_DATA_DIR = "/root/workspace/data/Defects4J/core"
 BIC_GT_DIR = "/root/workspace/data/Defects4J/BIC_dataset"
 BASELINE_DATA_DIR = "/root/workspace/data/Defects4J/baseline"
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 
-class Encoder():
-    def __init__(self, vocab={}):
-        self.vocab = vocab # {word : id}
+# Check if two encoded data are equal
+def equal_encode(vec1, vec2):
+    if len(vec1) != len(vec2):
+        return False
     
-    # Encode the input and returns set of used ids
-    def encode(self, text, update_vocab=True):
-        encode_res = [0] * len(self.vocab)
-        text = ronin.split(text.strip())
+    dict1 = dict(vec1)
 
-        for word, cnt in Counter(text).items():
-            if word in self.vocab:
-                encode_res[self.vocab[word]] = cnt
-                
-            elif update_vocab: # New word
-                encode_res.append(cnt)
-                self.vocab[word] = len(self.vocab)
-        
-        return encode_res
-
-# Return the sum of two encoded vectors
-def sum_encode(vec1, vec2):
-    res_dict = dict()
-
-    for id, cnt in vec1:
-        res_dict[id] = cnt
+    for (word, cnt) in vec2:
+        if vec1.get(word, 0) != cnt:
+            return False
     
-    for id, cnt in vec2:
-        res_dict[id] = res_dict.get(id, 0) + cnt
-    
-    return list(res_dict.items())
+    return True
 
 # data : 
-def gen_feature(project, adddel, encode_type):
+def gen_feature(project, tool='git', skip_stage_2=False, with_Rewrite=True, \
+    use_stopword=True, adddel='all', encode_type='simple'):
     project_dir = os.path.join(DIFF_DATA_DIR, project)
     feature_dict = dict()
 
-    with open(os.path.join(project_dir, 'diff_encode.pkl'), 'rb') as file:
+    file_postfix = savepath_postfix(tool, skip_stage_2, with_Rewrite, use_stopword)
+    with open(os.path.join(project_dir, 'encode', f'diff_encode{file_postfix}.pkl'), 'rb') as file:
         encode_dict = pickle.load(file)
 
     # Iterate through commits
@@ -55,16 +42,22 @@ def gen_feature(project, adddel, encode_type):
         feature_list = []
 
         if encode_type == 'simple':
+            path_encode_list = list()
             path_encode_sum = []
             content_encode_sum = []
 
             if adddel != 'del':
                 for (src_path_encode, encode_sum) in addition_list:
+                    """# Check if given path is already added
+                    if all(not equal_encode(src_path_encode, x) for x in path_encode_list):"""
+
                     path_encode_sum = sum_encode(path_encode_sum, src_path_encode)
                     content_encode_sum = sum_encode(content_encode_sum, encode_sum)
             
             if adddel != 'add':
                 for (src_path_encode, encode_sum) in deletion_list:
+                    """if src_path_encode in path_encode_set:
+                        continue"""
                     path_encode_sum = sum_encode(path_encode_sum, src_path_encode)
                     content_encode_sum = sum_encode(content_encode_sum, encode_sum)
             
@@ -76,7 +69,7 @@ def gen_feature(project, adddel, encode_type):
     feature_path = os.path.join(project_dir, 'feature')
     os.makedirs(feature_path, exist_ok=True)
 
-    with open(os.path.join(feature_path, f'{adddel}_{encode_type}.pkl'), 'wb') as file:
+    with open(os.path.join(feature_path, f'{adddel}{file_postfix}.pkl'), 'wb') as file:
         pickle.dump(feature_dict, file)
 
 if __name__ == "__main__":
@@ -91,8 +84,15 @@ if __name__ == "__main__":
     
     diff_dir = '/root/workspace/data/Defects4J/diff/'
 
+    skip_stage_2_list = [True, False]
+    with_Rewrite_list = [True, False]
+    use_stopword_list = [True, False]
+    adddel_list = ['all', 'add', 'del']
+    param_list = list(itertools.product(skip_stage_2_list, with_Rewrite_list, use_stopword_list, adddel_list))
+
     # Iterate through projects
     for project in os.listdir('/root/workspace/data/Defects4J/diff/'):
         print(f'Working on project {project}')
-        gen_feature(project, args.adddel, args.encode_type)
+        for (skip_stage_2, with_Rewrite, use_stopword, adddel) in param_list:
+            gen_feature(project, tool='git', skip_stage_2=skip_stage_2, with_Rewrite=with_Rewrite, use_stopword=use_stopword, adddel=adddel, encode_type='simple')
         
