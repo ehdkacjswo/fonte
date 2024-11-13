@@ -9,7 +9,7 @@ class Encoder():
         self.vocab = vocab # {word : id}
         self.stopword_list = stopwords.words('english')
     
-    def tokenize(self, text, use_stopword=True):
+    def tokenize(self, text, use_stopword):
         # Remove characters except alphabets and numbers
         if use_stopword:
             text = re.sub(r'[^A-Za-z0-9]', ' ', text) 
@@ -25,7 +25,7 @@ class Encoder():
         return token_list
 
     # Encode the input and list of used word index and count
-    def encode(self, text, use_stopword=True):
+    def encode(self, text, use_stopword):
         encode_res = []
         text = self.tokenize(text, use_stopword)
 
@@ -52,7 +52,7 @@ def sum_encode(vec1, vec2):
     return list(res_dict.items())
 
 # Postfix for encoded data savepath
-def savepath_postfix(tool='git', skip_stage_2=False, with_Rewrite=True, use_stopword=True):
+def savepath_postfix(skip_stage_2=False, with_Rewrite=True, use_stopword=True, adddel='add', use_diff=None, use_HSFL=None):
     return ('' if skip_stage_2 else \
-        (f'_{tool}_OpenRewrite' if with_Rewrite else f'_{tool}_noOpenRewrite')) + \
+        (f'_OpenRewrite' if with_Rewrite else f'_noOpenRewrite')) + \
         ('_stopword' if use_stopword else '')

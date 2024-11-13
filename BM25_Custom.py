@@ -32,7 +32,7 @@ class BM25_Encode(BM25Okapi):
 
     # Vectorize encoded features
     def vectorize_complex(self, features):
-        vector_sum = np.zeros(len(self.nd))
+        vector_sum = np.zeros(len(self.nd), dtype='float')
 
         for feature in features:
             doc_len = 0
@@ -45,8 +45,8 @@ class BM25_Encode(BM25Okapi):
             vector = [self.idf[word] * (feature_dict.get(word, 0) * (self.k1 + 1) /
                 (self.idf[word] + self.k1 * (1 - self.b + self.b * doc_len / self.avgdl))) for word in self.nd.keys()]
 
-            vector_sum = np.add(vector_sum, np.array(vector))
-        return np.divide(vector_sum, len(features))
+            vector_sum += np.array(vector, dtype='float')
+        return vector_sum / len(features)
     
     # Add encoded document
     def add_document(self, document):
