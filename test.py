@@ -119,7 +119,7 @@ if __name__ == "__main__":
     assert 0 <= args.lamb < 1
     
     # Generate iteration data
-    """for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
+    for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
         # Get BIC data
         print(f'Working on {folder}')
         [pid, vid] = folder[:-1].split("-")
@@ -127,12 +127,12 @@ if __name__ == "__main__":
         results_df = pd.concat(results_dict, \
             names=['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']).unstack()
         
-        results_df.to_hdf(os.path.join(DIFF_DATA_DIR, f'{folder}/fonte_scores.hdf'), key='data', mode='w')"""
+        results_df.to_hdf(os.path.join(DIFF_DATA_DIR, f'{folder}/fonte_scores.hdf'), key='data', mode='w')
     
     # Generate iteration data
-    iter_dict = dict()
+    """iter_dict = dict()
     for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
         # Get BIC data
         print(f'Working on {folder}')
         [pid, vid] = folder[:-1].split("-")
-        bisection_all(pid, vid)
+        bisection_all(pid, vid)"""
