@@ -2,6 +2,7 @@ import os, math, copy, json, sys, itertools
 import numpy as np
 import pandas as pd
 from sbfl.base import SBFL
+from tqdm import tqdm
 
 sys.path.append('/root/workspace/diff_util/lib/')
 from encoder import savepath_postfix
@@ -358,14 +359,19 @@ def standard_bisection(commits: list, BIC, verbose=False, return_pivots=False):
     else:
         return num_iterations
 
-def weighted_bisection(commits: list, scores: list, BIC, verbose=False,
+def weighted_bisection(commits: list, scores: list, BIC, ignore_zero = True, verbose=False,
     return_pivots=False):
     assert BIC in commits
     assert len(commits) == len(scores)
     # pre-condition: commit[i] is newer than commit[i+1]
     # pre-condition: score[i] is the score of commit[i]
     # return: the number of required iterations until the BIC is found
-    commits = [c for c, s in zip(commits, scores) if s > 0]
+    if ignore_zero:
+        commits = [c for c, s in zip(commits, scores) if s > 0]
+
+    if BIC not in commits:
+        return None
+
     scores = [s for s in scores if s > 0]
     BIC_index = commits.index(BIC)
     bad_index = 0
@@ -577,21 +583,25 @@ def score_eval_all(pid, vid, tool, formula, decay, voting_func,
 # For a given project, generate dictionary with number of iterations of fonte for every settings
 # Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
 def bisection_all(pid, vid, tool='git'):
+    fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
+    num_iters_dict = dict() # {setting : number of iterations}
+    
+    # Load fonte score dataframe
     fonte_scores_df = pd.read_hdf(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b/fonte_scores.hdf'))
     
+    # Get BIC
     GT = load_BIC_GT("./data/Defects4J/BIC_dataset")
     BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
 
-    fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
+    # Get list of every commits
     all_commits = get_all_commits(fault_dir)
 
+    # Iterate through every settings
     for (index, row) in fonte_scores_df.iterrows():
-        print(tuple(index))
         commit_df = row['commit']
         vote_df = row['vote']
 
         stage2 = index[5]
-        print(stage2)
         if stage2 == 'skip':
             style_change_commits = []
         else:
@@ -600,4 +610,18 @@ def bisection_all(pid, vid, tool='git'):
         C_BIC = [c for c in all_commits if c in commit_df.values and c not in style_change_commits]
         scores = [vote_df.loc[commit_df.loc[commit_df == c].index[0]] for c in C_BIC]
 
-        num_iter = weighted_bisection(C_BIC, scores, BIC)
+        # Score of BIC is zero
+        num_iters = (weighted_bisection(C_BIC, scores, BIC, ignore_zero=True), weighted_bisection(C_BIC, scores, BIC, ignore_zero=False))
+        if num_iters[0] is None:
+            with open('/root/workspace/eror.txt', 'a') as file:
+                a = tuple(index)
+                file.write(f'{pid}-{vid}b, True : {a}\n')
+        
+        if num_iters[1] is None:
+            with open('/root/workspace/eror.txt', 'a') as file:
+                a = tuple(index)
+                file.write(f'{pid}-{vid}b, False : {a}\n')
+
+        num_iters_dict[tuple(index)] = num_iters
+    
+    return num_iters_dict

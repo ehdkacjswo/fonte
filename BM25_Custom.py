@@ -17,18 +17,6 @@ class BM25_Encode(BM25Okapi):
         # Additional
         self.nd = {} # {word : val}
         self.num_doc = 0
-    
-    # Encode tokenized document
-    """def encode(self, document):
-        res = [0] * self.vocab_size
-
-        for word, cnt in Counter(document).items():
-            try:
-                res[self.vocab[word]] = cnt
-            except:
-                continue
-        
-        return res"""
 
     # Vectorize encoded features
     def vectorize_complex(self, features):
@@ -94,50 +82,3 @@ class BM25_Encode(BM25Okapi):
     def init_end(self):
         self.avgdl = self.num_doc / self.corpus_size
         self._calc_idf()
-
-"""
-class BM25_Custom(BM25Okapi):
-    def __init__(self, tokenizer=None, k1=1.5, b=0.75, epsilon=0.25):
-        # BM25 init
-        self.corpus_size = 0
-        self.avgdl = 0
-        self.doc_freqs = []
-        self.idf = {}
-        self.doc_len = []
-        self.tokenizer = tokenizer
-
-        # BM25Okapi init
-        self.k1 = k1
-        self.b = b
-        self.epsilon = epsilon
-
-        # Additional
-        self.nd = {}
-        self.num_doc = 0
-
-    # Add encoded
-    def add_document(self, document):
-        self.doc_len.append(len(document))
-        self.num_doc += len(document)
-
-        frequencies = {}
-        for word in document:
-            if word not in frequencies:
-                frequencies[word] = 0
-            frequencies[word] += 1
-        self.doc_freqs.append(frequencies)
-
-        for word, freq in frequencies.items():
-            try:
-                self.nd[word]+=1
-            except KeyError:
-                self.nd[word] = 1
-
-        self.corpus_size += 1
-    
-    # End initialziation process
-    def init_end(self):
-        self.avgdl = self.num_doc / self.corpus_size
-        self.vocab = list(set(sum([list(doc.keys()) for doc in self.doc_freqs], [])))
-        super()._calc_idf(self.nd)
-"""

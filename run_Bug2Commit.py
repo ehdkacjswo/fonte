@@ -10,6 +10,7 @@ from scipy.spatial.distance import cosine
 from lib.experiment_utils import *
 from nltk.corpus import stopwords
 import regex as re
+import math
 
 from BM25_Custom import BM25_Encode
 from tqdm import tqdm
@@ -110,9 +111,6 @@ def run_bug2commit(pid, vid, use_br, use_diff, stage2, use_stopword, adddel):
 
     return score_df
 
-def bool_to_int(a):
-    return 1 if a else 0
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Encode diff data")
     parser.add_argument('--tool', type=str, default="git",
@@ -141,6 +139,10 @@ if __name__ == "__main__":
         results_dict = dict()
 
         for (use_br, use_diff, stage2, use_stopword, adddel) in param_list:
+            if not use_br and use_diff and adddel == 'del':
+                print(use_br, use_diff, use_stopword, adddel)
+                print(run_bug2commit(pid, vid, use_br=use_br, use_diff=use_diff, stage2=stage2, \
+                    use_stopword=use_stopword, adddel=adddel))
             results_dict[(str(use_br), str(use_diff), str(stage2), str(use_stopword), adddel)] = \
                 run_bug2commit(pid, vid, use_br=use_br, use_diff=use_diff, stage2=stage2, \
                 use_stopword=use_stopword, adddel=adddel)
@@ -149,3 +151,4 @@ if __name__ == "__main__":
             names=['use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']).unstack()
         
         results_df.to_hdf(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b/scores.hdf'), key='data', mode='w')
+
