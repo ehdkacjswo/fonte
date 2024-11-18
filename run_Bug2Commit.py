@@ -1,16 +1,8 @@
 import os, sys, itertools
-import json
-import argparse
 import numpy as np
 import pandas as pd
-from spiral import ronin
-from rank_bm25 import BM25Okapi
-from collections import Counter
 from scipy.spatial.distance import cosine
 from lib.experiment_utils import *
-from nltk.corpus import stopwords
-import regex as re
-import math
 
 from BM25_Custom import BM25_Encode
 from tqdm import tqdm
@@ -112,18 +104,6 @@ def run_bug2commit(pid, vid, use_br, use_diff, stage2, use_stopword, adddel):
     return score_df
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Encode diff data")
-    parser.add_argument('--tool', type=str, default="git",
-        help="history retrieval tool, git or shovel (default: git)")
-    parser.add_argument('--skip-stage-2', action="store_true",
-        help="skiping stage 2 (default: False)")
-    parser.add_argument('--with-Rewrite', action="store_true",
-        help="skiping stage 2 (default: False)")
-    parser.add_argument('--use-stopword', type=int, default=0,
-        help="alpha (default: 0)")
-    parser.add_argument('--adddel', type=str, default="max",
-        help="tau (default: max)")
-
     GT = load_BIC_GT(BIC_GT_DIR)
 
     use_br_list = [True, False]
@@ -139,10 +119,6 @@ if __name__ == "__main__":
         results_dict = dict()
 
         for (use_br, use_diff, stage2, use_stopword, adddel) in param_list:
-            if not use_br and use_diff and adddel == 'del':
-                print(use_br, use_diff, use_stopword, adddel)
-                print(run_bug2commit(pid, vid, use_br=use_br, use_diff=use_diff, stage2=stage2, \
-                    use_stopword=use_stopword, adddel=adddel))
             results_dict[(str(use_br), str(use_diff), str(stage2), str(use_stopword), adddel)] = \
                 run_bug2commit(pid, vid, use_br=use_br, use_diff=use_diff, stage2=stage2, \
                 use_stopword=use_stopword, adddel=adddel)
