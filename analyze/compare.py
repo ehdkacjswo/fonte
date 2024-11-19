@@ -19,66 +19,60 @@ DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 def compare_bug2commit_simple(use_br=False):
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     tot_metric_dict = dict()
-    
-    # Iterate through every projects
-    for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
-        [pid, vid] = folder[:-1].split("-")
-        BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
-        
-        # Bug2Commit score and number of iterations
-        scores_df = pd.read_hdf(os.path.join(DIFF_DATA_DIR, f'{folder}/scores.hdf'))
-        with open(os.path.join(DIFF_DATA_DIR, f'{folder}/num_iters.pkl'), 'rb') as file:
-            num_iters_dict = pickle.load(file)
 
-        # Iterate through extra scores of every settings (use_br, use_diff, stage2, use_stopword, adddel)
-        for setting, row in scores_df.iterrows():
-            if not use_br and setting[0] == 'True':
+    # Iterate through projects
+    for project in tqdm(os.listdir(DIFF_DATA_DIR)):
+        [pid, vid] = project[:-1].split("-")
+        BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
+        project_dir = os.path.join(DIFF_DATA_DIR, project)
+
+        with open(os.path.join(project_dir, 'num_iters.pkl'), 'rb') as file:
+            num_iter_dict = pickle.load(file)
+    
+        # Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
+        fonte_scores_df = pd.read_hdf(os.path.join(project_dir, 'fonte_scores.hdf'))
+
+        # Iterate through extra scores of every settings
+        for setting, row in fonte_scores_df.iterrows():
+
+            # Don't use bug report and consider Bug2Commit score only case
+            if setting[0] != 'None' or setting[2] != '(\'add\', 0.0)' or (not use_br and setting[3] != 'False'):
                 continue
 
-            commit_df = row['commit_hash'].dropna()
-            rank_df = row['rank'].dropna()
+            commit_df = row['commit'].dropna()
+            score_df = row['vote'].dropna()
+            rank_df = score_df.rank(method='max', ascending=False)
 
             # Index of the BIC
             BIC_ind = commit_df.loc[commit_df == BIC].index[0]
-            setting_tup = tuple(setting)
+            BIC_rank = rank_df.loc[BIC_ind]
+            setting_tup = tuple(option for ind, option in enumerate(tuple(setting)) if ind not in [0, 2])
 
             if setting_tup not in tot_metric_dict:
                 tot_metric_dict[setting_tup] = dict()
             
-            setting_metric_dict = tot_metric_dict[setting_tup]
-
-            # Acc data
-            BIC_rank = rank_df.loc[BIC_ind]
-            for n in [1, 2, 3, 5, 10]:
-                acc_str = f'acc@{n}'
-                setting_metric_dict[acc_str] = setting_metric_dict.get(acc_str, 0) + (1 if BIC_rank <= n else 0)
-
-            # MRR data
-            # 130 is number of projects
-            setting_metric_dict['MRR'] = setting_metric_dict.get('MRR', 0) + 1 / (BIC_rank * 130)
-
-            # Mean of number of iterations
-            # Using Bug2Commit alone could possibly cause BIC score to be 0, so use only score mode 'rank'
-            setting_metric_dict['num_iters'] = setting_metric_dict.get('num_iters', 0) + \
-                num_iters_dict[('None', 'rank', '(\'add\', 0.0)') + setting_tup][0] / 130
+            tot_metric_dict[setting_tup]['rank'] = tot_metric_dict[setting_tup].get('rank', 0) + BIC_rank / 130
+            tot_metric_dict[setting_tup]['num_iters'] = \
+                tot_metric_dict[setting_tup].get('num_iters', 0) + num_iter_dict[tuple(setting)][1] / 130
 
     # Possible options for each parameters
     option_dict = {
+        'score_mode' : ['score', 'rank', 'both'],
         'use_br' : ['True', 'False'] if use_br else ['False'],
         'use_diff' : ['True', 'False'],
         'stage2' : ['skip', 'True', 'False'],
         'use_stopword' : ['True', 'False'],
         'adddel' : ['add', 'del', 'all-uni', 'all-sep']
-        #'adddel' : ['all-sep']
     }
 
-    setting_list = list(itertools.product(option_dict['use_br'], option_dict['use_diff'], \
+    setting_list = list(itertools.product(option_dict['score_mode'], option_dict['use_br'], option_dict['use_diff'], \
         option_dict['stage2'], option_dict['use_stopword'], option_dict['adddel']))
     
     # Compare the options of parameters
-    for ind, param in enumerate(['use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']):
+    for ind, param in enumerate(['score_mode', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']):
         if not use_br and param == 'use_br':
             continue
+
         print(f'Working on {param}')
         
         option_metric_dict = dict()
@@ -94,8 +88,21 @@ def compare_bug2commit_simple(use_br=False):
                         option_metric_dict[option][metric] = \
                             option_metric_dict[option].get(metric, []) + [val]
                     break
+
+        # Friedman test
+        """for metric in ['rank', 'num_iters']:
+            data_list = []
+
+            for option in param_option_list:
+                data_list.append(option_metric_dict[option][metric])
+            try:
+                pvalue = friedmanchisquare(*data_list)
+            except:
+                pvalue = 'Identical'
+            
+            print(f'Friedman test for {metric} : {pvalue}')"""
         
-        # Compare two different
+        # Post-hoc test
         for ind1 in range(len(param_option_list)):
             for ind2 in range(ind1 + 1, len(param_option_list)):
                 option1 = param_option_list[ind1]
@@ -129,14 +136,20 @@ def compare_bug2commit_simple(use_br=False):
                 metric_plot_dict[metric].append(val)
 
         for metric, val in metric_plot_dict.items():
-            pvalue = friedmanchisquare(*val).pvalue if len(param_option_list) > 2 else wilcoxon(*val).pvalue
+            try:
+                pvalue = friedmanchisquare(*val).pvalue if len(param_option_list) > 2 else wilcoxon(*val).pvalue
+            except:
+                pvalue = 'Identical'
+
+            print(f'Friedman test for {metric} : {pvalue}')
+            
             plt.figure()
             plt.boxplot(val, tick_labels=param_option_list)
-            plt.title(f"{param}-{metric}-{pvalue}")
+            plt.title(f"{param}-{metric}")
             plt.xlabel("X-axis")
             plt.ylabel("Y-axis")
             plt.grid(True)
-            plt.show()
+            plt.savefig(f'/root/workspace/analyze/plot/{param}_{metric}.png')
             plt.close()  # Close the figure to free memory
 
 def compare_bug2commit_complex(use_br=False):
@@ -487,42 +500,7 @@ def check_param_iter(target_dict: dict, strict = True):
                 if target_option[ind] != option:
                     is_target = False
                     break"""
-            
-# Generate csv file to feed ARTool
-# Combination of score_mode('score', 'both') & ensemble('mul', 'add'0.0)
-# have to be ignored to prevent possible error (BIC has 0 score)
-# But ARTool needs full combination for every parameters
-# So generate two csv files that ignores each of them
 
-def num_iters_to_csv():
-    with open('/root/workspace/num_iters.pkl', 'rb') as file:
-        num_iter_dict = pickle.load(file)
-    
-    # List of options that have to be ignored
-    ignore_score_mode_list = ['score', 'both']
-    ignore_ensemble_list = ['mul', '(\'add\', 0.0)']
-
-    no_score_mode_rows = []
-    no_ensemble_rows = []
-    
-    # HSFL is none when ensemble = 'add'0.0
-    # score_mode, use_br, use_diff, use_stopword, adddel is none when ensemble = 'add'1.0
-    for (HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel), num_iter_list in num_iter_dict.items():
-        if score_mode not in ignore_score_mode_list:
-            continue
-
-
-
-
-def metric_to_csv():
-    for project in tqdm(os.listdir(DIFF_DATA_DIR)):
-        with open(os.path.join(DIFF_DATA_DIR, project, 'num_iters.pkl'), 'rb') as file:
-            num_iter_dict = pickle.load(file)
-    
-        fonte_scores_df = pd.read_hdf(os.path.join(DIFF_DATA_DIR, f'{project}/fonte_scores.hdf'))
-
-
-    
 if __name__ == "__main__":
     #compare_extra_score()
     #compare_num_iters()
@@ -539,4 +517,4 @@ if __name__ == "__main__":
     #best_setting_iter()
     #num_iters_to_csv()
     #compare_bug2commit_simple()
-    compare_all_simple()
+    compare_bug2commit_simple()

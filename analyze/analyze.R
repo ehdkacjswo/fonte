@@ -6,9 +6,9 @@ library(purrr)
 library(progress)
 
 # Define independent variable combinations
-independent_vars <- c("stage2", "score_mode", "use_diff", "use_stopword", "adddel")
+independent_vars <- c("stage2", "score_mode", "ensemble", "use_diff", "use_stopword", "adddel")
 selected_iv_combinations <- unlist(
-  lapply(5:5, function(k) combn(independent_vars, k, simplify = FALSE)),
+  lapply(6:6, function(k) combn(independent_vars, k, simplify = FALSE)),
   recursive = FALSE
 )
 
@@ -21,7 +21,9 @@ data <- read.csv("/root/workspace/analyze/data/all_metrics.csv", stringsAsFactor
 data <- data %>%
   mutate(
     project = as.factor(project),
+    HSFL = as.factor(HSFL),
     score_mode = as.factor(score_mode),
+    ensemble = as.factor(ensemble),
     use_diff = as.factor(use_diff),
     stage2 = as.factor(stage2),
     use_stopword = as.factor(use_stopword),
@@ -31,7 +33,8 @@ data <- data %>%
   )
 
 # Filter the data
-#data <- data %>% filter(stage2 == "True")
+data <- data %>% filter(HSFL %in% c("False", "None"))
+#data <- data %>% filter(HSFL == "False")
 
 # Define function to perform ART ANOVA
 perform_art_anova <- function(dv_name, iv_combination) {
@@ -106,7 +109,7 @@ output_dir <- "art_anova_results_subset"
 dir.create(output_dir, showWarnings = FALSE)
 
 final_results <- map(selected_dependent_vars, function(dv) {
-  output_file <- file.path(output_dir, paste0("all_results_", dv, ".csv"))
+  output_file <- file.path(output_dir, paste0("no_HSFL_results_", dv, ".csv"))
   run_subset_analysis(dv, selected_iv_combinations, output_file)
 })
 

@@ -82,7 +82,8 @@ def bug2commit_metrics_to_csv():
                 writer.writerow([project, score_mode, use_diff, stage2, use_stopword, adddel, 'rank', val['rank']])
                 writer.writerow([project, score_mode, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])
 
-def all_metrics_to_csv():
+# Consider HSFL as independent variable or not
+def all_metrics_to_csv(use_HSFL=True):
     savepath = '/root/workspace/analyze/data/all_metrics.csv'
 
     """if os.path.isfile(savepath):
@@ -107,8 +108,8 @@ def all_metrics_to_csv():
         # Iterate through extra scores of every settings
         for setting, row in fonte_scores_df.iterrows():
 
-            # Consider Bug2Commit score only cases
-            if setting[0] != 'None' or setting[2] != '(\'add\', 0.0)' or setting[3] != 'False':
+            # Don't use bug report and ignore fonte score only case
+            if setting[3] == 'True' or setting[2] == '(\'add\', 1.0)':
                 continue
 
             commit_df = row['commit'].dropna()
@@ -118,7 +119,7 @@ def all_metrics_to_csv():
             # Index of the BIC
             BIC_ind = commit_df.loc[commit_df == BIC].index[0]
             BIC_rank = rank_df.loc[BIC_ind]
-            setting_tup = tuple(option for ind, option in enumerate(tuple(setting)) if ind not in [0, 2, 3])
+            setting_tup = tuple(option for ind, option in enumerate(tuple(setting)) if ind != 3)
 
             if setting_tup not in metric_dict:
                 metric_dict[setting_tup] = dict()
@@ -132,14 +133,13 @@ def all_metrics_to_csv():
     
     with open(savepath, 'w', newline='') as file:
         writer = csv.writer(file)
-        field = ['project', 'score_mode', 'use_diff', 'stage2', 'use_stopword', 'adddel', 'DependentName', 'DependentValue']
+        field = ['project', 'HSFL', 'score_mode', 'ensemble', 'use_diff', 'stage2', 'use_stopword', 'adddel', 'DependentName', 'DependentValue']
         writer.writerow(field)
 
         for project, metric_dict in project_metric_dict.items():
-            for (score_mode, use_diff, stage2, use_stopword, adddel), val in metric_dict.items():
-                writer.writerow([project, score_mode, use_diff, stage2, use_stopword, adddel, 'rank', val['rank']])
-                writer.writerow([project, score_mode, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])
-
+            for (HSFL, score_mode, ensemble, use_diff, stage2, use_stopword, adddel), val in metric_dict.items():
+                writer.writerow([project, HSFL, score_mode, ensemble, use_diff, stage2, use_stopword, adddel, 'rank', val['rank']])
+                writer.writerow([project, HSFL, score_mode, ensemble, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])
 
 if __name__ == "__main__":
     # Generate iteration data
