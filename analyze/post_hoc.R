@@ -21,39 +21,44 @@ data <- data %>%
 
 # List of dependent variables to analyze
 dependent_vars <- c("rank", "num_iters")
+independent_vars <- c("score_mode", "use_diff", "stage2", "use_stopword", "adddel")
 output_dir <- "/root/workspace/analyze/data/"
 results <- list()
 
 for (dep_var in dependent_vars) {
   subset_data <- data %>% filter(DependentName == dep_var)
-  
-  # Fit ART model
-  art_model <- art(DependentValue ~ score_mode * use_diff * stage2 * use_stopword * adddel + (1|project), data = subset_data)
-  #art_model <- art(DependentValue ~ score_mode * use_diff + (1|project), data = subset_data)
-  
-  # Perform post-hoc test for interaction of score_mode and use_diff
-  #posthoc_interaction <- art.con(art_model, "score_mode:use_diff:stage2:use_stopword:adddel")
-  #posthoc_interaction <- art.con(art_model, "score_mode:use_diff")
-  
-  # Convert results to a data frame
-  contrast_df <- as.data.frame(posthoc_interaction)
+    
+    # Fit ART model
+    art_model <- art(DependentValue ~ score_mode * use_diff * stage2 * use_stopword * adddel + (1|project), data = subset_data)
 
-  # Filter for significant cases (p-value < 0.05)
-  # Filter significant results
-  significant_contrasts <- contrast_df %>%
-    #filter(p.value < 0.05) %>%
-    mutate(
-      Winner = sub(" - .*", "", contrast),  # Extract the first setting (winner)
-      Loser = sub(".* - ", "", contrast)   # Extract the second setting (loser)
-    )
+  for (ind_var in independent_vars) {
+    
+    #art_model <- art(DependentValue ~ score_mode * use_diff + (1|project), data = subset_data)
+    
+    # Perform post-hoc test for interaction of score_mode and use_diff
+    #posthoc_interaction <- art.con(art_model, "score_mode:use_diff:stage2:use_stopword:adddel")
+    posthoc_interaction <- art.con(art_model, ind_var)
+    
+    # Convert results to a data frame
+    contrast_df <- as.data.frame(posthoc_interaction)
 
-  # Print significant cases
-  print(significant_contrasts)
-  output_file <- file.path(output_dir, paste0("post_hoc_", dep_var, ".csv"))
-  write.csv(significant_contrasts, file = output_file, row.names = FALSE)
+    # Filter for significant cases (p-value < 0.05)
+    # Filter significant results
+    significant_contrasts <- contrast_df %>%
+      #filter(p.value < 0.05) %>%
+      mutate(
+        p.value.adjusted = p.adjust(p.value, method = "bonferroni"),
+        Winner = sub(" - .*", "", contrast),  # Extract the first setting (winner)
+        Loser = sub(".* - ", "", contrast)   # Extract the second setting (loser)
+      )
 
-    # Save results
-  #results[[dep_var]] <- summary(posthoc_interaction)
+    # Print significant cases
+    output_file <- file.path(output_dir, paste0("post_hoc_", dep_var, "_", ind_var,".csv"))
+    write.csv(significant_contrasts, file = output_file, row.names = FALSE)
+
+      # Save results
+    #results[[dep_var]] <- summary(posthoc_interaction)
+  }
 }
 
 # Print results for each dependent variable

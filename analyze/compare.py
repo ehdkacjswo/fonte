@@ -146,8 +146,7 @@ def compare_bug2commit_simple(use_br=False):
             plt.figure()
             plt.boxplot(val, tick_labels=param_option_list)
             plt.title(f"{param}-{metric}")
-            plt.xlabel("X-axis")
-            plt.ylabel("Y-axis")
+            plt.xlabel("Options")
             plt.grid(True)
             plt.savefig(f'/root/workspace/analyze/plot/{param}_{metric}.png')
             plt.close()  # Close the figure to free memory
