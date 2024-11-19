@@ -1,16 +1,21 @@
-#install.packages(c("ARTool", "dplyr", "purrr"), dependencies = TRUE)
-#install.packages("pak")
-library(pak)
-#update.packages(checkBuilt = TRUE, ask = FALSE)
-#pak::pkg_install(c("ARTool", "dplyr", "purrr"))
-
+# Load necessary libraries
 library(ARTool)
 library(dplyr)
 library(tidyr)
 library(purrr)
 library(progress)
 
-# Load your data
+# Define independent variable combinations
+independent_vars <- c("stage2", "score_mode", "use_diff", "use_stopword", "adddel")
+selected_iv_combinations <- unlist(
+  lapply(5:5, function(k) combn(independent_vars, k, simplify = FALSE)),
+  recursive = FALSE
+)
+
+# Define dependent variables to analyze
+selected_dependent_vars <- c("rank", "num_iters")
+
+# Load and preprocess data
 data <- read.csv("/root/workspace/analyze/data/all_metrics.csv", stringsAsFactors = FALSE)
 
 data <- data %>%
@@ -25,10 +30,8 @@ data <- data %>%
     DependentValue = as.numeric(DependentValue)
   )
 
-# Generate all combinations of independent variables
-independent_vars <- c("score_mode", "use_diff", "stage2", "use_stopword", "adddel")
-iv_combinations <- map(1:length(independent_vars), ~combn(independent_vars, ., simplify = FALSE)) %>%
-  unlist(recursive = FALSE)
+# Filter the data
+#data <- data %>% filter(stage2 == "True")
 
 # Define function to perform ART ANOVA
 perform_art_anova <- function(dv_name, iv_combination) {
@@ -49,33 +52,63 @@ perform_art_anova <- function(dv_name, iv_combination) {
   return(list(dv_name = dv_name, iv_combination = iv_combination, model = art_model, anova = anova_results))
 }
 
-# Define function to track progress
-run_analysis_with_progress <- function(dv_name, iv_combinations) {
-  # Create a progress bar
+# Modify run_subset_analysis to use write.table() for appending
+run_subset_analysis <- function(dv_name, iv_combinations, output_file) {
   pb <- progress_bar$new(
-    format = "  Running ART ANOVA [:bar] :percent ETA: :eta",
-    total = length(iv_combinations), 
-    clear = FALSE, 
-    width = 60
+    format = "Processing [:bar] :percent (:current/:total) Dependent: :dv IVs: :ivs ETA: :eta",
+    total = length(iv_combinations),
+    clear = FALSE,
+    width = 80
   )
   
-  # Run ART ANOVA for all combinations with progress tracking
-  results <- map(iv_combinations, function(iv_combination) {
-    pb$tick()  # Update progress bar
-    perform_art_anova(dv_name, iv_combination)
-  })
+  results <- list()
+  first_write <- TRUE  # Track whether to write headers or append
+
+  for (i in seq_along(iv_combinations)) {
+    iv_combination <- iv_combinations[[i]]
+    pb$tick(tokens = list(dv = dv_name, ivs = paste(iv_combination, collapse = ", ")))
+    
+    tryCatch({
+      # Perform ART ANOVA
+      result <- perform_art_anova(dv_name, iv_combination)
+      
+      # Extract and save relevant data
+      anova_table <- result$anova %>%
+        mutate(
+          DependentName = dv_name,
+          IVs = paste(iv_combination, collapse = " + ")
+        )
+      
+      # Use write.table() to handle appending
+      write.table(
+        anova_table,
+        file = output_file,
+        sep = ",",
+        row.names = FALSE,
+        col.names = first_write,  # Include column headers only for the first write
+        append = !first_write,
+        quote = FALSE
+      )
+      
+      first_write <- FALSE  # After the first write, append subsequent results
+      results[[i]] <- anova_table
+    }, error = function(e) {
+      message(paste("Error in combination:", paste(iv_combination, collapse = ", ")))
+      message("Error message:", e$message)
+    })
+  }
   
   return(results)
 }
 
-# Perform ART ANOVA for all dependent variables and combinations of IVs
-dependent_vars <- unique(data$DependentName)
+# Perform analysis for selected dependent variables and IV combinations
+output_dir <- "art_anova_results_subset"
+dir.create(output_dir, showWarnings = FALSE)
 
-# Use walk to run the analysis and track progress for each dependent variable
-final_results <- map(dependent_vars, ~run_analysis_with_progress(.x, iv_combinations))
+final_results <- map(selected_dependent_vars, function(dv) {
+  output_file <- file.path(output_dir, paste0("all_results_", dv, ".csv"))
+  run_subset_analysis(dv, selected_iv_combinations, output_file)
+})
 
-# Combine all results
+# Combine all results into a single data frame (bind_rows will now work)
 final_results_combined <- bind_rows(final_results)
-
-# Save the results
-write.csv(final_results_combined, "/root/workspace/analyze/data/rm_anova.csv", row.names = FALSE)
