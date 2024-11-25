@@ -24,8 +24,8 @@ voting_functions = {
     (0, 'dense'): (lambda r: 1/r.dense_rank),
 }
 
-def bug2commit_metrics_to_csv():
-    savepath = '/root/workspace/analyze/data/Bug2Commit_metrics.csv'
+def metrics_to_csv(bug2commit=True):
+    savepath = f"/root/workspace/analyze/data/{'bug2commit' if bug2commit else 'all'}/metrics.csv"
 
     """if os.path.isfile(savepath):
         print(f'{savepath} already exists!')
@@ -47,10 +47,14 @@ def bug2commit_metrics_to_csv():
         fonte_scores_df = pd.read_hdf(os.path.join(project_dir, 'fonte_scores.hdf'))
 
         # Iterate through extra scores of every settings
+        # Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
         for setting, row in fonte_scores_df.iterrows():
 
             # Consider Bug2Commit score only cases
-            if setting[0] != 'None' or setting[2] != '(\'add\', 0.0)' or setting[3] != 'False':
+            if bug2commit and setting[2] != '(\'add\', 0.0)':
+                continue
+            
+            if not bug2commit and (setting[2] == '(\'add\', 1.0)' or setting[2] == '(\'add\', 0.0)'):
                 continue
 
             commit_df = row['commit'].dropna()
@@ -60,7 +64,11 @@ def bug2commit_metrics_to_csv():
             # Index of the BIC
             BIC_ind = commit_df.loc[commit_df == BIC].index[0]
             BIC_rank = rank_df.loc[BIC_ind]
-            setting_tup = tuple(option for ind, option in enumerate(tuple(setting)) if ind not in [0, 2, 3])
+            
+            if bug2commit:
+                setting_tup = tuple(option for ind, option in enumerate(tuple(setting)) if ind not in [0, 2])
+            else:
+                setting_tup = tuple(setting)
 
             if setting_tup not in metric_dict:
                 metric_dict[setting_tup] = dict()
@@ -74,17 +82,28 @@ def bug2commit_metrics_to_csv():
     
     with open(savepath, 'w', newline='') as file:
         writer = csv.writer(file)
-        field = ['project', 'score_mode', 'use_diff', 'stage2', 'use_stopword', 'adddel', 'DependentName', 'DependentValue']
-        writer.writerow(field)
+        if bug2commit:
+            field = ['project', 'score_mode', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel', 'DependentName', 'DependentValue']
+            writer.writerow(field)
 
-        for project, metric_dict in project_metric_dict.items():
-            for (score_mode, use_diff, stage2, use_stopword, adddel), val in metric_dict.items():
-                writer.writerow([project, score_mode, use_diff, stage2, use_stopword, adddel, 'rank', val['rank']])
-                writer.writerow([project, score_mode, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])
+            for project, metric_dict in project_metric_dict.items():
+                for (score_mode, use_br, use_diff, stage2, use_stopword, adddel), val in metric_dict.items():
+                    writer.writerow([project, score_mode, use_br, use_diff, stage2, use_stopword, adddel, 'rank', val['rank']])
+                    writer.writerow([project, score_mode, use_br, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])
+            
+        else:
+            field = ['project', 'HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel', 'DependentName', 'DependentValue']
+            writer.writerow(field)
+
+            for project, metric_dict in project_metric_dict.items():
+                for (HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel), val in metric_dict.items():
+                    writer.writerow([project, HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel, 'rank', val['rank']])
+                    writer.writerow([project, HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])
+
 
 # Consider HSFL as independent variable or not
 def all_metrics_to_csv(use_HSFL=True):
-    savepath = '/root/workspace/analyze/data/all_metrics.csv'
+    savepath = '/root/workspace/analyze/data/all/use_br_metrics.csv'
 
     """if os.path.isfile(savepath):
         print(f'{savepath} already exists!')
@@ -109,7 +128,7 @@ def all_metrics_to_csv(use_HSFL=True):
         for setting, row in fonte_scores_df.iterrows():
 
             # Don't use bug report and ignore fonte score only case
-            if setting[3] == 'True' or setting[2] == '(\'add\', 1.0)':
+            if setting[3] == 'False' or setting[2] == '(\'add\', 1.0)' or setting[2] == '(\'add\', 0.0)':
                 continue
 
             commit_df = row['commit'].dropna()
@@ -170,4 +189,5 @@ if __name__ == "__main__":
     """with open('/root/workspace/num_iters.pkl', 'wb') as file:
         pickle.dump(num_iters_dict, file)"""
     
-    all_metrics_to_csv()
+    #all_metrics_to_csv()
+    metrics_to_csv(False)

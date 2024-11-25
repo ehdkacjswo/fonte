@@ -7,16 +7,23 @@ import numpy as np
 from tqdm import tqdm
 import pandas as pd
 import seaborn as sns
+#from statsmodels.stats.multitest import multipletests
 
 sys.path.append('/root/workspace/lib/')
 from experiment_utils import *
 
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 
+# Get metric dictionary for bug2commit
+# metric : mean rank, mean number of iterations
+def get_metric_dict(bug2commit=True, use_br=True):
+    savepath = f"/root/workspace/analyze/data/{'bug2commit' if bug2commit else 'all'}/metric_dict.pkl"
 
-# Compare the extra scores based on metrics
-# Metrics : acc(1,2,3,5,10), MRR, Mean number of iterations (score rank)
-def compare_bug2commit_simple(use_br=False):
+    # If file already exists, read it
+    if os.path.isfile(savepath):
+        with open(savepath, 'rb') as file:
+            return pickle.load(file)
+    
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     tot_metric_dict = dict()
 
@@ -34,10 +41,15 @@ def compare_bug2commit_simple(use_br=False):
 
         # Iterate through extra scores of every settings
         for setting, row in fonte_scores_df.iterrows():
-
-            # Don't use bug report and consider Bug2Commit score only case
-            if setting[0] != 'None' or setting[2] != '(\'add\', 0.0)' or (not use_br and setting[3] != 'False'):
-                continue
+            if bug2commit: # Bug2Commit only case
+                if setting[0] != 'None' or setting[2] != '(\'add\', 0.0)':
+                    continue
+                metric_dict_key = tuple(option for ind, option in enumerate(tuple(setting)) if ind not in [0, 2])
+            
+            else: # Bug2Commit with Fonte
+                if setting[2] == '(\'add\', 1.0)' or setting[2] == '(\'add\', 0.0)':
+                    continue
+                metric_dict_key = tuple(setting)
 
             commit_df = row['commit'].dropna()
             score_df = row['vote'].dropna()
@@ -46,22 +58,34 @@ def compare_bug2commit_simple(use_br=False):
             # Index of the BIC
             BIC_ind = commit_df.loc[commit_df == BIC].index[0]
             BIC_rank = rank_df.loc[BIC_ind]
-            setting_tup = tuple(option for ind, option in enumerate(tuple(setting)) if ind not in [0, 2])
 
-            if setting_tup not in tot_metric_dict:
-                tot_metric_dict[setting_tup] = dict()
-            
-            tot_metric_dict[setting_tup]['rank'] = tot_metric_dict[setting_tup].get('rank', 0) + BIC_rank / 130
-            tot_metric_dict[setting_tup]['num_iters'] = \
-                tot_metric_dict[setting_tup].get('num_iters', 0) + num_iter_dict[tuple(setting)][1] / 130
+            setting_tup = tuple(setting)
 
+            if metric_dict_key not in tot_metric_dict:
+                tot_metric_dict[metric_dict_key] = dict()
+                tot_metric_dict[metric_dict_key]['rank'] = 0
+                tot_metric_dict[metric_dict_key]['num_iters'] = 0
+
+            tot_metric_dict[metric_dict_key]['rank'] += BIC_rank / 130
+            tot_metric_dict[metric_dict_key]['num_iters'] += num_iter_dict[setting_tup][1] / 130
+    
+    with open(savepath, 'wb') as file:
+        pickle.dump(tot_metric_dict, file)
+    
+    return tot_metric_dict
+
+# Compare the extra scores based on metrics
+# Metrics : acc(1,2,3,5,10), MRR, Mean number of iterations (score rank)
+def compare_bug2commit_simple(fixed=False, use_br=True):
+    tot_metric_dict = get_metric_dict(bug2commit=True)
+    
     # Possible options for each parameters
     option_dict = {
         'score_mode' : ['score', 'rank', 'both'],
-        'use_br' : ['True', 'False'] if use_br else ['False'],
+        'use_br' : ['True'] if use_br else ['False'],
         'use_diff' : ['True', 'False'],
-        'stage2' : ['skip', 'True', 'False'],
-        'use_stopword' : ['True', 'False'],
+        'stage2' : ['True'] if fixed else ['skip', 'True', 'False'],
+        'use_stopword' : ['True'] if fixed else ['True', 'False'],
         'adddel' : ['add', 'del', 'all-uni', 'all-sep']
     }
 
@@ -70,86 +94,139 @@ def compare_bug2commit_simple(use_br=False):
     
     # Compare the options of parameters
     for ind, param in enumerate(['score_mode', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']):
-        if not use_br and param == 'use_br':
+        if param == 'use_br':
+            continue
+        
+        if fixed and (param == 'stage2' or param == 'use_stopword'):
             continue
 
         print(f'Working on {param}')
         
-        option_metric_dict = dict()
+        metric_dict = {'rank' : dict(), 'num_iters' : dict()}
         param_option_list = option_dict[param]
         
         for setting in setting_list: # For every possible setting
             for option in param_option_list: # For possible options for selected parameter
                 if setting[ind] == option:
-                    if option not in option_metric_dict:
-                        option_metric_dict[option] = dict()
-
                     for metric, val in tot_metric_dict[setting].items(): # Gather the metrics
-                        option_metric_dict[option][metric] = \
-                            option_metric_dict[option].get(metric, []) + [val]
+                        metric_dict[metric][option] = metric_dict[metric].get(option, []) + [val]
                     break
 
-        # Friedman test
-        """for metric in ['rank', 'num_iters']:
-            data_list = []
+        for metric, val_dict in metric_dict.items():
+            data = [val_dict[option] for option in param_option_list]
 
-            for option in param_option_list:
-                data_list.append(option_metric_dict[option][metric])
-            try:
-                pvalue = friedmanchisquare(*data_list)
-            except:
-                pvalue = 'Identical'
-            
-            print(f'Friedman test for {metric} : {pvalue}')"""
-        
-        # Post-hoc test
-        for ind1 in range(len(param_option_list)):
-            for ind2 in range(ind1 + 1, len(param_option_list)):
-                option1 = param_option_list[ind1]
-                option2 = param_option_list[ind2]
-
-                print(f'Comparing {option1} and {option2}')
-
-                for metric in option_metric_dict[option1].keys():
-                    val1 = mean(option_metric_dict[option1][metric])
-                    val2 = mean(option_metric_dict[option2][metric])
-
-                    try:
-                        pvalue = wilcoxon(option_metric_dict[option1][metric], option_metric_dict[option2][metric]).pvalue
-                    except:
-                        pvalue = 'Identical'
-
-                    print(f'{metric} for {option1} : {val1}')
-                    print(f'{metric} for {option2} : {val2}')
-                    print(f'P-value : {pvalue}')
-
-        # Dictionary for drawing box plot
-        metric_plot_dict = dict()
-
-        for option in param_option_list:
-            metric_dict = option_metric_dict[option]
-
-            for metric, val in metric_dict.items():
-                if metric not in metric_plot_dict:
-                    metric_plot_dict[metric] = []
-                
-                metric_plot_dict[metric].append(val)
-
-        for metric, val in metric_plot_dict.items():
-            try:
-                pvalue = friedmanchisquare(*val).pvalue if len(param_option_list) > 2 else wilcoxon(*val).pvalue
-            except:
-                pvalue = 'Identical'
-
-            print(f'Friedman test for {metric} : {pvalue}')
-            
             plt.figure()
-            plt.boxplot(val, tick_labels=param_option_list)
+            plt.boxplot(data, tick_labels=param_option_list)
             plt.title(f"{param}-{metric}")
             plt.xlabel("Options")
             plt.grid(True)
-            plt.savefig(f'/root/workspace/analyze/plot/{param}_{metric}.png')
+            plt.savefig(f"/root/workspace/analyze/plot/bug2commit/{'fixed_' if fixed else ''}{'' if use_br else 'no_br_'}{param}_{metric}.png")
             plt.close()  # Close the figure to free memory
+
+# fix : use_stopword and 
+# Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
+def get_best_set(fix=True, bug2commit=True, HSFL=False, use_br=False):
+    
+    def setting_str_to_tup(setting):
+        if setting[0] == '(' and setting[-1] == ')':
+            setting = setting[1:-1]
+        
+        option_list = setting.split(',')
+
+        if not bug2commit:
+            if HSFL:
+                if option_list[2] == '(\'add\'':
+                    option_list[2] += f',{option_list[3]}'
+                    option_list = option_list[:3] + option_list[4:]
+            
+            else:
+                if option_list[1] == '(\'add\'':
+                    option_list[1] += f',{option_list[2]}'
+                    option_list = option_list[:2] + option_list[3:]
+
+        if bug2commit:
+            if fix:
+                return ('None', option_list[0], '(\'add\', 0.0)', str(use_br), option_list[1], 'True', 'True', option_list[2])
+            else:
+                return ('None', option_list[0], '(\'add\', 0.0)', str(use_br), option_list[1], option_list[2], option_list[3], option_list[4])
+        
+        else:
+            if fix:
+                if HSFL:
+                    return (option_list[0], option_list[1], option_list[2], str(use_br), option_list[3], 'True', 'True', option_list[4])
+                else:
+                    return ('False', option_list[0], option_list[1], str(use_br), option_list[2], 'True', 'True', option_list[3])
+            else:
+                if HSFL:
+                    return (option_list[0], option_list[1], option_list[2], str(use_br), option_list[3], option_list[4], option_list[5], option_list[6])
+                else:
+                    return ('False', option_list[0], option_list[1], str(use_br), option_list[2], option_list[3], option_list[4], option_list[5])
+
+    # ['score_mode', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
+    tot_metric_dict = get_metric_dict(bug2commit)
+    best_set_dict = dict()
+
+    for metric in ['rank', 'num_iters']:
+        print(metric)
+        best_set = set()
+
+        # Load post-hoc results
+        data = pd.read_csv(f"/root/workspace/analyze/data/{'bug2commit' if bug2commit else 'all'}/post_hoc/fix_posthoc_results.csv")
+        metric_data = data[data["Test"] == metric]
+
+        # Extract all unique settings
+        setting_set = set(metric_data["setting_1"]).union(metric_data["setting_2"])
+
+        # Iterate through all settings
+        for setting in setting_set:
+            
+            # Setting must not have large value for any other settings
+            related_data = metric_data[
+                ((metric_data["setting_1"] == setting) | (metric_data["setting_2"] == setting)) & \
+                (metric_data["p.value"] < 0.05)
+            ]
+
+            related_set = set(related_data["setting_1"]).union(related_data["setting_2"])
+            if len(related_set) == 0:
+                #print(setting)
+                continue
+
+            setting_tup = setting_str_to_tup(setting)
+            setting_metric = tot_metric_dict[setting_tup][metric]
+
+            # Check if the setting is better than 
+            is_best = True
+            for related_setting in related_set:
+                related_tup = setting_str_to_tup(related_setting)
+                related_metric = tot_metric_dict[related_tup][metric]
+
+                if related_metric < setting_metric:
+                    is_best = False
+                    #print(setting)
+                    break
+            
+            if is_best:
+                #print(setting_tup)
+                best_set.add(setting_tup)
+        best_set_dict[metric] = best_set
+    
+    best_set = best_set_dict['rank'] & best_set_dict['num_iters']
+    best_list = [(tup, tot_metric_dict[tup]['rank'], tot_metric_dict[tup]['num_iters']) for tup in best_set]
+    best_list.sort(key=lambda x : x[1:3])
+
+    pareto_list = [best_list[0]]
+    for (tup, rank, num_iters) in best_list[1:]:
+        if pareto_list[-1][1] == rank: # Same rank
+            if pareto_list[-1][2] == num_iters: # Same metrics
+                pareto_list.append((tup, rank, num_iters))
+            
+        elif pareto_list[-1][2] > num_iters: # New setting has worse rank but better number of iterations
+            pareto_list.append((tup, rank, num_iters))
+
+    print(['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel'])
+
+    for (tup, rank, num_iters) in pareto_list:
+        print(tup, rank, num_iters)
 
 def compare_bug2commit_complex(use_br=False):
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
@@ -397,108 +474,6 @@ def compare_all_simple():
                     print(f'{metric} for {option1} : {val1}')
                     print(f'{metric} for {option2} : {val2}')
                     print(f'P-value : {pvalue}')"""
-        
-# For fixed target parameter(s), check whether 
-def check_param_iter(target_dict: dict, strict = True):
-    with open('/root/workspace/num_iters.pkl', 'rb') as file:
-        num_iter_dict = pickle.load(file)
-
-    # Possible options for each parameters
-    option_dict = {
-        'HSFL' : ['True', 'False', 'None'],
-        'score_mode' : ['score', 'rank', 'both', 'None'],
-        'ensemble' : ['mul', '(\'add\', 0.1)', '(\'add\', 0.2)', '(\'add\', 0.3)', \
-        '(\'add\', 0.4)',  '(\'add\', 0.5)', '(\'add\', 0.6)', '(\'add\', 0.7)', '(\'add\', 0.8)', \
-        '(\'add\', 0.9)',],
-        'use_br' : ['False', 'None'],
-        'use_diff' : ['True', 'False', 'None'],
-        'stage2' : ['skip', 'True', 'False'],
-        'use_stopword' : ['True', 'False', 'None'],
-        'adddel' : ['add', 'all-uni', 'all-sep', 'None']
-    }
-
-    param_ind_dict = {'HSFL' : 0, 'score_mode' : 1, 'ensemble' : 2, 'use_br' : 3, \
-        'use_diff' : 4, 'stage2' : 5, 'use_stopword' : 6, 'adddel' : 7}
-    
-    param_list = ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
-
-    # 아닌거 목록 만들고, 맞는거 목록 만들어서 쭉 돌리기?
-    # List of possible options for target parameters
-    target_param_list = list(target_dict.keys())
-    target_option_list = [option_dict[param] for param in target_param_list]
-    target_option_list = list(itertools.product(*target_option_list))
-
-    # List of possible options for non-target parameters
-    non_target_param_list = [param for param in param_list if param not in target_dict]
-    non_target_option_list = [option_dict[param] for param in non_target_param_list]
-    non_target_option_list = list(itertools.product(*non_target_option_list))
-
-    # Iterate through every non-target options
-    for non_target_option in non_target_option_list:
-
-        # Setting with target option
-        target_setting = tuple([target_dict[param] if param in target_dict else \
-            non_target_option[non_target_param_list.index(param)] for param in param_list])
-        
-        # Invalid setting
-        if target_setting not in num_iter_dict:
-            continue
-        
-        target_num_iter_list = [num_iter[0] for num_iter in num_iter_dict[target_setting]]
-
-        # Ignore 
-        if 'None' in target_num_iter_list:
-            continue
-        
-        # Iterate through every target options
-        for target_option in target_option_list:
-            if 'None' in target_option or target_option == tuple(target_dict.values()):
-                continue
-            
-            # Setting with non-target option
-            non_target_setting = tuple([target_option[target_param_list.index(param)] \
-                if param in target_dict else target_setting[ind] for ind, param in enumerate(param_list)])
-            
-            non_target_num_iter_list = [num_iter[0] for num_iter in num_iter_dict[non_target_setting]]
-
-            # Ignore 
-            if 'None' in non_target_num_iter_list:
-                continue
-            
-            if strict:
-                for target_num_iter, non_target_num_iter in zip(target_num_iter_list, non_target_num_iter_list):
-                    if target_num_iter[0] > non_target_num_iter:
-                        print(non_target_setting)
-                        break
-            
-            else:
-                if mean(target_num_iter_list) > mean(non_target_num_iter_list):
-                    print(f'{target_setting} : {mean(target_num_iter_list)}')
-                    print(f'{non_target_setting} : {mean(non_target_num_iter_list)}')
-
-    """
-    for setting, num_iters1 in num_iters_dict.items():
-        # Check if current setting is target or not
-        is_target = True
-
-        for (param, option) in target_list:
-            if setting[param_ind_dict[param]] != option:
-                is_target = False
-                break
-        
-        if not is_target:
-            continue
-
-        target_option_list = [option_dict[param] for (param, _) in target_list]
-        target_option_list = list(itertools.product(*target_option_list))
-
-        for target_option in target_option_list:
-            is_target = True
-
-            for ind, (_, option) in enumerate(target_list):
-                if target_option[ind] != option:
-                    is_target = False
-                    break"""
 
 if __name__ == "__main__":
     #compare_extra_score()
@@ -516,4 +491,13 @@ if __name__ == "__main__":
     #best_setting_iter()
     #num_iters_to_csv()
     #compare_bug2commit_simple()
-    compare_bug2commit_simple()
+    #compare_bug2commit_simple()
+    #get_bug2commit_best_set(False)
+    #compare_bug2commit_simple()
+
+    """a = get_metric_dict(bug2commit=True)
+
+    for setting, val in a.items():
+        if setting[1] == 'False' and setting[3] == 'True' and setting[4] == 'True':
+            print(setting, val)"""
+    get_best_set()

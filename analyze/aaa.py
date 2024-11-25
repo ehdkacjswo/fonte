@@ -1,10 +1,10 @@
 import pandas as pd
 
 # Load significant post-hoc results
-data = pd.read_csv("/root/workspace/analyze/data/post_hoc_rank.csv")
+data = pd.read_csv("/root/workspace/analyze/data/bug2commit/posthoc_results.csv")
 
 # Extract all unique settings
-all_settings = set(data["Winner"]).union(data["Loser"])
+all_settings = set(data["setting_1"]).union(data["setting_2"])
 
 # Initialize the candidate set with all settings
 candidate_set = set(all_settings)
