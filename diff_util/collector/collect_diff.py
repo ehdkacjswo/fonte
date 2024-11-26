@@ -23,6 +23,8 @@ CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
 def get_range_dict(pid, vid, tool='git'):
     commit_path = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b', tool, 'commits.pkl')
     com_df = pd.read_pickle(commit_path)
+
+    # Drop duplicates
     com_df.drop_duplicates(subset=['src_path', 'begin_line', 'end_line'], inplace=True)
     range_dict = dict()
 
@@ -36,7 +38,7 @@ def get_range_dict(pid, vid, tool='git'):
     
 # Parse the diff text
 # Return format : [[commit, before_src_path, after_src_path, line, content]]
-def parse_diff(diff_txt, dif_commit, scr_path):
+def parse_diff(diff_txt, dif_commit, src_path):
     rows = []
 
     # Regex to find info
