@@ -9,23 +9,16 @@ library(progress)
 
 # Command line parser
 option_list <- list(
-  make_option(c("-e", "--exclude"), type = "character", default = "use_diff", 
+  make_option(c("-e", "--exclude"), type = "character", default = "", 
               help = "Comma-separated list of independent variables to exclude"),
-  make_option(c("-b", "--bug2commit"), type = "logical", default = TRUE, 
+  make_option(c("-b", "--bug2commit"), type = "logical", default = FALSE, 
               help = "Use bug2commit only[default: TRUE]"),
-  make_option(c("-f", "--fix"), type = "logical", default = TRUE, 
-              help = "Fix stage2, use_stopword as True [default: TRUE]"),
-  make_option(c("-h", "--hsfl"), type = "logical", default = FALSE, 
-              help = "Fix use_stopword as True [default: FALSE]")
+  make_option(c("-f", "--fix"), type = "character", default = "HSFL:True,use_stopword:True,stage2:True,use_br:True", 
+              help = "Comma-separated list of parameters and values to fix (e.g., use_stopword:False,stage2:True)")
 )
 
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
-
-# Parse excluded variables
-excluded_vars <- unlist(strsplit(opt$exclude, ","))
-if (opt$fix) excluded_vars <- setdiff(excluded_vars, c("use_stopword", "stage2"))
-output_file <- "/root/workspace/analyze/data/all/post_hoc/use_br_fix_posthoc_results.csv"
 
 # Load data
 if (opt$bug2commit) {
@@ -44,7 +37,7 @@ if (opt$bug2commit) {
       DependentValue = as.numeric(DependentValue)
     )
 } else {
-  data <- read.csv("/root/workspace/analyze/data/all/use_br_metrics.csv", stringsAsFactors = FALSE)
+  data <- read.csv("/root/workspace/analyze/data/all/metrics.csv", stringsAsFactors = FALSE)
 
   data <- data %>%
   mutate(
@@ -60,21 +53,49 @@ if (opt$bug2commit) {
     DependentName = as.factor(DependentName),
     DependentValue = as.numeric(DependentValue)
   )
-
-  if (!opt$hsfl) {
-    data <- data %>% filter(HSFL == "False")
-    data <- data[,!names(data) %in% c("HSFL")]
-    excluded_vars <- setdiff(excluded_vars, c("HSFL"))
-  }
 }
 
-if (opt$fix) {
-  data <- data %>% filter(use_stopword == "True" & stage2 == 'True')
-  data <- data[,!names(data) %in% c("stage2", "use_stopword")]
-  excluded_vars <- setdiff(excluded_vars, c("stage2", "use_stopword"))
+# Parse excluded variables and reorder them in same order of columns in the data
+excluded_vars <- unlist(strsplit(opt$exclude, ","))
+excluded_vars <- intersect(colnames(data), excluded_vars)
+
+# Parse fix parameters and values
+fix_parameters <- if (opt$fix != "") unlist(strsplit(opt$fix, split = ",")) else NULL
+
+# Convert the fix parameters to a named list
+if (!is.null(fix_parameters)) {
+  fix_conditions <- lapply(fix_parameters, function(param) {
+    parts <- unlist(strsplit(param, ":"))
+    setNames(list(parts[2]), parts[1])
+  })
+  fix_conditions <- do.call(c, fix_conditions)
+
+  # Filter parameters in data and reorder them in same order of columns in the data
+  fix_conditions <- fix_conditions[names(fix_conditions) %in% colnames(data)]
+  fix_conditions <- fix_conditions[match(colnames(data), names(fix_conditions), nomatch = 0)]
+} else {
+  fix_conditions <- list()
 }
 
-# Function to get unique combinations of excluded variable values
+# Ensure excluded variables exist in the dataset
+if (!all(names(fix_conditions) %in% colnames(data))) {
+  stop("One or more excluded variables do not exist in the dataset.")
+}
+
+# Fix the paremeters and remove from excluded variables
+for (param in names(fix_conditions)) {
+  value <- fix_conditions[[param]]
+  data <- data %>% filter(!!sym(param) == value)
+  data <- data[, !names(data) %in% param] # Remove fixed column
+  excluded_vars <- setdiff(excluded_vars, param) # Remove from excluding list
+}
+
+# Ensure excluded variables exist in the dataset
+if (!all(excluded_vars %in% colnames(data))) {
+  stop("One or more excluded variables do not exist in the dataset.")
+}
+
+# Get unique combinations of excluded variable values
 get_excluded_levels <- function(data, excluded_vars) {
   if (length(excluded_vars) == 0) return(NULL)
   data %>%
@@ -83,8 +104,8 @@ get_excluded_levels <- function(data, excluded_vars) {
     drop_na()
 }
 
-# Perform ART ANOVA and post-hoc contrast test
-perform_art_posthoc <- function(dv_name, excluded_values, excluded_vars) {
+# Perform ART post-hoc contrast test
+perform_art_posthoc <- function(dv_name, excluded_vars, excluded_values) {
   # Filter data for the dependent variable and excluded values
   filtered_data <- data %>% filter(DependentName == dv_name)
   for (var in excluded_vars) {
@@ -98,13 +119,13 @@ perform_art_posthoc <- function(dv_name, excluded_values, excluded_vars) {
   
   # Perform post-hoc contrast test
   interaction_term <- paste(remaining_vars, collapse = ":")
-  posthoc_results <- art.con(art_model, interaction_term, adjust = "bonferroni")
+  posthoc_results <- art.con(art_model, interaction_term)
   contrast_df <- as.data.frame(posthoc_results)
   
   # Add excluded variable levels
-  #for (var in excluded_vars) {
-  #  contrast_df[[var]] <- excluded_values[[var]]
-  #}
+  for (var in excluded_vars) {
+    contrast_df[[var]] <- excluded_values[[var]]
+  }
   
   return(contrast_df)
 }
@@ -112,7 +133,6 @@ perform_art_posthoc <- function(dv_name, excluded_values, excluded_vars) {
 # Main analysis loop
 run_analysis <- function(dependent_vars, excluded_vars, output_file) {
   excluded_levels <- get_excluded_levels(data, excluded_vars)
-  print(excluded_levels)
   all_results <- list()
 
   pb <- progress_bar$new(
@@ -122,10 +142,10 @@ run_analysis <- function(dependent_vars, excluded_vars, output_file) {
     width = 80
   )
   
-  for (dv_name in dependent_vars) {
-    if (is.null(excluded_levels)) {
-      # If no excluded variables, run directly
-      result <- perform_art_posthoc(dv_name, list(), excluded_vars)
+  # No data excluded
+  if (is.null(excluded_levels)) {
+    for (dv_name in dependent_vars) {
+      result <- perform_art_posthoc(dv_name, excluded_vars, list())
       result_df <- as.data.frame(result)
 
       # Filter significant cases (p-value < 0.05)
@@ -133,38 +153,71 @@ run_analysis <- function(dependent_vars, excluded_vars, output_file) {
         mutate(
           setting_1 = sub(" - .*", "", contrast),  # Extract first option
           setting_2 = sub(".* - ", "", contrast),  # Extract second option
+          metric = dv_name
         ) %>%
-        filter(p.value < 0.05)
-      all_results[[dv_name]] <- significant_contrasts
+        select(p.value, setting_1, setting_2, metric) #%>%
+        #filter(p.value < 0.05)
+
+      all_results <- append(all_results, list(significant_contrasts))
       pb$tick(tokens = list(dv = dv_name, levels = "none"))
-    } else {
+    }
+  } else {
+    for (dv_name in dependent_vars) {
       for (i in seq_len(nrow(excluded_levels))) {
+        # Get the value of 
         excluded_values <- excluded_levels[i, ] %>% 
           as.list() %>%
           setNames(names(excluded_levels)) %>% # Ensure the list retains variable names
           lapply(as.character)
-        print(excluded_values)
-        result <- perform_art_posthoc(dv_name, excluded_values, excluded_vars)
+        
+        result <- perform_art_posthoc(dv_name, excluded_vars, excluded_values)
         result_df <- as.data.frame(result)
+
+        exclude_string <- paste(excluded_values, collapse = ",")
 
         # Filter significant cases (p-value < 0.05)
         significant_contrasts <- result_df %>%
           mutate(
             setting_1 = sub(" - .*", "", contrast),  # Extract first option
             setting_2 = sub(".* - ", "", contrast),  # Extract second option
+            metric = dv_name,
+            exclude_string = exclude_string
           ) #%>%
+          select(metric, p.value, setting_1, setting_2, exclude_string) %>%
           #filter(p.value < 0.05)
-        all_results[[paste(dv_name, paste(excluded_values, collapse = "_"), sep = "_")]] <- significant_contrasts
+
+        all_results <- append(all_results, list(significant_contrasts))
         pb$tick(tokens = list(dv = dv_name, levels = paste(unlist(excluded_values), collapse = ", ")))
       }
     }
   }
 
   # Combine results and save to a single file
-  combined_results <- bind_rows(all_results, .id = "Test")
-  #write.csv(combined_results, file = output_file, row.names = FALSE)
+  combined_results <- bind_rows(all_results)
+  write.csv(combined_results, file = output_file, row.names = FALSE)
 }
 
 # List of dependent variables
 dependent_vars <- c("rank", "num_iters")
+
+fix_string <- paste(
+  paste(names(fix_conditions), fix_conditions, sep = ":"),
+  collapse = ","
+)
+
+exclude_string <- paste(excluded_vars, collapse = ',')
+
+setting_string <- paste0(
+  fix_string,
+  if (fix_string != '' & exclude_string != '') ',' else '',
+  exclude_string 
+)
+
+# Output file path
+output_file <- paste0("/root/workspace/analyze/data/",
+  if (opt$bug2commit) "bug2commit" else "all",
+  "/post_hoc/",
+  setting_string,
+  '.csv')
+
 run_analysis(dependent_vars, excluded_vars, output_file)
