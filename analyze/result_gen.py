@@ -162,7 +162,7 @@ def all_metrics_to_csv(use_HSFL=True):
 
 if __name__ == "__main__":
     # Generate iteration data
-    """for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
+    for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
         # Get BIC data
         print(f'Working on {folder}')
         [pid, vid] = folder[:-1].split("-")
@@ -170,10 +170,10 @@ if __name__ == "__main__":
         results_df = pd.concat(results_dict, \
             names=['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']).unstack()
         
-        results_df.to_hdf(os.path.join(DIFF_DATA_DIR, f'{folder}/fonte_scores.hdf'), key='data', mode='w')"""
+        results_df.to_hdf(os.path.join(DIFF_DATA_DIR, f'{folder}/fonte_scores.hdf'), key='data', mode='w')
     
     # Generate iteration data
-    """num_iters_dict = dict()
+    num_iters_dict = dict()
     for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
         print(f'Working on {folder}')
         [pid, vid] = folder[:-1].split("-")
@@ -182,12 +182,6 @@ if __name__ == "__main__":
 
         with open(os.path.join(DIFF_DATA_DIR, folder, 'num_iters.pkl'), 'wb') as file:
             pickle.dump(result_dict, file)
-
-        for setting, num_iter in result_dict.items():
-            num_iters_dict[setting] = num_iters_dict.get(setting, []) + [num_iter]"""
-    
-    """with open('/root/workspace/num_iters.pkl', 'wb') as file:
-        pickle.dump(num_iters_dict, file)"""
     
     #all_metrics_to_csv()
-    metrics_to_csv(False)
+    #metrics_to_csv(False)

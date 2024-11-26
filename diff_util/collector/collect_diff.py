@@ -13,7 +13,7 @@ import git # GitPython
 from tabulate import tabulate
 from nltk.corpus import stopwords
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append('/root/workspace/diff_util/lib/')
 from diff import Diff_commit
 
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
@@ -46,7 +46,7 @@ def parse_diff(diff_txt, dif_commit, src_path):
     file_path_regex = r'^diff --git a/(.*) b/(.*)$'
     diff_block_regex = r'@@ -(\d+),?\d* \+(\d+),?\d* @@'
 
-    commit = None
+    commit_hash = None
     old_file_path = None
     new_file_path = None
     cur_old_line = None
@@ -60,17 +60,13 @@ def parse_diff(diff_txt, dif_commit, src_path):
         commit_match = re.match(commit_regex, line)
         if commit_match:
             commit = commit_match.group(1)
-            diff_commit.add_commit(commit, src_path)
+            commit_hash = commit[:7]
+            diff_commit.add_commit(commit_hash, src_path)
+
             old_file_path = None
             new_file_path = None
             cur_old_line = None
             new_old_line = None
-
-            """if commit in commit_set: # Duplicate commit in on log cmd
-                with open('/root/workspace/eror.txt', 'a') as file:
-                    file.write(f'Double commit in one cmd: {commit}\n')
-            else:
-                commit_set.add(commit)"""
             continue
 
         # Commit has to be identified
@@ -87,7 +83,7 @@ def parse_diff(diff_txt, dif_commit, src_path):
 
             # Consider only java files
             if old_file_path.endswith('.java') and new_file_path.endswith('.java'):
-                diff_commit.add_file_info(commit, src_path, old_file_path, new_file_path)
+                diff_commit.add_file_info(commit_hash, src_path, old_file_path, new_file_path)
             else:
                 old_file_path = None
                 new_file_path = None
@@ -115,13 +111,8 @@ def parse_diff(diff_txt, dif_commit, src_path):
     
             line = line[1:].strip()
 
-            # Ignore meaningless content and path info
-            """if not any(char.isalpha() or char.isdigit() for char in line) or line.startswith('---'):
-                continue"""
-
-            diff_commit.add_diff(commit, src_path, old_file_path, new_file_path, cur_old_line, line, 'del')
+            diff_commit.add_diff(commit_hash, src_path, old_file_path, new_file_path, cur_old_line, line, 'del')
             cur_old_line += 1
-            #rows.append([False, old_file_path, new_file_path, cur_old_line - 1, line[1:]])
             
         # Added line
         elif line.startswith('+'):
@@ -130,12 +121,8 @@ def parse_diff(diff_txt, dif_commit, src_path):
             
             line = line[1:].strip()
 
-            # Ignore meaningless content and path info
-            """if not any(char.isalpha() or char.isdigit() for char in line) or line.startswith('+++'):
-                continue"""
-            diff_commit.add_diff(commit, src_path, old_file_path, new_file_path, cur_new_line, line, 'add')
+            diff_commit.add_diff(commit_hash, src_path, old_file_path, new_file_path, cur_new_line, line, 'add')
             cur_new_line += 1
-            #rows.append([True, old_file_path, new_file_path, cur_new_line - 1, line])
                 
         # Unchanged line
         else:
