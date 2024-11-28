@@ -111,7 +111,7 @@ def get_best_set_bug2commit(use_br=True):
 
 # fix : use_stopword and 
 def get_best_set(bug2commit=False, \
-    fix={'HSFL':'False', 'use_br':'False', 'stage2':'True', 'use_stopword':'True'}, exclude=[]):
+    fix={'HSFL':'False', 'use_br':'True', 'stage2':'True', 'use_stopword':'True'}, exclude=[]):
 
     # 대상 var이 한개인 경우는 작동하지 않는다
     # 현재 exclude 고려 X
@@ -284,5 +284,5 @@ if __name__ == "__main__":
     for setting, val in a.items():
         if setting[1] == 'False' and setting[3] == 'True' and setting[4] == 'True':
             print(setting, val)"""
-    get_best_set_bug2commit(use_br=False)
+    get_best_set_bug2commit(use_br=True)
     get_best_set()

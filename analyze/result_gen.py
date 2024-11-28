@@ -99,6 +99,7 @@ def metrics_to_csv(bug2commit=True):
                 for (HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel), val in metric_dict.items():
                     writer.writerow([project, HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel, 'rank', val['rank']])
                     writer.writerow([project, HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compute commit scores")
     parser.add_argument('--tool', type=str, default="git",
@@ -145,4 +146,5 @@ if __name__ == "__main__":
         with open(os.path.join(DIFF_DATA_DIR, folder, 'num_iters.pkl'), 'wb') as file:
             pickle.dump(result_dict, file)
     
-    #metrics_to_csv(False)
+    metrics_to_csv(False)
+    metrics_to_csv(True)
