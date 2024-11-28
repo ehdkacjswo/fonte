@@ -48,9 +48,9 @@ def run_bug2commit(pid, vid, use_br, use_diff, stage2, use_stopword, adddel):
     # Encode the query feature
     encoded_query_features = []
     for feature in query_features:
-        encoded_feature = encoder.encode(feature, use_stopword, update_vocab=False)
+        encoded_feature = encoder.encode(feature, use_stopword)
         encoded_query_features.append(encoded_feature)
-        #bm25.add_document(encoded_feature)
+        bm25.add_document(encoded_feature)
 
     # For target list of commits get used set
     with open(os.path.join(diff_data_dir, 'feature/feature.pkl'), 'rb') as file:
