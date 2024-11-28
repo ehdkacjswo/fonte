@@ -99,67 +99,6 @@ def metrics_to_csv(bug2commit=True):
                 for (HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel), val in metric_dict.items():
                     writer.writerow([project, HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel, 'rank', val['rank']])
                     writer.writerow([project, HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])
-
-
-# Consider HSFL as independent variable or not
-def all_metrics_to_csv(use_HSFL=True):
-    savepath = '/root/workspace/analyze/data/all/use_br_metrics.csv'
-
-    """if os.path.isfile(savepath):
-        print(f'{savepath} already exists!')
-        return"""
-    
-    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
-    project_metric_dict = dict()
-
-    for project in tqdm(os.listdir(DIFF_DATA_DIR)):
-        [pid, vid] = project[:-1].split("-")
-        BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
-        project_dir = os.path.join(DIFF_DATA_DIR, project)
-
-        metric_dict = dict()
-
-        with open(os.path.join(project_dir, 'num_iters.pkl'), 'rb') as file:
-            num_iter_dict = pickle.load(file)
-    
-        fonte_scores_df = pd.read_hdf(os.path.join(project_dir, 'fonte_scores.hdf'))
-
-        # Iterate through extra scores of every settings
-        for setting, row in fonte_scores_df.iterrows():
-
-            # Don't use bug report and ignore fonte score only case
-            if setting[3] == 'False' or setting[2] == '(\'add\', 1.0)' or setting[2] == '(\'add\', 0.0)':
-                continue
-
-            commit_df = row['commit'].dropna()
-            score_df = row['vote'].dropna()
-            rank_df = score_df.rank(method='max', ascending=False)
-
-            # Index of the BIC
-            BIC_ind = commit_df.loc[commit_df == BIC].index[0]
-            BIC_rank = rank_df.loc[BIC_ind]
-            setting_tup = tuple(option for ind, option in enumerate(tuple(setting)) if ind != 3)
-
-            if setting_tup not in metric_dict:
-                metric_dict[setting_tup] = dict()
-            else:
-                print('ERRORRRRR!!!!!!!')
-            
-            metric_dict[setting_tup]['rank'] = int(BIC_rank)
-            metric_dict[setting_tup]['num_iters'] = num_iter_dict[tuple(setting)][1]
-        
-        project_metric_dict[project] = metric_dict
-    
-    with open(savepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        field = ['project', 'HSFL', 'score_mode', 'ensemble', 'use_diff', 'stage2', 'use_stopword', 'adddel', 'DependentName', 'DependentValue']
-        writer.writerow(field)
-
-        for project, metric_dict in project_metric_dict.items():
-            for (HSFL, score_mode, ensemble, use_diff, stage2, use_stopword, adddel), val in metric_dict.items():
-                writer.writerow([project, HSFL, score_mode, ensemble, use_diff, stage2, use_stopword, adddel, 'rank', val['rank']])
-                writer.writerow([project, HSFL, score_mode, ensemble, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compute commit scores")
     parser.add_argument('--tool', type=str, default="git",
@@ -206,5 +145,4 @@ if __name__ == "__main__":
         with open(os.path.join(DIFF_DATA_DIR, folder, 'num_iters.pkl'), 'wb') as file:
             pickle.dump(result_dict, file)
     
-    #all_metrics_to_csv()
     #metrics_to_csv(False)

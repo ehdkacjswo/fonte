@@ -101,7 +101,7 @@ def encode_pid(pid, vid, stage2, use_stopword):
             deletion_encode_sum = list()
 
             for content in deletion_content_dict.values():
-                addition_encode_sum = sum_encode(deletion_encode_sum, encoder.encode(content, use_stopword))
+                deletion_encode_sum = sum_encode(deletion_encode_sum, encoder.encode(content, use_stopword))
             
             deletion_list.append(((before_src_path, before_src_path_encode), deletion_encode_sum))
         
@@ -118,8 +118,8 @@ def encode_pid(pid, vid, stage2, use_stopword):
     return encode_dict, encoder.vocab
 
 if __name__ == "__main__":
-    stage2_list = ['skip', True, False] # Skip stage or use OpenRewrite or not
-    use_stopword_list = [True, False] # Use stopword or not    
+    stage2_list = [True] # ['skip', True, False] Skip stage or use OpenRewrite or not
+    use_stopword_list = [True] # [True, False] Use stopword or not    
     param_list = list(itertools.product(stage2_list, use_stopword_list))
     
     for project_dir in tqdm(os.listdir(DIFF_DATA_DIR)):
@@ -129,17 +129,17 @@ if __name__ == "__main__":
         # Encode diff for every settings
         encode_dict = dict()
         vocab_dict = dict()
-        encoder = Encoder()
 
         for (stage2, use_stopword) in param_list:
             encode_res, vocab = encode_pid(pid=pid, vid=vid, stage2=stage2, use_stopword=use_stopword)
             encode_dict[(stage2, use_stopword)] = encode_res
             vocab_dict[(stage2, use_stopword)] = vocab
+            #print(encode_dict)
 
         diff_encode_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b/encode')
         os.makedirs(diff_encode_dir, exist_ok=True)
 
-        """with open(os.path.join(diff_encode_dir, f'diff_encode.pkl'), 'wb') as file:
+        with open(os.path.join(diff_encode_dir, f'diff_encode.pkl'), 'wb') as file:
             pickle.dump(encode_dict, file)
         with open(os.path.join(diff_encode_dir, f'vocab.pkl'), 'wb') as file:
-            pickle.dump(vocab_dict, file)"""
+            pickle.dump(vocab_dict, file)

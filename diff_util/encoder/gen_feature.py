@@ -40,8 +40,8 @@ def gen_feature(project, stage2, use_stopword, adddel):
     for commit_hash, [msg_encode, addition_list, deletion_list] in encode_dict.items():
         if adddel == 'all-uni':
             path_set = set()
-            path_encode_sum = []
-            content_encode_sum = []
+            path_encode_sum = list()
+            content_encode_sum = list()
 
             # Ecode whole data
             for (src_path_info, encode_sum) in addition_list:
@@ -91,8 +91,8 @@ def gen_feature(project, stage2, use_stopword, adddel):
 if __name__ == "__main__":
     diff_dir = '/root/workspace/data/Defects4J/diff/'
 
-    stage2_list = ['skip', True, False] # Skip stage or use OpenRewrite or not
-    use_stopword_list = [True, False] # Use stopword or not
+    stage2_list = [True] # ['skip', True, False] Skip stage or use OpenRewrite or not
+    use_stopword_list = [True] # [True, False] Use stopword or not
     adddel_list = ['add', 'del', 'all-uni', 'all-sep'] # Which diff data to uses
     param_list = list(itertools.product(stage2_list, use_stopword_list, adddel_list))
     

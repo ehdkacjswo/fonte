@@ -10,29 +10,13 @@ library(optparse)
 option_list <- list(
   make_option(c("-e", "--exclude"), type = "character", default = "", 
               help = "Comma-separated list of independent variables to exclude"),
-  make_option(c("-b", "--bug2commit"), type = "logical", default = FALSE, 
+  make_option(c("-b", "--bug2commit"), type = "logical", default = TRUE, 
               help = "Use bug2commit only[default: TRUE]"),
-  make_option(c("-f", "--fix"), type = "character", default = "use_stopword:True,stage2:True,use_br:True,HSFL:False", 
+  make_option(c("-f", "--fix"), type = "character", default = "use_stopword:True,stage2:True,use_br:False", 
               help = "Comma-separated list of parameters and values to fix (e.g., use_stopword:False,stage2:True)")
 )
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
-
-# Parse excluded variables
-excluded_vars <- unlist(strsplit(opt$exclude, split = ","))
-
-# Parse fix parameters and values
-fix_parameters <- if (opt$fix != "") unlist(strsplit(opt$fix, split = ",")) else NULL
-
-# Convert the fix parameters to a named list
-fix_conditions <- list()
-if (!is.null(fix_parameters)) {
-  fix_conditions <- lapply(fix_parameters, function(param) {
-    parts <- unlist(strsplit(param, ":"))
-    setNames(list(parts[2]), parts[1])
-  })
-  fix_conditions <- do.call(c, fix_conditions)
-}
 
 # Define dependent variables to analyze
 selected_dependent_vars <- c("rank", "num_iters")
@@ -72,19 +56,39 @@ if (opt$bug2commit) {
   )
 }
 
-# Apply fix conditions dynamically
-if (!is.null(fix_conditions)) {
-  for (param in names(fix_conditions)) {
-    value <- fix_conditions[[param]]
-    data <- data %>% filter(!!sym(param) == value)
-    data <- data[, !names(data) %in% param] # Remove fixed column
-    excluded_vars <- setdiff(excluded_vars, param)
-  }
+# Parse excluded variables and reorder them in same order of columns in the data
+excluded_vars <- unlist(strsplit(opt$exclude, ","))
+excluded_vars <- intersect(colnames(data), excluded_vars)
+
+# Parse fix parameters and values
+fix_parameters <- if (opt$fix != "") unlist(strsplit(opt$fix, split = ",")) else NULL
+
+# Convert the fix parameters to a named list
+if (!is.null(fix_parameters)) {
+  fix_conditions <- lapply(fix_parameters, function(param) {
+    parts <- unlist(strsplit(param, ":"))
+    setNames(list(parts[2]), parts[1])
+  })
+  fix_conditions <- do.call(c, fix_conditions)
+
+  # Filter parameters in data and reorder them in same order of columns in the data
+  fix_conditions <- fix_conditions[names(fix_conditions) %in% colnames(data)]
+  fix_conditions <- fix_conditions[match(colnames(data), names(fix_conditions), nomatch = 0)]
+} else {
+  fix_conditions <- list()
 }
 
 # Ensure excluded variables exist in the dataset
 if (!all(excluded_vars %in% colnames(data))) {
   stop("One or more excluded variables do not exist in the dataset.")
+}
+
+# Fix the paremeters and remove from excluded variables
+for (param in names(fix_conditions)) {
+  value <- fix_conditions[[param]]
+  data <- data %>% filter(!!sym(param) == value)
+  data <- data[, !names(data) %in% param] # Remove fixed column
+  excluded_vars <- setdiff(excluded_vars, param) # Remove from excluding list
 }
 
 # Function to get unique combinations of excluded variable values
@@ -184,12 +188,25 @@ run_analysis <- function(dependent_vars, excluded_vars, file_prefix) {
   write.csv(final_results, file = paste0(file_prefix, ".csv"), row.names = FALSE)
 }
 
+fix_string <- paste(
+  paste(names(fix_conditions), fix_conditions, sep = ":"),
+  collapse = ","
+)
+
+exclude_string <- paste(excluded_vars, collapse = ',')
+
+setting_string <- paste0(
+  fix_string,
+  if (fix_string != '' & exclude_string != '') ',' else '',
+  exclude_string 
+)
+
 # Output file path
 file_prefix <- paste0("/root/workspace/analyze/data/",
   if (opt$bug2commit) "bug2commit" else "all",
   "/art_anova/",
-  if (opt$fix != "") paste0(opt$fix, ",") else "",
-  paste0(excluded_vars, collapse = ","))
+  setting_string,
+  '.csv')
 
 # Run the analysis
 run_analysis(selected_dependent_vars, excluded_vars, file_prefix)

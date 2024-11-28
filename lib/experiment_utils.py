@@ -429,7 +429,7 @@ def score_eval_all(pid, vid, tool, formula, decay, voting_func,
     # Possible settings
     use_br_list = [True, False]
     use_diff_list = [True, False]
-    use_stopword_list = [True, False]
+    use_stopword_list = [True] # [True, False]
     adddel_list = ['add', 'del', 'all-uni', 'all-sep']
     extra_score_list = list(itertools.product(use_br_list, use_diff_list, use_stopword_list, adddel_list))
 
@@ -477,7 +477,7 @@ def score_eval_all(pid, vid, tool, formula, decay, voting_func,
 
     result_dict = dict()
     
-    for stage2 in ['skip', True, False]:
+    for stage2 in [True]: #['skip', True, False]
         # Get commit history info
         commit_df = load_commit_history(fault_dir, tool)
         if stage2 == 'skip':
