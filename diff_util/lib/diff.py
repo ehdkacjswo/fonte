@@ -12,13 +12,13 @@ class Diff_commit: # Class containg diff data of commit
             file_info_key = (before_src_path, after_src_path)
             dict_idx = 0 if adddel == 'add' else 1 # Select addition, deletion
 
-            if line not in self.dict[file_info_key][dict_idx]:
+            if line not in self.diff_dict[file_info_key][dict_idx]:
                 self.diff_dict[file_info_key][dict_idx][line] = content
 
-            """if line in self.diff_dict[file_info_key][dict_idx]:
+            if line in self.diff_dict[file_info_key][dict_idx]:
                 if self.diff_dict[file_info_key][dict_idx][line] != content: # Same line, but different content
                     with open('/root/workspace/eror.txt', 'a') as file:
-                        file.write(f'Different diff content for same line num: {before_src_path},{after_src_path}, {line}\n')"""
+                        file.write(f'Different diff content for same line num: {before_src_path},{after_src_path}, {line}\n')
         
         def self_print(self):
             for (before_src_path, after_src_path) in self.diff_dict.keys():
@@ -76,10 +76,10 @@ class Diff_commit_encode: # Class containg encoded diff data of commit
             if line not in self.dict[file_info_key][dict_idx]:
                 self.diff_dict[file_info_key][dict_idx][line] = content
 
-            """if line in self.diff_dict[file_info_key][dict_idx]:
+            if line in self.diff_dict[file_info_key][dict_idx]:
                 if self.diff_dict[file_info_key][dict_idx][line] != content: # Same line, but different content
                     with open('/root/workspace/eror.txt', 'a') as file:
-                        file.write(f'Different diff content for same line num: {before_src_path},{after_src_path}, {line}\n')"""
+                        file.write(f'Different diff content for same line num: {before_src_path},{after_src_path}, {line}\n')
         
         def self_print(self):
             for (before_src_path, after_src_path) in self.diff_dict.keys():

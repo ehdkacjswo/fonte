@@ -38,7 +38,7 @@ def get_range_dict(pid, vid, tool='git'):
     
 # Parse the diff text
 # Return format : [[commit, before_src_path, after_src_path, line, content]]
-def parse_diff(diff_txt, dif_commit, src_path):
+def parse_diff(diff_txt, diff_commit, src_path):
     rows = []
 
     # Regex to find info
@@ -159,8 +159,8 @@ if __name__ == "__main__":
                 raise e
 
     # Save the parsed result
-    savedir = f'/root/workspace/data/Defects4J/diff/{args.project}-{args.version}b'
+    """savedir = f'/root/workspace/data/Defects4J/diff/{args.project}-{args.version}b'
     os.makedirs(savedir, exist_ok=True)
 
     with open(os.path.join(savedir, 'diff.pkl'), 'wb') as file:
-        pickle.dump(diff_commit, file)
+        pickle.dump(diff_commit, file)"""

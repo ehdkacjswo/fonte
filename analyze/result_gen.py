@@ -161,6 +161,29 @@ def all_metrics_to_csv(use_HSFL=True):
                 writer.writerow([project, HSFL, score_mode, ensemble, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Compute commit scores")
+    parser.add_argument('--tool', type=str, default="git",
+        help="history retrieval tool, git or shovel (default: git)")
+    parser.add_argument('--formula', type=str, default="Ochiai",
+        help="SBFL formula (default: Ochiai)")
+    parser.add_argument('--alpha', type=int, default=0,
+        help="alpha (default: 0)")
+    parser.add_argument('--tau', type=str, default="max",
+        help="tau (default: max)")
+    parser.add_argument('--lamb', type=float, default=0.1,
+        help="lambda (default: 0.1)")
+    parser.add_argument('--skip-stage-2', action="store_true",
+        help="skiping stage 2 (default: False)")
+    parser.add_argument('--no-openrewrite', action="store_true",
+        help="not using openrewrite in Stage 2(default: False)")
+    parser.add_argument('--output', '-o',
+        help="path to output file (example: output.csv)")
+    args = parser.parse_args()
+
+    assert args.alpha in [0, 1]
+    assert args.tau in ["max", "dense"]
+    assert 0 <= args.lamb < 1
+
     # Generate iteration data
     for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
         # Get BIC data
