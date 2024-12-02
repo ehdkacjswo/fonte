@@ -25,7 +25,7 @@ class Encoder():
         return token_list
 
     # Encode the input and list of used word index and count
-    def encode(self, text, use_stopword):
+    def encode(self, text, use_stopword, update_vocab=True):
         encode_res = []
         text = self.tokenize(text, use_stopword)
 
@@ -33,7 +33,7 @@ class Encoder():
             if word in self.vocab: # Word in vocab
                 encode_res.append((self.vocab[word], cnt))
                 
-            else: # New word
+            elif update_vocab: # New word
                 encode_res.append((len(self.vocab), cnt))
                 self.vocab[word] = len(self.vocab)
         

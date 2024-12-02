@@ -48,9 +48,9 @@ def run_bug2commit(pid, vid, use_br, use_diff, stage2, use_stopword, adddel):
     # Encode the query feature
     encoded_query_features = []
     for feature in query_features:
-        encoded_feature = encoder.encode(feature, use_stopword)
+        encoded_feature = encoder.encode(feature, use_stopword, update_vocab=False)
         encoded_query_features.append(encoded_feature)
-        bm25.add_document(encoded_feature)
+        #bm25.add_document(encoded_feature)
 
     # For target list of commits get used set
     with open(os.path.join(diff_data_dir, 'feature/feature.pkl'), 'rb') as file:
@@ -77,22 +77,25 @@ def run_bug2commit(pid, vid, use_br, use_diff, stage2, use_stopword, adddel):
     # Handle query features
     query_vector = bm25.vectorize_complex(encoded_query_features)
 
-    """if not np.any(query_vector):
+    if not np.any(query_vector):
         with open('/root/workspace/eror.txt', 'a') as file:
-                file.write(f'Query vector of {pid}-{vid}b is zero\n')"""
+                file.write(f'Query vector of {pid}-{vid}b is zero\n')
 
     # Handle commit features
     for commit_hash in filtered_commit_feature_dict.keys():
         filtered_commit_feature_dict[commit_hash] = bm25.vectorize_complex(filtered_commit_feature_dict[commit_hash])
 
-        """if not np.any(commit_feature_dict[commit_hash]):
+        if not np.any(commit_feature_dict[commit_hash]):
             with open('/root/workspace/eror.txt', 'a') as file:
-                file.write(f'Commit vector of {pid}-{vid}b:{commit_hash} is zero\n')"""
+                file.write(f'Commit vector of {pid}-{vid}b:{commit_hash} is zero\n')
 
     #print(f"{pid}-{vid}b: Calculating the scores of commits...................")
     score_rows = []
     for commit_hash, vector in filtered_commit_feature_dict.items():
-        similarity = 1 - cosine(vector, query_vector)
+        if np.any(vector) and np.any(query_vector):
+            similarity = 1 - cosine(vector, query_vector)
+        else:
+            similarity = 0
         score_rows.append([commit_hash, similarity])
 
     score_df = pd.DataFrame(data=score_rows, columns=["commit_hash", "score"])
@@ -115,7 +118,7 @@ if __name__ == "__main__":
 
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
-        print(f'Working on {pid}-{vid}b')
+        print(f'Bug2Commit : Working on {pid}-{vid}b')
         results_dict = dict()
 
         for (use_br, use_diff, stage2, use_stopword, adddel) in param_list:
@@ -126,5 +129,5 @@ if __name__ == "__main__":
         results_df = pd.concat(results_dict, \
             names=['use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']).unstack()
         
-        results_df.to_hdf(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b/scores.hdf'), key='data', mode='w')
+        #results_df.to_hdf(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b/scores.hdf'), key='data', mode='w')
 

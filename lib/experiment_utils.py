@@ -394,6 +394,18 @@ def weighted_bisection(commits: list, scores: list, BIC, ignore_zero = True, ver
             else:
                 # already pass the min, now increasing
                 break
+        # Extra code for 0 score cases
+        if not ignore_zero and scores[pivot_index] == 0:
+            min_pivot_index = pivot_index
+            max_pivot_index = pivot_index
+
+            while scores[min_pivot_index] == 0 and min_pivot_index > bad_index + 1:
+                min_pivot_index -= 1
+            while scores[max_pivot_index] == 0 and max_pivot_index < good_index - 1:
+                max_pivot_index += 1
+            
+            pivot_index = int((min_pivot_index + max_pivot_index) / 2)
+            
         if verbose:
             print(f"Test {pivot_index}")
         if return_pivots:

@@ -12,7 +12,7 @@ option_list <- list(
               help = "Comma-separated list of independent variables to exclude"),
   make_option(c("-b", "--bug2commit"), type = "logical", default = TRUE, 
               help = "Use bug2commit only[default: TRUE]"),
-  make_option(c("-f", "--fix"), type = "character", default = "use_stopword:True,stage2:True,use_br:False", 
+  make_option(c("-f", "--fix"), type = "character", default = "use_stopword:True,stage2:True,use_br:False,HSFL:False", 
               help = "Comma-separated list of parameters and values to fix (e.g., use_stopword:False,stage2:True)")
 )
 opt_parser <- OptionParser(option_list = option_list)
@@ -101,15 +101,13 @@ get_excluded_levels <- function(data, excluded_vars) {
 }
 
 # Define function to perform ART ANOVA
-perform_art_anova <- function(dv_name, excluded_vars, excluded_values, file_prefix) {
+perform_art_anova <- function(dv_name, excluded_vars, excluded_values) {
   # Filter data based on excluded variable values
   filtered_data <- data %>% filter(DependentName == dv_name)
   for (var in excluded_vars) {
     filtered_data <- filtered_data %>% filter(!!sym(var) == excluded_values[[var]])
+    filtered_data <- filtered_data[, !names(filtered_data) %in% var] # Remove fixed column
   }
-  #print(filtered_data)
-  #print(excluded_vars)
-  #print(excluded_values)
 
   # Check if filtered data is empty
   if (nrow(filtered_data) == 0) {
@@ -117,7 +115,7 @@ perform_art_anova <- function(dv_name, excluded_vars, excluded_values, file_pref
     return(NULL)
   }
   
-  # Get remaining independent 
+  # Get remaining independent variables
   remaining_vars <- setdiff(names(filtered_data), c(excluded_vars, "DependentValue", "project", "DependentName"))
   
   # Create formula dynamically
@@ -135,17 +133,22 @@ perform_art_anova <- function(dv_name, excluded_vars, excluded_values, file_pref
   anova_results <- anova_results %>%
     mutate(
       DependentName = dv_name,
-      FixedVars = paste(paste(excluded_vars, excluded_values, sep = "="), collapse = ", "),
+      #FixedVars = paste(paste(excluded_vars, excluded_values, sep = ":"), collapse = ","),
       InteractionTerm = rownames(anova_results),
       PValue = `Pr(>F)`
     ) %>%
-    select(FixedVars, InteractionTerm, PValue, DependentName)
+    select(InteractionTerm, PValue, DependentName)
+  
+  # Add excluded variable levels
+  for (var in excluded_vars) {
+    anova_results[[var]] <- excluded_values[[var]]
+  }
   
   return(anova_results)
 }
 
 # Run ART ANOVA for all dependent variables and excluded combinations
-run_analysis <- function(dependent_vars, excluded_vars, file_prefix) {
+run_analysis <- function(dependent_vars, excluded_vars, output_file) {
   excluded_levels <- get_excluded_levels(data, excluded_vars)
 
   pb <- progress_bar$new(
@@ -159,7 +162,7 @@ run_analysis <- function(dependent_vars, excluded_vars, file_prefix) {
   for (dv_name in dependent_vars) {
     if (is.null(excluded_levels)) {
       # If no excluded variables, run directly
-      results[[dv_name]] <- perform_art_anova(dv_name, excluded_vars, list(), file_prefix)
+      results[[dv_name]] <- perform_art_anova(dv_name, excluded_vars, list())
     } else {
       for (i in seq_len(nrow(excluded_levels))) {
         excluded_values <- excluded_levels[i, ] %>% 
@@ -169,7 +172,7 @@ run_analysis <- function(dependent_vars, excluded_vars, file_prefix) {
         
         tryCatch({
           # Perform ART ANOVA
-          result <- perform_art_anova(dv_name, excluded_vars, excluded_values, file_prefix)
+          result <- perform_art_anova(dv_name, excluded_vars, excluded_values)
           if (!is.null(result)) {
             results <- append(results, list(result))
           }
@@ -185,7 +188,7 @@ run_analysis <- function(dependent_vars, excluded_vars, file_prefix) {
   
   # Combine results and write to file
   final_results <- bind_rows(results)
-  write.csv(final_results, file = paste0(file_prefix, ".csv"), row.names = FALSE)
+  write.csv(final_results, file = output_file, row.names = FALSE)
 }
 
 fix_string <- paste(
@@ -202,11 +205,11 @@ setting_string <- paste0(
 )
 
 # Output file path
-file_prefix <- paste0("/root/workspace/analyze/data/",
+output_file <- paste0("/root/workspace/analyze/data/",
   if (opt$bug2commit) "bug2commit" else "all",
   "/art_anova/",
   setting_string,
   '.csv')
 
 # Run the analysis
-run_analysis(selected_dependent_vars, excluded_vars, file_prefix)
+run_analysis(selected_dependent_vars, excluded_vars, output_file)

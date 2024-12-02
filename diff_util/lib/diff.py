@@ -63,7 +63,7 @@ class Diff_commit: # Class containg diff data of commit
 
             for src_path in self.diff_dict[commit_hash].keys():
                 print(f'src_path : {src_path}')
-                #self.diff_dict[commit_hash][src_path].self_print()
+                self.diff_dict[commit_hash][src_path].self_print()
 
 class Diff_commit_encode: # Class containg encoded diff data of commit
     class Diff_src: # Class containg diff data of source file

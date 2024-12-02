@@ -24,6 +24,76 @@ voting_functions = {
     (0, 'dense'): (lambda r: 1/r.dense_rank),
 }
 
+# Get metric dictionary for bug2commit
+# metric : mean rank, mean number of iterations
+def get_metric_dict(bug2commit=True):
+    savepath = f"/root/workspace/analyze/data/{'bug2commit' if bug2commit else 'all'}/metric_dict.pkl"
+
+    # If file already exists, read it
+    if os.path.isfile(savepath):
+        with open(savepath, 'rb') as file:
+            return pickle.load(file)
+    
+    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+    tot_metric_dict = dict()
+
+    # Iterate through projects
+    for project in tqdm(os.listdir(DIFF_DATA_DIR)):
+        [pid, vid] = project[:-1].split("-")
+        BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
+        project_dir = os.path.join(DIFF_DATA_DIR, project)
+
+        with open(os.path.join(project_dir, 'num_iters.pkl'), 'rb') as file:
+            num_iter_dict = pickle.load(file)
+    
+        # Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
+        fonte_scores_df = pd.read_hdf(os.path.join(project_dir, 'fonte_scores.hdf'))
+
+        # Iterate through extra scores of every settings
+        for setting, row in fonte_scores_df.iterrows():
+            if bug2commit: # Bug2Commit only case
+                if setting[0] != 'None' or setting[2] != '(\'add\', 0.0)':
+                    continue
+                metric_dict_key = tuple(option for ind, option in enumerate(tuple(setting)) if ind not in [0, 2])
+            
+            else: # Bug2Commit with Fonte
+                if setting[2] == '(\'add\', 1.0)' or setting[2] == '(\'add\', 0.0)':
+                    continue
+                metric_dict_key = tuple(setting)
+
+            commit_df = row['commit'].dropna()
+            score_df = row['vote'].dropna()
+            rank_df = score_df.rank(method='max', ascending=False)
+
+            # Index of the BIC
+            BIC_ind = commit_df.loc[commit_df == BIC].index[0]
+            BIC_rank = rank_df.loc[BIC_ind]
+
+            setting_tup = tuple(setting)
+            n_list = [1, 2, 3, 5, 10]
+
+            if metric_dict_key not in tot_metric_dict:
+                tot_metric_dict[metric_dict_key] = dict()
+                tot_metric_dict[metric_dict_key]['rank'] = 0
+                tot_metric_dict[metric_dict_key]['num_iters'] = 0
+                tot_metric_dict[metric_dict_key]['MRR'] = 0
+
+                for n in n_list:
+                    tot_metric_dict[metric_dict_key][f'acc@{n}'] = 0
+
+            tot_metric_dict[metric_dict_key]['rank'] += BIC_rank / 130
+            tot_metric_dict[metric_dict_key]['num_iters'] += num_iter_dict[setting_tup][1] / 130
+
+            tot_metric_dict[metric_dict_key]['MRR'] += 1 / (BIC_rank * 130)
+            for n in n_list:
+                if BIC_rank <= n:
+                    tot_metric_dict[metric_dict_key][f'acc@{n}'] += 1
+    
+    with open(savepath, 'wb') as file:
+        pickle.dump(tot_metric_dict, file)
+    
+    return tot_metric_dict
+
 def metrics_to_csv(bug2commit=True):
     savepath = f"/root/workspace/analyze/data/{'bug2commit' if bug2commit else 'all'}/metrics.csv"
 
@@ -127,7 +197,7 @@ if __name__ == "__main__":
     # Generate iteration data
     for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
         # Get BIC data
-        print(f'Working on {folder}')
+        print(f'Fonte_score_eval : Working on {folder}')
         [pid, vid] = folder[:-1].split("-")
         results_dict = score_eval_all(pid, vid, args.tool, args.formula, args.lamb, voting_functions[(args.alpha, args.tau)])
         results_df = pd.concat(results_dict, \
@@ -138,7 +208,7 @@ if __name__ == "__main__":
     # Generate iteration data
     num_iters_dict = dict()
     for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
-        print(f'Working on {folder}')
+        print(f'Weighted bisection : Working on {folder}')
         [pid, vid] = folder[:-1].split("-")
 
         result_dict = bisection_all(pid, vid)
@@ -146,5 +216,5 @@ if __name__ == "__main__":
         with open(os.path.join(DIFF_DATA_DIR, folder, 'num_iters.pkl'), 'wb') as file:
             pickle.dump(result_dict, file)
     
-    metrics_to_csv(False)
-    metrics_to_csv(True)
+    """metrics_to_csv(False)
+    metrics_to_csv(True)"""
