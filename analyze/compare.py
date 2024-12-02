@@ -220,9 +220,12 @@ if __name__ == "__main__":
     best_metric = tot_metric_dict[('score', 'False', 'True', 'True', 'True', 'del')]
     print(best_metric['MRR'], best_metric['acc@1'], best_metric['acc@2'], best_metric['acc@3'], best_metric['acc@5'], best_metric['acc@10'], best_metric['num_iters'])"""
 
-    #get_best_set_bug2commit(use_br=False)
+    get_best_set_bug2commit(use_br=False)
+    get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'False', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
+    
     #print('Original Fonte')
     #print('MRR : 0.5277061540997692, acc@1 : 47, acc@2 : 66, acc@3 : 85, acc@5 : 98, acc@10 : 110, # Iters : 3.5076923076923032')
-    #get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'False', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
-    #get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'False', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
-    compare_setting(setting1=('score', 'False', 'True', 'True', 'True', 'del'), setting2=('score', 'False', 'False', 'True', 'True', 'add'))
+    
+    get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'True', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
+    get_best_set_bug2commit(use_br=True)
+    #compare_setting(setting1=('score', 'False', 'True', 'True', 'True', 'del'), setting2=('score', 'False', 'False', 'True', 'True', 'add'))

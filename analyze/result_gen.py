@@ -195,7 +195,7 @@ if __name__ == "__main__":
     assert 0 <= args.lamb < 1
 
     # Generate iteration data
-    for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
+    """for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
         # Get BIC data
         print(f'Fonte_score_eval : Working on {folder}')
         [pid, vid] = folder[:-1].split("-")
@@ -203,18 +203,17 @@ if __name__ == "__main__":
         results_df = pd.concat(results_dict, \
             names=['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']).unstack()
         
-        results_df.to_hdf(os.path.join(DIFF_DATA_DIR, f'{folder}/fonte_scores.hdf'), key='data', mode='w')
+        results_df.to_hdf(os.path.join(DIFF_DATA_DIR, f'{folder}/fonte_scores.hdf'), key='data', mode='w')"""
     
     # Generate iteration data
-    num_iters_dict = dict()
+    """num_iters_dict = dict()
     for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
         print(f'Weighted bisection : Working on {folder}')
         [pid, vid] = folder[:-1].split("-")
-
         result_dict = bisection_all(pid, vid)
 
         with open(os.path.join(DIFF_DATA_DIR, folder, 'num_iters.pkl'), 'wb') as file:
-            pickle.dump(result_dict, file)
+            pickle.dump(result_dict, file)"""
     
-    """metrics_to_csv(False)
-    metrics_to_csv(True)"""
+    metrics_to_csv(False)
+    metrics_to_csv(True)

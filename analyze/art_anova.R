@@ -8,7 +8,7 @@ library(optparse)
 
 # Define command-line arguments
 option_list <- list(
-  make_option(c("-e", "--exclude"), type = "character", default = "", 
+  make_option(c("-e", "--exclude"), type = "character", default = "score_mode", 
               help = "Comma-separated list of independent variables to exclude"),
   make_option(c("-b", "--bug2commit"), type = "logical", default = TRUE, 
               help = "Use bug2commit only[default: TRUE]"),
