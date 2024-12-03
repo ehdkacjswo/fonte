@@ -134,7 +134,6 @@ if __name__ == "__main__":
             encode_res, vocab = encode_pid(pid=pid, vid=vid, stage2=stage2, use_stopword=use_stopword)
             encode_dict[(stage2, use_stopword)] = encode_res
             vocab_dict[(stage2, use_stopword)] = vocab
-            #print(encode_dict)
 
         diff_encode_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b/encode')
         os.makedirs(diff_encode_dir, exist_ok=True)

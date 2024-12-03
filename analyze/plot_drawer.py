@@ -59,7 +59,9 @@ def draw_plot(bug2commit=False, fix={'use_br':'False', 'stage2':'True', 'use_sto
     savepath = os.path.join(f"/root/workspace/analyze/plot", f"{'bug2commit' if bug2commit else 'all'}", fixed_string)
     
     for param, metric_dict in plot_dict.items():
-        for metric, option_dict in metric_dict.items():
+        #for metric, option_dict in metric_dict.items():
+        for metric in ['MRR', 'num_iters']:
+            option_dict = metric_dict[metric]
             label_list = option_dict.keys()
             data = [option_dict[label] for label in label_list]
 
@@ -267,4 +269,4 @@ def compare_all_simple():
             pickle.dump(metric_dict, file)
 
 if __name__ == "__main__":
-    draw_plot(bug2commit=False)
+    draw_plot()

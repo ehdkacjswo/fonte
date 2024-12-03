@@ -47,7 +47,7 @@ def get_best_set_bug2commit(use_br=True):
 
 # fix : use_stopword and 
 def get_best_set(bug2commit=False, \
-    fix={'HSFL':'False', 'use_br':'True', 'stage2':'True', 'use_stopword':'True'}, exclude=[]):
+    fix={'HSFL':'False', 'use_br':'False', 'stage2':'True', 'use_stopword':'True'}, exclude=[]):
 
     # 대상 var이 한개인 경우는 작동하지 않는다
     # 현재 exclude 고려 X
@@ -136,22 +136,22 @@ def get_best_set(bug2commit=False, \
                 #print(setting_tup)
                 best_set.add(setting_tup)
 
-                if related_set == setting_set:
-                    print(f'King!!! {setting_tup}')
-
         best_set_dict[metric] = best_set
     
     best_set = best_set_dict['rank'] & best_set_dict['num_iters']
+    best_set = best_set_dict['num_iters']
+    #print(best_set_dict['rank'])
+    #print(best_set_dict['num_iters'])
     best_list = [(tup, tot_metric_dict[tup]['MRR'], -tot_metric_dict[tup]['num_iters']) for tup in best_set]
     best_list.sort(key=lambda x : x[1:], reverse=True)
 
     pareto_list = [best_list[0]]
     for (tup, mrr, num_iters) in best_list[1:]:
-        if pareto_list[-1][1] == mrr: # Same rank
-            if pareto_list[-1][2] == num_iters: # Same metrics
+        if pareto_list[-1][1] == mrr: # Same MRR
+            if pareto_list[-1][2] == num_iters: # Same metrics (Elsewise worse metric)
                 pareto_list.append((tup, mrr, num_iters))
             
-        elif pareto_list[-1][2] < num_iters: # New setting has worse rank but better number of iterations
+        elif pareto_list[-1][2] < num_iters: # New setting has worse MRR but better number of iterations
             pareto_list.append((tup, mrr, num_iters))
 
     print(param_list)
@@ -209,7 +209,6 @@ def compare_setting(setting1, setting2, bug2commit=True):
 # ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
 if __name__ == "__main__":
     # ['score_mode', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
-    tot_metric_dict = get_metric_dict(bug2commit=False)
     """org_bug2commit_metric = tot_metric_dict[('score', 'False', 'False', 'True', 'True', 'add')]
 
     print('Original Bug2Commit without bug report')
@@ -220,12 +219,12 @@ if __name__ == "__main__":
     best_metric = tot_metric_dict[('score', 'False', 'True', 'True', 'True', 'del')]
     print(best_metric['MRR'], best_metric['acc@1'], best_metric['acc@2'], best_metric['acc@3'], best_metric['acc@5'], best_metric['acc@10'], best_metric['num_iters'])"""
 
-    get_best_set_bug2commit(use_br=False)
-    get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'False', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
+    get_best_set_bug2commit(use_br=True)
+    get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'True', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
     
     #print('Original Fonte')
     #print('MRR : 0.5277061540997692, acc@1 : 47, acc@2 : 66, acc@3 : 85, acc@5 : 98, acc@10 : 110, # Iters : 3.5076923076923032')
     
-    get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'True', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
-    get_best_set_bug2commit(use_br=True)
+    #get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'True', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
+    #get_best_set_bug2commit(use_br=True)
     #compare_setting(setting1=('score', 'False', 'True', 'True', 'True', 'del'), setting2=('score', 'False', 'False', 'True', 'True', 'add'))

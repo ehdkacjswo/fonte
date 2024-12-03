@@ -8,9 +8,9 @@ library(optparse)
 
 # Define command-line arguments
 option_list <- list(
-  make_option(c("-e", "--exclude"), type = "character", default = "score_mode", 
+  make_option(c("-e", "--exclude"), type = "character", default = "", 
               help = "Comma-separated list of independent variables to exclude"),
-  make_option(c("-b", "--bug2commit"), type = "logical", default = TRUE, 
+  make_option(c("-b", "--bug2commit"), type = "logical", default = FALSE, 
               help = "Use bug2commit only[default: TRUE]"),
   make_option(c("-f", "--fix"), type = "character", default = "use_stopword:True,stage2:True,use_br:False,HSFL:False", 
               help = "Comma-separated list of parameters and values to fix (e.g., use_stopword:False,stage2:True)")

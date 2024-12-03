@@ -8,7 +8,7 @@ from diff import *
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
 
-def test_diff(pid='Closure', vid='10'):
+def test_diff(pid='Cli', vid='29'):
     with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b/diff.pkl'), 'rb') as file:
         diff_data = pkl.load(file)
     

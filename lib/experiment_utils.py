@@ -448,7 +448,7 @@ def score_eval_all(pid, vid, tool, formula, decay, voting_func,
     extra_score_list = list(itertools.product(use_br_list, use_diff_list, use_stopword_list, adddel_list))
 
     score_mode_list = ['score', 'rank', 'both']
-    ensemble_list = ['mul', ('add', 0.0), ('add', 0.1), ('add', 0.2), ('add', 0.3), ('add', 0.4), \
+    ensemble_list = ['extra', ('add', 0.0), ('add', 0.1), ('add', 0.2), ('add', 0.3), ('add', 0.4), \
         ('add', 0.5), ('add', 0.6), ('add', 0.7), ('add', 0.8), ('add', 0.9), ('add', 1.0)]
     score_param_list = list(itertools.product(score_mode_list, ensemble_list))
 
@@ -553,19 +553,18 @@ def score_eval_all(pid, vid, tool, formula, decay, voting_func,
                 rank_df = extra_score_df['rank']
 
                 for (score_mode, ensemble) in score_param_list:
-                    result_key = (str(HSFL), str(score_mode), str(ensemble), str(use_br), str(use_diff), \
-                        str(stage2), str(use_stopword), str(adddel))
+                    if ensemble == 'extra': # Only Bug2Commit
+                        result_key = ('None', str(score_mode), str(ensemble), str(use_br), str(use_diff), str(stage2), str(use_stopword), str(adddel))
 
-                    if ensemble != 'mul':
-                        if ensemble[1] == 1.0: # Use only original score
-                            result_key = (str(HSFL), 'None', str(ensemble), 'None', 'None', str(stage2), 'None', 'None')
+                    elif ensemble[1] == 0.0: # Use only original score
+                        result_key = (str(HSFL), 'None', str(ensemble), 'None', 'None', str(stage2), 'None', 'None')
 
-                        elif ensemble[1] == 0.0: # Use only extra score
-                            result_key = ('None', str(score_mode), str(ensemble), str(use_br), str(use_diff), \
-                                str(stage2), str(use_stopword), str(adddel))
-                        
-                        if result_key in result_dict: # Already done
-                            continue
+                    else: # Use both
+                        result_key = (str(HSFL), str(score_mode), str(ensemble), str(use_br), str(use_diff), \
+                            str(stage2), str(use_stopword), str(adddel))
+                    
+                    if result_key in result_dict: # Already visited
+                        continue
 
                     vote_rows = []
                 
@@ -582,10 +581,10 @@ def score_eval_all(pid, vid, tool, formula, decay, voting_func,
                             score = score_df.loc[index] / rank_df.loc[index]
                         
                         # Ensemble the scores based on ensemble method
-                        if ensemble == 'mul':
-                            vote_rows.append((commit, score * vote))
+                        if ensemble == 'extra':
+                            vote_rows.append((commit, score))
                         else:
-                            vote_rows.append((commit, vote * ensemble[1] + score * (1 - ensemble[1])))
+                            vote_rows.append((commit, vote * (1 + ensemble[1] * score)))
 
                     vote_df = pd.DataFrame(data=vote_rows, columns=["commit", "vote"])
                     vote_df.sort_values(by="vote", ascending=False, inplace=True)
@@ -624,18 +623,11 @@ def bisection_all(pid, vid, tool='git'):
         C_BIC = [c for c in all_commits if c in commit_df.values and c not in style_change_commits]
         scores = [vote_df.loc[commit_df.loc[commit_df == c].index[0]] for c in C_BIC]
 
-        # Score of BIC is zero
-        num_iters = (weighted_bisection(C_BIC, scores, BIC, ignore_zero=True), weighted_bisection(C_BIC, scores, BIC, ignore_zero=False))
-        if num_iters[0] is None:
-            with open('/root/workspace/eror.txt', 'a') as file:
-                a = tuple(index)
-                file.write(f'{pid}-{vid}b, True : {a}\n')
-        
-        if num_iters[1] is None:
-            with open('/root/workspace/eror.txt', 'a') as file:
-                a = tuple(index)
-                file.write(f'{pid}-{vid}b, False : {a}\n')
+        key = tuple(index)
 
-        num_iters_dict[tuple(index)] = num_iters
+        if key[2] == 'extra':
+            num_iters_dict[tuple(index)] = weighted_bisection(C_BIC, scores, BIC, ignore_zero=False)
+        else:
+            num_iters_dict[tuple(index)] = weighted_bisection(C_BIC, scores, BIC, ignore_zero=True)
     
     return num_iters_dict

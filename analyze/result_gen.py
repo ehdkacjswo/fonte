@@ -52,12 +52,12 @@ def get_metric_dict(bug2commit=True):
         # Iterate through extra scores of every settings
         for setting, row in fonte_scores_df.iterrows():
             if bug2commit: # Bug2Commit only case
-                if setting[0] != 'None' or setting[2] != '(\'add\', 0.0)':
+                if setting[2] != 'extra':
                     continue
                 metric_dict_key = tuple(option for ind, option in enumerate(tuple(setting)) if ind not in [0, 2])
             
             else: # Bug2Commit with Fonte
-                if setting[2] == '(\'add\', 1.0)' or setting[2] == '(\'add\', 0.0)':
+                if setting[2] in ['extra', '(\'add\', 0.0)']:
                     continue
                 metric_dict_key = tuple(setting)
 
@@ -82,7 +82,7 @@ def get_metric_dict(bug2commit=True):
                     tot_metric_dict[metric_dict_key][f'acc@{n}'] = 0
 
             tot_metric_dict[metric_dict_key]['rank'] += BIC_rank / 130
-            tot_metric_dict[metric_dict_key]['num_iters'] += num_iter_dict[setting_tup][1] / 130
+            tot_metric_dict[metric_dict_key]['num_iters'] += num_iter_dict[setting_tup] / 130
 
             tot_metric_dict[metric_dict_key]['MRR'] += 1 / (BIC_rank * 130)
             for n in n_list:
@@ -121,10 +121,10 @@ def metrics_to_csv(bug2commit=True):
         for setting, row in fonte_scores_df.iterrows():
 
             # Consider Bug2Commit score only cases
-            if bug2commit and setting[2] != '(\'add\', 0.0)':
+            if bug2commit and setting[2] != 'extra':
                 continue
             
-            if not bug2commit and (setting[2] == '(\'add\', 1.0)' or setting[2] == '(\'add\', 0.0)'):
+            if not bug2commit and (setting[2] in ['extra', '(\'add\', 0.0)']):
                 continue
 
             commit_df = row['commit'].dropna()
@@ -135,7 +135,7 @@ def metrics_to_csv(bug2commit=True):
             BIC_ind = commit_df.loc[commit_df == BIC].index[0]
             BIC_rank = rank_df.loc[BIC_ind]
             
-            if bug2commit:
+            if bug2commit: # Ignore HSFL and ensemble
                 setting_tup = tuple(option for ind, option in enumerate(tuple(setting)) if ind not in [0, 2])
             else:
                 setting_tup = tuple(setting)
@@ -146,7 +146,7 @@ def metrics_to_csv(bug2commit=True):
                 print('ERRORRRRR!!!!!!!')
             
             metric_dict[setting_tup]['rank'] = int(BIC_rank)
-            metric_dict[setting_tup]['num_iters'] = num_iter_dict[tuple(setting)][1]
+            metric_dict[setting_tup]['num_iters'] = num_iter_dict[tuple(setting)]
         
         project_metric_dict[project] = metric_dict
     
@@ -194,7 +194,8 @@ if __name__ == "__main__":
     assert args.tau in ["max", "dense"]
     assert 0 <= args.lamb < 1
 
-    # Generate iteration data
+    # Generate score data
+    #print('Generating score data')
     """for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
         # Get BIC data
         print(f'Fonte_score_eval : Working on {folder}')
@@ -203,10 +204,11 @@ if __name__ == "__main__":
         results_df = pd.concat(results_dict, \
             names=['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']).unstack()
         
-        results_df.to_hdf(os.path.join(DIFF_DATA_DIR, f'{folder}/fonte_scores.hdf'), key='data', mode='w')"""
+        results_df.to_hdf(os.path.join(DIFF_DATA_DIR, f'{folder}/fonte_scores.hdf'), key='data', mode='w')
     
     # Generate iteration data
-    """num_iters_dict = dict()
+    num_iters_dict = dict()
+    #print('Generating iteration data')
     for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
         print(f'Weighted bisection : Working on {folder}')
         [pid, vid] = folder[:-1].split("-")
@@ -215,5 +217,6 @@ if __name__ == "__main__":
         with open(os.path.join(DIFF_DATA_DIR, folder, 'num_iters.pkl'), 'wb') as file:
             pickle.dump(result_dict, file)"""
     
+    # Generating csv file
     metrics_to_csv(False)
     metrics_to_csv(True)

@@ -156,8 +156,8 @@ run_analysis <- function(dependent_vars, excluded_vars, output_file) {
           setting_2 = sub(".* - ", "", contrast),  # Extract second option
           metric = dv_name
         ) %>%
-        select(p.value, setting_1, setting_2, metric) #%>%
-        #filter(p.value < 0.05)
+        select(p.value, setting_1, setting_2, metric) %>%
+        filter(p.value < 0.05)
 
       all_results <- append(all_results, list(significant_contrasts))
       pb$tick(tokens = list(dv = dv_name, levels = "none"))

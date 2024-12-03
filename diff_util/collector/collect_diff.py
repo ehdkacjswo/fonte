@@ -54,13 +54,13 @@ def parse_diff(diff_txt, diff_commit, src_path):
     diff_lines = diff_txt.splitlines()
 
     for line in diff_lines:
+        print(line)
         # Match commit info
         commit_match = re.match(commit_regex, line)
         if commit_match:
             commit = commit_match.group(1)
             commit_hash = commit[:7]
             diff_commit.add_commit(commit_hash, src_path)
-            #print(f'Adding commit {commit_hash}:{src_path}')
 
             old_file_path = None
             new_file_path = None
@@ -147,7 +147,6 @@ if __name__ == "__main__":
     # For each change info, run git log and parse the result
     for src_path, ranges in range_dict.items():
         for begin_line, end_line in ranges:
-            #print(f'Parsing {src_path}:{begin_line},{end_line}\n')
             cmd = COMMIT_LOG_CMD.format(begin_line, end_line, src_path)
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
             stdout, _ = p.communicate()
@@ -159,8 +158,8 @@ if __name__ == "__main__":
                 raise e
         
     # Save the parsed result
-    savedir = f'/root/workspace/data/Defects4J/diff/{args.project}-{args.version}b'
+    """savedir = f'/root/workspace/data/Defects4J/diff/{args.project}-{args.version}b'
     os.makedirs(savedir, exist_ok=True)
 
     with open(os.path.join(savedir, 'diff.pkl'), 'wb') as file:
-        pickle.dump(diff_commit, file)
+        pickle.dump(diff_commit, file)"""
