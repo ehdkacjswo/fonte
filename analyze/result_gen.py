@@ -26,6 +26,46 @@ voting_functions = {
 
 # Get metric dictionary for bug2commit
 # metric : mean rank, mean number of iterations
+def org_fonte_metric():
+    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+
+    fonte_setting = ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None')
+    fonte_metric_dict = {'MRR' : 0, 'num_iters' : 0, 'acc@1' : 0, 'acc@2' : 0, 'acc@3' : 0, 'acc@5' : 0, 'acc@10' : 0}
+
+    # Iterate through projects
+    for project in os.listdir(DIFF_DATA_DIR):
+        [pid, vid] = project[:-1].split("-")
+        BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
+        project_dir = os.path.join(DIFF_DATA_DIR, project)
+
+        with open(os.path.join(project_dir, 'num_iters.pkl'), 'rb') as file:
+            num_iter_dict = pickle.load(file)
+    
+        # Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
+        fonte_scores_df = pd.read_hdf(os.path.join(project_dir, 'fonte_scores.hdf'))
+
+        row = fonte_scores_df.loc[fonte_setting]
+
+        commit_df = row['commit'].dropna()
+        score_df = row['vote'].dropna()
+        rank_df = score_df.rank(method='max', ascending=False)
+
+        # Index of the BIC
+        BIC_ind = commit_df.loc[commit_df == BIC].index[0]
+        BIC_rank = rank_df.loc[BIC_ind]
+
+        n_list = [1, 2, 3, 5, 10]
+
+        fonte_metric_dict['num_iters'] += num_iter_dict[fonte_setting] / 130
+        fonte_metric_dict['MRR'] += 1 / (BIC_rank * 130)
+        for n in n_list:
+            if BIC_rank <= n:
+                fonte_metric_dict[f'acc@{n}'] += 1
+    
+    return fonte_metric_dict
+
+# Get metric dictionary for bug2commit
+# metric : mean rank, mean number of iterations
 def get_metric_dict(bug2commit=True):
     savepath = f"/root/workspace/analyze/data/{'bug2commit' if bug2commit else 'all'}/metric_dict.pkl"
 
