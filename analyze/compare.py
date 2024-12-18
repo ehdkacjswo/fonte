@@ -141,6 +141,9 @@ def get_best_set(bug2commit=False, \
         if len(best_set) == 0:
             print(f'No setting with significantly better {metric}')
 
+    if len(best_set_dict['rank']) == 0 and len(best_set_dict['num_iters']) == 0:
+        # Get all settings
+        return
     best_set = best_set_dict['rank'] & best_set_dict['num_iters']
     best_set = best_set_dict['num_iters']
     #print(best_set_dict['rank'])

@@ -7,6 +7,7 @@ import argparse
 import subprocess
 import sys
 import pickle
+import tempfile
 
 import pandas as pd
 import git # GitPython
@@ -17,6 +18,8 @@ sys.path.append('/root/workspace/diff_util/lib/')
 from diff import Diff_commit
 
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
+
+
 
 # Get range of suspicious parts
 # Return = {src_path : set(line_start, line_end)}
@@ -143,20 +146,29 @@ if __name__ == "__main__":
 
     range_dict = get_range_dict(args.project, args.version)
     COMMIT_LOG_CMD = 'git log -M -C -L {0},{1}:{2}'
-    diff_commit = Diff_commit()
 
-    # For each change info, run git log and parse the result
+    # Build list of command line arguments
     for src_path, ranges in range_dict.items():
-        for begin_line, end_line in ranges:
-            cmd = COMMIT_LOG_CMD.format(begin_line, end_line, src_path)
-            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-            stdout, _ = p.communicate()
+        cmd_args = ['log', '-M', '-C']
 
-            try:
-                parse_diff(stdout.decode(encoding='utf-8', errors='ignore'), diff_commit, src_path)
-            except UnicodeDecodeError as e:
-                print(cmd)
-                raise e
+        for begin_line, end_line in ranges:
+            cmd_args.append(f'-L {begin_line},{end_line}:{src_path}')
+
+        # Create temporary file with git arguments
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix=".txt") as temp_file:
+            temp_file_name = temp_file.name
+            
+            temp_file.write("\n".join(cmd_args))
+
+        cmd = COMMIT_LOG_CMD.format(begin_line, end_line, src_path)
+        p = subprocess.Popen(f'git f@{temp_file_name}', shell=True, stdout=subprocess.PIPE)
+        stdout, _ = p.communicate()
+
+        try:
+            parse_diff(stdout.decode(encoding='utf-8', errors='ignore'), src_path)
+        except UnicodeDecodeError as e:
+            print(cmd)
+            raise e
         
     # Save the parsed result
     """savedir = f'/root/workspace/data/Defects4J/diff/{args.project}-{args.version}b'

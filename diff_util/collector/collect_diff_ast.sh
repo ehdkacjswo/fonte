@@ -27,6 +27,9 @@ for dir in "$BASE_DIR"/*/; do
     echo "Directory name $dir_name does not match the pattern."
   fi
 
+  project="Closure"
+  version="21"
+
   tmpdir=/tmp/${project}-${version}b/
   faulty_version=$(grep ^${version}, /defects4j/framework/projects/${project}/commit-db | cut -d',' -f2)
   #source $HOME/.sdkman/bin/sdkman-init.sh && sdk use java 8.0.302-open
@@ -60,12 +63,13 @@ for dir in "$BASE_DIR"/*/; do
   echo "Reset to the actual buggy version $faulty_version  OK"
 
   # Collect relative diff
-  python /root/workspace/diff_util/collector/collect_diff.py -p $project -v $version
+  python /root/workspace/diff_util/collector/collect_diff_ast.py -p $project -v $version
 
   # Clean up the tmp directory
   rm -rf $tmpdir
   echo "Cleaning up $tmpdir"
   cd "$original_cwd"
+  exit 1
 done
 
   
