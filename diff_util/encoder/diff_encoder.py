@@ -47,12 +47,12 @@ def encode_pid(pid, vid, stage2, use_stopword):
         add_data = False # Add the data only when the commit has modified relative files
 
         for src_path, src_diff in commit_diff.items(): # Iterate through source files editted by commit
-            if (commit_hash, src_path) in excluded: # Exclude style change
-                continue
-            
-            add_data = True
-            
             for (before_src_path, after_src_path), [addition, deletion] in src_diff.diff_dict.items():
+                if (commit_hash, after_src_path) in excluded: # Exclude style change
+                    continue
+                
+                add_data = True
+
                 addition_content_dict = addition_dict.get(after_src_path, dict())
                 deletion_content_dict = deletion_dict.get(before_src_path, dict())
 
