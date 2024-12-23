@@ -236,7 +236,7 @@ if __name__ == "__main__":
 
     # Generate score data
     #print('Generating score data')
-    """for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
+    for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
         # Get BIC data
         print(f'Fonte_score_eval : Working on {folder}')
         [pid, vid] = folder[:-1].split("-")
@@ -255,7 +255,7 @@ if __name__ == "__main__":
         result_dict = bisection_all(pid, vid)
 
         with open(os.path.join(DIFF_DATA_DIR, folder, 'num_iters.pkl'), 'wb') as file:
-            pickle.dump(result_dict, file)"""
+            pickle.dump(result_dict, file)
     
     # Generating csv file
     metrics_to_csv(False)

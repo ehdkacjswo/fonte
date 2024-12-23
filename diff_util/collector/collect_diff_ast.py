@@ -52,7 +52,7 @@ class Diff:
         self.cur_after_line = None
 
         if commit_hash not in self.diff_dict:
-            self.diff_dict[commit_hash] = [dict(), dict()]
+            self.diff_dict[commit_hash] = {'gumtree' : dict(), 'git' : dict()}
     
     # Set path info (only java file allowed)
     def set_src_path(self, before_src_path, after_src_path):
