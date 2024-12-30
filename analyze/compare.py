@@ -141,13 +141,21 @@ def get_best_set(bug2commit=False, \
         if len(best_set) == 0:
             print(f'No setting with significantly better {metric}')
 
+    # Every settings are statistically identical
     if len(best_set_dict['rank']) == 0 and len(best_set_dict['num_iters']) == 0:
         # Get all settings
         return
-    best_set = best_set_dict['rank'] & best_set_dict['num_iters']
-    best_set = best_set_dict['num_iters']
-    #print(best_set_dict['rank'])
-    #print(best_set_dict['num_iters'])
+    
+    # No setting is 
+    elif len(best_set_dict['rank']) == 0:
+        best_set = best_set_dict['num_iters']
+    
+    elif len(best_set_dict['num_iters']) == 0:
+        best_set = best_set_dict['rank']
+    
+    else:
+        best_set = best_set_dict['rank'] & best_set_dict['num_iters']
+
     best_list = [(tup, tot_metric_dict[tup]['MRR'], -tot_metric_dict[tup]['num_iters']) for tup in best_set]
     best_list.sort(key=lambda x : x[1:], reverse=True)
 
@@ -243,6 +251,7 @@ if __name__ == "__main__":
 
     print('Original Fonte without bug report')
     print_metric(org_fonte_metric())
+    print_metric(fonte_metric_dict[('False', 'rank', "('add', 1.0)", 'False', 'F', 'True')])
     print('New Fonte without bug report')
     get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'False', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
     compare_setting(('False', 'rank', "('add', 1.0)", 'False', 'True', 'True', 'True', 'all-sep'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)

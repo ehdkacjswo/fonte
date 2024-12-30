@@ -15,10 +15,10 @@ import git # GitPython
 from tabulate import tabulate
 from nltk.corpus import stopwords
 
-sys.path.append('/root/workspace/diff_util/lib/')
-from diff import Diff_commit
-
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
+commit_regex = r'commit (\w{40})'
+file_path_regex = r'^diff --git a/(.*) b/(.*)$'
+diff_block_regex = r'@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@'
 
 # Get range of suspicious parts
 # Return = {src_path : set(line_start, line_end)}
@@ -40,125 +40,140 @@ def get_range_dict(pid, vid, tool='git'):
 
 class Diff:
     def __init__(self, diff_dict=dict()):
+        self.range_dict = dict()
+        self.gumtree_dict = dict()
+        self.git_dict = dict()
+        
         self.diff_dict = diff_dict
-        self.cur_commit_hash = None
-    
-    # Set current commit hash
-    def set_commit_hash(self, commit_hash):
-        self.cur_commit_hash = commit_hash
-        self.before_src_path = None
-        self.after_src_path = None
+        self.commit_hash = None
+        self.path_tup = None
         self.cur_before_line = None
-        self.cur_after_line = None
+    
+    # Set current commit
+    def set_commit_hash(self, line):
+        commit_match = re.match(commit_regex, line) # Match commit info
+        if commit_match:
+            commit = commit_match.group(1)
+            self.commit_hash = commit[:7]
+        else:
+            return False
 
-        if commit_hash not in self.diff_dict:
-            self.diff_dict[commit_hash] = {'gumtree' : dict(), 'git' : dict()}
+        # Initialize info
+        self.path_tup = None
+        self.cur_before_line = None
+
+        # Add commit
+        if self.commit_hash not in self.range_dict:
+            self.range_dict[self.commit_hash] = dict()
+            self.gumtree_dict[self.commit_hash] = dict()
+            self.git_dict[self.commit_hash] = dict()
+        
+        return True
     
     # Set path info (only java file allowed)
-    def set_src_path(self, before_src_path, after_src_path):
-        if before_src_path.endswith('.java') and after_src_path.endswith('.java'):
-            self.before_src_path = before_src_path
-            self.after_src_path = after_src_path
+    def set_src_path(self, line):
+        if self.commit_hash is None: # commit has to be defined
+            return True
+        
+        # Match file paths
+        file_match = re.match(file_path_regex, line)
+        if file_match:
+            before_src_path = file_match.group(1)
+            after_src_path = file_match.group(2)
         else:
-            self.before_src_path = None
-            self.after_src_path = None
+            return False
 
         self.cur_before_line = None
-        self.cur_after_line = None
+
+        # Ignore non-java file
+        if not before_src_path.endswith('.java') or not after_src_path.endswith('.java'):
+            self.path_tup = None
+            return True
+
+        # Set before/after path info
+        self.path_tup = (before_src_path, after_src_path)
+
+        if self.path_tup not in self.range_dict[self.commit_hash]:
+            self.range_dict[self.commit_hash][self.path_tup] = {'addition' : IntervalTree(), 'deletion' : IntervalTree()}
+            self.gumtree_dict[self.commit_hash][self.path_tup] = {'addition' : dict(), 'deletion' : dict()}
+            self.git_dict[self.commit_hash][self.path_tup] = {'addition' : dict(), 'deletion' : dict()}
+        
+        return True
     
     # Set line info
-    def set_line_num(self, cur_before_line, num_before_line, cur_after_line, num_after_line):
-        self.cur_before_line = cur_before_line
-        self.num_before_line = num_before_line
-        self.cur_after_line = cur_after_line
-        self.num_after_line = num_after_line
+    def set_line_num(self, line):
+        if self.path_tup is None: # Before/after path has to be defined
+            return True
+        
+        # Match line info
+        line_match = re.match(diff_block_regex, line)
+        if line_match:
+            self.cur_before_line = int(line_match.group(1))
+            self.num_before_line = 1 if line_match.group(2) is None else int(line_match.group(2))
+            self.cur_after_line = int(line_match.group(3))
+            self.num_after_line = 1 if line_match.group(4) is None else int(line_match.group(4))
+        else:
+            return False
 
         # Add range info
-        if num_before_line > 0:
+        if self.num_before_line > 0:
+            self.range_dict[self.commit_hash][self.path_tup]['deletion']\
+                [self.cur_before_line : self.cur_before_line + self.num_before_line] = True
+        
+        if self.num_after_line > 0:
+            self.range_dict[self.commit_hash][self.path_tup]['addition']\
+                [self.cur_after_line : self.cur_after_line + self.num_after_line] = True
+        
+        return True
+    
+    def get_git_diff(self, line):
+        if self.cur_before_line is None: # Line info has to be defined
+            return
+                
+        # Deleted line
+        if line.startswith('-'):
+            if line.startswith('---'): # File path
+                return
+    
+            line = line[1:].strip()
+
+            self.git_dict[self.commit_hash][self.path_tup]['deletion'][self.cur_before_line] = line
+            self.cur_before_line += 1
             
+        # Added line
+        elif line.startswith('+'):
+            if line.startswith('+++'): # File path
+                return
+            
+            line = line[1:].strip()
+
+            self.git_dict[self.commit_hash][self.path_tup]['addition'][self.cur_after_line] = line
+            self.cur_after_line += 1
+                
+        # Unchanged line
+        else:
+            self.cur_before_line += 1
+            self.cur_after_line += 1
+        
+        return     
             
     # Parse the diff text
     # Return format : [[commit, before_src_path, after_src_path, line, content]]
     def parse_diff(self, diff_txt):
-        # Regex to find info
-        commit_regex = r'commit (\w{40})'
-        file_path_regex = r'^diff --git a/(.*) b/(.*)$'
-        diff_block_regex = r'@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@'
-
-        commit_hash = None
-        old_file_path = None
-        new_file_path = None
-        cur_old_line = None
-        new_old_line = None
-
-        #commit_set = set() # Check multiple commits in one command
         diff_lines = diff_txt.splitlines()
 
         for line in diff_lines:
-            # Match commit info
-            commit_match = re.match(commit_regex, line)
-            if commit_match:
-                commit = commit_match.group(1)
-                self.set_commit_hash(commit[:7])
-                continue
-
-            # Commit has to be identified
-            if self.cur_commit_hash is None:
+            if self.set_commit_hash(line): # Match commit info
                 continue
             
-            # Match file paths
-            file_match = re.match(file_path_regex, line)
-            if file_match:
-                before_src_path = file_match.group(1)
-                after_src_path = file_match.group(2)
-                self.set_src_path(before_src_path, after_src_path)
+            if self.set_src_path(line):
                 continue
             
-            # Ignore non-java file
-            if self.before_src_path is None or self.after_src_path is None:
+            if self.set_line_num(line):
                 continue
 
-            # Match line numbers
-            line_match = re.match(diff_block_regex, line)
-            if line_match:
-                cur_before_line = int(line_match.group(1))
-                num_before_line = 1 if line_match.group(2) is None else int(line_match.group(2))
-                cur_after_line = int(line_match.group(3))
-                num_after_line = 1 if line_match.group(4) is None else int(line_match.group(4))
-                self.set_line_num(cur_before_line, num_before_line, cur_after_line, num_after_line)
-                continue
+            self.get_git_diff(line)
             
-            # Ignore meaningless line (Ex index...)
-            if cur_old_line is None or cur_new_line is None:
-                continue
-                    
-            # Deleted line
-            if line.startswith('-'):
-                if line.startswith('---'):
-                    continue
-        
-                line = line[1:].strip()
-
-                #diff_commit.add_diff(commit_hash, src_path, old_file_path, new_file_path, cur_old_line, line, 'del')
-                print('del')
-                cur_old_line += 1
-                
-            # Added line
-            elif line.startswith('+'):
-                if line.startswith('+++'):
-                    continue
-                
-                line = line[1:].strip()
-
-                #diff_commit.add_diff(commit_hash, src_path, old_file_path, new_file_path, cur_new_line, line, 'add')
-                print('add')
-                cur_new_line += 1
-                    
-            # Unchanged line
-            else:
-                cur_old_line += 1
-                cur_new_line += 1
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compute commit scores")
     parser.add_argument('--project', '-p', type=str, default="Closure",
@@ -174,6 +189,8 @@ if __name__ == "__main__":
     range_dict = get_range_dict(args.project, args.version)
     COMMIT_LOG_CMD = 'git log -M -C -L {0},{1}:{2}'
 
+    diff = Diff()
+
     # For each change info, run git log and parse the result
     for src_path, ranges in range_dict.items():
         for begin_line, end_line in ranges:
@@ -182,10 +199,13 @@ if __name__ == "__main__":
             stdout, _ = p.communicate()
 
             try:
-                parse_diff(stdout.decode(encoding='utf-8', errors='ignore'))
+                diff.parse_diff(stdout.decode(encoding='utf-8', errors='ignore'))
             except UnicodeDecodeError as e:
                 print(cmd)
                 raise e
+    
+    print(diff.range_dict)
+    #print(diff.git_dict)
         
     # Save the parsed result
     """savedir = f'/root/workspace/data/Defects4J/diff/{args.project}-{args.version}b'

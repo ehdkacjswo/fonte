@@ -95,7 +95,7 @@ def gumtree_diff(dir_name='/home/coinse/doam/fonte', old_file='old.java', new_fi
             lines = file.readlines()
         
         for line in lines:
-            token_ranges[-1].append((token_ranges[-1][1] + 1, token_ranges[-1][1] + len(line)))
+            token_ranges[-1].append((token_ranges[-1][-1][1] + 1, token_ranges[-1][-1][1] + len(line)))
             
     
     deletion = []
