@@ -251,9 +251,10 @@ if __name__ == "__main__":
 
     print('Original Fonte without bug report')
     print_metric(org_fonte_metric())
-    print_metric(fonte_metric_dict[('False', 'rank', "('add', 1.0)", 'False', 'F', 'True')])
+    #print_metric(fonte_metric_dict[('False', 'rank', "('add', 1.0)", 'False', 'False', 'True')])
     print('New Fonte without bug report')
-    get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'False', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
+    #get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'False', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
+    get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'False', 'stage2':'skip', 'use_stopword':'True'}, exclude=[])
     compare_setting(('False', 'rank', "('add', 1.0)", 'False', 'True', 'True', 'True', 'all-sep'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
     compare_setting(('False', 'rank', "('add', 1.0)", 'False', 'True', 'True', 'True', 'del'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
     print('New Fonte with bug report')

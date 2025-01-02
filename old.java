@@ -70,7 +70,7 @@ import java.util.Set;
 class PrototypeObjectType extends ObjectType {
   private static final long serialVersionUID = 1L;
 
-  private final String className;
+  private final String classNames;
   private final Map<String, Property> properties;
   private final boolean nativeType;
 

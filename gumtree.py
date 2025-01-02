@@ -77,7 +77,7 @@ def gumtree_diff(dir_name='/home/coinse/doam/fonte', old_file='old.java', new_fi
     token_ranges = []
 
     for filename in target_files:
-        cmd = parse_cmd.format(dir_name, old_file)
+        cmd = parse_cmd.format(dir_name, filename)
 
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         stdout, _ = p.communicate()
@@ -96,6 +96,9 @@ def gumtree_diff(dir_name='/home/coinse/doam/fonte', old_file='old.java', new_fi
         
         for line in lines:
             token_ranges[-1].append((token_ranges[-1][-1][1] + 1, token_ranges[-1][-1][1] + len(line)))
+    
+    print(target_jsons[0]['root']['pos'], target_jsons[0]['root']['length'])
+    print(token_ranges[0][-1])
             
     
     deletion = []
@@ -150,6 +153,9 @@ def gumtree_diff(dir_name='/home/coinse/doam/fonte', old_file='old.java', new_fi
 
     
     #print(diff_json)
+    with open('old.java', 'r') as file:
+        txt = file.read()
+    print(txt[2810:2820])
 
 if __name__ == "__main__":
     gumtree_diff()

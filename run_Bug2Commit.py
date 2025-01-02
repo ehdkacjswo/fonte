@@ -111,7 +111,7 @@ if __name__ == "__main__":
 
     use_br_list = [True, False]
     use_diff_list = [True, False]
-    stage2_list = [True] # ['skip', True, False] Skip stage or use OpenRewrite or not
+    stage2_list = [True, 'skip'] # ['skip', True, False] Skip stage or use OpenRewrite or not
     use_stopword_list = [True] # [True, False] Use stopword or not
     adddel_list = ['add', 'del', 'all-uni', 'all-sep'] # Which diff data to uses
     param_list = list(itertools.product(use_br_list, use_diff_list, stage2_list, use_stopword_list, adddel_list))

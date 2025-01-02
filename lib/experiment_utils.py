@@ -491,7 +491,7 @@ def score_eval_all(pid, vid, tool, formula, decay, voting_func,
 
     result_dict = dict()
     
-    for stage2 in [True]: #['skip', True, False]
+    for stage2 in [True, 'skip']: #['skip', True, False]
         # Get commit history info
         commit_df = load_commit_history(fault_dir, tool)
         if stage2 == 'skip':

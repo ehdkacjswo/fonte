@@ -27,8 +27,8 @@ for dir in "$BASE_DIR"/*/; do
     echo "Directory name $dir_name does not match the pattern."
   fi
 
-  project="Closure"
-  version="21"
+  project="Cli"
+  version="29"
 
   tmpdir=/tmp/${project}-${version}b/
   faulty_version=$(grep ^${version}, /defects4j/framework/projects/${project}/commit-db | cut -d',' -f2)
@@ -66,7 +66,7 @@ for dir in "$BASE_DIR"/*/; do
   python /root/workspace/diff_util/collector/collect_diff_ast.py -p $project -v $version
 
   # Clean up the tmp directory
-  rm -rf $tmpdir
+  #rm -rf $tmpdir
   echo "Cleaning up $tmpdir"
   cd "$original_cwd"
   exit 1

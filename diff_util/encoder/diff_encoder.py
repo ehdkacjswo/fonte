@@ -118,7 +118,7 @@ def encode_pid(pid, vid, stage2, use_stopword):
     return encode_dict, encoder.vocab
 
 if __name__ == "__main__":
-    stage2_list = [True] # ['skip', True, False] Skip stage or use OpenRewrite or not
+    stage2_list = [True, 'skip'] # ['skip', True, False] Skip stage or use OpenRewrite or not
     use_stopword_list = [True] # [True, False] Use stopword or not    
     param_list = list(itertools.product(stage2_list, use_stopword_list))
     

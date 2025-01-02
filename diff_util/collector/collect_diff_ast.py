@@ -15,6 +15,9 @@ import git # GitPython
 from tabulate import tabulate
 from nltk.corpus import stopwords
 
+sys.path.append('/root/workspace/diff_util/lib/')
+import gumtree
+
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
 commit_regex = r'commit (\w{40})'
 file_path_regex = r'^diff --git a/(.*) b/(.*)$'
@@ -85,8 +88,10 @@ class Diff:
 
         self.cur_before_line = None
 
-        # Ignore non-java file
-        if not before_src_path.endswith('.java') or not after_src_path.endswith('.java'):
+
+        # Ignore non-java / empty file
+        if not (before_src_path.endswith('.java') or before_src_path != '/dev/null') \
+            or not (after_src_path.endswith('.java') or after_src_path != '/dev/null'):
             self.path_tup = None
             return True
 
@@ -117,12 +122,10 @@ class Diff:
 
         # Add range info
         if self.num_before_line > 0:
-            self.range_dict[self.commit_hash][self.path_tup]['deletion']\
-                [self.cur_before_line : self.cur_before_line + self.num_before_line] = True
-        
+            self.range_dict[self.commit_hash][self.path_tup]['deletion'].addi(self.cur_before_line, self.cur_before_line + self.num_before_line)
+
         if self.num_after_line > 0:
-            self.range_dict[self.commit_hash][self.path_tup]['addition']\
-                [self.cur_after_line : self.cur_after_line + self.num_after_line] = True
+            self.range_dict[self.commit_hash][self.path_tup]['addition'].addi(self.cur_after_line, self.cur_after_line + self.num_after_line)
         
         return True
     
@@ -155,7 +158,54 @@ class Diff:
             self.cur_before_line += 1
             self.cur_after_line += 1
         
-        return     
+        return
+    
+    def parse_gumtree(self):
+        for commit_hash in self.range_dict.keys():
+            for (before_src_path, after_src_path) in self.range_dict[commit_hash].keys():
+                addition_range = self.range_dict[commit_hash][(before_src_path, after_src_path)]['addition']
+                deletion_range = self.range_dict[commit_hash][(before_src_path, after_src_path)]['deletion']
+
+                # Copy after file
+                if after_src_path == '/dev/null': # No after file
+                    no_after_src = True
+                else:
+                    p = subprocess.Popen(f'git show {commit_hash}:{after_src_path}', shell=True, stdout=subprocess.PIPE)
+                    after_code, _ = p.communicate()
+
+                    # Error raised but 
+                    if p.returncode != 0 and not addition_range.is_empty():
+                        with open('/root/workspace/error.txt', 'a') as file:
+                            file.write(f'Failed to copy file {commit_hash}:{after_src_path}')
+                        continue
+                    
+                    after_code = after_code.decode(encoding='utf-8', errors='ignore')
+                    with open('/root/workspace/tmp/after.java', 'w') as file:
+                        file.write(after_code)
+                    
+                    no_after_src = False
+
+                # Copy before file
+                if before_src_path == '/dev/null': # No before file
+                    no_before_src = True
+                else:
+                    p = subprocess.Popen(f'git show {commit_hash}~1:{before_src_path}', shell=True, stdout=subprocess.PIPE)
+                    before_code, _ = p.communicate()
+                    
+                    if p.returncode != 0 and not deletion_range.is_empty():
+                        with open('/root/workspace/error.txt', 'a') as file:
+                            file.write(f'Failed to copy file {commit_hash}~1:{before_src_path}')
+                        continue
+                    
+                    before_code = before_code.decode(encoding='utf-8', errors='ignore')
+                    with open('/root/workspace/tmp/before.java', 'w') as file:
+                        file.write(before_code)
+                    
+                    no_before_src = False
+                
+                gumtree.diff_json(no_after_src=no_after_src, no_before_src=no_before_src, addition_range=addition_range, deletion_range=deletion_range)
+                
+
             
     # Parse the diff text
     # Return format : [[commit, before_src_path, after_src_path, line, content]]
@@ -173,6 +223,8 @@ class Diff:
                 continue
 
             self.get_git_diff(line)
+        
+        self.parse_gumtree()
             
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compute commit scores")
@@ -183,7 +235,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     print('Working on {}_{}b'.format(args.project, args.version))
-    with open('/root/workspace/eror.txt', 'a') as file:
+    with open('/root/workspace/error.txt', 'a') as file:
         file.write('Working on {}_{}b\n'.format(args.project, args.version))
 
     range_dict = get_range_dict(args.project, args.version)
