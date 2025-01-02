@@ -1,8 +1,52 @@
+from __future__ import annotations
+
 import subprocess, json, re
-from intervaltree import Interval, IntervalTree
+from interval import interval
+from typing import Optional
 
 # Directory mounted on "original" adfasdf
 DIR_NAME = '/home/coinse/doam/fonte/tmp'
+
+# -0.5, +0.5 해서 강제로 겹치게
+# 1. Building line range (Add range)
+# 2. With each line in line range, build token range (Add range, number in)
+# 3. Get intersection of two ranges (Intersection)
+# 4. Find every labels in token range (Intersect, range in)
+# Possible issue : [n.5, n.5 from intersection]
+
+class CustomInterval():
+    # 
+    def wide_interval(self, start:Optional[int]=None, end:Optional[int]=None):
+        if start is None:
+            return interval()
+        elif end is None:
+            return interval[start - 0.5, start + 0.5]
+        else:
+            return interval[start - 0.5, end + 0.5]
+
+    def __init__(self, start:Optional[int]=None, end:Optional[int]=None):
+        self.interval_data = self.wide_interval(start, end)
+
+    # Add interval
+    def add_interval(self, start:Optional[int]=None, end:Optional[int]=None):
+        self.interval_data |= self.wide_interval(start, end)
+    
+    # Intersection
+    def __and__(self, other:CustomInterval):
+        ret = CustomInterval()
+        ret.interval_data = self.interval_data & other.interval_data
+        return ret
+    
+    # Add range
+    
+    # 
+    def __contains__(self, item):
+        if isinstance(item, int):
+            return interval[item] in self.interval_data
+        elif isinstance(item, CustomInterval):
+            return item.interval_data in self.interval_data
+        else: # Error
+            return None
 
 def get_all_labels(tree_json):
     if 'label' in tree_json:
@@ -11,7 +55,6 @@ def get_all_labels(tree_json):
     else:
         res = []
 
-    
     for child in tree_json['children']:
         res += all_label(child)
     
@@ -19,40 +62,124 @@ def get_all_labels(tree_json):
 
 # Return list of every labels in given token range of the tree
 def get_labels_in_range(tree_json, token_range):
-    
-    # Check if given interval is subset of token range
-    def interval_in_range(begin, length):
-        interval = Interval(begin, begin + length)
-        for sub_range in token_range:
-            if sub_range.contains_interval(interval):
-                return True
-        return False
-
     label_list = []
 
-    if 'label' in tree_json and interval_in_range(int(tree_json['pos'], int(tree_json['length']))):
+    if 'label' in tree_json and CustomInterval(int(child['pos']), int(child['pos']) + int(child['length']) - 1) in token_range:
         label_list = [tree_json['label']]
 
     for child in tree_json['children']:
-        if interval_in_range(int(child['pos']), int(child['length']))
-        if token_range.overlaps(int(child['pos']), int(child['pos']) + int(child['length'])):
+        if len(token_range & CustomInterval(int(child['pos']), int(child['pos']) + int(child['length']) - 1)):
             label_list += get_labels_in_range(child, token_range)
 
     return label_list
 
-def token_range(filename):
-    res = [(-1, -1)]
-
-    with open(filename, 'r') as file:
-        lines = file.readlines()
+# Convert line level range to token level range
+def line_to_token_range(lines, line_range):
+    token_range = CustomInterval()
+    token_cnt = 0
     
-    a = 0
-    for line in lines:
-        res.append((res[-1][1] + 1, res[-1][1] + len(line)))
-        print(line, res[-1])
-        a += len(line)
-    print(a)
-    return res
+    # Add range for line in given range
+    for line_cnt, line in enumerate(lines):
+        if line_cnt + 1 in line_range:
+            token_range.add_interval(token_cnt, token_cnt + len(line) - 1)
+        token_cnt += len(line)
+
+    return token_range
+
+# Return addition, deletion, update token range
+# addition, deletion = Token range
+# update = {interval(token pos, pos + length) : updated label}
+def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deletion_range, use_comment=False):
+    
+    # Convert line level range to token level range
+    if no_after_src:
+        addition_token_range = CustomInterval()
+    else:
+        with open('/root/workspace/tmp/after.java', 'r') as file:
+            after_lines = file.readlines()
+        addition_token_range = line_to_token_range(after_lines, addition_range)
+    
+    if no_before_src:
+        deletion_token_range = CustomInterval()
+    else:
+        with open('/root/workspace/tmp/before.java', 'r') as file:
+            before_lines = file.readlines()
+        deletion_token_range = line_to_token_range(before_lines, deletion_range)       
+    
+    # File creation/deletion (Update has to be empty)
+    if no_after_src or no_before_src:
+        return addition_token_range, deletion_token_range, dict()
+
+    # File modification
+    else:
+        diff_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtreediff/gumtree textdiff -g java-jdt -m gumtree-simple -f JSON before.java after.java'
+        p = subprocess.Popen(diff_cmd, shell=True, stdout=subprocess.PIPE)
+        stdout, _ = p.communicate()
+
+        if p.returncode != 0: # Diff error
+            return None
+
+        try:
+            diff_json = json.loads(stdout.decode(encoding='utf-8', errors='ignore'))
+        except:
+            return None # Decoding error
+        
+        tree_pattern = r".+\[(\d+),(\d+)\]"
+        gumtree_addition_range = CustomInterval()
+        gumtree_deletion_range = CustomInterval()
+        gumtree_update_dict = dict()
+
+        for action in diff_json['actions']:
+            # Insertion (tree, node) action
+            if action['action'].startswith('insert'):
+                match = re.match(tree_pattern, action['tree'])
+
+                if match:
+                    start_pos = int(match.group(1))
+                    end_pos = int(match.group(2))
+                    gumtree_addition_range.add_interval(start_pos, end_pos - 1)
+                
+            # Update node action
+            # {'action': 'update-node', 'tree': 'SimpleName: classNames [2810,2820]', 'label': 'className'}
+            elif action['action'] == 'update-node':
+                match = re.match(tree_pattern, action['tree'])
+
+                if match:
+                    start_pos = int(match.group(1))
+                    end_pos = int(match.group(2))
+                    gumtree_update_dict[CustomInterval(start_pos, end_pos - 1)] = action['label']
+
+            # Deletion (tree, node) action
+            # {'action': 'delete-tree', 'tree': 'ReturnStatement [14519,14532]'}
+            elif action['action'].startswith('delete'):
+                match = re.match(tree_pattern, action['tree'])
+
+                if match:
+                    start_pos = int(match.group(1))
+                    end_pos = int(match.group(2))
+                    gumtree_deletion_range.add_interval(start_pos, end_pos - 1)
+            
+            """
+            # {'action': 'move-tree', 'tree': 'IfStatement [14204,14459]', 'parent': 'Block [12965,14472]', 'at': 7}
+            elif action['action'] == 'move-tree':
+                #print(action)
+                match = re.match(tree_pattern, action['tree'])
+
+                if match:
+                    start_pos = int(match.group(1))
+                    end_pos = int(match.group(2))
+                    print(find_tree(target_jsons[0]['root'], start_pos, end_pos))
+            """
+        
+        # Get intersection
+        gumtree_update_dict = {update_range : label for (update_range, label) in gumtree_update_dict.items() if update_range in deletion_token_range}
+        
+        print(addition_token_range.interval_data, gumtree_addition_range.interval_data)
+        addition_token_range &= gumtree_addition_range
+        print(addition_token_range.interval_data)
+        deletion_token_range &= gumtree_deletion_range
+
+        return addition_token_range, deletion_token_range, gumtree_update_dict
 
 def tree_json(filepath):
     parse_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtreediff/gumtree parse -g java-jdt -f JSON {filepath}'
@@ -68,168 +195,10 @@ def tree_json(filepath):
         return None # Decoding error
 
 # 
-def diff_json(no_after_src, no_before_src, addition_range, deletion_range):
-    if addition and deletion:
-        # Perform diff
-        diff_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtreediff/gumtree textdiff -g java-jdt -m gumtree-simple -f JSON before.java after.java'
-        p = subprocess.Popen(diff_cmd, shell=True, stdout=subprocess.PIPE)
-        stdout, _ = p.communicate()
-
-        if p.returncode != 0: # Diff error
-            return None
-
-        try:
-            diff_json = json.loads(stdout.decode(encoding='utf-8', errors='ignore'))
-        except:
-            return None # Decoding error
-        
-        tree_pattern = r".+\[(\d+),(\d+)\]"
-        addition_range = IntervalTree()
-        deletion_tree = IntervalTree()
-
-        # 각자 별개가 아니라 range 모아서 한번에
-        for action in diff_json['actions']:
-            print(action)
-            # Insertion (tree, node) action
-            if action['action'].startswith('insert'):
-                #print(action)
-                match = re.match(tree_pattern, action['tree'])
-
-                if match:
-                    start_pos = int(match.group(1))
-                    end_pos = int(match.group(2))
-                    addition_range[start_pos : end_pos] = True
-                    #print(find_tree(target_jsons[1]['root'], start_pos, end_pos))
-                
-            # Update node action
-            # {'action': 'update-node', 'tree': 'SimpleName: classNames [2810,2820]', 'label': 'className'}
-            elif action['action'] == 'update-node':
-                #print(action)
-                match = re.match(tree_pattern, action['tree'])
-
-                if match:
-                    start_pos = int(match.group(1))
-                    end_pos = int(match.group(2))
-                    print(find_tree(target_jsons[0]['root'], start_pos, end_pos))
-            
-            """elif action['action'] == 'move-tree':
-                #print(action)
-                match = re.match(tree_pattern, action['tree'])
-
-                if match:
-                    start_pos = int(match.group(1))
-                    end_pos = int(match.group(2))
-                    print(find_tree(target_jsons[0]['root'], start_pos, end_pos))"""
-            
-            # Deletion (tree, node) action
-            elif action['action'].startswith('delete'):
-                #print(action)
-                match = re.match(tree_pattern, action['tree'])
-
-                if match:
-                    start_pos = int(match.group(1))
-                    end_pos = int(match.group(2))
-                    print(find_tree(target_jsons[0]['root'], start_pos, end_pos))
-
-    
-
-# Gumtree is executed by host's 
-def gumtree_diff(dir_name='/home/coinse/doam/fonte', old_file='old.java', new_file='new.java'):
-    # Perform diff
-    diff_cmd = f'docker run --rm -v {dir_name}:/diff gumtreediff/gumtree textdiff -g java-jdt -m gumtree-simple -f JSON {old_file} {new_file}'
-    p = subprocess.Popen(diff_cmd, shell=True, stdout=subprocess.PIPE)
-    stdout, _ = p.communicate()
-
-    try:
-        diff_json = json.loads(stdout.decode(encoding='utf-8', errors='ignore'))
-    except UnicodeDecodeError as e:
-        print(cmd)
-        raise e
-    
-    # Parse files
-    parse_cmd = 'docker run --rm -v {0}:/diff gumtreediff/gumtree parse -g java-jdt -f JSON {1}'
-
-    target_files = [old_file, new_file]
-    target_jsons = []
-    token_ranges = []
-
-    for filename in target_files:
-        cmd = parse_cmd.format(dir_name, filename)
-
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        stdout, _ = p.communicate()
-
-        try:
-            target_jsons.append(json.loads(stdout.decode(encoding='utf-8', errors='ignore')))
-        except UnicodeDecodeError as e:
-            print(cmd)
-            raise e
-        
-        # Get token range
-        token_ranges.append([(-1, -1)])
-
-        with open(filename, 'r') as file:
-            lines = file.readlines()
-        
-        for line in lines:
-            token_ranges[-1].append((token_ranges[-1][-1][1] + 1, token_ranges[-1][-1][1] + len(line)))
-    
-    print(target_jsons[0]['root']['pos'], target_jsons[0]['root']['length'])
-    print(token_ranges[0][-1])
-            
-    
-    deletion = []
-    addition = []
-
-    tree_pattern = r".+\[(\d+),(\d+)\]"
-
-    # 각자 별개가 아니라 range 모아서 한번에
-    for action in diff_json['actions']:
-        print(action)
-        # Insertion (tree, node) action
-        if action['action'].startswith('insert'):
-            #print(action)
-            match = re.match(tree_pattern, action['tree'])
-
-            if match:
-                start_pos = int(match.group(1))
-                end_pos = int(match.group(2))
-                print(find_tree(target_jsons[1]['root'], start_pos, end_pos))
-              
-        # Update node action
-        elif action['action'] == 'update-node':
-            #print(action)
-            match = re.match(tree_pattern, action['tree'])
-
-            if match:
-                start_pos = int(match.group(1))
-                end_pos = int(match.group(2))
-                print(find_tree(target_jsons[0]['root'], start_pos, end_pos))
-        
-        elif action['action'] == 'move-tree':
-            #print(action)
-            match = re.match(tree_pattern, action['tree'])
-
-            if match:
-                start_pos = int(match.group(1))
-                end_pos = int(match.group(2))
-                print(find_tree(target_jsons[0]['root'], start_pos, end_pos))
-        
-        # Deletion (tree, node) action
-        elif action['action'].startswith('delete'):
-            #print(action)
-            match = re.match(tree_pattern, action['tree'])
-
-            if match:
-                start_pos = int(match.group(1))
-                end_pos = int(match.group(2))
-                print(find_tree(target_jsons[0]['root'], start_pos, end_pos))
-        
-        # move-node, move-tree
-        # addition-tree, addition-node : Super class for move, insert
-
-    
-    #print(diff_json)
+def gumtree_diff(no_after_src, no_before_src, addition_range, deletion_range, use_comment=False):
+    addition_token_range, deletion_token_range, update_dict = gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deletion_range)
+    print(addition_token_range.interval_data)
+    print(deletion_token_range.interval_data)
 
 if __name__ == "__main__":
     gumtree_diff()

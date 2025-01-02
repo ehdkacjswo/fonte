@@ -10,13 +10,13 @@ import pickle
 import tempfile
 
 import pandas as pd
-from intervaltree import IntervalTree
+from interval import interval
 import git # GitPython
 from tabulate import tabulate
 from nltk.corpus import stopwords
 
 sys.path.append('/root/workspace/diff_util/lib/')
-import gumtree
+from gumtree import *
 
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
 commit_regex = r'commit (\w{40})'
@@ -88,10 +88,9 @@ class Diff:
 
         self.cur_before_line = None
 
-
-        # Ignore non-java / empty file
-        if not (before_src_path.endswith('.java') or before_src_path != '/dev/null') \
-            or not (after_src_path.endswith('.java') or after_src_path != '/dev/null'):
+        # Allow only java/null file
+        if not (before_src_path.endswith('.java') or before_src_path == '/dev/null') \
+            or not (after_src_path.endswith('.java') or after_src_path == '/dev/null'):
             self.path_tup = None
             return True
 
@@ -99,7 +98,7 @@ class Diff:
         self.path_tup = (before_src_path, after_src_path)
 
         if self.path_tup not in self.range_dict[self.commit_hash]:
-            self.range_dict[self.commit_hash][self.path_tup] = {'addition' : IntervalTree(), 'deletion' : IntervalTree()}
+            self.range_dict[self.commit_hash][self.path_tup] = {'addition' : CustomInterval(), 'deletion' : CustomInterval()}
             self.gumtree_dict[self.commit_hash][self.path_tup] = {'addition' : dict(), 'deletion' : dict()}
             self.git_dict[self.commit_hash][self.path_tup] = {'addition' : dict(), 'deletion' : dict()}
         
@@ -122,10 +121,13 @@ class Diff:
 
         # Add range info
         if self.num_before_line > 0:
-            self.range_dict[self.commit_hash][self.path_tup]['deletion'].addi(self.cur_before_line, self.cur_before_line + self.num_before_line)
+            print(self.range_dict[self.commit_hash][self.path_tup]['deletion'].interval_data)
+            print(self.cur_before_line, self.cur_before_line + self.num_before_line - 1)
+            self.range_dict[self.commit_hash][self.path_tup]['deletion'].add_interval(self.cur_before_line, self.cur_before_line + self.num_before_line - 1)
+            print(self.range_dict[self.commit_hash][self.path_tup]['deletion'].interval_data)
 
         if self.num_after_line > 0:
-            self.range_dict[self.commit_hash][self.path_tup]['addition'].addi(self.cur_after_line, self.cur_after_line + self.num_after_line)
+            self.range_dict[self.commit_hash][self.path_tup]['addition'].add_interval(self.cur_after_line, self.cur_after_line + self.num_after_line - 1)
         
         return True
     
@@ -137,6 +139,12 @@ class Diff:
         if line.startswith('-'):
             if line.startswith('---'): # File path
                 return
+            
+            # File was created but deletion occured
+            if self.path_tup[0] == '/dev/null':
+                with open('/root/workspace/error.txt', 'a') as file:
+                    file.write(f'Deletion on empty file detected {commit_hash}:{before_src_path}')
+                return
     
             line = line[1:].strip()
 
@@ -146,6 +154,12 @@ class Diff:
         # Added line
         elif line.startswith('+'):
             if line.startswith('+++'): # File path
+                return
+            
+            # File was created but deletion occured
+            if self.path_tup[1] == '/dev/null':
+                with open('/root/workspace/error.txt', 'a') as file:
+                    file.write(f'Addition on empty file detected {commit_hash}:{after_src_path}')
                 return
             
             line = line[1:].strip()
@@ -173,17 +187,23 @@ class Diff:
                     p = subprocess.Popen(f'git show {commit_hash}:{after_src_path}', shell=True, stdout=subprocess.PIPE)
                     after_code, _ = p.communicate()
 
-                    # Error raised but 
-                    if p.returncode != 0 and not addition_range.is_empty():
-                        with open('/root/workspace/error.txt', 'a') as file:
-                            file.write(f'Failed to copy file {commit_hash}:{after_src_path}')
-                        continue
+                    # Error raised while copying file
+                    if p.returncode != 0:
+                        # Actual addition occured but failed to copy file
+                        if len(self.git_dict[commit_hash][(before_src_path, after_src_path)]['addition']) > 0:
+                            with open('/root/workspace/error.txt', 'a') as file:
+                                file.write(f'Failed to copy file {commit_hash}:{after_src_path}')
+                            continue
+                        
+                        else:
+                            no_after_src = True
                     
-                    after_code = after_code.decode(encoding='utf-8', errors='ignore')
-                    with open('/root/workspace/tmp/after.java', 'w') as file:
-                        file.write(after_code)
-                    
-                    no_after_src = False
+                    else:
+                        after_code = after_code.decode(encoding='utf-8', errors='ignore')
+                        with open('/root/workspace/tmp/after.java', 'w') as file:
+                            file.write(after_code)
+                        
+                        no_after_src = False
 
                 # Copy before file
                 if before_src_path == '/dev/null': # No before file
@@ -192,21 +212,28 @@ class Diff:
                     p = subprocess.Popen(f'git show {commit_hash}~1:{before_src_path}', shell=True, stdout=subprocess.PIPE)
                     before_code, _ = p.communicate()
                     
-                    if p.returncode != 0 and not deletion_range.is_empty():
-                        with open('/root/workspace/error.txt', 'a') as file:
-                            file.write(f'Failed to copy file {commit_hash}~1:{before_src_path}')
-                        continue
-                    
-                    before_code = before_code.decode(encoding='utf-8', errors='ignore')
-                    with open('/root/workspace/tmp/before.java', 'w') as file:
-                        file.write(before_code)
-                    
-                    no_before_src = False
+                    # Error raised while copying file
+                    if p.returncode != 0:
+                        # Actual deletion occured but failed to copy file
+                        if len(self.git_dict[commit_hash][(before_src_path, after_src_path)]['deletion']) > 0:
+                            with open('/root/workspace/error.txt', 'a') as file:
+                                file.write(f'Failed to copy file {commit_hash}~1:{before_src_path}')
+                            continue
+                        
+                        else:
+                            no_before_src = True
+                        
+                    else:
+                        before_code = before_code.decode(encoding='utf-8', errors='ignore')
+                        with open('/root/workspace/tmp/before.java', 'w') as file:
+                            file.write(before_code)
+                        
+                        no_before_src = False
                 
-                gumtree.diff_json(no_after_src=no_after_src, no_before_src=no_before_src, addition_range=addition_range, deletion_range=deletion_range)
+                print(no_after_src, no_before_src, addition_range.interval_data, deletion_range.interval_data)
+                print(self.git_dict[commit_hash][(before_src_path, after_src_path)])
+                gumtree_diff(no_after_src=no_after_src, no_before_src=no_before_src, addition_range=addition_range, deletion_range=deletion_range)
                 
-
-            
     # Parse the diff text
     # Return format : [[commit, before_src_path, after_src_path, line, content]]
     def parse_diff(self, diff_txt):
