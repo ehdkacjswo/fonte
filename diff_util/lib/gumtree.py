@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import subprocess, json, re
-from interval import interval
+from interval import interval, inf
 from typing import Optional
 
 # Directory mounted on "original" adfasdf
@@ -37,8 +37,6 @@ class CustomInterval():
         ret.interval_data = self.interval_data & other.interval_data
         return ret
     
-    # Add range
-    
     # 
     def __contains__(self, item):
         if isinstance(item, int):
@@ -47,49 +45,27 @@ class CustomInterval():
             return item.interval_data in self.interval_data
         else: # Error
             return None
-
-def get_all_labels(tree_json):
-    if 'label' in tree_json:
-        res = [tree_json['label']]
     
-    else:
-        res = []
-
-    for child in tree_json['children']:
-        res += all_label(child)
-    
-    return res
-
-# Return list of every labels in given token range of the tree
-def get_labels_in_range(tree_json, token_range):
-    label_list = []
-
-    if 'label' in tree_json and CustomInterval(int(child['pos']), int(child['pos']) + int(child['length']) - 1) in token_range:
-        label_list = [tree_json['label']]
-
-    for child in tree_json['children']:
-        if len(token_range & CustomInterval(int(child['pos']), int(child['pos']) + int(child['length']) - 1)):
-            label_list += get_labels_in_range(child, token_range)
-
-    return label_list
-
-# Convert line level range to token level range
-def line_to_token_range(lines, line_range):
-    token_range = CustomInterval()
-    token_cnt = 0
-    
-    # Add range for line in given range
-    for line_cnt, line in enumerate(lines):
-        if line_cnt + 1 in line_range:
-            token_range.add_interval(token_cnt, token_cnt + len(line) - 1)
-        token_cnt += len(line)
-
-    return token_range
+    def is_empty(self):
+        return len(self.interval_data) == 0
 
 # Return addition, deletion, update token range
 # addition, deletion = Token range
 # update = {interval(token pos, pos + length) : updated label}
 def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deletion_range, use_comment=False):
+    
+    # Convert line level range to token level range
+    def line_to_token_range(lines, line_range):
+        token_range = CustomInterval()
+        token_cnt = 0
+        
+        # Add range for line in given range
+        for line_cnt, line in enumerate(lines):
+            if line_cnt + 1 in line_range:
+                token_range.add_interval(token_cnt, token_cnt + len(line) - 1)
+            token_cnt += len(line)
+
+        return token_range
     
     # Convert line level range to token level range
     if no_after_src:
@@ -104,7 +80,9 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
     else:
         with open('/root/workspace/tmp/before.java', 'r') as file:
             before_lines = file.readlines()
-        deletion_token_range = line_to_token_range(before_lines, deletion_range)       
+        deletion_token_range = line_to_token_range(before_lines, deletion_range)
+
+    print('deletion', deletion_token_range)       
     
     # File creation/deletion (Update has to be empty)
     if no_after_src or no_before_src:
@@ -130,6 +108,7 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
         gumtree_update_dict = dict()
 
         for action in diff_json['actions']:
+            print(action)
             # Insertion (tree, node) action
             if action['action'].startswith('insert'):
                 match = re.match(tree_pattern, action['tree'])
@@ -174,15 +153,42 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
         # Get intersection
         gumtree_update_dict = {update_range : label for (update_range, label) in gumtree_update_dict.items() if update_range in deletion_token_range}
         
-        print(addition_token_range.interval_data, gumtree_addition_range.interval_data)
+        print('aaa', gumtree_deletion_range.interval_data)
         addition_token_range &= gumtree_addition_range
-        print(addition_token_range.interval_data)
+        print(deletion_token_range.interval_data)
         deletion_token_range &= gumtree_deletion_range
+        print(deletion_token_range.interval_data)
 
         return addition_token_range, deletion_token_range, gumtree_update_dict
 
-def tree_json(filepath):
-    parse_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtreediff/gumtree parse -g java-jdt -f JSON {filepath}'
+# Parse the file and returns in json format
+def gumtree_parse(filename, token_range):
+    def get_all_labels(tree_json):
+        if 'label' in tree_json:
+            res = [tree_json['label']]
+        
+        else:
+            res = []
+
+        for child in tree_json['children']:
+            res += all_label(child)
+        
+        return res
+
+    # Return list of every labels in given token range of the tree
+    def get_labels_in_range(tree_json, token_range):
+        label_list = []
+
+        if 'label' in tree_json and CustomInterval(int(tree_json['pos']), int(tree_json['pos']) + int(tree_json['length']) - 1) in token_range:
+            label_list = [tree_json['label']]
+
+        for child in tree_json['children']:
+            if not (token_range & CustomInterval(int(child['pos']), int(child['pos']) + int(child['length']) - 1)).is_empty():
+                label_list += get_labels_in_range(child, token_range)
+
+        return label_list
+
+    parse_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtreediff/gumtree parse -g java-jdt -f JSON {filename}'
     p = subprocess.Popen(parse_cmd, shell=True, stdout=subprocess.PIPE)
     stdout, _ = p.communicate()
 
@@ -190,15 +196,41 @@ def tree_json(filepath):
         return None
 
     try:
-        return json.loads(stdout.decode(encoding='utf-8', errors='ignore'))
+        tree_json = json.loads(stdout.decode(encoding='utf-8', errors='ignore'))
     except:
         return None # Decoding error
+    
+    return get_labels_in_range(tree_json['root'], token_range)
 
 # 
 def gumtree_diff(no_after_src, no_before_src, addition_range, deletion_range, use_comment=False):
-    addition_token_range, deletion_token_range, update_dict = gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deletion_range)
+    
+    # Get token ranges
+    addition_token_range, deletion_token_range, update_dict = \
+        gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deletion_range)
+    
     print(addition_token_range.interval_data)
     print(deletion_token_range.interval_data)
+    
+    # Get tokens
+    if no_after_src:
+        addition_tokens = []
+    else:
+        addition_tokens = gumtree_parse('after.java', addition_token_range)
+
+    if no_before_src:
+        deletion_tokens = []
+    else:
+        deletion_tokens = gumtree_parse('before.java', deletion_token_range)
+    
+    print(addition_tokens, deletion_tokens)
+    return addition_tokens, deletion_tokens
 
 if __name__ == "__main__":
-    gumtree_diff()
+    addition_range = CustomInterval()
+    deletion_range = CustomInterval()
+
+    addition_range.interval_data = interval[-inf, inf]
+    deletion_range.interval_data = interval[-inf, inf]
+
+    gumtree_diff(False, False, addition_range, deletion_range)
