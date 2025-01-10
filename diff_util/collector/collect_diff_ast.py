@@ -61,7 +61,7 @@ class Diff:
         else:
             return False
 
-        # Initialize info
+        # Initialization
         self.path_tup = None
         self.cur_before_line = None
 
@@ -86,6 +86,7 @@ class Diff:
         else:
             return False
 
+        # Initialization
         self.cur_before_line = None
 
         # Allow only java/null file
@@ -121,23 +122,21 @@ class Diff:
 
         # Add range info
         if self.num_before_line > 0:
-            print(self.range_dict[self.commit_hash][self.path_tup]['deletion'].interval_data)
-            print(self.cur_before_line, self.cur_before_line + self.num_before_line - 1)
             self.range_dict[self.commit_hash][self.path_tup]['deletion'].add_interval(self.cur_before_line, self.cur_before_line + self.num_before_line - 1)
-            print(self.range_dict[self.commit_hash][self.path_tup]['deletion'].interval_data)
 
         if self.num_after_line > 0:
             self.range_dict[self.commit_hash][self.path_tup]['addition'].add_interval(self.cur_after_line, self.cur_after_line + self.num_after_line - 1)
         
         return True
     
+    # Get actual diff
     def get_git_diff(self, line):
         if self.cur_before_line is None: # Line info has to be defined
             return
                 
         # Deleted line
         if line.startswith('-'):
-            if line.startswith('---'): # File path
+            if line.startswith('---'): # Deleted file path
                 return
             
             # File was created but deletion occured
@@ -153,10 +152,10 @@ class Diff:
             
         # Added line
         elif line.startswith('+'):
-            if line.startswith('+++'): # File path
+            if line.startswith('+++'): # Added file path
                 return
             
-            # File was created but deletion occured
+            # File was deleted but addition occured
             if self.path_tup[1] == '/dev/null':
                 with open('/root/workspace/error.txt', 'a') as file:
                     file.write(f'Addition on empty file detected {commit_hash}:{after_src_path}')
@@ -174,16 +173,17 @@ class Diff:
         
         return
     
+    # Perform gumtree parsing
     def parse_gumtree(self):
         for commit_hash in self.range_dict.keys():
             for (before_src_path, after_src_path) in self.range_dict[commit_hash].keys():
+                print(before_src_path, after_src_path)
                 addition_range = self.range_dict[commit_hash][(before_src_path, after_src_path)]['addition']
                 deletion_range = self.range_dict[commit_hash][(before_src_path, after_src_path)]['deletion']
 
-                # Copy after file
                 if after_src_path == '/dev/null': # No after file
                     no_after_src = True
-                else:
+                else: # Copy after file
                     p = subprocess.Popen(f'git show {commit_hash}:{after_src_path}', shell=True, stdout=subprocess.PIPE)
                     after_code, _ = p.communicate()
 
@@ -205,10 +205,9 @@ class Diff:
                         
                         no_after_src = False
 
-                # Copy before file
                 if before_src_path == '/dev/null': # No before file
                     no_before_src = True
-                else:
+                else: # Copy before file
                     p = subprocess.Popen(f'git show {commit_hash}~1:{before_src_path}', shell=True, stdout=subprocess.PIPE)
                     before_code, _ = p.communicate()
                     
@@ -230,9 +229,10 @@ class Diff:
                         
                         no_before_src = False
                 
-                print(no_after_src, no_before_src, addition_range.interval_data, deletion_range.interval_data)
-                print(self.git_dict[commit_hash][(before_src_path, after_src_path)])
+                #print(no_after_src, no_before_src, addition_range.interval_data, deletion_range.interval_data)
+                #print(self.git_dict[commit_hash][(before_src_path, after_src_path)])
                 gumtree_diff(no_after_src=no_after_src, no_before_src=no_before_src, addition_range=addition_range, deletion_range=deletion_range)
+                return
                 
     # Parse the diff text
     # Return format : [[commit, before_src_path, after_src_path, line, content]]
@@ -243,15 +243,15 @@ class Diff:
             if self.set_commit_hash(line): # Match commit info
                 continue
             
-            if self.set_src_path(line):
+            if self.set_src_path(line): # Match source path info
                 continue
             
-            if self.set_line_num(line):
+            if self.set_line_num(line): # Match line number info
                 continue
 
-            self.get_git_diff(line)
+            self.get_git_diff(line) # Match actual diff data info
         
-        self.parse_gumtree()
+        self.parse_gumtree() # Perform gumtree parsing
             
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compute commit scores")
@@ -283,7 +283,7 @@ if __name__ == "__main__":
                 print(cmd)
                 raise e
     
-    print(diff.range_dict)
+    #print(diff.range_dict)
     #print(diff.git_dict)
         
     # Save the parsed result

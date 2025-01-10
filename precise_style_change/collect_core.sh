@@ -33,9 +33,6 @@ for dir in "$BASE_DIR"/*/; do
     echo "Directory name $dir_name does not match the pattern."
   fi
 
-  project="Cli"
-  version="29"
-
   tmpdir=/tmp/${project}-${version}b/
   faulty_version=$(grep ^${version}, /defects4j/framework/projects/${project}/commit-db | cut -d',' -f2)
   #source $HOME/.sdkman/bin/sdkman-init.sh && sdk use java 8.0.302-open
@@ -76,7 +73,6 @@ for dir in "$BASE_DIR"/*/; do
   #rm -rf $tmpdir
   echo "Cleaning up $tmpdir"
   cd "$original_cwd"
-  exit 1
 done
 
   

@@ -68,7 +68,7 @@ cat $workdir/modified_files_${sha} | while read after_src_path before_src_path; 
   fi
 done
 
-echo "* Summary:" $output
-cat $output
+#echo "* Summary:" $output
+#cat $output
 echo ""
 echo ""
