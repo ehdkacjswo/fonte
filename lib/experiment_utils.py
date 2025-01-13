@@ -136,9 +136,11 @@ def load_commit_history(fault_dir, tool):
     return com_df
 
 def get_style_change_commits(fault_dir, tool, with_Rewrite=True):
-    postfix = "" if with_Rewrite else "_noOpenRewrite"
+    #postfix = "" if with_Rewrite else "_noOpenRewrite"
+    postfix = "" if with_Rewrite else ""
+    prefix = "" if with_Rewrite else "precise_"
     val_df = pd.read_csv(
-        os.path.join(fault_dir, tool, f"validation{postfix}.csv"), 
+        os.path.join(fault_dir, tool, f"{prefix}validation{postfix}.csv"), 
         header=None,
         names=["commit", "src_path", "AST_diff"])
 
@@ -491,7 +493,7 @@ def score_eval_all(pid, vid, tool, formula, decay, voting_func,
 
     result_dict = dict()
     
-    for stage2 in [True, 'skip']: #['skip', True, False]
+    for stage2 in [True, False]: #['skip', True, False]
         # Get commit history info
         commit_df = load_commit_history(fault_dir, tool)
         if stage2 == 'skip':
@@ -514,7 +516,8 @@ def score_eval_all(pid, vid, tool, formula, decay, voting_func,
                     & (commit_df.depth > row.depth)
                 commit_df.loc[affected, "new_depth"] = commit_df.loc[affected, "new_depth"] - 1
         
-        for HSFL in [True, False]:
+        # for HSFL in [True, False]:
+        for HSFL in [False]:
             vote_dict = dict()
 
             for _, row in sbfl_df.reset_index().iterrows():

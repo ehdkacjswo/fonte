@@ -105,8 +105,8 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
         gumtree_deletion_range = CustomInterval()
         gumtree_update_dict = dict()
 
+        # {'action': 'action', 'tree': 'type:'}
         for action in diff_json['actions']:
-            print(action['action'])
             # Insertion (tree, node) action
             if action['action'].startswith('insert'):
                 match = re.match(tree_pattern, action['tree'])
@@ -119,7 +119,7 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
             # Update node action
             # {'action': 'update-node', 'tree': 'SimpleName: classNames [2810,2820]', 'label': 'className'}
             elif action['action'] == 'update-node':
-                print(action)
+                #print(action)
                 match = re.match(tree_pattern, action['tree'])
 
                 if match:
@@ -195,6 +195,8 @@ def gumtree_parse(filename, token_range):
         tree_json = json.loads(stdout.decode(encoding='utf-8', errors='ignore'))
     except:
         return None # Decoding error
+    #print(json.dumps(tree_json, indent=4))
+    #print(tree_json)
     
     return get_labels_in_range(tree_json['root'], token_range)
 

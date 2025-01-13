@@ -17,13 +17,14 @@ from nltk.corpus import stopwords
 
 sys.path.append('/root/workspace/diff_util/lib/')
 from gumtree import *
+from encoder import *
 
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
 commit_regex = r'commit (\w{40})'
 file_path_regex = r'^diff --git a/(.*) b/(.*)$'
 diff_block_regex = r'@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@'
 
-# Get range of suspicious parts
+# Get line range of suspicious parts
 # Return = {src_path : set(line_start, line_end)}
 def get_range_dict(pid, vid, tool='git'):
     commit_path = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b', tool, 'commits.pkl')
@@ -42,15 +43,23 @@ def get_range_dict(pid, vid, tool='git'):
     return range_dict
 
 class Diff:
-    def __init__(self, diff_dict=dict()):
-        self.range_dict = dict()
-        self.gumtree_dict = dict()
-        self.git_dict = dict()
-        
-        self.diff_dict = diff_dict
+    def __init__(self):
+        # Interval of lines modified
+        # {commit : {(before, after src path) : before, after line interval} }
+        self.line_interval_dict = dict()
+
+        # Code data on given position
+        # {commit : {file : {position : encoded content} } }
+        self.git_dict = dict() # line > code
+        self.gumtree_dict = dict() # pos > code
+
         self.commit_hash = None
         self.path_tup = None
         self.cur_before_line = None
+
+        # Encoder for git/gumtree diff
+        self.git_encoder = Encoder()
+        self.gumtree_encoder = Encoder()
     
     # Set current commit
     def set_commit_hash(self, line):
@@ -67,10 +76,10 @@ class Diff:
 
         # Add commit
         if self.commit_hash not in self.range_dict:
-            self.range_dict[self.commit_hash] = dict()
-            self.gumtree_dict[self.commit_hash] = dict()
+            self.line_interval_dict[self.commit_hash] = dict()
             self.git_dict[self.commit_hash] = dict()
-        
+            self.gumtree_dict[self.commit_hash] = dict()
+            
         return True
     
     # Set path info (only java file allowed)
@@ -100,8 +109,16 @@ class Diff:
 
         if self.path_tup not in self.range_dict[self.commit_hash]:
             self.range_dict[self.commit_hash][self.path_tup] = {'addition' : CustomInterval(), 'deletion' : CustomInterval()}
-            self.gumtree_dict[self.commit_hash][self.path_tup] = {'addition' : dict(), 'deletion' : dict()}
-            self.git_dict[self.commit_hash][self.path_tup] = {'addition' : dict(), 'deletion' : dict()}
+
+            # Encode 
+            git_path_tup = (self.git_encoder.encode(before_src_path, use_stopword=False, update_vocab=True), \
+                self.git_encoder.encode(after_src_path, use_stopword=False, update_vocab=True))
+            gumtree_path_tup = (self.gumtree_encoder.encode(before_src_path, use_stopword=False, update_vocab=True), \
+                self.gumtree_encoder.encode(after_src_path, use_stopword=False, update_vocab=True))
+
+            self.git_dict[self.commit_hash][self.path_tup] = {'path_tup' : git_path_tup, 'addition' : [], 'deletion' : []}
+            self.gumtree_dict[self.commit_hash][self.path_tup] = {'path_tup' : gumtree_path_tup, 'addition' : [], 'deletion' : []}
+            
         
         return True
     
@@ -146,8 +163,10 @@ class Diff:
                 return
     
             line = line[1:].strip()
+            encoded_line = self.git_encoder.encode(line, use_stopword=False, update_vocab=True)
 
-            self.git_dict[self.commit_hash][self.path_tup]['deletion'][self.cur_before_line] = line
+            self.git_dict[self.commit_hash][self.path_tup]['deletion'] = \
+                sum_encode(self.git_dict[self.commit_hash][self.path_tup]['deletion'], encoded_line)
             self.cur_before_line += 1
             
         # Added line
@@ -162,8 +181,10 @@ class Diff:
                 return
             
             line = line[1:].strip()
+            encoded_line = self.git_encoder.encode(line, use_stopword=False, update_vocab=True)
 
-            self.git_dict[self.commit_hash][self.path_tup]['addition'][self.cur_after_line] = line
+            self.git_dict[self.commit_hash][self.path_tup]['addition'] = \
+                sum_encode(self.git_dict[self.commit_hash][self.path_tup]['addition'], encoded_line)
             self.cur_after_line += 1
                 
         # Unchanged line
@@ -284,7 +305,7 @@ if __name__ == "__main__":
                 raise e
     
     #print(diff.range_dict)
-    #print(diff.git_dict)
+    print(diff.git_dict)
         
     # Save the parsed result
     """savedir = f'/root/workspace/data/Defects4J/diff/{args.project}-{args.version}b'

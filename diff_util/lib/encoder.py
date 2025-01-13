@@ -5,11 +5,17 @@ from nltk.corpus import stopwords
 
 # Class that encodes string while expanding the vocabulary
 class Encoder():
+    stopword_list = stopwords.words('english')
+    keyword_list = ['abstract', 'assert', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class', \
+        'const', 'continue', 'default', 'do', 'double', 'else', 'enum', 'extends', 'final', 'finally', 'float', \
+        'for', 'goto', 'if', 'implements', 'import', 'instanceof', 'int', 'interface', 'long', 'native', 'new', \
+        'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'strictfp', 'super', 'switch', \
+        'synchronized', 'this', 'throw', 'throws', 'transient', 'try', 'void', 'volatile', 'while']
+
     def __init__(self, vocab={}):
         self.vocab = vocab # {word : id}
-        self.stopword_list = stopwords.words('english')
     
-    def tokenize(self, text, use_stopword):
+    def tokenize(self, text, use_stopword=True):
         # Remove characters except alphabets and numbers
         if use_stopword:
             text = re.sub(r'[^A-Za-z0-9]', ' ', text) 
@@ -20,12 +26,12 @@ class Encoder():
         # Remove single character, numbers and stopwords
         if use_stopword:
             token_list = [token for token in token_list if \
-                (len(token) > 1 and not token.isdigit() and token not in self.stopword_list)]
+                (len(token) > 1 and not token.isdigit() and token not in Encoder.stopword_list)]
             
         return token_list
 
     # Encode the input and list of used word index and count
-    def encode(self, text, use_stopword, update_vocab=True):
+    def encode(self, text, use_stopword=True, update_vocab=True):
         encode_res = []
         text = self.tokenize(text, use_stopword)
 

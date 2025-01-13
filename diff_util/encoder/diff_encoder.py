@@ -13,9 +13,11 @@ BASE_DATA_DIR = '/root/workspace/data/Defects4J/baseline'
 # Get the unchanged file data
 # [(commit, src_path)]
 def get_style_change_data(coredir, tool='git', with_Rewrite=True):
-    postfix = "" if with_Rewrite else "_noOpenRewrite"
+    #postfix = "" if with_Rewrite else "_noOpenRewrite"
+    postfix = "" if with_Rewrite else ""
+    prefix = "" if with_Rewrite else "precise_"
     val_df = pd.read_csv(
-        os.path.join(coredir, tool, f"validation{postfix}.csv"), 
+        os.path.join(coredir, tool, f"{prefix}validation{postfix}.csv"), 
         header=None,
         names=["commit", "src_path", "AST_diff"])
     
@@ -118,7 +120,7 @@ def encode_pid(pid, vid, stage2, use_stopword):
     return encode_dict, encoder.vocab
 
 if __name__ == "__main__":
-    stage2_list = [True, 'skip'] # ['skip', True, False] Skip stage or use OpenRewrite or not
+    stage2_list = [True, False] # ['skip', True, False] Skip stage or use OpenRewrite or not
     use_stopword_list = [True] # [True, False] Use stopword or not    
     param_list = list(itertools.product(stage2_list, use_stopword_list))
     
