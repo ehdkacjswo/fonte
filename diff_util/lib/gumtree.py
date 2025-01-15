@@ -3,6 +3,7 @@ from __future__ import annotations
 import subprocess, json, re
 from interval import interval, inf
 from typing import Optional
+from charset_normalizer import from_path
 
 # Directory mounted on "original" adfasdf
 DIR_NAME = '/home/coinse/doam/fonte/tmp'
@@ -49,6 +50,21 @@ class CustomInterval():
     def is_empty(self):
         return len(self.interval_data) == 0
 
+def file_encode(no_after_src, no_before_src):
+    if not no_after_src:
+        encoded_code = from_path('/root/workspace/tmp/after.java').best()
+        
+        if encoded_code is not None:
+            with open('/root/workspace/tmp/after.java', 'w', encoding='utf-8') as file:
+                file.write(str(encoded_code))
+    
+    if not no_before_src:
+        encoded_code = from_path('/root/workspace/tmp/before.java').best()
+        
+        if encoded_code is not None:
+            with open('/root/workspace/tmp/before.java', 'w', encoding='utf-8') as file:
+                file.write(str(encoded_code))
+
 # Return addition, deletion, update token range
 # addition, deletion = Token range
 # update = {interval(token pos, pos + length) : updated label}
@@ -71,14 +87,14 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
     if no_after_src:
         addition_token_range = CustomInterval()
     else:
-        with open('/root/workspace/tmp/after.java', 'r') as file:
+        with open('/root/workspace/tmp/after.java', 'r', encoding='utf-8', errors='ignore') as file:
             after_lines = file.readlines()
         addition_token_range = line_to_token_range(after_lines, addition_range)
     
     if no_before_src:
         deletion_token_range = CustomInterval()
     else:
-        with open('/root/workspace/tmp/before.java', 'r') as file:
+        with open('/root/workspace/tmp/before.java', 'r', encoding='utf-8', errors='ignore') as file:
             before_lines = file.readlines()
         deletion_token_range = line_to_token_range(before_lines, deletion_range)
     
@@ -88,11 +104,12 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
 
     # File modification
     else:
-        diff_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtreediff/gumtree textdiff -g java-jdtc -m gumtree-simple -f JSON before.java after.java'
+        diff_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtree textdiff -g java-jdt -m gumtree-simple -f JSON before.java after.java'
         p = subprocess.Popen(diff_cmd, shell=True, stdout=subprocess.PIPE)
         stdout, _ = p.communicate()
 
         if p.returncode != 0: # Diff error
+            print('OJODSFO')
             return None
 
         try:
@@ -100,6 +117,7 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
         except:
             return None # Decoding error
         
+        print(diff_json)
         tree_pattern = r".+\[(\d+),(\d+)\]"
         gumtree_addition_range = CustomInterval()
         gumtree_deletion_range = CustomInterval()
@@ -184,11 +202,12 @@ def gumtree_parse(filename, token_range):
 
         return label_list
 
-    parse_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtreediff/gumtree parse -g java-jdtc -f JSON {filename}'
+    parse_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtree parse -g java-jdt -f JSON {filename}'
     p = subprocess.Popen(parse_cmd, shell=True, stdout=subprocess.PIPE)
     stdout, _ = p.communicate()
 
     if p.returncode != 0: # Parsing error
+        print('OJODSFO')
         return None
 
     try:
@@ -196,12 +215,13 @@ def gumtree_parse(filename, token_range):
     except:
         return None # Decoding error
     #print(json.dumps(tree_json, indent=4))
-    #print(tree_json)
+    print(tree_json)
     
     return get_labels_in_range(tree_json['root'], token_range)
 
 # addition [class, method, variable, comment], deletion [class, method, variable, comment]
-def gumtree_diff(no_after_src, no_before_src, addition_range, deletion_range, use_comment=False):
+def gumtree_diff(no_after_src=False, no_before_src=False, addition_range=interval[-inf,inf], deletion_range=interval[-inf,inf], use_comment=False):
+    #file_encode(no_after_src, no_before_src)
     
     # Get token ranges
     addition_token_range, deletion_token_range, update_dict = \

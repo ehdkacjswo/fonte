@@ -1,0 +1,33 @@
+diff --git a/src/com/google/javascript/jscomp/DefinitionsRemover.java b/src/com/google/javascript/jscomp/DefinitionsRemover.java
+index 7605567..58bf8fa 100644
+--- a/src/com/google/javascript/jscomp/DefinitionsRemover.java
++++ b/src/com/google/javascript/jscomp/DefinitionsRemover.java
+@@ -79,6 +79,9 @@ org.openrewrite.java.cleanup.HideUtilityClassConstructor, org.openrewrite.java.cleanup.OperatorWrap
+      * definition statement.
+      */
+     Node getRValue();
++
++      private Definition <error>() {
++      }
+   }
+ 
+   /**
+@@ -296,8 +299,8 @@
+     VarDefinition(Node node) {
+       Preconditions.checkArgument(NodeUtil.isVarDeclaration(node));
+       Preconditions.checkArgument(node.hasChildren(),
+-          "VAR Declaration of " + node.getString() +
+-          "should be assigned a value.");
++          "VAR Declaration of " + node.getString()
++          + "should be assigned a value.");
+       name = node;
+     }
+ 
+@@ -322,4 +325,7 @@
+       return name.getFirstChild();
+     }
+   }
++
++    private DefinitionsRemover() {
++    }
+ }

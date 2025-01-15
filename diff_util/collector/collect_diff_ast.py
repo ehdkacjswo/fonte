@@ -26,21 +26,21 @@ diff_block_regex = r'@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@'
 
 # Get line range of suspicious parts
 # Return = {src_path : set(line_start, line_end)}
-def get_range_dict(pid, vid, tool='git'):
+def get_line_interval_dict(pid, vid, tool='git'):
     commit_path = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b', tool, 'commits.pkl')
     com_df = pd.read_pickle(commit_path)
 
     # Drop duplicates
     com_df.drop_duplicates(subset=['src_path', 'begin_line', 'end_line'], inplace=True)
-    range_dict = dict()
+    line_interval_dict = dict()
 
     for _, row in com_df.iterrows():
         src_path = row['src_path']
-        range_val = range_dict.get(src_path, [])
+        range_val = line_interval_dict.get(src_path, [])
         range_val.append((row['begin_line'], row['end_line']))
-        range_dict[src_path] = range_val
+        line_interval_dict[src_path] = range_val
 
-    return range_dict
+    return line_interval_dict
 
 class Diff:
     def __init__(self):
@@ -75,7 +75,7 @@ class Diff:
         self.cur_before_line = None
 
         # Add commit
-        if self.commit_hash not in self.range_dict:
+        if self.commit_hash not in self.line_interval_dict:
             self.line_interval_dict[self.commit_hash] = dict()
             self.git_dict[self.commit_hash] = dict()
             self.gumtree_dict[self.commit_hash] = dict()
@@ -107,8 +107,8 @@ class Diff:
         # Set before/after path info
         self.path_tup = (before_src_path, after_src_path)
 
-        if self.path_tup not in self.range_dict[self.commit_hash]:
-            self.range_dict[self.commit_hash][self.path_tup] = {'addition' : CustomInterval(), 'deletion' : CustomInterval()}
+        if self.path_tup not in self.line_interval_dict[self.commit_hash]:
+            self.line_interval_dict[self.commit_hash][self.path_tup] = {'addition' : CustomInterval(), 'deletion' : CustomInterval()}
 
             # Encode 
             git_path_tup = (self.git_encoder.encode(before_src_path, use_stopword=False, update_vocab=True), \
@@ -139,10 +139,10 @@ class Diff:
 
         # Add range info
         if self.num_before_line > 0:
-            self.range_dict[self.commit_hash][self.path_tup]['deletion'].add_interval(self.cur_before_line, self.cur_before_line + self.num_before_line - 1)
+            self.line_interval_dict[self.commit_hash][self.path_tup]['deletion'].add_interval(self.cur_before_line, self.cur_before_line + self.num_before_line - 1)
 
         if self.num_after_line > 0:
-            self.range_dict[self.commit_hash][self.path_tup]['addition'].add_interval(self.cur_after_line, self.cur_after_line + self.num_after_line - 1)
+            self.line_interval_dict[self.commit_hash][self.path_tup]['addition'].add_interval(self.cur_after_line, self.cur_after_line + self.num_after_line - 1)
         
         return True
     
@@ -196,11 +196,11 @@ class Diff:
     
     # Perform gumtree parsing
     def parse_gumtree(self):
-        for commit_hash in self.range_dict.keys():
-            for (before_src_path, after_src_path) in self.range_dict[commit_hash].keys():
+        for commit_hash in self.line_interval_dict.keys():
+            for (before_src_path, after_src_path) in self.line_interval_dict[commit_hash].keys():
                 print(before_src_path, after_src_path)
-                addition_range = self.range_dict[commit_hash][(before_src_path, after_src_path)]['addition']
-                deletion_range = self.range_dict[commit_hash][(before_src_path, after_src_path)]['deletion']
+                addition_range = self.line_interval_dict[commit_hash][(before_src_path, after_src_path)]['addition']
+                deletion_range = self.line_interval_dict[commit_hash][(before_src_path, after_src_path)]['deletion']
 
                 if after_src_path == '/dev/null': # No after file
                     no_after_src = True
@@ -286,13 +286,13 @@ if __name__ == "__main__":
     with open('/root/workspace/error.txt', 'a') as file:
         file.write('Working on {}_{}b\n'.format(args.project, args.version))
 
-    range_dict = get_range_dict(args.project, args.version)
+    line_interval_dict = get_line_interval_dict(args.project, args.version)
     COMMIT_LOG_CMD = 'git log -M -C -L {0},{1}:{2}'
 
     diff = Diff()
 
     # For each change info, run git log and parse the result
-    for src_path, ranges in range_dict.items():
+    for src_path, ranges in line_interval_dict.items():
         for begin_line, end_line in ranges:
             cmd = COMMIT_LOG_CMD.format(begin_line, end_line, src_path)
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
@@ -304,7 +304,7 @@ if __name__ == "__main__":
                 print(cmd)
                 raise e
     
-    #print(diff.range_dict)
+    #print(diff.line_interval_dict)
     print(diff.git_dict)
         
     # Save the parsed result
