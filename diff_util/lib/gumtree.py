@@ -49,6 +49,16 @@ class CustomInterval():
     
     def is_empty(self):
         return len(self.interval_data) == 0
+    
+    def components(self):
+        return self.interval_data.components
+    
+    def __iter__(self):
+        return iter(self.interval_data)
+
+class FullCustomInterval(CustomInterval):
+    def __init__(self):
+        self.interval_data = interval[-inf, inf]
 
 def file_encode(no_after_src, no_before_src):
     if not no_after_src:
@@ -72,27 +82,27 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
     
     # Convert line level range to token level range
     def line_to_token_range(lines, line_range):
-        token_range = CustomInterval()
+        token_range = interval()
         token_cnt = 0
         
         # Add range for line in given range
         for line_cnt, line in enumerate(lines):
             if line_cnt + 1 in line_range:
-                token_range.add_interval(token_cnt, token_cnt + len(line) - 1)
+                token_range |= interval[token_cnt, token_cnt + len(line) - 1]
             token_cnt += len(line)
 
         return token_range
     
     # Convert line level range to token level range
     if no_after_src:
-        addition_token_range = CustomInterval()
+        addition_token_range = interval()
     else:
         with open('/root/workspace/tmp/after.java', 'r', encoding='utf-8', errors='ignore') as file:
             after_lines = file.readlines()
         addition_token_range = line_to_token_range(after_lines, addition_range)
     
     if no_before_src:
-        deletion_token_range = CustomInterval()
+        deletion_token_range = interval()
     else:
         with open('/root/workspace/tmp/before.java', 'r', encoding='utf-8', errors='ignore') as file:
             before_lines = file.readlines()
@@ -100,27 +110,29 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
     
     # File creation/deletion (Update has to be empty)
     if no_after_src or no_before_src:
-        return addition_token_range, deletion_token_range, dict()
+        return addition_token_range, deletion_token_range
 
     # File modification
     else:
-        diff_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtree textdiff -g java-jdt -m gumtree-simple -f JSON before.java after.java'
+        diff_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtree textdiff -g java-jdtc -m gumtree-simple -f JSON before.java after.java'
         p = subprocess.Popen(diff_cmd, shell=True, stdout=subprocess.PIPE)
         stdout, _ = p.communicate()
 
         if p.returncode != 0: # Diff error
-            print('OJODSFO')
-            return None
+            with open('/root/workspace/error.txt', 'a') as file:
+                file.write(f'GumTreeDiff returns error : {stdout}\n')
+            return None, None
 
         try:
             diff_json = json.loads(stdout.decode(encoding='utf-8', errors='ignore'))
         except:
-            return None # Decoding error
+            with open('/root/workspace/error.txt', 'a') as file:
+                file.write(f'Diff output decoding error\n')
+            return None, None # Decoding error
         
-        print(diff_json)
         tree_pattern = r".+\[(\d+),(\d+)\]"
-        gumtree_addition_range = CustomInterval()
-        gumtree_deletion_range = CustomInterval()
+        gumtree_addition_range = interval()
+        gumtree_deletion_range = interval()
         gumtree_update_dict = dict()
 
         # {'action': 'action', 'tree': 'type:'}
@@ -132,7 +144,7 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
                 if match:
                     start_pos = int(match.group(1))
                     end_pos = int(match.group(2))
-                    gumtree_addition_range.add_interval(start_pos, end_pos - 1)
+                    gumtree_addition_range |= interval[start_pos, end_pos - 1]
                 
             # Update node action
             # {'action': 'update-node', 'tree': 'SimpleName: classNames [2810,2820]', 'label': 'className'}
@@ -143,7 +155,9 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
                 if match:
                     start_pos = int(match.group(1))
                     end_pos = int(match.group(2))
-                    gumtree_update_dict[CustomInterval(start_pos, end_pos - 1)] = action['label']
+                    #gumtree_update_dict[CustomInterval(start_pos, end_pos - 1)] = action['label']
+                    gumtree_deletion_range |= interval[start_pos, end_pos - 1]
+                    gumtree_addition_range |= interval[action['targetPos'], action['targetLength']]
 
             # Deletion (tree, node) action
             # {'action': 'delete-tree', 'tree': 'ReturnStatement [14519,14532]'}
@@ -153,7 +167,7 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
                 if match:
                     start_pos = int(match.group(1))
                     end_pos = int(match.group(2))
-                    gumtree_deletion_range.add_interval(start_pos, end_pos - 1)
+                    gumtree_deletion_range |= interval[start_pos, end_pos - 1]
             
             """
             # {'action': 'move-tree', 'tree': 'IfStatement [14204,14459]', 'parent': 'Block [12965,14472]', 'at': 7}
@@ -168,64 +182,69 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
             """
         
         # Get intersection
-        gumtree_update_dict = {update_range : label for (update_range, label) in gumtree_update_dict.items() if update_range in deletion_token_range}
+        #gumtree_update_dict = {update_range : label for (update_range, label) in gumtree_update_dict.items() if update_range in deletion_token_range}
 
         addition_token_range &= gumtree_addition_range
         deletion_token_range &= gumtree_deletion_range
 
-        return addition_token_range, deletion_token_range, gumtree_update_dict
+        return addition_token_range, deletion_token_range
 
 # Parse the file and returns in json format
-def gumtree_parse(filename, token_range):
-    def get_all_labels(tree_json):
-        if 'label' in tree_json:
-            res = [tree_json['label']]
-        
-        else:
-            res = []
-
-        for child in tree_json['children']:
-            res += all_label(child)
-        
-        return res
-
-    # Return list of every labels in given token range of the tree
-    def get_labels_in_range(tree_json, token_range):
-        label_list = []
-
-        if 'label' in tree_json and CustomInterval(int(tree_json['pos']), int(tree_json['pos']) + int(tree_json['length']) - 1) in token_range:
-            label_list = [tree_json['label']]
-
-        for child in tree_json['children']:
-            if not (token_range & CustomInterval(int(child['pos']), int(child['pos']) + int(child['length']) - 1)).is_empty():
-                label_list += get_labels_in_range(child, token_range)
-
-        return label_list
-
-    parse_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtree parse -g java-jdt -f JSON {filename}'
+def gumtree_parse(filename, token_range=interval[-inf, inf]):
+    parse_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtree parse -g custom-jdt -f JSON {filename}'
     p = subprocess.Popen(parse_cmd, shell=True, stdout=subprocess.PIPE)
     stdout, _ = p.communicate()
 
     if p.returncode != 0: # Parsing error
-        print('OJODSFO')
+        with open('/root/workspace/error.txt', 'a') as file:
+            file.write(f'Parse returns error : {stdout}\n')
         return None
 
     try:
-        tree_json = json.loads(stdout.decode(encoding='utf-8', errors='ignore'))
+        parse_json = json.loads(stdout.decode(encoding='utf-8', errors='ignore'))
     except:
+        with open('/root/workspace/error.txt', 'a') as file:
+            file.write(f'Parse output decoding error\n')
         return None # Decoding error
-    #print(json.dumps(tree_json, indent=4))
-    print(tree_json)
+    #print(json.dumps(parse_json, indent=4))
+    token_interval_dict = {'class':interval(), 'method':interval(), 'variable':interval(), 'comment':interval()}
+
+    for data in parse_json:
+        if 'isClass' in data:
+            token_interval_dict['class'] |= interval[int(data['pos']), int(data['pos']) + int(data['length']) - 1]
+        elif 'isMethod' in data:
+            token_interval_dict['method'] |= interval[int(data['pos']), int(data['pos']) + int(data['length']) - 1]
+        elif 'isComment' in data:
+            token_interval_dict['comment'] |= interval[int(data['pos']), int(data['pos']) + int(data['length']) - 1]
+        elif 'isVariable' in data:
+            token_interval_dict['variable'] |= interval[int(data['pos']), int(data['pos']) + int(data['length']) - 1]
     
-    return get_labels_in_range(tree_json['root'], token_range)
+    with open(f'/root/workspace/tmp/{filename}', 'r', encoding='utf-8', errors='ignore') as file:
+        filedata = file.read()
+
+    token_dict = dict()
+    
+    for token_type, token_interval in token_interval_dict.items():
+        token_interval &= token_range
+        token_dict[token_type] = []
+
+        for sub_interval in token_interval:
+            if sub_interval.inf != sub_interval.sup:
+                token_dict[token_type] += [''.join(filedata[int(sub_interval.inf) : int(sub_interval.sup) + 1])]
+                print(token_type, token_dict[token_type][-1])
+    
+    return token_dict
 
 # addition [class, method, variable, comment], deletion [class, method, variable, comment]
 def gumtree_diff(no_after_src=False, no_before_src=False, addition_range=interval[-inf,inf], deletion_range=interval[-inf,inf], use_comment=False):
     #file_encode(no_after_src, no_before_src)
     
     # Get token ranges
-    addition_token_range, deletion_token_range, update_dict = \
+    addition_token_range, deletion_token_range = \
         gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deletion_range)
+    
+    if addition_token_range is None or deletion_token_range is None:
+        return None, None
     
     # Get tokens
     if no_after_src:
@@ -237,6 +256,7 @@ def gumtree_diff(no_after_src=False, no_before_src=False, addition_range=interva
         deletion_tokens = []
     else:
         deletion_tokens = gumtree_parse('before.java', deletion_token_range)
+    #print(update_dict)
     
     return addition_tokens, deletion_tokens
 
@@ -247,4 +267,4 @@ if __name__ == "__main__":
     addition_range.interval_data = interval[-inf, inf]
     deletion_range.interval_data = interval[-inf, inf]
 
-    gumtree_diff(False, False, addition_range, deletion_range)
+    gumtree_diff(False, False)

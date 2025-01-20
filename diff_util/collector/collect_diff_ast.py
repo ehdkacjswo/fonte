@@ -59,7 +59,6 @@ class Diff:
 
         # Encoder for git/gumtree diff
         self.git_encoder = Encoder()
-        self.gumtree_encoder = Encoder()
     
     # Set current commit
     def set_commit_hash(self, line):
@@ -108,16 +107,14 @@ class Diff:
         self.path_tup = (before_src_path, after_src_path)
 
         if self.path_tup not in self.line_interval_dict[self.commit_hash]:
-            self.line_interval_dict[self.commit_hash][self.path_tup] = {'addition' : CustomInterval(), 'deletion' : CustomInterval()}
+            self.line_interval_dict[self.commit_hash][self.path_tup] = {'addition' : interval(), 'deletion' : interval()}
 
             # Encode 
-            git_path_tup = (self.git_encoder.encode(before_src_path, use_stopword=False, update_vocab=True), \
-                self.git_encoder.encode(after_src_path, use_stopword=False, update_vocab=True))
-            gumtree_path_tup = (self.gumtree_encoder.encode(before_src_path, use_stopword=False, update_vocab=True), \
-                self.gumtree_encoder.encode(after_src_path, use_stopword=False, update_vocab=True))
+            #git_path_tup = (self.git_encoder.encode(before_src_path, use_stopword=True, update_vocab=True), \
+            #    self.git_encoder.encode(after_src_path, use_stopword=True, update_vocab=True))
 
-            self.git_dict[self.commit_hash][self.path_tup] = {'path_tup' : git_path_tup, 'addition' : [], 'deletion' : []}
-            self.gumtree_dict[self.commit_hash][self.path_tup] = {'path_tup' : gumtree_path_tup, 'addition' : [], 'deletion' : []}
+            self.git_dict[self.commit_hash][self.path_tup] = {'addition' : {}, 'deletion' : {}}
+            self.gumtree_dict[self.commit_hash][self.path_tup] = {'addition' : interval(), 'deletion' : interval()}
             
         
         return True
@@ -139,10 +136,10 @@ class Diff:
 
         # Add range info
         if self.num_before_line > 0:
-            self.line_interval_dict[self.commit_hash][self.path_tup]['deletion'].add_interval(self.cur_before_line, self.cur_before_line + self.num_before_line - 1)
+            self.line_interval_dict[self.commit_hash][self.path_tup]['deletion'] |= interval[self.cur_before_line, self.cur_before_line + self.num_before_line - 1]
 
         if self.num_after_line > 0:
-            self.line_interval_dict[self.commit_hash][self.path_tup]['addition'].add_interval(self.cur_after_line, self.cur_after_line + self.num_after_line - 1)
+            self.line_interval_dict[self.commit_hash][self.path_tup]['addition'] |= interval[self.cur_after_line, self.cur_after_line + self.num_after_line - 1]
         
         return True
     
@@ -163,10 +160,9 @@ class Diff:
                 return
     
             line = line[1:].strip()
-            encoded_line = self.git_encoder.encode(line, use_stopword=False, update_vocab=True)
+            #encoded_line = self.git_encoder.encode(line, use_stopword=True, update_vocab=True)
 
-            self.git_dict[self.commit_hash][self.path_tup]['deletion'] = \
-                sum_encode(self.git_dict[self.commit_hash][self.path_tup]['deletion'], encoded_line)
+            self.git_dict[self.commit_hash][self.path_tup]['deletion'][self.cur_before_line] = line
             self.cur_before_line += 1
             
         # Added line
@@ -181,10 +177,9 @@ class Diff:
                 return
             
             line = line[1:].strip()
-            encoded_line = self.git_encoder.encode(line, use_stopword=False, update_vocab=True)
+            #encoded_line = self.git_encoder.encode(line, use_stopword=True, update_vocab=True)
 
-            self.git_dict[self.commit_hash][self.path_tup]['addition'] = \
-                sum_encode(self.git_dict[self.commit_hash][self.path_tup]['addition'], encoded_line)
+            self.git_dict[self.commit_hash][self.path_tup]['addition'][self.cur_after_line] = line
             self.cur_after_line += 1
                 
         # Unchanged line
@@ -198,7 +193,7 @@ class Diff:
     def parse_gumtree(self):
         for commit_hash in self.line_interval_dict.keys():
             for (before_src_path, after_src_path) in self.line_interval_dict[commit_hash].keys():
-                print(before_src_path, after_src_path)
+                #(before_src_path, after_src_path)
                 addition_range = self.line_interval_dict[commit_hash][(before_src_path, after_src_path)]['addition']
                 deletion_range = self.line_interval_dict[commit_hash][(before_src_path, after_src_path)]['deletion']
 
@@ -252,7 +247,23 @@ class Diff:
                 
                 #print(no_after_src, no_before_src, addition_range.interval_data, deletion_range.interval_data)
                 #print(self.git_dict[commit_hash][(before_src_path, after_src_path)])
-                gumtree_diff(no_after_src=no_after_src, no_before_src=no_before_src, addition_range=addition_range, deletion_range=deletion_range)
+                addition_token_interval, deletion_token_interval = gumtree_diff_token_range(no_after_src=no_after_src, no_before_src=no_before_src, addition_range=addition_range, deletion_range=deletion_range)
+                
+                if addition_token_interval is None or deletion_token_interval is None:
+                    with open('/root/workspace/error.txt', 'a') as file:
+                        file.write(f'GumTree token interval retrieval failed')
+
+                    return
+
+
+                self.gumtree_dict[self.commit_hash][self.path_tup]['addition'] |= addition_token_interval
+                self.gumtree_dict[self.commit_hash][self.path_tup]['deletion'] |= deletion_token_interval
+
+                #print(self.commit_hash)
+                #print(self.path_tup)
+                #print(self.gumtree_dict[self.commit_hash][self.path_tup]['addition'].format("%+g"))
+                #print(self.gumtree_dict[self.commit_hash][self.path_tup]['deletion'].format("%+g"))
+
                 return
                 
     # Parse the diff text
@@ -305,11 +316,18 @@ if __name__ == "__main__":
                 raise e
     
     #print(diff.line_interval_dict)
-    print(diff.git_dict)
+    #print(diff.git_dict)
+    #print(diff.gumtree_dict)
         
     # Save the parsed result
-    """savedir = f'/root/workspace/data/Defects4J/diff/{args.project}-{args.version}b'
+    savedir = f'/root/workspace/data/Defects4J/diff/{args.project}-{args.version}b'
     os.makedirs(savedir, exist_ok=True)
 
-    with open(os.path.join(savedir, 'diff.pkl'), 'wb') as file:
-        pickle.dump(diff_commit, file)"""
+    with open(os.path.join(savedir, 'git_diff.pkl'), 'wb') as file:
+        pickle.dump(diff.git_dict, file)
+
+    #with open(os.path.join(savedir, 'git_vocab.pkl'), 'wb') as file:
+    #    pickle.dump(diff.git_encoder.vocab, file)
+
+    with open(os.path.join(savedir, 'gumtree_diff_interval.pkl'), 'wb') as file:
+        pickle.dump(diff.gumtree_dict, file)
