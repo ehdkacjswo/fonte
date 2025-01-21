@@ -283,7 +283,7 @@ class Diff:
 
             self.get_git_diff(line) # Match actual diff data info
         
-        self.parse_gumtree() # Perform gumtree parsing
+        #self.parse_gumtree() # Perform gumtree parsing
             
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compute commit scores")
@@ -314,6 +314,7 @@ if __name__ == "__main__":
             except UnicodeDecodeError as e:
                 print(cmd)
                 raise e
+    diff.parse_gumtree()
     
     #print(diff.line_interval_dict)
     #print(diff.git_dict)
