@@ -27,8 +27,8 @@ for dir in "$BASE_DIR"/*/; do
     echo "Directory name $dir_name does not match the pattern."
   fi
 
-  #project="Cli"
-  #version="29"
+  project="Cli"
+  version="29"
 
   tmpdir=/tmp/${project}-${version}b/
   faulty_version=$(grep ^${version}, /defects4j/framework/projects/${project}/commit-db | cut -d',' -f2)
@@ -63,13 +63,13 @@ for dir in "$BASE_DIR"/*/; do
   echo "Reset to the actual buggy version $faulty_version  OK"
 
   # Collect relative diff
-  python /root/workspace/diff_util/stage2/collect_token_gumtree.py -p $project -v $version
+  python /root/workspace/diff_util/stage2/stage2.py -p $project -v $version
 
   # Clean up the tmp directory
   rm -rf $tmpdir
   echo "Cleaning up $tmpdir"
   cd "$original_cwd"
-  #exit 1
+  exit 1
 done
 
   

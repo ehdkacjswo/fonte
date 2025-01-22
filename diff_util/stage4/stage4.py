@@ -1,0 +1,124 @@
+import os, sys, json, argparse, pickle, itertools
+import numpy as np
+import pandas as pd
+from spiral import ronin
+from collections import Counter
+from tqdm import tqdm
+
+sys.path.append('/root/workspace/diff_util/lib/')
+from diff import *
+from encoder import *
+
+CORE_DATA_DIR = "/root/workspace/data/Defects4J/core"
+BIC_GT_DIR = "/root/workspace/data/Defects4J/BIC_dataset"
+BASELINE_DATA_DIR = "/root/workspace/data/Defects4J/baseline"
+DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
+
+# Check if two encoded data are equal
+def equal_encode(vec1, vec2):
+    if len(vec1) != len(vec2):
+        return False
+    
+    dict1 = dict(vec1)
+
+    for (word, cnt) in vec2:
+        if vec1.get(word, 0) != cnt:
+            return False
+    
+    return True
+
+encode_type_dict = {'git' : ['diff'], 'gumtree_base' : ['diff'], 'gumtree_class' : ['class', 'method', 'variable', 'comment']}
+adddel_list = ['add', 'del', 'all-uni', 'all-sep']
+
+# data : 
+def stage4(stage3_data, diff_type):
+    res_dict = {adddel : dict() for adddel in adddel_list}
+    encode_type_list = encode_type_dict[diff_type]
+
+    # Iterate through commits
+    for commit_hash, commit_data in stage3_data.items():
+        src_path_set = set()
+        src_path_addition = list()
+        src_path_deletion = list()
+        src_path_all_uni = list()
+
+        content_addition = dict()
+        content_deletion = dict()
+    
+        # Addition data
+        for src_path, encode_dict in commit_data["addition"].items():
+            if src_path not in src_path_set: # Only unique path for all-uni
+                src_path_set.add(src_path)
+                src_path_all_uni = sum_encode(src_path_all_uni, encode_dict['src_path'])
+            
+            src_path_addition = sum_encode(src_path_addition, encode_dict['src_path'])
+            
+            for encode_type in encode_type_list:
+                content_addition[encode_type] = sum_encode(content_addition.get(encode_type, []), encode_dict.get(encode_type, []))
+
+        # Deletion data
+        for src_path, encode_dict in commit_data["deletion"].items():
+            if src_path not in src_path_set: # Only unique path for all-uni
+                src_path_set.add(src_path)
+                src_path_all_uni = sum_encode(src_path_all_uni, encode_dict['src_path'])
+            
+            src_path_deletion = sum_encode(src_path_deletion, encode_dict['src_path'])
+            
+            for encode_type in encode_type_list:
+                content_deletion[encode_type] = sum_encode(content_deletion.get(encode_type, []), encode_dict.get(encode_type, []))
+        
+        for adddel in adddel_list:
+            res_dict[adddel][commit_hash] = [commit_data.get("message", [])]
+
+            if adddel == 'all-uni':
+                src_path_encode = [src_path_all_uni]
+                content_encode = {encode_type : \
+                    [sum_encode(content_addition.get(encode_type, []), content_deletion.get(encode_type, []))] \
+                    for encode_type in encode_type_list}
+            
+            elif adddel == 'all-sep':
+                src_path_encode = [src_path_addition, src_path_deletion]
+                content_encode = {encode_type : \
+                    [content_addition.get(encode_type, []), content_deletion.get(encode_type, [])] \
+                    for encode_type in encode_type_list}
+            
+            elif adddel == 'add':
+                src_path_encode = [src_path_addition]
+                content_encode = {encode_type : [content_addition.get(encode_type, [])] for encode_type in encode_type_list}
+            
+            else:
+                src_path_encode = [src_path_deletion]
+                content_encode = {encode_type : [content_deletion.get(encode_type, [])] for encode_type in encode_type_list}
+
+            res_dict[adddel][commit_hash] += src_path_encode
+
+            for encode_type in encode_type_list:
+                res_dict[adddel][commit_hash] += content_encode[encode_type]
+        
+    return res_dict
+
+if __name__ == "__main__":
+    adddel_list = ['add', 'del', 'all-uni', 'all-sep'] # Which diff data to uses
+    
+    # Iterate through projects
+    for project in tqdm(os.listdir(DIFF_DATA_DIR)):
+        project = 'Cli-29b'
+        print(f'Working on project {project}')
+
+        with open(os.path.join(DIFF_DATA_DIR, project, 'stage3_encode.pkl'), 'rb') as file:
+            stage3_dict = pickle.load(file)
+        res_dict = dict()
+
+        for stage2, sub_dict in stage3_dict.items():
+            res_dict[stage2] = dict()
+
+            for (diff_type, use_stopword), stage3_data in sub_dict.items():
+                res_stage4 = stage4(stage3_data=stage3_data, diff_type=diff_type)
+
+                for adddel, res_stage4_data in res_stage4.items():
+                    res_dict[stage2][(diff_type, use_stopword, adddel)] = res_stage4_data
+        
+        with open(os.path.join(DIFF_DATA_DIR, project, 'stage4.pkl'), 'wb') as file:
+            pickle.dump(res_dict, file)
+        
+        break
