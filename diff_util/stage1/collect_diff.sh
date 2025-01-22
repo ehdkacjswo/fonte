@@ -63,10 +63,10 @@ for dir in "$BASE_DIR"/*/; do
   echo "Reset to the actual buggy version $faulty_version  OK"
 
   # Collect relative diff
-  python /root/workspace/diff_util/encoder/encode_diff_gumtree.py -p $project -v $version
+  python /root/workspace/diff_util/stage1/collect_diff.py -p $project -v $version
 
   # Clean up the tmp directory
-  #rm -rf $tmpdir
+  rm -rf $tmpdir
   echo "Cleaning up $tmpdir"
   cd "$original_cwd"
   exit 1

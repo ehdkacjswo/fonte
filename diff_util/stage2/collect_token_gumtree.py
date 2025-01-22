@@ -1,4 +1,4 @@
-import os, json, argparse, pickle, sys, itertools, subprocess
+import os, json, argparse, pickle, sys, itertools, subprocess, logging
 import pandas as pd
 from tqdm import tqdm
 from interval import interval
@@ -44,7 +44,7 @@ def encode_token(commit_hash, src_interval_dict, modify, classify_token):
 
     for src_path, src_interval in src_interval_dict[modify].items():
         # Empty interval
-        if len(src_interval) == 0:
+        if src_interval.is_empty():
             src_encode_dict[src_path] = dict()
             continue
 
@@ -69,7 +69,7 @@ def encode_token(commit_hash, src_interval_dict, modify, classify_token):
             if not classify_token:
                 src_token_dict[src_path] = {'token':[]}
                 for token_interval in src_interval:
-                    src_token_dict[src_path]['token'] += [''.join(code_txt[int(token_interval.inf) : int(token_interval.sup) + 1])]
+                    src_token_dict[src_path]['token'] += [''.join(code_txt[int(token_interval[0]) + 1 : int(token_interval[1]) + 1])]
                 continue
 
             with open('/root/workspace/tmp/tmp.java', 'w') as file:
@@ -109,13 +109,13 @@ def encode_gumtree(pid, vid, stage2, classify_token):
             if (commit_hash, before_src_path, after_src_path) in excluded: # Exclude style change
                 continue
 
-            if after_src_path != '/dev/null' and len(diff_interval['addition']) > 0:
+            if after_src_path != '/dev/null' and not diff_interval['addition'].is_empty():
                 addition_interval_dict[after_src_path] = \
-                    addition_interval_dict.get(after_src_path, interval()) | diff_interval['addition']
+                    addition_interval_dict.get(after_src_path, CustomInterval()) | diff_interval['addition']
             
-            if before_src_path != '/dev/null' and len(diff_interval['deletion']):
+            if before_src_path != '/dev/null' and not diff_interval['deletion'].is_empty():
                 deletion_interval_dict[before_src_path] = \
-                    deletion_interval_dict.get(before_src_path, interval()) | diff_interval['deletion']
+                    deletion_interval_dict.get(before_src_path, CustomInterval()) | diff_interval['deletion']
 
         total_interval[commit_hash] = {'addition' : dict(), 'deletion' : dict()}
 
@@ -132,8 +132,7 @@ def encode_gumtree(pid, vid, stage2, classify_token):
         total_token[commit_hash] = dict()
         total_token[commit_hash]['addition'] = encode_token(commit_hash, commit_interval, 'addition', classify_token)
         total_token[commit_hash]['deletion'] = encode_token(commit_hash, commit_interval, 'deletion', classify_token)
-    
-    print(total_token)
+
     return total_token
 
 if __name__ == "__main__":
@@ -143,6 +142,8 @@ if __name__ == "__main__":
     parser.add_argument('--version', '-v', type=int, default=21,
         help="Target buggy version (default: 21)")
     args = parser.parse_args()
+
+    logging.basicConfig(filename="/root/workspace/diff_util/collector/", level=logging.INFO)
 
     print('Working on {}_{}b'.format(args.project, args.version))
     with open('/root/workspace/error.txt', 'a') as file:

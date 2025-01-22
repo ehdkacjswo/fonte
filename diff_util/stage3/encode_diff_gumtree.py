@@ -30,6 +30,8 @@ def get_style_change_data(coredir, tool='git', with_Rewrite=True):
 # skip_stage_2 = Excluding style change diff, with_Rewrite = , use_stopword
 # Encoded data : {commit_hash : [addition_list, deletion_list, msg_encode]}
 # addition/deletion dict : [(before/after_src_path_encode, content_encode_sum)]
+
+# Data has form of {commit_hash : {type : token_list}}
 def encode_git(pid, vid, stage2, use_stopword):
     # Load related diff data
     diff_data_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
