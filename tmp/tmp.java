@@ -1,48 +1,42 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//cli/src/java/org/apache/commons/cli/Util.java,v 1.2 2002/12/09 23:47:25 jkeyes Exp $
- * $Revision: 1.2 $
- * $Date: 2002/12/09 23:47:25 $
+ * Joda Software License, Version 1.0
  *
- * ====================================================================
  *
- * The Apache Software License, Version 1.1
- *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
- * reserved.
+ * Copyright (c) 2001-2004 Stephen Colebourne.  
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ *    notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
  *
- * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:
+ * 3. The end-user documentation included with the redistribution,
+ *    if any, must include the following acknowledgment:  
  *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowlegement may appear in the software itself,
- *    if and wherever such third-party acknowlegements normally appear.
+ *        Joda project (http://www.joda.org/)."
+ *    Alternately, this acknowledgment may appear in the software itself,
+ *    if and wherever such third-party acknowledgments normally appear.
  *
- * 4. The names "The Jakarta Project", "Commons", and "Apache Software
- *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written
- *    permission, please contact apache@apache.org.
+ * 4. The name "Joda" must not be used to endorse or promote products
+ *    derived from this software without prior written permission. For
+ *    written permission, please contact licence@joda.org.
  *
- * 5. Products derived from this software may not be called "Apache"
- *    nor may "Apache" appear in their names without prior written
- *    permission of the Apache Group.
+ * 5. Products derived from this software may not be called "Joda",
+ *    nor may "Joda" appear in their name, without prior written
+ *    permission of the Joda project.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * DISCLAIMED.  IN NO EVENT SHALL THE JODA AUTHORS OR THE PROJECT
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -53,40 +47,391 @@
  * ====================================================================
  *
  * This software consists of voluntary contributions made by many
- * individuals on behalf of the Apache Software Foundation.  For more
- * information on the Apache Software Foundation, please see
- * <http://www.apache.org/>.
- *
+ * individuals on behalf of the Joda project and was originally 
+ * created by Stephen Colebourne <scolebourne@joda.org>. For more
+ * information on the Joda project, please see <http://www.joda.org/>.
  */
-package org.apache.commons.cli;
+package org.joda.time;
 
 /**
- * Contains useful helper methods for classes within this package.
+ * Chronology provides access to the individual date time fields for a
+ * chronological calendar system. Various chronologies are supported by
+ * subclasses including ISO and GregorianJulian.
+ * <p>
+ * This interface defines a number of fields with names from the ISO8601
+ * standard. Chronology does not 'strongly' define these fields however, thus
+ * implementations are free to interpret the field names as they wish. For
+ * example, a week could be defined as 10 days and a month as 40 days in a
+ * special WeirdChronology implementation. Clearly the GJ and ISO
+ * implementations provided use the field names as you would expect.
+ * 
+ * @see org.joda.time.chrono.ISOChronology
+ * @see org.joda.time.chrono.GJChronology
+ * @see org.joda.time.chrono.GregorianChronology
+ * @see org.joda.time.chrono.JulianChronology
+ * @see org.joda.time.chrono.CopticChronology
+ * @see org.joda.time.chrono.BuddhistChronology
  *
- * @author John Keyes (john at integralsource.com)
+ * @author Stephen Colebourne
+ * @author Brian S O'Neill
+ * @since 1.0
  */
-class Util {
+public interface Chronology {
+    
+    /**
+     * Returns the DateTimeZone that this Chronology operates in, or null if
+     * unspecified.
+     *
+     * @return DateTimeZone null if unspecified
+     */
+    DateTimeZone getZone();
 
     /**
-     * <p>Remove the hyphens from the begining of <code>str</code> and
-     * return the new String.</p>
+     * Returns an instance of this Chronology that operates in the UTC time
+     * zone. Chronologies that do not operate in a time zone or are already
+     * UTC must return themself.
      *
-     * @param str The string from which the hyphens should be removed.
-     *
-     * @return the hyphens from the begining of <code>str</code> and
-     * return the new String.
+     * @return a version of this chronology that ignores time zones
      */
-    static String stripLeadingHyphens(String str)
-    {
-        if (str.startsWith("--"))
-        {
-            return str.substring(2, str.length());
-        }
-        else if (str.startsWith("-"))
-        {
-            return str.substring(1, str.length());
-        }
+    Chronology withUTC();
+    
+    /**
+     * Returns an instance of this Chronology that operates in any time zone.
+     *
+     * @return a version of this chronology with a specific time zone
+     * @param zone to use, or default if null
+     * @see org.joda.time.chrono.ZonedChronology
+     */
+    Chronology withZone(DateTimeZone zone);
 
-        return str;
-    }
+    /**
+     * Returns a datetime millisecond instant, formed from the given year,
+     * month, day, and millisecond values. The set of given values must refer
+     * to a valid datetime, or else an IllegalArgumentException is thrown.
+     * <p>
+     * The default implementation calls upon separate DateTimeFields to
+     * determine the result. Subclasses are encouraged to provide a more
+     * efficient implementation.
+     *
+     * @param year year to use
+     * @param monthOfYear month to use
+     * @param dayOfMonth day of month to use
+     * @param millisOfDay millisecond to use
+     * @return millisecond instant from 1970-01-01T00:00:00Z
+     */
+    long getDateTimeMillis(int year, int monthOfYear, int dayOfMonth, int millisOfDay)
+        throws IllegalArgumentException;
+
+    /**
+     * Returns a datetime millisecond instant, formed from the given year,
+     * month, day, hour, minute, second, and millisecond values. The set of
+     * given values must refer to a valid datetime, or else an
+     * IllegalArgumentException is thrown.
+     * <p>
+     * The default implementation calls upon separate DateTimeFields to
+     * determine the result. Subclasses are encouraged to provide a more
+     * efficient implementation.
+     *
+     * @param year year to use
+     * @param monthOfYear month to use
+     * @param dayOfMonth day of month to use
+     * @param hourOfDay hour to use
+     * @param minuteOfHour minute to use
+     * @param secondOfMinute second to use
+     * @param millisOfSecond millisecond to use
+     * @return millisecond instant from 1970-01-01T00:00:00Z
+     */
+    long getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,
+                           int hourOfDay, int minuteOfHour,
+                           int secondOfMinute, int millisOfSecond)
+        throws IllegalArgumentException;
+
+    /**
+     * Returns a datetime millisecond instant, from from the given instant,
+     * hour, minute, second, and millisecond values. The set of given values
+     * must refer to a valid datetime, or else an IllegalArgumentException is
+     * thrown.
+     * <p>
+     * The default implementation calls upon separate DateTimeFields to
+     * determine the result. Subclasses are encouraged to provide a more
+     * efficient implementation.
+     *
+     * @param instant instant to start from
+     * @param hourOfDay hour to use
+     * @param minuteOfHour minute to use
+     * @param secondOfMinute second to use
+     * @param millisOfSecond millisecond to use
+     * @return millisecond instant from 1970-01-01T00:00:00Z
+     */
+    long getDateTimeMillis(long instant,
+                           int hourOfDay, int minuteOfHour,
+                           int secondOfMinute, int millisOfSecond)
+        throws IllegalArgumentException;
+
+    /**
+     * Validates whether the values are valid for the fields of a partial instant.
+     *
+     * @param instant  the partial instant to validate
+     * @param values  the values to validate, not null, match fields in partial
+     * @throws IllegalArgumentException if the instant is invalid
+     */
+    void validate(ReadablePartial instant, int[] values);
+
+    // Millis
+    //-----------------------------------------------------------------------
+    /**
+     * Get the millis duration field for this chronology.
+     * 
+     * @return DurationField or UnsupportedDurationField if unsupported
+     */
+    DurationField millis();
+
+    /**
+     * Get the millis of second field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField millisOfSecond();
+
+    /**
+     * Get the millis of day field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField millisOfDay();
+
+    // Second
+    //-----------------------------------------------------------------------
+    /**
+     * Get the seconds duration field for this chronology.
+     * 
+     * @return DurationField or UnsupportedDurationField if unsupported
+     */
+    DurationField seconds();
+
+    /**
+     * Get the second of minute field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField secondOfMinute();
+
+    /**
+     * Get the second of day field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField secondOfDay();
+
+    // Minute
+    //-----------------------------------------------------------------------
+    /**
+     * Get the minutes duration field for this chronology.
+     * 
+     * @return DurationField or UnsupportedDurationField if unsupported
+     */
+    DurationField minutes();
+
+    /**
+     * Get the minute of hour field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField minuteOfHour();
+
+    /**
+     * Get the minute of day field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField minuteOfDay();
+
+    // Hour
+    //-----------------------------------------------------------------------
+    /**
+     * Get the hours duration field for this chronology.
+     * 
+     * @return DurationField or UnsupportedDurationField if unsupported
+     */
+    DurationField hours();
+
+    /**
+     * Get the hour of day (0-23) field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField hourOfDay();
+
+    /**
+     * Get the hour of day (offset to 1-24) field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField clockhourOfDay();
+
+    /**
+     * Get the hour of am/pm (0-11) field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField hourOfHalfday();
+
+    /**
+     * Get the hour of am/pm (offset to 1-12) field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField clockhourOfHalfday();
+
+    /**
+     * Get the AM(0) PM(1) field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField halfdayOfDay();
+
+    // Day
+    //-----------------------------------------------------------------------
+    /**
+     * Get the days duration field for this chronology.
+     * 
+     * @return DurationField or UnsupportedDurationField if unsupported
+     */
+    DurationField days();
+
+    /**
+     * Get the day of week field for this chronology.
+     *
+     * <p>DayOfWeek values are defined in {@link DateTimeConstants}.
+     * They use the ISO definitions, where 1 is Monday and 7 is Sunday.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField dayOfWeek();
+
+    /**
+     * Get the day of month field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField dayOfMonth();
+
+    /**
+     * Get the day of year field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField dayOfYear();
+
+    // Week
+    //-----------------------------------------------------------------------
+    /**
+     * Get the weeks duration field for this chronology.
+     * 
+     * @return DurationField or UnsupportedDurationField if unsupported
+     */
+    DurationField weeks();
+
+    /**
+     * Get the week of a week based year field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField weekOfWeekyear();
+
+    /**
+     * Get the weekyears duration field for this chronology.
+     * 
+     * @return DurationField or UnsupportedDurationField if unsupported
+     */
+    DurationField weekyears();
+
+    /**
+     * Get the year of a week based year field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField weekyear();
+
+    // Month
+    //-----------------------------------------------------------------------
+    /**
+     * Get the months duration field for this chronology.
+     * 
+     * @return DurationField or UnsupportedDurationField if unsupported
+     */
+    DurationField months();
+
+    /**
+     * Get the month of year field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField monthOfYear();
+
+    // Year
+    //-----------------------------------------------------------------------
+    /**
+     * Get the years duration field for this chronology.
+     * 
+     * @return DurationField or UnsupportedDurationField if unsupported
+     */
+    DurationField years();
+
+    /**
+     * Get the year field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField year();
+
+    /**
+     * Get the year of era field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField yearOfEra();
+
+    /**
+     * Get the year of century field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField yearOfCentury();
+
+    /**
+     * Get the centuries duration field for this chronology.
+     * 
+     * @return DurationField or UnsupportedDurationField if unsupported
+     */
+    DurationField centuries();
+
+    /**
+     * Get the century of era field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField centuryOfEra();
+
+    /**
+     * Get the eras duration field for this chronology.
+     * 
+     * @return DurationField or UnsupportedDurationField if unsupported
+     */
+    DurationField eras();
+
+    /**
+     * Get the era field for this chronology.
+     * 
+     * @return DateTimeField or UnsupportedDateTimeField if unsupported
+     */
+    DateTimeField era();
+
+    /**
+     * Gets a debugging toString.
+     * 
+     * @return a debugging string
+     */
+    String toString();
+
 }
