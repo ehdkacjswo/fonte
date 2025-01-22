@@ -149,7 +149,6 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
             # Update node action
             # {'action': 'update-node', 'tree': 'SimpleName: classNames [2810,2820]', 'label': 'className'}
             elif action['action'] == 'update-node':
-                #print(action)
                 match = re.match(tree_pattern, action['tree'])
 
                 if match:
@@ -157,7 +156,7 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
                     end_pos = int(match.group(2))
                     #gumtree_update_dict[CustomInterval(start_pos, end_pos - 1)] = action['label']
                     gumtree_deletion_range |= interval[start_pos, end_pos - 1]
-                    gumtree_addition_range |= interval[action['targetPos'], action['targetLength']]
+                    gumtree_addition_range |= interval[action['targetPos'], action['targetPos'] + action['targetLength'] - 1]
 
             # Deletion (tree, node) action
             # {'action': 'delete-tree', 'tree': 'ReturnStatement [14519,14532]'}
@@ -172,18 +171,14 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_range, deleti
             """
             # {'action': 'move-tree', 'tree': 'IfStatement [14204,14459]', 'parent': 'Block [12965,14472]', 'at': 7}
             elif action['action'] == 'move-tree':
-                #print(action)
                 match = re.match(tree_pattern, action['tree'])
 
                 if match:
                     start_pos = int(match.group(1))
                     end_pos = int(match.group(2))
-                    print(find_tree(target_jsons[0]['root'], start_pos, end_pos))
             """
         
         # Get intersection
-        #gumtree_update_dict = {update_range : label for (update_range, label) in gumtree_update_dict.items() if update_range in deletion_token_range}
-
         addition_token_range &= gumtree_addition_range
         deletion_token_range &= gumtree_deletion_range
 
@@ -229,9 +224,7 @@ def gumtree_parse(filename, token_range=interval[-inf, inf]):
         token_dict[token_type] = []
 
         for sub_interval in token_interval:
-            if sub_interval.inf != sub_interval.sup:
-                token_dict[token_type] += [''.join(filedata[int(sub_interval.inf) : int(sub_interval.sup) + 1])]
-                print(token_type, token_dict[token_type][-1])
+            token_dict[token_type] += [''.join(filedata[int(sub_interval.inf) : int(sub_interval.sup) + 1])]
     
     return token_dict
 
@@ -256,7 +249,6 @@ def gumtree_diff(no_after_src=False, no_before_src=False, addition_range=interva
         deletion_tokens = []
     else:
         deletion_tokens = gumtree_parse('before.java', deletion_token_range)
-    #print(update_dict)
     
     return addition_tokens, deletion_tokens
 

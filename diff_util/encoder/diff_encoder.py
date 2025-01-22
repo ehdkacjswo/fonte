@@ -140,7 +140,7 @@ if __name__ == "__main__":
         diff_encode_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b/encode')
         os.makedirs(diff_encode_dir, exist_ok=True)
 
-        with open(os.path.join(diff_encode_dir, f'diff_encode.pkl'), 'wb') as file:
+        """with open(os.path.join(diff_encode_dir, f'diff_encode.pkl'), 'wb') as file:
             pickle.dump(encode_dict, file)
         with open(os.path.join(diff_encode_dir, f'vocab.pkl'), 'wb') as file:
-            pickle.dump(vocab_dict, file)
+            pickle.dump(vocab_dict, file)"""

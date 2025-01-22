@@ -26,7 +26,10 @@ class Encoder():
         # Remove single character, numbers and stopwords
         if use_stopword:
             token_list = [token for token in token_list if \
-                (len(token) > 1 and not token.isdigit() and token not in Encoder.stopword_list)]
+                (len(token) > 1 and \
+                not token.isdigit() and \
+                token not in Encoder.stopword_list and \
+                token not in Encoder.keyword_list)]
             
         return token_list
 
