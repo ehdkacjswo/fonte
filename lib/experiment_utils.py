@@ -4,9 +4,6 @@ import pandas as pd
 from sbfl.base import SBFL
 from tqdm import tqdm
 
-sys.path.append('/root/workspace/diff_util/lib/')
-from encoder import savepath_postfix
-
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core'
 RESULT_DATA_DIR = '/root/workspace/data/Defects4J/result'
@@ -379,102 +376,4 @@ voting_functions = {
     (0, 'dense'): (lambda r: 1/r.dense_rank),
 }
 
-# For a given project, generate dataframe with result scores of fonte for every settings
-# Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
-def run_fonte(pid, vid):
-    fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
-    res_dict = dict()
 
-    for stage2 in ['skip']:
-        if stage2 == 'skip':
-            excluded = []
-        else:
-            excluded = get_style_change_commits(fault_dir, tool='git', with_Rewrite=stage2) #?
-        res_dict[stage2] = vote_for_commits(fault_dir, tool='git', formula='Ochiai', decay=0.1, \
-            voting_func=(lambda r: 1/r.max_rank), use_method_level_score=False, excluded=excluded, adjust_depth=True)
-    
-    savedir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b')
-    os.makedirs(savedir, exist_ok=True)
-    
-    return res_dict
-
-def run_ensemble(pid, vid):
-    # Load voting results
-    with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'bug2commit.pkl'), 'rb') as file:
-        bug2commit_dict = pickle.load(file)
-    
-    with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'fonte.pkl'), 'rb') as file:
-        fonte_dict = pickle.load(file)
-    
-    res_dict = dict()
-    
-    for stage2, sub_dict in bug2commit_dict.items():
-        fonte_df = fonte_dict[stage2]
-        res_dict[stage2] = dict()
-
-        for (diff_type, use_stopword, adddel, use_br), bug2commit_df in sub_dict.items():
-            merged_df = fonte_df.merge(bug2commit_df, on='commit', how='left', suffixes=('_fonte', '_bug2commit'))
-            merged_df['vote_bug2commit'].fillna(0, inplace=True)
-
-            for beta in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]:
-                merged_df['vote'] = merged_df['vote_fonte'] * (1 + beta * merged_df['vote_bug2commit'])
-                result_df = merged_df[['vote']]
-
-                result_df["rank"] = result_df["vote"].rank(ascending=False, method="max")
-                result_df["rank"] = result_df["rank"].astype(int)
-                result_df.sort_values(by="rank", inplace=True)
-                #result_df = result_df.set_index('commit')
-
-                res_dict[stage2][(diff_type, use_stopword, adddel, use_br, beta)] = result_df
-    
-    return res_dict
-
-def bisection_all(pid, vid):
-    # Basic commit info
-    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
-    BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
-
-    fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
-    all_commits = get_all_commits(fault_dir)
-
-    # Load voting results
-    with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'bug2commit.pkl'), 'rb') as file:
-        bug2commit_dict = pickle.load(file)
-    
-    with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'fonte.pkl'), 'rb') as file:
-        fonte_dict = pickle.load(file)
-    
-    with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'ensemble.pkl'), 'rb') as file:
-        ensemble_dict = pickle.load(file)
-
-    fonte_iter = dict()
-    bug2commit_iter = dict()
-    ensemble_iter = dict()
-    
-    for stage2, sub_dict in bug2commit_dict.items():
-        fonte_df = fonte_dict[stage2]
-        bug2commit_iter[stage2] = dict()
-        ensemble_iter[stage2] = dict()
-
-        # Get list of target commits
-        if stage2 == 'skip':
-            style_change_commits = []
-        else:
-            style_change_commits = get_style_change_commits(fault_dir, tool, with_Rewrite=(stage2=='True'))
-        
-        print(fonte_df)
-        C_BIC = [c for c in all_commits if c in fonte_df.index and c not in style_change_commits]
-
-        # 
-        votes = [float(fonte_df.loc[c, "vote"]) for c in C_BIC]
-        fonte_iter[stage2] = weighted_bisection(C_BIC, votes, BIC, ignore_zero=False)
-
-        for key, bug2commit_df in sub_dict.items():
-            votes = [float(bug2commit_df.loc[c, "vote"]) for c in C_BIC]
-            bug2commit_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC, ignore_zero=False)
-        
-        for key, ensemble_df in ensemble_dict[stage2].items():
-            votes = [float(ensemble_df.loc[c, "vote"]) for c in C_BIC]
-            bug2commit_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC, ignore_zero=False)
-    
-    return fonte_iter, bug2commit_iter, ensemble_iter
