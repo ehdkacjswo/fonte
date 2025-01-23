@@ -41,15 +41,20 @@ class BM25_Encode(BM25Okapi):
         self.corpus_size += 1
 
         for ind, cnt in document:
-            self.nd[ind] = self.nd.get(ind, 0) + 1
-            self.num_doc += cnt
+            if cnt > 0:
+                self.nd[ind] = self.nd.get(ind, 0) + 1
+                self.num_doc += cnt
     
     def _calc_idf(self):
         """
         Calculates frequencies of terms in documents and in corpus.
         This algorithm sets a floor on the idf values to eps * average_idf
         """
-        # collect idf sum to calculate an average idf for epsilon value
+
+        if len(self.nd) == 0:
+            return
+
+        # collect idf sum to calculate an average idf for epsilon 
         idf_sum = 0
         self.idf = dict()
 
@@ -60,9 +65,9 @@ class BM25_Encode(BM25Okapi):
 
         for word, freq in self.nd.items():
             # No count
-            if freq == 0:
+            """if freq == 0:
                 self.idf[word] = 0
-                continue
+                continue"""
 
             len_idf += 1
             idf = math.log(self.corpus_size - freq + 0.5) - math.log(freq + 0.5)

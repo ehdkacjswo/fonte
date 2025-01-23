@@ -17,8 +17,7 @@ class Encoder():
     
     def tokenize(self, text, use_stopword=True):
         # Remove characters except alphabets and numbers
-        if use_stopword:
-            text = re.sub(r'[^A-Za-z0-9]', ' ', text) 
+        text = re.sub(r'[^A-Za-z0-9]', ' ', text) 
 
         token_list = ronin.split(text) # Split the text
         token_list = [token.lower() for token in token_list] # Apply lowercase

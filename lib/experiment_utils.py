@@ -1,4 +1,4 @@
-import os, math, copy, json, sys, itertools
+import os, math, copy, json, sys, itertools, pickle
 import numpy as np
 import pandas as pd
 from sbfl.base import SBFL
@@ -9,6 +9,7 @@ from encoder import savepath_postfix
 
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core'
+RESULT_DATA_DIR = '/root/workspace/data/Defects4J/result'
 
 def load_BIC_GT(dataset_dir):
     def load_BIC_data(filename):
@@ -148,24 +149,16 @@ def get_style_change_commits(fault_dir, tool, with_Rewrite=True):
     agg_df = val_df.groupby("commit").all()[["unchanged"]]
     return agg_df.index[agg_df["unchanged"]].tolist()
 
-# HSFL parameter means the score will be regularized similarly as HSFL
 def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
-    use_method_level_score=False, adjust_depth=True,
-    in_class_only=False, HSFL=True, beta=0.0, \
-    use_diff=True, skip_stage_2=False, with_Rewrite=True, use_stopword=True, adddel='all'):
-    
-    # Get commit history info
+    use_method_level_score=False, excluded=[], adjust_depth=True,
+    in_class_only=False):
     commit_df = load_commit_history(fault_dir, tool)
-    if skip_stage_2:
-        excluded = []
-    else:
-        excluded = get_style_change_commits(fault_dir, tool, with_Rewrite=with_Rewrite)
 
     commit_df["excluded"] = commit_df["commit_hash"].isin(excluded)
     commit_df["new_depth"] = commit_df["depth"]
 
-    # Adjust depth of commits by ignoring excluded commits
     if len(excluded) > 0 and adjust_depth:
+        # update commit depth
         commit_df.loc[commit_df.excluded, "new_depth"] = None
         commit_df["method_identifier"] = commit_df.class_file + ":" + \
             commit_df.method_name + commit_df.method_signature + \
@@ -176,15 +169,12 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
                 & (commit_df.depth > row.depth)
             commit_df.loc[affected, "new_depth"] = commit_df.loc[affected, "new_depth"] - 1
 
-    # Get SBFL score
     sbfl_df = get_sbfl_scores_from_coverage(
         os.path.join(fault_dir, "coverage.pkl"),
         formula=formula,
         covered_by_failure_only=True,
         in_class_only=in_class_only)
 
-    # For method level score, each statements votes for the method
-    # And score of method will be sum of the votes from the statements
     if use_method_level_score:
         identifier = ["class_file", "method_name", "method_signature","begin_line", "end_line"]
         l_sbfl_df = sbfl_df.reset_index()
@@ -209,16 +199,9 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
         sbfl_df = pd.DataFrame(method_sbfl_rows,columns=identifier+["score"])
         sbfl_df = sbfl_df.set_index(identifier)
 
-    # Get the rank based on SBFL scores
     sbfl_df["dense_rank"] = (-sbfl_df["score"]).rank(method="dense")
     sbfl_df["max_rank"] = (-sbfl_df["score"]).rank(method="max")
-    
-    extra_score_dict = extra_score(fault_dir.replace('core', 'baseline'), use_diff=use_diff, skip_stage_2=skip_stage_2, with_Rewrite=with_Rewrite, use_stopword=use_stopword, adddel=adddel)
-    vote_dict = dict()
     vote_rows = []
-    total_vote = 0
-    BIC_vote = 0
-
     for _, row in sbfl_df.reset_index().iterrows():
         vote = voting_func(row)
         if use_method_level_score:
@@ -233,52 +216,15 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
                 & (commit_df.begin_line <= row.line) \
                 & (commit_df.end_line >= row.line)
             ]
-        
-        induce_sqrt = math.sqrt(com_df.shape[0])
-        induce_sqrt = 0
-        list_commits = []
-        sum_score = 0
-
-        # Find commits that modified the statement(method) and not excluded
         for commit, depth in zip(com_df.commit_hash, com_df.new_depth):
-            if commit not in excluded:
-                list_commits.append((commit, depth))
-                sum_score = sum_score + extra_score_dict.get(commit, min(extra_score_dict.values(), default=1))
-                """if commit not in extra_score_dict:
-                    print('FBL-BERT key doesn\'t exists : {} {}'.format(commit,fault_dir))"""
-        
-        induce_sqrt = math.sqrt(len(list_commits))
-        #sum_score = 1 if score is None else sum_score / induce_sqrt
-        sum_score = 1
-        
-        # Vote for commits
-        for commit, depth in list_commits:
-            if HSFL:
-                decayed_vote = vote * ((1-decay) ** depth) * sum_score / induce_sqrt
-                #decayed_vote = (vote * beta + extra_score_dict.get(commit, min(extra_score_dict.values(), default=0)) * (1 - beta)) * ((1-decay) ** depth) * sum_score / induce_sqrt
+            if commit in excluded:
+                decayed_vote = 0
             else:
-                decayed_vote = vote * ((1-decay) ** depth) * sum_score
-                #decayed_vote = (vote * beta + extra_score_dict.get(commit, min(extra_score_dict.values(), default=0)) * (1 - beta)) * ((1-decay) ** depth) * sum_score
-            vote_dict[commit] = vote_dict.get(commit, 0) + decayed_vote
-                
-
-        """decayed_vote = vote * ((1-decay) ** depth)
-                list_commits.append(commit)
-        
-        for commit in list_commits:
-            induce_sqrt = induce_sqrt + """
-
-    # Apply extra score
-    for commit, vote in vote_dict.items():
-        vote_rows.append([commit, vote * extra_score_dict.get(commit, min(extra_score_dict.values(), default=1))])
-        #vote_rows.append([commit, vote])
-        #if commit not in extra_score_dict.keys():
-            #print(fault_dir, commit)
-
+                decayed_vote = vote * ((1-decay) ** depth)
+            vote_rows.append([commit, decayed_vote])
     vote_df = pd.DataFrame(data=vote_rows, columns=["commit", "vote"])
     agg_vote_df = vote_df.groupby("commit").sum("vote")
     agg_vote_df.sort_values(by="vote", ascending=False, inplace=True)
-
     return agg_vote_df
 
 def max_aggr_for_commits(fault_dir, tool, formula,
@@ -361,7 +307,7 @@ def standard_bisection(commits: list, BIC, verbose=False, return_pivots=False):
     else:
         return num_iterations
 
-def weighted_bisection(commits: list, scores: list, BIC, ignore_zero = True, verbose=False,
+def weighted_bisection(commits: list, scores: list, BIC, ignore_zero=False, verbose=False,
     return_pivots=False):
     assert BIC in commits
     assert len(commits) == len(scores)
@@ -435,202 +381,100 @@ voting_functions = {
 
 # For a given project, generate dataframe with result scores of fonte for every settings
 # Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
-def score_eval_all(pid, vid, tool, formula, decay, voting_func,
-    use_method_level_score=False, adjust_depth=True,
-    in_class_only=False):
+def run_fonte(pid, vid):
+    fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
+    res_dict = dict()
 
-    fault_dir = os.path.join('/root/workspace/data/Defects4J/core', f'{pid}-{vid}b')
-    extra_scores_df = pd.read_hdf(os.path.join('/root/workspace/data/Defects4J/diff', f'{pid}-{vid}b/scores.hdf'))
-
-    # Possible settings
-    use_br_list = [True, False]
-    use_diff_list = [True, False]
-    use_stopword_list = [True] # [True, False]
-    adddel_list = ['add', 'del', 'all-uni', 'all-sep']
-    extra_score_list = list(itertools.product(use_br_list, use_diff_list, use_stopword_list, adddel_list))
-
-    score_mode_list = ['score', 'rank', 'both']
-    ensemble_list = ['extra', ('add', 0.0), ('add', 0.1), ('add', 0.2), ('add', 0.3), ('add', 0.4), \
-        ('add', 0.5), ('add', 0.6), ('add', 0.7), ('add', 0.8), ('add', 0.9), ('add', 1.0)]
-    score_param_list = list(itertools.product(score_mode_list, ensemble_list))
-
-    # Get SBFL score
-    sbfl_df = get_sbfl_scores_from_coverage(
-        os.path.join(fault_dir, "coverage.pkl"),
-        formula=formula,
-        covered_by_failure_only=True,
-        in_class_only=in_class_only)
-
-    # For method level score, each statements votes for the method
-    # And score of method will be sum of the votes from the statements
-    if use_method_level_score:
-        identifier = ["class_file", "method_name", "method_signature","begin_line", "end_line"]
-        l_sbfl_df = sbfl_df.reset_index()
-        l_sbfl_df["dense_rank"] = (-l_sbfl_df["score"]).rank(method="dense")
-        l_sbfl_df["max_rank"] = (-l_sbfl_df["score"]).rank(method="max")
-
-        l_sbfl_df["score"] = l_sbfl_df.apply(voting_func, axis=1)
-
-        method_sbfl_rows = []
-        for _, method in commit_df[identifier].drop_duplicates().iterrows():
-            method_score = l_sbfl_df[
-                (l_sbfl_df.class_file == method.class_file)
-                # & (l_sbfl_df.method_name == method.method_name)
-                # & (l_sbfl_df.method_signature == method.method_signature)   
-                & (l_sbfl_df.line >= method.begin_line)
-                & (l_sbfl_df.line <= method.end_line)
-            ].score.sum()
-            method_sbfl_rows.append([
-                method.class_file, method.method_name, method.method_signature,
-                method.begin_line, method.end_line, method_score
-            ])
-        sbfl_df = pd.DataFrame(method_sbfl_rows,columns=identifier+["score"])
-        sbfl_df = sbfl_df.set_index(identifier)
-
-    # Get the rank based on SBFL scores
-    sbfl_df["dense_rank"] = (-sbfl_df["score"]).rank(method="dense")
-    sbfl_df["max_rank"] = (-sbfl_df["score"]).rank(method="max")
-
-    result_dict = dict()
-    
-    for stage2 in [True, False]: #['skip', True, False]
-        # Get commit history info
-        commit_df = load_commit_history(fault_dir, tool)
+    for stage2 in ['skip']:
         if stage2 == 'skip':
             excluded = []
         else:
-            excluded = get_style_change_commits(fault_dir, tool, with_Rewrite=stage2)
-
-        commit_df["excluded"] = commit_df["commit_hash"].isin(excluded)
-        commit_df["new_depth"] = commit_df["depth"]
-
-        # Adjust depth of commits by ignoring excluded commits
-        if len(excluded) > 0 and adjust_depth:
-            commit_df.loc[commit_df.excluded, "new_depth"] = None
-            commit_df["method_identifier"] = commit_df.class_file + ":" + \
-                commit_df.method_name + commit_df.method_signature + \
-                ":L" + commit_df.begin_line.astype(str) + "," + commit_df.end_line.astype(str)
-            for _, row in commit_df[commit_df.excluded].iterrows():
-                # print(row)
-                affected = (commit_df.method_identifier == row.method_identifier)\
-                    & (commit_df.depth > row.depth)
-                commit_df.loc[affected, "new_depth"] = commit_df.loc[affected, "new_depth"] - 1
-        
-        # for HSFL in [True, False]:
-        for HSFL in [False]:
-            vote_dict = dict()
-
-            for _, row in sbfl_df.reset_index().iterrows():
-                vote = voting_func(row)
-                if use_method_level_score:
-                    com_df = commit_df[
-                        (commit_df.class_file == row.class_file) \
-                        & (commit_df.method_name == row.method_name) \
-                        & (commit_df.method_signature == row.method_signature)
-                    ]
-                else:
-                    com_df = commit_df[
-                        (commit_df.class_file == row.class_file) \
-                        & (commit_df.begin_line <= row.line) \
-                        & (commit_df.end_line >= row.line)
-                    ]
-                
-                list_commits = []
-
-                # Find commits that modified the statement(method) and not excluded
-                for commit, depth in zip(com_df.commit_hash, com_df.new_depth):
-                    if commit not in excluded:
-                        list_commits.append((commit, depth))
-                
-                induce_sqrt = math.sqrt(len(list_commits))
-                
-                # Vote for commits
-                for commit, depth in list_commits:
-                    decayed_vote = vote * ((1-decay) ** depth) / (induce_sqrt if HSFL else 1)
-                    vote_dict[commit] = vote_dict.get(commit, 0) + decayed_vote
-
-            for (use_br, use_diff, use_stopword, adddel) in extra_score_list:
-                extra_score_df = extra_scores_df.loc[(str(use_br), str(use_diff), str(stage2), str(use_stopword), str(adddel))]
-                commit_hash_df = extra_score_df['commit_hash']
-                score_df = extra_score_df['score']
-                rank_df = extra_score_df['rank']
-
-                for (score_mode, ensemble) in score_param_list:
-                    if ensemble == 'extra': # Only Bug2Commit
-                        result_key = ('None', str(score_mode), str(ensemble), str(use_br), str(use_diff), str(stage2), str(use_stopword), str(adddel))
-
-                    elif ensemble[1] == 0.0: # Use only original score
-                        result_key = (str(HSFL), 'None', str(ensemble), 'None', 'None', str(stage2), 'None', 'None')
-
-                    else: # Use both
-                        result_key = (str(HSFL), str(score_mode), str(ensemble), str(use_br), str(use_diff), \
-                            str(stage2), str(use_stopword), str(adddel))
-                    
-                    if result_key in result_dict: # Already visited
-                        continue
-
-                    vote_rows = []
-                
-                    # Apply extra score
-                    for commit, vote in vote_dict.items():
-                        index = commit_hash_df.loc[commit_hash_df == commit].index[0]
-                        
-                        # Extra score of commit based on score mode
-                        if score_mode == 'score':
-                            score = score_df.loc[index]
-                        elif score_mode == 'rank':
-                            score = 1 / rank_df.loc[index]
-                        else:
-                            score = score_df.loc[index] / rank_df.loc[index]
-                        
-                        # Ensemble the scores based on ensemble method
-                        if ensemble == 'extra':
-                            vote_rows.append((commit, score))
-                        else:
-                            vote_rows.append((commit, vote * (1 + ensemble[1] * score)))
-
-                    vote_df = pd.DataFrame(data=vote_rows, columns=["commit", "vote"])
-                    vote_df.sort_values(by="vote", ascending=False, inplace=True)
-
-                    result_dict[result_key] = vote_df
+            excluded = get_style_change_commits(fault_dir, tool='git', with_Rewrite=stage2) #?
+        res_dict[stage2] = vote_for_commits(fault_dir, tool='git', formula='Ochiai', decay=0.1, \
+            voting_func=(lambda r: 1/r.max_rank), use_method_level_score=False, excluded=excluded, adjust_depth=True)
     
-    return result_dict
+    savedir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b')
+    os.makedirs(savedir, exist_ok=True)
+    
+    return res_dict
 
-# For a given project, generate dictionary with number of iterations of fonte for every settings
-# Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
-def bisection_all(pid, vid, tool='git'):
-    fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
-    num_iters_dict = dict() # {setting : number of iterations}
+def run_ensemble(pid, vid):
+    # Load voting results
+    with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'bug2commit.pkl'), 'rb') as file:
+        bug2commit_dict = pickle.load(file)
     
-    # Load fonte score dataframe
-    fonte_scores_df = pd.read_hdf(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b/fonte_scores.hdf'))
+    with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'fonte.pkl'), 'rb') as file:
+        fonte_dict = pickle.load(file)
     
-    # Get BIC
-    GT = load_BIC_GT("./data/Defects4J/BIC_dataset")
+    res_dict = dict()
+    
+    for stage2, sub_dict in bug2commit_dict.items():
+        fonte_df = fonte_dict[stage2]
+        res_dict[stage2] = dict()
+
+        for (diff_type, use_stopword, adddel, use_br), bug2commit_df in sub_dict.items():
+            merged_df = fonte_df.merge(bug2commit_df, on='commit', how='left', suffixes=('_fonte', '_bug2commit'))
+            merged_df['vote_bug2commit'].fillna(0, inplace=True)
+
+            for beta in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]:
+                merged_df['vote'] = merged_df['vote_fonte'] * (1 + beta * merged_df['vote_bug2commit'])
+                result_df = merged_df[['vote']]
+
+                result_df["rank"] = result_df["vote"].rank(ascending=False, method="max")
+                result_df["rank"] = result_df["rank"].astype(int)
+                result_df.sort_values(by="rank", inplace=True)
+                #result_df = result_df.set_index('commit')
+
+                res_dict[stage2][(diff_type, use_stopword, adddel, use_br, beta)] = result_df
+    
+    return res_dict
+
+def bisection_all(pid, vid):
+    # Basic commit info
+    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
 
-    # Get list of every commits
+    fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
     all_commits = get_all_commits(fault_dir)
 
-    # Iterate through every settings
-    for (index, row) in fonte_scores_df.iterrows():
-        commit_df = row['commit']
-        vote_df = row['vote']
+    # Load voting results
+    with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'bug2commit.pkl'), 'rb') as file:
+        bug2commit_dict = pickle.load(file)
+    
+    with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'fonte.pkl'), 'rb') as file:
+        fonte_dict = pickle.load(file)
+    
+    with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'ensemble.pkl'), 'rb') as file:
+        ensemble_dict = pickle.load(file)
 
-        stage2 = index[5]
+    fonte_iter = dict()
+    bug2commit_iter = dict()
+    ensemble_iter = dict()
+    
+    for stage2, sub_dict in bug2commit_dict.items():
+        fonte_df = fonte_dict[stage2]
+        bug2commit_iter[stage2] = dict()
+        ensemble_iter[stage2] = dict()
+
+        # Get list of target commits
         if stage2 == 'skip':
             style_change_commits = []
         else:
             style_change_commits = get_style_change_commits(fault_dir, tool, with_Rewrite=(stage2=='True'))
         
-        C_BIC = [c for c in all_commits if c in commit_df.values and c not in style_change_commits]
-        scores = [vote_df.loc[commit_df.loc[commit_df == c].index[0]] for c in C_BIC]
+        print(fonte_df)
+        C_BIC = [c for c in all_commits if c in fonte_df.index and c not in style_change_commits]
 
-        key = tuple(index)
+        # 
+        votes = [float(fonte_df.loc[c, "vote"]) for c in C_BIC]
+        fonte_iter[stage2] = weighted_bisection(C_BIC, votes, BIC, ignore_zero=False)
 
-        if key[2] == 'extra':
-            num_iters_dict[tuple(index)] = weighted_bisection(C_BIC, scores, BIC, ignore_zero=False)
-        else:
-            num_iters_dict[tuple(index)] = weighted_bisection(C_BIC, scores, BIC, ignore_zero=True)
+        for key, bug2commit_df in sub_dict.items():
+            votes = [float(bug2commit_df.loc[c, "vote"]) for c in C_BIC]
+            bug2commit_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC, ignore_zero=False)
+        
+        for key, ensemble_df in ensemble_dict[stage2].items():
+            votes = [float(ensemble_df.loc[c, "vote"]) for c in C_BIC]
+            bug2commit_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC, ignore_zero=False)
     
-    return num_iters_dict
+    return fonte_iter, bug2commit_iter, ensemble_iter
