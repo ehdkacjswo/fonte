@@ -174,8 +174,6 @@ class Diff:
         else:
             self.before_line += 1
             self.after_line += 1
-        
-        return
     
     # Perform gumtree parsing
     def parse_gumtree(self):
@@ -241,7 +239,6 @@ class Diff:
                 else:
                     self.gumtree_interval[commit_hash][(before_src_path, after_src_path)]['addition'] |= addition_token_interval
                     self.gumtree_interval[commit_hash][(before_src_path, after_src_path)]['deletion'] |= deletion_token_interval
-        return
                 
     # Parse the diff text
     # Return format : [[commit, before_src_path, after_src_path, line, content]]
@@ -293,7 +290,7 @@ def main(pid, vid):
 
             if p.returncode != 0:
                 log('[ERROR] git log failed', out_txt, err_txt)
-                return
+                continue
 
             diff.parse_diff(stdout.decode(encoding='utf-8', errors='ignore'))
 

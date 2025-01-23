@@ -50,7 +50,8 @@ def get_feature(encode_data, diff_type):
             src_path_addition = sum_encode(src_path_addition, encode_dict['src_path'])
             
             for encode_type in encode_type_list:
-                content_addition[encode_type] = sum_encode(content_addition.get(encode_type, []), encode_dict.get(encode_type, []))
+                content_addition[encode_type] = \
+                    sum_encode(content_addition.get(encode_type, []), encode_dict.get(encode_type, []))
 
         # Deletion data
         for src_path, encode_dict in commit_data["deletion"].items():

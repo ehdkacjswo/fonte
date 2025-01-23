@@ -30,7 +30,7 @@ def encode(stage2_data, pid, vid, diff_type, use_stopword):
     for commit_hash, commit_diff in stage2_data.items(): # Iterate through commits
         res_dict[commit_hash] = dict()
 
-        for modify, modify_diff in commit_diff.items():
+        for modify, modify_diff in commit_diff.items(): # addition / deletion
             res_dict[commit_hash][modify] = dict()
         
             for src_path, src_diff in modify_diff.items():

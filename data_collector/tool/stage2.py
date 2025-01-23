@@ -69,22 +69,25 @@ def git_stage2(pid, vid, stage2):
             addition_content_dict = addition_dict.get(after_src_path, dict())
             deletion_content_dict = deletion_dict.get(before_src_path, dict())
 
-            for line, content in src_diff['addition'].items():
-                if line not in addition_content_dict:
-                    addition_content_dict[line] = content
+            if after_src_path != '/dev/null':
+                for line, content in src_diff['addition'].items():
+                    if line not in addition_content_dict:
+                        addition_content_dict[line] = content
+                    
+                    elif content != addition_content_dict[line]: # Different diff data for same source file
+                        log(f'[ERROR] Different addition content!!! {commit_hash} {after_src_path} {line}')
                 
-                elif content != addition_content_dict[line]: # Different diff data for same source file
-                    log(f'[ERROR] Different addition content!!! {commit_hash} {after_src_path} {line}')
+                addition_dict[after_src_path] = {'diff' : list(addition_content_dict.values())}
             
-            for line, content in src_diff['deletion'].items():
-                if line not in deletion_content_dict:
-                    deletion_content_dict[line] = content
-                
-                elif content != deletion_content_dict[line]: # Different diff data for same source file
-                    log(f'[ERROR] Different deletion content!!! {commit_hash} {before_src_path} {line}')
-            
-            addition_dict[after_src_path] = {'diff' : list(addition_content_dict.values())}
-            deletion_dict[before_src_path] = {'diff' : list(deletion_content_dict.values())}
+            if before_src_path != '/dev/null':
+                for line, content in src_diff['deletion'].items():
+                    if line not in deletion_content_dict:
+                        deletion_content_dict[line] = content
+                    
+                    elif content != deletion_content_dict[line]: # Different diff data for same source file
+                        log(f'[ERROR] Different deletion content!!! {commit_hash} {before_src_path} {line}')
+
+                deletion_dict[before_src_path] = {'diff' : list(deletion_content_dict.values())}
         
         res_dict[commit_hash] = {'addition' : addition_dict, 'deletion' : deletion_dict}
     
@@ -172,10 +175,12 @@ def gumtree_stage2(pid, vid, stage2, classify_token):
         gumtree_interval[commit_hash] = {'addition' : dict(), 'deletion' : dict()}
 
         for src_path, src_interval in addition_interval.items():
-            gumtree_interval[commit_hash]['addition'][src_path] = src_interval
+            if src_path != '/dev/null':
+                gumtree_interval[commit_hash]['addition'][src_path] = src_interval
         
         for src_path, src_interval in deletion_interval.items():
-            gumtree_interval[commit_hash]['deletion'][src_path] = src_interval
+            if src_path != '/dev/null':
+                gumtree_interval[commit_hash]['deletion'][src_path] = src_interval
     
     # {commit_hash : {addition / deletion : {src_path : {src_path, token_types}}}}
     res_dict = dict()

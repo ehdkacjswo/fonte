@@ -11,14 +11,9 @@ if __name__ == "__main__":
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
 
-        pid = "Cli"
-        vid = "29"
-
         collect_diff.main(pid, vid)
         stage2.main(pid, vid)
         encode.main(pid, vid)
         get_feature.main(pid, vid)
         vote.main(pid, vid)
         bisection.main(pid, vid)
-
-        break
