@@ -29,7 +29,7 @@ if __name__ == "__main__":
         exit(1)
     
     else:
-        code_txt = code_txt.decode(encoding='utf-8', errors='ignore')
+        #code_txt = code_txt.decode(encoding='utf-8', errors='ignore')
 
-        with open('/root/workspace/data_collector/copy.java', 'w') as file:
+        with open('/root/workspace/data_collector/copy1.java', 'wb') as file:
             file.write(code_txt)

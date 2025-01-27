@@ -77,7 +77,7 @@ def git_stage2(pid, vid, stage2):
                     elif content != addition_content_dict[line]: # Different diff data for same source file
                         log(f'[ERROR] Different addition content!!! {commit_hash} {after_src_path} {line}')
                 
-                addition_dict[after_src_path] = {'diff' : list(addition_content_dict.values())}
+                addition_dict[after_src_path] = addition_content_dict
             
             if before_src_path != '/dev/null':
                 for line, content in src_diff['deletion'].items():
@@ -87,7 +87,14 @@ def git_stage2(pid, vid, stage2):
                     elif content != deletion_content_dict[line]: # Different diff data for same source file
                         log(f'[ERROR] Different deletion content!!! {commit_hash} {before_src_path} {line}')
 
-                deletion_dict[before_src_path] = {'diff' : list(deletion_content_dict.values())}
+                deletion_dict[before_src_path] = deletion_content_dict
+        
+        # Dictionary to list
+        for after_src_path, line_diff in addition_dict.items():
+            addition_dict[after_src_path] = {'diff' : list(line_diff.values())}
+
+        for before_src_path, line_diff in deletion_dict.items():
+            deletion_dict[before_src_path] = {'diff' : list(line_diff.values())}
         
         res_dict[commit_hash] = {'addition' : addition_dict, 'deletion' : deletion_dict}
     
