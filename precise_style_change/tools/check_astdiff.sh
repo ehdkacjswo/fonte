@@ -28,7 +28,7 @@ cat $workdir/modified_files_${sha} | while read after_src_path before_src_path; 
   if [ "$use_Rewrite" = true ]; then
     astyle --mode=java --style=java $after_src_path
   fi
-  cp $after_src_path $after_src_path.$sha
+  cp $after_src_path /root/workspace/tmp/after.java
   # checkout to $sha~1
   git checkout $sha~1 $before_src_path
   if [ $? -eq 0 ]; then
@@ -36,28 +36,28 @@ cat $workdir/modified_files_${sha} | while read after_src_path before_src_path; 
     if [ "$use_Rewrite" = true ]; then
       astyle --mode=java --style=java $before_src_path
     fi
-    cp $before_src_path $before_src_path.$sha~1
+    cp $before_src_path /root/workspace/tmp/before.java
 
     # compare AST
-    java -cp $analyzer_jar analyzer.ASTIsomorphicChecker \
-      $after_src_path.$sha $before_src_path.$sha~1 > $after_src_path.$sha.is_isomorphic
+    is_isomorphic=$(docker run --rm -v /home/coinse/doam/fonte/tmp:/diff gumtree isotest \
+      -g java-jdtnc before.java after.java)
     if [ $? -eq 0 ]; then
-      if grep -Fxq "true" $after_src_path.$sha.is_isomorphic; then
-        result='U'
-      else
-        result='C'
-      fi
+      case "$is_isomorphic" in
+        "true") result='U' ;;
+        "false") result='C' ;;
+        *) result='E' ;;
+      esac
     else
       result='E' # error
     fi
-    echo "--- ASTs are Isomorphic (w/ Rewrite: $use_Rewrite):" $(echo $after_src_path.$sha.is_isomorphic)
+    echo "--- ASTs are Isomorphic (w/ Rewrite: $use_Rewrite):" $(echo $is_isomorphic)
 
-    rm $after_src_path.$sha
-    rm $before_src_path.$sha~1
+    #rm $after_src_path.$sha
+    #rm $before_src_path.$sha~1
 
     echo $before_src_path,$after_src_path,$result >> $output
   else
-    rm $after_src_path.$sha
+    #rm $after_src_path.$sha
 
     echo "$before_src_path may not exist in $sha~1"
     echo "$before_src_path,$after_src_path,N" >> $output

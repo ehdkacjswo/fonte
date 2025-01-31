@@ -30,8 +30,8 @@ for dir in "$BASE_DIR"/*/; do
     echo "Directory name $dir_name does not match the pattern."
   fi
 
-  project="Cli"
-  version="29"
+  #project="Cli"
+  #version="29"
   
   sh /root/workspace/lib/checkout.sh $project $version
 
@@ -40,8 +40,8 @@ for dir in "$BASE_DIR"/*/; do
   sh /root/workspace/precise_style_change/tools/combine_style_change_results.sh $project $version $tool $use_Rewrite
 
   # Clean up the tmp directory
-  cd "$original_cwd"
-  exit 1
+  #cd "$original_cwd"
+  #exit 1
 done
 
   

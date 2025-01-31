@@ -366,14 +366,3 @@ def weighted_bisection(commits: list, scores: list, BIC, ignore_zero=False, verb
         return num_iterations, pivots
     else:
         return num_iterations
-
-# Voting functions
-voting_functions = {
-    # key: (alpha, tau)
-    (1, 'max'): (lambda r: r.score/r.max_rank),
-    (0, 'max'): (lambda r: 1/r.max_rank),
-    (1, 'dense'): (lambda r: r.score/r.dense_rank),
-    (0, 'dense'): (lambda r: 1/r.dense_rank),
-}
-
-
