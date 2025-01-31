@@ -16,7 +16,7 @@ workdir=/tmp/${pid}-${vid}b
 
 cd $workdir
 
-python /root/workspace/precise_style_change/get_touched_files.py $commit_log \
+python /root/workspace/precise_style_change/tools/get_touched_files.py $commit_log \
   --output $workdir/modified_files_${sha} \
   --commit $sha
 
@@ -26,9 +26,7 @@ cat $workdir/modified_files_${sha} | while read after_src_path before_src_path; 
   # checkout to $sha
   git checkout $sha $after_src_path
   if [ "$use_Rewrite" = true ]; then
-    java -cp $analyzer_jar analyzer.RewriteRunner $after_src_path cleanup.diff
-    patch -p1 < cleanup.diff
-    rm cleanup.diff
+    astyle --mode=java --style=java $after_src_path
   fi
   cp $after_src_path $after_src_path.$sha
   # checkout to $sha~1
@@ -36,9 +34,7 @@ cat $workdir/modified_files_${sha} | while read after_src_path before_src_path; 
   if [ $? -eq 0 ]; then
     # only when $file is a valid path in $sha~1
     if [ "$use_Rewrite" = true ]; then
-      java -cp $analyzer_jar analyzer.RewriteRunner $before_src_path cleanup.diff
-      patch -p1 < cleanup.diff
-      rm cleanup.diff
+      astyle --mode=java --style=java $before_src_path
     fi
     cp $before_src_path $before_src_path.$sha~1
 

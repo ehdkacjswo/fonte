@@ -21,9 +21,8 @@ if [ ! -f $aggregated ]; then
     if [ -f $scdir/$sha.csv ]; then
       sed -e "s/^/${sha},/" $scdir/$sha.csv >> $aggregated
     else
-      #rm $aggregated
-      #break
-      continue
+      rm $aggregated
+      break
     fi
   done
   [ -f $aggregated ] && echo "Successfully generated: $aggregated"

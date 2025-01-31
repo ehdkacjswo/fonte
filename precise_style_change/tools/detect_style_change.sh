@@ -21,10 +21,10 @@ source $SDKMAN_DIR/bin/sdkman-init.sh && sdk use java 11.0.12-open
 
 python /root/workspace/docker/workspace/tools/get_candidates.py $commits | while read sha; do
   if [ -f $scdir/$sha.csv ]; then
-    sha=e33e925
-    sh /root/workspace/precise_style_change/check_astdiff.sh $pid $vid $commits $sha $use_Rewrite $scdir/$sha.csv
+    #sha=e33e925
+    sh /root/workspace/precise_style_change/tools/check_astdiff.sh $pid $vid $commits $sha $use_Rewrite $scdir/$sha.csv
     echo "$sha.csv exists"
   else
-    sh /root/workspace/precise_style_change/check_astdiff.sh $pid $vid $commits $sha $use_Rewrite $scdir/$sha.csv
+    sh /root/workspace/precise_style_change/tools/check_astdiff.sh $pid $vid $commits $sha $use_Rewrite $scdir/$sha.csv
   fi
 done

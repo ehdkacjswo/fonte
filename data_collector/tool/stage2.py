@@ -203,7 +203,7 @@ def main(pid, vid):
     log(f'Working on {pid}_{vid}b')
 
     # Checkout Defects4J project
-    p = subprocess.Popen(f'sh /root/workspace/data_collector/tool/checkout.sh {pid} {vid}', \
+    p = subprocess.Popen(f'sh /root/workspace/lib/checkout.sh {pid} {vid}', \
         shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out_txt, err_txt = p.communicate()
 

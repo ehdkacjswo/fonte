@@ -128,11 +128,11 @@ def vote_ensemble(pid, vid):
 
             for beta in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]:
                 merged_df['vote'] = merged_df['vote_fonte'] * (1 + beta * merged_df['vote_bug2commit'])
-                result_df = merged_df[['vote']]
+                result_df = merged_df[['vote']].copy()
 
                 result_df["rank"] = result_df["vote"].rank(ascending=False, method="max")
                 result_df["rank"] = result_df["rank"].astype(int)
-                result_df.sort_values(by="rank", inplace=True)
+                result_df = result_df.sort_values(by="rank")
 
                 res_dict[stage2][(diff_type, use_stopword, adddel, use_br, beta)] = result_df
     

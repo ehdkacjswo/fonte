@@ -22,8 +22,7 @@ public class TaskManager {
     public void listTasks() {
         if (tasks.isEmpty()) {
             System.out.println("No tasks available.");
-        }
-	else {
+        } else {
             for (String task : tasks) {
                 System.out.println(task);
             }
