@@ -22,6 +22,8 @@ python /root/workspace/precise_style_change/tools/get_touched_files.py $commit_l
 
 echo "- Commit:" $sha
 cat $workdir/modified_files_${sha} | while read after_src_path before_src_path; do
+  #after_src_path=src/com/google/javascript/jscomp/NodeUtil.java
+  #before_src_path=src/com/google/javascript/jscomp/NodeUtil.java
   echo "-- File:" $after_src_path
   # checkout to $sha
   git checkout $sha $after_src_path
@@ -40,7 +42,7 @@ cat $workdir/modified_files_${sha} | while read after_src_path before_src_path; 
 
     # compare AST
     is_isomorphic=$(docker run --rm -v /home/coinse/doam/fonte/tmp:/diff gumtree isotest \
-      -g java-jdtnc before.java after.java)
+      -g java-jdtnc before.java after.java 2>&1)
     if [ $? -eq 0 ]; then
       case "$is_isomorphic" in
         "true") result='U' ;;
@@ -62,6 +64,7 @@ cat $workdir/modified_files_${sha} | while read after_src_path before_src_path; 
     echo "$before_src_path may not exist in $sha~1"
     echo "$before_src_path,$after_src_path,N" >> $output
   fi
+  #exit 1
 done
 
 #echo "* Summary:" $output

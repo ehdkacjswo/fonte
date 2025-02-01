@@ -30,8 +30,8 @@ for dir in "$BASE_DIR"/*/; do
     echo "Directory name $dir_name does not match the pattern."
   fi
 
-  #project="Cli"
-  #version="29"
+  #project="Closure"
+  #version="10"
   
   sh /root/workspace/lib/checkout.sh $project $version
 
