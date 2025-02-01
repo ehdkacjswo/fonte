@@ -4,5 +4,6 @@
 
 #python /root/workspace/run_Bug2Commit.py
 python /root/workspace/analyze/result_gen.py
-Rscript /root/workspace/analyze/art_anova.R
-Rscript /root/workspace/analyze/art_anova.R -f "use_stopword:True,stage2:True,use_br:True,HSFL:False"
+
+# Post-hoc test
+Rscript /root/workspace/analyze/post_hoc.R -b FALSE -f "use_stopword:True,use_br:True,HSFL:False"

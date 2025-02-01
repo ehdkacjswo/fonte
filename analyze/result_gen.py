@@ -26,6 +26,46 @@ voting_functions = {
 
 # Get metric dictionary for bug2commit
 # metric : mean rank, mean number of iterations
+def org_fonte_metric():
+    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+
+    fonte_setting = ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None')
+    fonte_metric_dict = {'MRR' : 0, 'num_iters' : 0, 'acc@1' : 0, 'acc@2' : 0, 'acc@3' : 0, 'acc@5' : 0, 'acc@10' : 0}
+
+    # Iterate through projects
+    for project in os.listdir(DIFF_DATA_DIR):
+        [pid, vid] = project[:-1].split("-")
+        BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
+        project_dir = os.path.join(DIFF_DATA_DIR, project)
+
+        with open(os.path.join(project_dir, 'num_iters.pkl'), 'rb') as file:
+            num_iter_dict = pickle.load(file)
+    
+        # Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
+        fonte_scores_df = pd.read_hdf(os.path.join(project_dir, 'fonte_scores.hdf'))
+
+        row = fonte_scores_df.loc[fonte_setting]
+
+        commit_df = row['commit'].dropna()
+        score_df = row['vote'].dropna()
+        rank_df = score_df.rank(method='max', ascending=False)
+
+        # Index of the BIC
+        BIC_ind = commit_df.loc[commit_df == BIC].index[0]
+        BIC_rank = rank_df.loc[BIC_ind]
+
+        n_list = [1, 2, 3, 5, 10]
+
+        fonte_metric_dict['num_iters'] += num_iter_dict[fonte_setting] / 130
+        fonte_metric_dict['MRR'] += 1 / (BIC_rank * 130)
+        for n in n_list:
+            if BIC_rank <= n:
+                fonte_metric_dict[f'acc@{n}'] += 1
+    
+    return fonte_metric_dict
+
+# Get metric dictionary for bug2commit
+# metric : mean rank, mean number of iterations
 def get_metric_dict(bug2commit=True):
     savepath = f"/root/workspace/analyze/data/{'bug2commit' if bug2commit else 'all'}/metric_dict.pkl"
 
@@ -171,32 +211,9 @@ def metrics_to_csv(bug2commit=True):
                     writer.writerow([project, HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Compute commit scores")
-    parser.add_argument('--tool', type=str, default="git",
-        help="history retrieval tool, git or shovel (default: git)")
-    parser.add_argument('--formula', type=str, default="Ochiai",
-        help="SBFL formula (default: Ochiai)")
-    parser.add_argument('--alpha', type=int, default=0,
-        help="alpha (default: 0)")
-    parser.add_argument('--tau', type=str, default="max",
-        help="tau (default: max)")
-    parser.add_argument('--lamb', type=float, default=0.1,
-        help="lambda (default: 0.1)")
-    parser.add_argument('--skip-stage-2', action="store_true",
-        help="skiping stage 2 (default: False)")
-    parser.add_argument('--no-openrewrite', action="store_true",
-        help="not using openrewrite in Stage 2(default: False)")
-    parser.add_argument('--output', '-o',
-        help="path to output file (example: output.csv)")
-    args = parser.parse_args()
-
-    assert args.alpha in [0, 1]
-    assert args.tau in ["max", "dense"]
-    assert 0 <= args.lamb < 1
-
     # Generate score data
     #print('Generating score data')
-    """for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
+    for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
         # Get BIC data
         print(f'Fonte_score_eval : Working on {folder}')
         [pid, vid] = folder[:-1].split("-")
@@ -215,7 +232,7 @@ if __name__ == "__main__":
         result_dict = bisection_all(pid, vid)
 
         with open(os.path.join(DIFF_DATA_DIR, folder, 'num_iters.pkl'), 'wb') as file:
-            pickle.dump(result_dict, file)"""
+            pickle.dump(result_dict, file)
     
     # Generating csv file
     metrics_to_csv(False)

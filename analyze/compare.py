@@ -12,7 +12,7 @@ import seaborn as sns
 sys.path.append('/root/workspace/lib/')
 from experiment_utils import *
 
-from result_gen import get_metric_dict
+from result_gen import get_metric_dict, org_fonte_metric
 
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 
@@ -137,11 +137,25 @@ def get_best_set(bug2commit=False, \
                 best_set.add(setting_tup)
 
         best_set_dict[metric] = best_set
+
+        if len(best_set) == 0:
+            print(f'No setting with significantly better {metric}')
+
+    # Every settings are statistically identical
+    if len(best_set_dict['rank']) == 0 and len(best_set_dict['num_iters']) == 0:
+        # Get all settings
+        return
     
-    best_set = best_set_dict['rank'] & best_set_dict['num_iters']
-    best_set = best_set_dict['num_iters']
-    #print(best_set_dict['rank'])
-    #print(best_set_dict['num_iters'])
+    # No setting is 
+    elif len(best_set_dict['rank']) == 0:
+        best_set = best_set_dict['num_iters']
+    
+    elif len(best_set_dict['num_iters']) == 0:
+        best_set = best_set_dict['rank']
+    
+    else:
+        best_set = best_set_dict['rank'] & best_set_dict['num_iters']
+
     best_list = [(tup, tot_metric_dict[tup]['MRR'], -tot_metric_dict[tup]['num_iters']) for tup in best_set]
     best_list.sort(key=lambda x : x[1:], reverse=True)
 
@@ -172,17 +186,17 @@ def compare_setting(setting1, setting2, bug2commit=True):
         # Index of the BIC
         BIC_ind = commit_df.loc[commit_df == BIC].index[0]
 
-        return int(rank_df.loc[BIC_ind]), iter_dict[setting][1]
+        return int(rank_df.loc[BIC_ind]), iter_dict[setting]
 
     if bug2commit:
-        setting1 = ('None', setting1[0], '(\'add\', 0.0)', setting1[1], setting1[2], setting1[3], setting1[4], setting1[5])
-        setting2 = ('None', setting2[0], '(\'add\', 0.0)', setting2[1], setting2[2], setting2[3], setting2[4], setting2[5])
+        setting1 = ('None', setting1[0], 'extra', setting1[1], setting1[2], setting1[3], setting1[4], setting1[5])
+        setting2 = ('None', setting2[0], 'extra', setting2[1], setting2[2], setting2[3], setting2[4], setting2[5])
     
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     metric_dict1 = [[], []]
     metric_dict2 = [[], []]
 
-    for project in tqdm(os.listdir(DIFF_DATA_DIR)):
+    for project in os.listdir(DIFF_DATA_DIR):
         [pid, vid] = project[:-1].split("-")
         BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
         project_dir = os.path.join(DIFF_DATA_DIR, project)
@@ -202,24 +216,61 @@ def compare_setting(setting1, setting2, bug2commit=True):
         metric_dict2[0] += [rank2]
         metric_dict2[1] += [iter2]
     
-    print('Wilcoxon on rank')
+    print('Wilcoxon')
     print(wilcoxon(metric_dict1[0], metric_dict2[0], alternative='less'))
     print(wilcoxon(metric_dict1[1], metric_dict2[1], alternative='less'))
 
 # ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
 if __name__ == "__main__":
     # ['score_mode', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
-    """org_bug2commit_metric = tot_metric_dict[('score', 'False', 'False', 'True', 'True', 'add')]
+    bug2commit_metric_dict = get_metric_dict(bug2commit=True)
+    org_bug2commit_metric = bug2commit_metric_dict[('score', 'False', 'False', 'True', 'True', 'add')]
 
     print('Original Bug2Commit without bug report')
-    print(org_bug2commit_metric['MRR'], org_bug2commit_metric['acc@1'], org_bug2commit_metric['acc@2'], org_bug2commit_metric['acc@3'], org_bug2commit_metric['acc@5'], org_bug2commit_metric['acc@10'], org_bug2commit_metric['num_iters'])
-    print('New best bug2commit')
-    
-    
-    best_metric = tot_metric_dict[('score', 'False', 'True', 'True', 'True', 'del')]
-    print(best_metric['MRR'], best_metric['acc@1'], best_metric['acc@2'], best_metric['acc@3'], best_metric['acc@5'], best_metric['acc@10'], best_metric['num_iters'])"""
+    print_metric(bug2commit_metric_dict[('score', 'False', 'False', 'True', 'True', 'add')])
 
+    print('New best bug2commit without bug report')
+    get_best_set_bug2commit(use_br=False)
+    compare_setting(('score', 'False', 'False', 'True', 'True', 'all-sep'), ('score', 'False', 'False', 'True', 'True', 'add'), True)
+    compare_setting(('score', 'False', 'False', 'True', 'True', 'add'), ('score', 'False', 'False', 'True', 'True', 'all-sep'), True)
+    compare_setting(('score', 'False', 'True', 'True', 'True', 'del'), ('score', 'False', 'False', 'True', 'True', 'add'), True)
+    compare_setting(('score', 'False', 'False', 'True', 'True', 'add'), ('score', 'False', 'True', 'True', 'True', 'del'), True)
+
+    print('===============================================================================')
+
+    print('Original Bug2Commit with bug report')
+    print_metric(bug2commit_metric_dict[('score', 'True', 'False', 'True', 'True', 'add')])
+
+    print('New best bug2commit with bug report')
     get_best_set_bug2commit(use_br=True)
+    compare_setting(('both', 'True', 'True', 'True', 'True', 'all-sep'), ('score', 'True', 'False', 'True', 'True', 'add'), True)
+
+    print('===============================================================================')
+
+    fonte_metric_dict = get_metric_dict(bug2commit=False)
+
+    print('Original Fonte without bug report')
+    print_metric(org_fonte_metric())
+    #print_metric(fonte_metric_dict[('False', 'rank', "('add', 1.0)", 'False', 'False', 'True')])
+    print('New Fonte without bug report')
+    #get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'False', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
+    get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'False', 'use_stopword':'True'}, exclude=[])
+    compare_setting(('False', 'rank', "('add', 1.0)", 'False', 'True', 'True', 'True', 'all-sep'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    compare_setting(('False', 'rank', "('add', 1.0)", 'False', 'True', 'True', 'True', 'del'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    print('New Fonte with bug report')
+    get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'True', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
+    compare_setting(('False', 'rank', "('add', 0.8)", 'True', 'True', 'True', 'True', 'add'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    compare_setting(('False', 'rank', "('add', 0.7)", 'True', 'True', 'True', 'True', 'all-uni'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    compare_setting(('False', 'rank', "('add', 0.9)", 'True', 'True', 'True', 'True', 'all-uni'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    compare_setting(('False', 'rank', "('add', 0.8)", 'True', 'True', 'True', 'True', 'all-sep'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    compare_setting(('False', 'rank', "('add', 1.0)", 'True', 'True', 'True', 'True', 'all-sep'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    
+    
+    
+    #best_metric = tot_metric_dict[('score', 'False', 'True', 'True', 'True', 'del')]
+    #print(best_metric['MRR'], best_metric['acc@1'], best_metric['acc@2'], best_metric['acc@3'], best_metric['acc@5'], best_metric['acc@10'], best_metric['num_iters'])
+
+    """get_best_set_bug2commit(use_br=True)
     get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'True', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
     
     #print('Original Fonte')
@@ -227,4 +278,4 @@ if __name__ == "__main__":
     
     #get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'True', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
     #get_best_set_bug2commit(use_br=True)
-    #compare_setting(setting1=('score', 'False', 'True', 'True', 'True', 'del'), setting2=('score', 'False', 'False', 'True', 'True', 'add'))
+    #compare_setting(setting1=('score', 'False', 'True', 'True', 'True', 'del'), setting2=('score', 'False', 'False', 'True', 'True', 'add'))"""
