@@ -12,77 +12,12 @@ import seaborn as sns
 sys.path.append('/root/workspace/lib/')
 from experiment_utils import *
 
+from result_gen import get_metric_dict, org_fonte_metric
+
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 
-# Get metric dictionary for bug2commit
-# metric : mean rank, mean number of iterations
-def get_metric_dict(bug2commit=True):
-    savepath = f"/root/workspace/analyze/data/{'bug2commit' if bug2commit else 'all'}/metric_dict.pkl"
-
-    # If file already exists, read it
-    if os.path.isfile(savepath):
-        with open(savepath, 'rb') as file:
-            return pickle.load(file)
-    
-    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
-    tot_metric_dict = dict()
-
-    # Iterate through projects
-    for project in tqdm(os.listdir(DIFF_DATA_DIR)):
-        [pid, vid] = project[:-1].split("-")
-        BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
-        project_dir = os.path.join(DIFF_DATA_DIR, project)
-
-        with open(os.path.join(project_dir, 'num_iters.pkl'), 'rb') as file:
-            num_iter_dict = pickle.load(file)
-    
-        # Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
-        fonte_scores_df = pd.read_hdf(os.path.join(project_dir, 'fonte_scores.hdf'))
-
-        # Iterate through extra scores of every settings
-        for setting, row in fonte_scores_df.iterrows():
-            if bug2commit: # Bug2Commit only case
-                if setting[0] != 'None' or setting[2] != '(\'add\', 0.0)':
-                    continue
-                metric_dict_key = tuple(option for ind, option in enumerate(tuple(setting)) if ind not in [0, 2])
-            
-            else: # Bug2Commit with Fonte
-                if setting[2] == '(\'add\', 1.0)' or setting[2] == '(\'add\', 0.0)':
-                    continue
-                metric_dict_key = tuple(setting)
-
-            commit_df = row['commit'].dropna()
-            score_df = row['vote'].dropna()
-            rank_df = score_df.rank(method='max', ascending=False)
-
-            # Index of the BIC
-            BIC_ind = commit_df.loc[commit_df == BIC].index[0]
-            BIC_rank = rank_df.loc[BIC_ind]
-
-            setting_tup = tuple(setting)
-            n_list = [1, 2, 3, 5, 10]
-
-            if metric_dict_key not in tot_metric_dict:
-                tot_metric_dict[metric_dict_key] = dict()
-                tot_metric_dict[metric_dict_key]['rank'] = 0
-                tot_metric_dict[metric_dict_key]['num_iters'] = 0
-                tot_metric_dict[metric_dict_key]['MRR'] = 0
-
-                for n in n_list:
-                    tot_metric_dict[metric_dict_key][f'acc@{n}'] = 0
-
-            tot_metric_dict[metric_dict_key]['rank'] += BIC_rank / 130
-            tot_metric_dict[metric_dict_key]['num_iters'] += num_iter_dict[setting_tup][1] / 130
-
-            tot_metric_dict[metric_dict_key]['MRR'] += 1 / (BIC_rank * 130)
-            for n in n_list:
-                if BIC_rank <= n:
-                    tot_metric_dict[metric_dict_key][f'acc@{n}'] += 1
-    
-    with open(savepath, 'wb') as file:
-        pickle.dump(tot_metric_dict, file)
-    
-    return tot_metric_dict
+def print_metric(metric_dict):
+    print(f"MRR : {metric_dict['MRR']}, acc@1 : {metric_dict['acc@1']}, acc@2 : {metric_dict['acc@2']}, acc@3 : {metric_dict['acc@3']}, acc@5 : {metric_dict['acc@5']}, acc@10 : {metric_dict['acc@10']}, # Iters : {metric_dict['num_iters']}")
 
 # fix : use_stopword and 
 # Settings : ['score_mode', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
@@ -107,11 +42,12 @@ def get_best_set_bug2commit(use_br=True):
     print(['score_mode', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel'])
 
     for (tup, mrr, num_iters) in pareto_list:
-        print(tup, mrr, -num_iters)
+        print(tup)
+        print_metric(tot_metric_dict[tup])
 
 # fix : use_stopword and 
 def get_best_set(bug2commit=False, \
-    fix={'HSFL':'True', 'use_br':'True', 'stage2':'True', 'use_stopword':'True'}, exclude=[]):
+    fix={'HSFL':'False', 'use_br':'False', 'stage2':'True', 'use_stopword':'True'}, exclude=[]):
 
     # 대상 var이 한개인 경우는 작동하지 않는다
     # 현재 exclude 고려 X
@@ -199,90 +135,147 @@ def get_best_set(bug2commit=False, \
             if is_best:
                 #print(setting_tup)
                 best_set.add(setting_tup)
+
         best_set_dict[metric] = best_set
+
+        if len(best_set) == 0:
+            print(f'No setting with significantly better {metric}')
+
+    # Every settings are statistically identical
+    if len(best_set_dict['rank']) == 0 and len(best_set_dict['num_iters']) == 0:
+        # Get all settings
+        return
     
-    best_set = best_set_dict['rank'] & best_set_dict['num_iters']
+    # No setting is 
+    elif len(best_set_dict['rank']) == 0:
+        best_set = best_set_dict['num_iters']
+    
+    elif len(best_set_dict['num_iters']) == 0:
+        best_set = best_set_dict['rank']
+    
+    else:
+        best_set = best_set_dict['rank'] & best_set_dict['num_iters']
+
     best_list = [(tup, tot_metric_dict[tup]['MRR'], -tot_metric_dict[tup]['num_iters']) for tup in best_set]
     best_list.sort(key=lambda x : x[1:], reverse=True)
 
     pareto_list = [best_list[0]]
     for (tup, mrr, num_iters) in best_list[1:]:
-        if pareto_list[-1][1] == mrr: # Same rank
-            if pareto_list[-1][2] == num_iters: # Same metrics
+        if pareto_list[-1][1] == mrr: # Same MRR
+            if pareto_list[-1][2] == num_iters: # Same metrics (Elsewise worse metric)
                 pareto_list.append((tup, mrr, num_iters))
             
-        elif pareto_list[-1][2] < num_iters: # New setting has worse rank but better number of iterations
+        elif pareto_list[-1][2] < num_iters: # New setting has worse MRR but better number of iterations
             pareto_list.append((tup, mrr, num_iters))
 
     print(param_list)
 
     for (tup, mrr, num_iters) in pareto_list:
-        print(tup, mrr, -num_iters)
+        print(tup)
+        print_metric(tot_metric_dict[tup])
+
+def compare_setting(setting1, setting2, bug2commit=True):
+
+    def get_metric(fonte_df, iter_dict, setting, BIC):
+        fonte_row = fonte_df.loc[setting]
+
+        commit_df = fonte_row['commit'].dropna()
+        score_df = fonte_row['vote'].dropna()
+        rank_df = score_df.rank(method='max', ascending=False)
+
+        # Index of the BIC
+        BIC_ind = commit_df.loc[commit_df == BIC].index[0]
+
+        return int(rank_df.loc[BIC_ind]), iter_dict[setting]
+
+    if bug2commit:
+        setting1 = ('None', setting1[0], 'extra', setting1[1], setting1[2], setting1[3], setting1[4], setting1[5])
+        setting2 = ('None', setting2[0], 'extra', setting2[1], setting2[2], setting2[3], setting2[4], setting2[5])
     
-    """best_list = [(tup, tot_metric_dict[tup]['MRR'], tot_metric_dict[tup]['acc@1'], tot_metric_dict[tup]['acc@2'],\
-        tot_metric_dict[tup]['acc@3'], tot_metric_dict[tup]['acc@5'], tot_metric_dict[tup]['acc@10'], \
-        -tot_metric_dict[tup]['num_iters']) for tup in best_set]
-    best_list.sort(key=lambda x : x[1:], reverse=True)
-    #print(best_list)
+    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+    metric_dict1 = [[], []]
+    metric_dict2 = [[], []]
 
-    pareto_list = []
-    for val1 in best_list:
-        add = True
+    for project in os.listdir(DIFF_DATA_DIR):
+        [pid, vid] = project[:-1].split("-")
+        BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
+        project_dir = os.path.join(DIFF_DATA_DIR, project)
+
+        metric_dict = dict()
+
+        with open(os.path.join(project_dir, 'num_iters.pkl'), 'rb') as file:
+            num_iter_dict = pickle.load(file)
+    
+        fonte_scores_df = pd.read_hdf(os.path.join(project_dir, 'fonte_scores.hdf'))
         
-        for val2 in best_list:
-            if val1[0] == val2[0]:
-                continue
-            
-            # No : Worse than val2 on some points, same on others
+        rank1, iter1 = get_metric(fonte_scores_df, num_iter_dict, setting1, BIC)
+        rank2, iter2 = get_metric(fonte_scores_df, num_iter_dict, setting2, BIC)
 
-            same = True
-            better = False
-            worse = False
+        metric_dict1[0] += [rank1]
+        metric_dict1[1] += [iter1]
+        metric_dict2[0] += [rank2]
+        metric_dict2[1] += [iter2]
+    
+    print('Wilcoxon')
+    print(wilcoxon(metric_dict1[0], metric_dict2[0], alternative='less'))
+    print(wilcoxon(metric_dict1[1], metric_dict2[1], alternative='less'))
 
-            for i in range(1, 8):
-                if val1[i] > val2[i]:
-                    better = True
-                    same = False
-                elif val2[i] > val1[i]:
-                    worse = True
-                    same = False
-            
-            if worse and not better:
-                add = False
-                break
-        
-        if add:
-            pareto_list.append(val1)
-
-    print(param_list)
-
-    for val in pareto_list:
-        print(val)"""
-
+# ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
 if __name__ == "__main__":
-    #compare_extra_score()
-    #compare_num_iters()
-    #check_param_iter({'score_mode': 'both', 'stage2': 'True'}, strict=False)
+    # ['score_mode', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
+    bug2commit_metric_dict = get_metric_dict(bug2commit=True)
+    org_bug2commit_metric = bug2commit_metric_dict[('score', 'False', 'False', 'True', 'True', 'add')]
 
-    """with open('/root/workspace/num_iters.pkl', 'rb') as file:
-        num_iter_dict = pickle.load(file)
-    
-    num_iter_list = list(num_iter_dict.items())
-    num_iter_list = [(a, [b[0] in ])]
-    num_iter_list.sort(key=lambda x : mean([a[0] ]))"""
+    print('Original Bug2Commit without bug report')
+    print_metric(bug2commit_metric_dict[('score', 'False', 'False', 'True', 'True', 'add')])
 
-    #compare_fonte_score()
-    #best_setting_iter()
-    #num_iters_to_csv()
-    #compare_bug2commit_simple()
-    #compare_bug2commit_simple()
-    #get_bug2commit_best_set(False)
-    #compare_bug2commit_simple()
+    print('New best bug2commit without bug report')
+    get_best_set_bug2commit(use_br=False)
+    compare_setting(('score', 'False', 'False', 'True', 'True', 'all-sep'), ('score', 'False', 'False', 'True', 'True', 'add'), True)
+    compare_setting(('score', 'False', 'False', 'True', 'True', 'add'), ('score', 'False', 'False', 'True', 'True', 'all-sep'), True)
+    compare_setting(('score', 'False', 'True', 'True', 'True', 'del'), ('score', 'False', 'False', 'True', 'True', 'add'), True)
+    compare_setting(('score', 'False', 'False', 'True', 'True', 'add'), ('score', 'False', 'True', 'True', 'True', 'del'), True)
 
-    """a = get_metric_dict(bug2commit=True)
+    print('===============================================================================')
 
-    for setting, val in a.items():
-        if setting[1] == 'False' and setting[3] == 'True' and setting[4] == 'True':
-            print(setting, val)"""
+    print('Original Bug2Commit with bug report')
+    print_metric(bug2commit_metric_dict[('score', 'True', 'False', 'True', 'True', 'add')])
+
+    print('New best bug2commit with bug report')
     get_best_set_bug2commit(use_br=True)
-    get_best_set()
+    compare_setting(('both', 'True', 'True', 'True', 'True', 'all-sep'), ('score', 'True', 'False', 'True', 'True', 'add'), True)
+
+    print('===============================================================================')
+
+    fonte_metric_dict = get_metric_dict(bug2commit=False)
+
+    print('Original Fonte without bug report')
+    print_metric(org_fonte_metric())
+    #print_metric(fonte_metric_dict[('False', 'rank', "('add', 1.0)", 'False', 'False', 'True')])
+    print('New Fonte without bug report')
+    #get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'False', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
+    get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'False', 'use_stopword':'True'}, exclude=[])
+    compare_setting(('False', 'rank', "('add', 1.0)", 'False', 'True', 'True', 'True', 'all-sep'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    compare_setting(('False', 'rank', "('add', 1.0)", 'False', 'True', 'True', 'True', 'del'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    print('New Fonte with bug report')
+    get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'True', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
+    compare_setting(('False', 'rank', "('add', 0.8)", 'True', 'True', 'True', 'True', 'add'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    compare_setting(('False', 'rank', "('add', 0.7)", 'True', 'True', 'True', 'True', 'all-uni'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    compare_setting(('False', 'rank', "('add', 0.9)", 'True', 'True', 'True', 'True', 'all-uni'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    compare_setting(('False', 'rank', "('add', 0.8)", 'True', 'True', 'True', 'True', 'all-sep'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    compare_setting(('False', 'rank', "('add', 1.0)", 'True', 'True', 'True', 'True', 'all-sep'), ('False', 'None', '(\'add\', 0.0)', 'None', 'None', 'True', 'None', 'None'), False)
+    
+    
+    
+    #best_metric = tot_metric_dict[('score', 'False', 'True', 'True', 'True', 'del')]
+    #print(best_metric['MRR'], best_metric['acc@1'], best_metric['acc@2'], best_metric['acc@3'], best_metric['acc@5'], best_metric['acc@10'], best_metric['num_iters'])
+
+    """get_best_set_bug2commit(use_br=True)
+    get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'True', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
+    
+    #print('Original Fonte')
+    #print('MRR : 0.5277061540997692, acc@1 : 47, acc@2 : 66, acc@3 : 85, acc@5 : 98, acc@10 : 110, # Iters : 3.5076923076923032')
+    
+    #get_best_set(bug2commit=False, fix={'HSFL':'False', 'use_br':'True', 'stage2':'True', 'use_stopword':'True'}, exclude=[])
+    #get_best_set_bug2commit(use_br=True)
+    #compare_setting(setting1=('score', 'False', 'True', 'True', 'True', 'del'), setting2=('score', 'False', 'False', 'True', 'True', 'add'))"""

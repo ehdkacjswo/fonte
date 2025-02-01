@@ -13,7 +13,7 @@ option_list <- list(
               help = "Comma-separated list of independent variables to exclude"),
   make_option(c("-b", "--bug2commit"), type = "logical", default = FALSE, 
               help = "Use bug2commit only[default: TRUE]"),
-  make_option(c("-f", "--fix"), type = "character", default = "HSFL:True,use_stopword:True,stage2:True,use_br:True", 
+  make_option(c("-f", "--fix"), type = "character", default = "use_br:False,use_stopword:True,HSFL:False", 
               help = "Comma-separated list of parameters and values to fix (e.g., use_stopword:False,stage2:True)")
 )
 
@@ -110,6 +110,7 @@ perform_art_posthoc <- function(dv_name, excluded_vars, excluded_values) {
   filtered_data <- data %>% filter(DependentName == dv_name)
   for (var in excluded_vars) {
     filtered_data <- filtered_data %>% filter(!!sym(var) == excluded_values[[var]])
+    filtered_data <- filtered_data[, !names(filtered_data) %in% var] # Remove fixed column
   }
   
   # Remaining independent variables
@@ -155,8 +156,8 @@ run_analysis <- function(dependent_vars, excluded_vars, output_file) {
           setting_2 = sub(".* - ", "", contrast),  # Extract second option
           metric = dv_name
         ) %>%
-        select(p.value, setting_1, setting_2, metric) #%>%
-        #filter(p.value < 0.05)
+        select(p.value, setting_1, setting_2, metric) %>%
+        filter(p.value < 0.05)
 
       all_results <- append(all_results, list(significant_contrasts))
       pb$tick(tokens = list(dv = dv_name, levels = "none"))
@@ -182,8 +183,8 @@ run_analysis <- function(dependent_vars, excluded_vars, output_file) {
             setting_2 = sub(".* - ", "", contrast),  # Extract second option
             metric = dv_name,
             exclude_string = exclude_string
-          ) #%>%
-          select(metric, p.value, setting_1, setting_2, exclude_string) %>%
+          ) %>%
+          select(union(excluded_vars, c('metric', 'p.value', 'setting_1', 'setting_2'))) #%>%
           #filter(p.value < 0.05)
 
         all_results <- append(all_results, list(significant_contrasts))
