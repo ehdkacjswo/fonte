@@ -49,7 +49,7 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
             ":L" + commit_df.begin_line.astype(str) + "," + commit_df.end_line.astype(str)
 
         # Adjust depth for each suspicious methods
-        for (class_file, method_id), group in commit_df.groupby(["method_identifier"]):
+        for (method_id), group in commit_df.groupby(["method_identifier"]):
             affected_depths = sorted(group.loc[group["new_depth"].isna(), "depth"].tolist())
             
             if not affected_depths:

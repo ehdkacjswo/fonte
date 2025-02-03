@@ -230,5 +230,5 @@ def main(pid, vid):
             else:
                 res_dict[stage2][diff_type] = gumtree_stage2(pid, vid, stage2, diff_type.endswith('class'))
 
-    with open(os.path.join(save_dir, f'stage21.pkl'), 'wb') as file:
+    with open(os.path.join(save_dir, f'stage2.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)

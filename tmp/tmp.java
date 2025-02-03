@@ -1,832 +1,1313 @@
 /*
- * Copyright 2009 The Closure Compiler Authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Rhino code, released
+ * May 6, 1999.
+ *
+ * The Initial Developer of the Original Code is
+ * Netscape Communications Corporation.
+ * Portions created by the Initial Developer are Copyright (C) 1997-1999
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Bob Jervis
+ *   Google Inc.
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * the GNU General Public License Version 2 or later (the "GPL"), in which
+ * case the provisions of the GPL are applicable instead of those above. If
+ * you wish to allow use of your version of this file only under the terms of
+ * the GPL and not to allow others to use your version of this file under the
+ * MPL, indicate your decision by deleting the provisions above and replacing
+ * them with the notice and other provisions required by the GPL. If you do
+ * not delete the provisions above, a recipient may use your version of this
+ * file under either the MPL or the GPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
 
-package com.google.javascript.jscomp;
+package com.google.javascript.rhino.jstype;
 
+import static com.google.javascript.rhino.jstype.JSTypeNative.ALL_TYPE;
 import static com.google.javascript.rhino.jstype.JSTypeNative.ARRAY_TYPE;
-import static com.google.javascript.rhino.jstype.JSTypeNative.BOOLEAN_TYPE;
-import static com.google.javascript.rhino.jstype.JSTypeNative.NO_OBJECT_TYPE;
-import static com.google.javascript.rhino.jstype.JSTypeNative.NULL_TYPE;
-import static com.google.javascript.rhino.jstype.JSTypeNative.NUMBER_STRING;
-import static com.google.javascript.rhino.jstype.JSTypeNative.NUMBER_TYPE;
-import static com.google.javascript.rhino.jstype.JSTypeNative.OBJECT_TYPE;
-import static com.google.javascript.rhino.jstype.JSTypeNative.STRING_TYPE;
+import static com.google.javascript.rhino.jstype.JSTypeNative.NO_TYPE;
 import static com.google.javascript.rhino.jstype.JSTypeNative.UNKNOWN_TYPE;
 import static com.google.javascript.rhino.jstype.JSTypeNative.VOID_TYPE;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.javascript.jscomp.Scope.Var;
-import com.google.javascript.rhino.JSDocInfo;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
+import com.google.common.collect.Sets;
+import com.google.javascript.rhino.ErrorReporter;
 import com.google.javascript.rhino.Node;
-import com.google.javascript.rhino.jstype.FunctionType;
-import com.google.javascript.rhino.jstype.JSType;
-import com.google.javascript.rhino.jstype.JSTypeNative;
-import com.google.javascript.rhino.jstype.JSTypeRegistry;
-import com.google.javascript.rhino.jstype.ObjectType;
-import com.google.javascript.rhino.jstype.StaticSlot;
-import com.google.javascript.rhino.jstype.UnknownType;
+import com.google.javascript.rhino.ScriptRuntime;
+import com.google.javascript.rhino.Token;
 
-import java.text.MessageFormat;
-import java.util.Iterator;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 
 /**
- * A central reporter for all type violations: places where the programmer
- * has annotated a variable (or property) with one type, but has assigned
- * another type to it.
+ * The type registry is used to resolve named types.
  *
- * Also doubles as a central repository for all type violations, so that
- * type-based optimizations (like AmbiguateProperties) can be fault-tolerant.
+ * <p>This class is not thread-safe.
  *
- * @author nicksantos@google.com (Nick Santos)
+*
  */
-class TypeValidator {
+public class JSTypeRegistry implements Serializable {
+  private static final long serialVersionUID = 1L;
 
-  private final AbstractCompiler compiler;
-  private final JSTypeRegistry typeRegistry;
-  private final JSType allValueTypes;
-  private boolean shouldReport = true;
-  private final JSType nullOrUndefined;
+  // TODO(user): An instance of this class should be used during
+  // compilation. We also want to make all types' constructors package private
+  // and force usage of this registry instead. This will allow us to evolve the
+  // types without being tied by an open API.
 
-  // TODO(nicksantos): Provide accessors to better filter the list of type
-  // mismatches. For example, if we pass (Cake|null) where only Cake is
-  // allowed, that doesn't mean we should invalidate all Cakes.
-  private final List<TypeMismatch> mismatches = Lists.newArrayList();
+  private final transient ErrorReporter reporter;
 
-  // User warnings
-  private static final String FOUND_REQUIRED =
-      "{0}\n" +
-      "found   : {1}\n" +
-      "required: {2}";
+  // We use an Array instead of an immutable list because this lookup needs
+  // to be very fast. When it was an immutable list, we were spending 5% of
+  // CPU time on bounds checking inside get().
+  private final JSType[] nativeTypes;
 
-  static final DiagnosticType INVALID_CAST =
-      DiagnosticType.warning("JSC_INVALID_CAST",
-          "invalid cast - must be a subtype or supertype\n" +
-          "from: {0}\n" +
-          "to  : {1}");
+  private final Map<String, JSType> namesToTypes;
 
-  static final DiagnosticType TYPE_MISMATCH_WARNING =
-      DiagnosticType.warning(
-          "JSC_TYPE_MISMATCH",
-          "{0}");
+  // Set of namespaces in which types (or other namespaces) exist.
+  private final Set<String> namespaces = new HashSet<String>();
 
-  static final DiagnosticType MISSING_EXTENDS_TAG_WARNING =
-      DiagnosticType.warning(
-          "JSC_MISSING_EXTENDS_TAG",
-          "Missing @extends tag on type {0}");
+  // NOTE(nicksantos): This is a terrible terrible hack. When type expressions
+  // are evaluated, we need to be able to decide whether that type name
+  // resolves to a nullable type or a non-nullable type. Object types are
+  // nullable, but enum types are not.
+  //
+  // Notice that it's not good enough to just declare enum types sooner.
+  // For example, if we have
+  // /** @enum {MyObject} */ var MyEnum = ...;
+  // we won't be to declare "MyEnum" without evaluating the expression
+  // {MyObject}, and following those dependencies starts to lead us into
+  // undecidable territory. Instead, we "pre-declare" enum types,
+  // so that the expression resolver can decide whether a given name is
+  // nullable or not.
+  private final Set<String> enumTypeNames = new HashSet<String>();
 
-  static final DiagnosticType DUP_VAR_DECLARATION =
-      DiagnosticType.warning("JSC_DUP_VAR_DECLARATION",
-          "variable {0} redefined with type {1}, " +
-          "original definition at {2}:{3} with type {4}");
+  // Types that have been "forward-declared."
+  // If these types are not declared anywhere in the binary, we shouldn't
+  // try to type-check them at all.
+  private final Set<String> forwardDeclaredTypes = new HashSet<String>();
 
-  static final DiagnosticType HIDDEN_PROPERTY_MISMATCH =
-      DiagnosticType.warning("JSC_HIDDEN_PROPERTY_MISMATCH",
-          "mismatch of the {0} property type and the type " +
-          "of the property it overrides from superclass {1}\n" +
-          "original: {2}\n" +
-          "override: {3}");
+  // A map of properties to the types on which those properties have been
+  // declared.
+  private final Map<String, Set<ObjectType>> typesIndexedByProperty =
+      Maps.newHashMap();
 
-  static final DiagnosticType INTERFACE_METHOD_NOT_IMPLEMENTED =
-      DiagnosticType.warning(
-          "JSC_INTERFACE_METHOD_NOT_IMPLEMENTED",
-          "property {0} on interface {1} is not implemented by type {2}");
+  // A map of properties to the greatest subtype on which those properties have
+  // been declared. This is filled lazily from the types declared in
+  // typesIndexedByProperty.
+  private final Map<String, JSType> greatestSubtypeByProperty =
+      Maps.newHashMap();
 
-  static final DiagnosticType HIDDEN_INTERFACE_PROPERTY_MISMATCH =
-      DiagnosticType.warning(
-        "JSC_HIDDEN_INTERFACE_PROPERTY_MISMATCH",
-        "mismatch of the {0} property type and the type " +
-        "of the property it overrides from interface {1}\n" +
-        "original: {2}\n" +
-        "override: {3}");
+  // A map from interface name to types that implement it.
+  private final Multimap<String, FunctionType> interfaceToImplementors =
+      Multimaps.newHashMultimap();
 
-  static final DiagnosticType UNKNOWN_TYPEOF_VALUE =
-      DiagnosticType.warning("JSC_UNKNOWN_TYPEOF_VALUE", "unknown type: {0}");
+  // All the unresolved named types.
+  private final Multimap<StaticScope<JSType>, NamedType> unresolvedNamedTypes =
+      Multimaps.newArrayListMultimap();
 
-  static final DiagnosticType ILLEGAL_PROPERTY_ACCESS =
-      DiagnosticType.warning("JSC_ILLEGAL_PROPERTY_ACCESS",
-                             "Cannot do {0} access on a {1}");
+  // All the resolved named types.
+  private final Multimap<StaticScope<JSType>, NamedType> resolvedNamedTypes =
+      Multimaps.newArrayListMultimap();
 
-  static final DiagnosticGroup ALL_DIAGNOSTICS = new DiagnosticGroup(
-      INVALID_CAST,
-      TYPE_MISMATCH_WARNING,
-      MISSING_EXTENDS_TAG_WARNING,
-      DUP_VAR_DECLARATION,
-      HIDDEN_PROPERTY_MISMATCH,
-      INTERFACE_METHOD_NOT_IMPLEMENTED,
-      HIDDEN_INTERFACE_PROPERTY_MISMATCH,
-      UNKNOWN_TYPEOF_VALUE,
-      ILLEGAL_PROPERTY_ACCESS);
+  // NamedType warns about unresolved types in the last generation.
+  private boolean lastGeneration = true;
 
-  TypeValidator(AbstractCompiler compiler) {
-    this.compiler = compiler;
-    this.typeRegistry = compiler.getTypeRegistry();
-    this.allValueTypes = typeRegistry.createUnionType(
-        STRING_TYPE, NUMBER_TYPE, BOOLEAN_TYPE, NULL_TYPE, VOID_TYPE);
-    this.nullOrUndefined = typeRegistry.createUnionType(
-        NULL_TYPE, VOID_TYPE);
+  // The template type name.
+  private String templateTypeName;
+
+  // The template type.
+  private TemplateType templateType;
+
+  /**
+   * Constructs a new type registry populated with the built-in types.
+   */
+  public JSTypeRegistry(ErrorReporter reporter) {
+    this.reporter = reporter;
+    nativeTypes = new JSType[JSTypeNative.values().length];
+    namesToTypes = new HashMap<String, JSType>();
+    resetForTypeCheck();
   }
 
   /**
-   * Gets a list of type violations.
+   * Reset to run the TypeCheck pass.
+   */
+  public void resetForTypeCheck() {
+    typesIndexedByProperty.clear();
+    initializeBuiltInTypes();
+    namesToTypes.clear();
+    namespaces.clear();
+    initializeRegistry();
+  }
+
+  private void initializeBuiltInTypes() {
+    // These locals shouldn't be all caps.
+    BooleanType BOOLEAN_TYPE = new BooleanType(this);
+    registerNativeType(JSTypeNative.BOOLEAN_TYPE, BOOLEAN_TYPE);
+
+    NullType NULL_TYPE = new NullType(this);
+    registerNativeType(JSTypeNative.NULL_TYPE, NULL_TYPE);
+
+    NumberType NUMBER_TYPE = new NumberType(this);
+    registerNativeType(JSTypeNative.NUMBER_TYPE, NUMBER_TYPE);
+
+    StringType STRING_TYPE = new StringType(this);
+    registerNativeType(JSTypeNative.STRING_TYPE, STRING_TYPE);
+
+    UnknownType UNKNOWN_TYPE = new UnknownType(this, false);
+    registerNativeType(JSTypeNative.UNKNOWN_TYPE, UNKNOWN_TYPE);
+    registerNativeType(
+        JSTypeNative.CHECKED_UNKNOWN_TYPE, new UnknownType(this, true));
+
+    VoidType VOID_TYPE = new VoidType(this);
+    registerNativeType(JSTypeNative.VOID_TYPE, VOID_TYPE);
+
+    AllType ALL_TYPE = new AllType(this);
+    registerNativeType(JSTypeNative.ALL_TYPE, ALL_TYPE);
+
+    // Top Level Prototype (the One)
+    // The initializations of TOP_LEVEL_PROTOTYPE and OBJECT_FUNCTION_TYPE
+    // use each other's results, so at least one of them will get null
+    // instead of an actual type; however, this seems to be benign.
+    ObjectType TOP_LEVEL_PROTOTYPE =
+        new FunctionPrototypeType(this, null, null, true);
+    registerNativeType(JSTypeNative.TOP_LEVEL_PROTOTYPE, TOP_LEVEL_PROTOTYPE);
+
+    // Object
+    FunctionType OBJECT_FUNCTION_TYPE =
+        new FunctionType(this, "Object", null,
+            createOptionalParameters(ALL_TYPE), UNKNOWN_TYPE,
+            null, null, true, true);
+    OBJECT_FUNCTION_TYPE.defineDeclaredProperty(
+        "prototype", TOP_LEVEL_PROTOTYPE, true);
+    registerNativeType(JSTypeNative.OBJECT_FUNCTION_TYPE, OBJECT_FUNCTION_TYPE);
+
+    ObjectType OBJECT_PROTOTYPE = OBJECT_FUNCTION_TYPE.getPrototype();
+    registerNativeType(JSTypeNative.OBJECT_PROTOTYPE, OBJECT_PROTOTYPE);
+
+    ObjectType OBJECT_TYPE = OBJECT_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(JSTypeNative.OBJECT_TYPE, OBJECT_TYPE);
+
+    // Function
+    FunctionType FUNCTION_FUNCTION_TYPE =
+        new FunctionType(this, "Function", null,
+            createParametersWithVarArgs(ALL_TYPE), UNKNOWN_TYPE,
+            null, null, true, true);
+    FUNCTION_FUNCTION_TYPE.setPrototypeBasedOn(OBJECT_TYPE);
+    registerNativeType(
+        JSTypeNative.FUNCTION_FUNCTION_TYPE, FUNCTION_FUNCTION_TYPE);
+
+    ObjectType FUNCTION_PROTOTYPE = FUNCTION_FUNCTION_TYPE.getPrototype();
+    registerNativeType(JSTypeNative.FUNCTION_PROTOTYPE, FUNCTION_PROTOTYPE);
+
+    NoType NO_TYPE = new NoType(this);
+    registerNativeType(JSTypeNative.NO_TYPE, NO_TYPE);
+
+    NoObjectType NO_OBJECT_TYPE = new NoObjectType(this);
+    registerNativeType(JSTypeNative.NO_OBJECT_TYPE, NO_OBJECT_TYPE);
+
+    // Array
+    FunctionType ARRAY_FUNCTION_TYPE =
+      new FunctionType(this, "Array", null,
+          createParametersWithVarArgs(ALL_TYPE), null, null, null, true, true) {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public JSType getReturnType() {
+          return getInstanceType();
+        }
+      };
+    ObjectType arrayPrototype = ARRAY_FUNCTION_TYPE.getPrototype();
+    registerNativeType(JSTypeNative.ARRAY_FUNCTION_TYPE, ARRAY_FUNCTION_TYPE);
+
+    ObjectType ARRAY_TYPE = ARRAY_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(JSTypeNative.ARRAY_TYPE, ARRAY_TYPE);
+
+    // Boolean
+    FunctionType BOOLEAN_OBJECT_FUNCTION_TYPE =
+        new FunctionType(this, "Boolean", null,
+            createParameters(false, ALL_TYPE), BOOLEAN_TYPE, null, null, true,
+            true);
+    ObjectType booleanPrototype = BOOLEAN_OBJECT_FUNCTION_TYPE.getPrototype();
+    registerNativeType(
+        JSTypeNative.BOOLEAN_OBJECT_FUNCTION_TYPE, BOOLEAN_OBJECT_FUNCTION_TYPE);
+
+    ObjectType BOOLEAN_OBJECT_TYPE =
+        BOOLEAN_OBJECT_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(JSTypeNative.BOOLEAN_OBJECT_TYPE, BOOLEAN_OBJECT_TYPE);
+
+    // Date
+    FunctionType DATE_FUNCTION_TYPE =
+      new FunctionType(this, "Date", null,
+          createOptionalParameters(UNKNOWN_TYPE, UNKNOWN_TYPE, UNKNOWN_TYPE,
+              UNKNOWN_TYPE, UNKNOWN_TYPE, UNKNOWN_TYPE, UNKNOWN_TYPE),
+          STRING_TYPE, null, null, true, true);
+    ObjectType datePrototype = DATE_FUNCTION_TYPE.getPrototype();
+    registerNativeType(JSTypeNative.DATE_FUNCTION_TYPE, DATE_FUNCTION_TYPE);
+
+    ObjectType DATE_TYPE = DATE_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(JSTypeNative.DATE_TYPE, DATE_TYPE);
+
+    // Error
+    FunctionType ERROR_FUNCTION_TYPE = new ErrorFunctionType(this, "Error");
+    registerNativeType(JSTypeNative.ERROR_FUNCTION_TYPE, ERROR_FUNCTION_TYPE);
+
+    ObjectType ERROR_TYPE = ERROR_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(JSTypeNative.ERROR_TYPE, ERROR_TYPE);
+
+    // EvalError
+    FunctionType EVAL_ERROR_FUNCTION_TYPE =
+        new ErrorFunctionType(this, "EvalError");
+    EVAL_ERROR_FUNCTION_TYPE.setPrototypeBasedOn(ERROR_TYPE);
+    registerNativeType(
+        JSTypeNative.EVAL_ERROR_FUNCTION_TYPE, EVAL_ERROR_FUNCTION_TYPE);
+
+    ObjectType EVAL_ERROR_TYPE = EVAL_ERROR_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(JSTypeNative.EVAL_ERROR_TYPE, EVAL_ERROR_TYPE);
+
+    // RangeError
+    FunctionType RANGE_ERROR_FUNCTION_TYPE =
+        new ErrorFunctionType(this, "RangeError");
+    RANGE_ERROR_FUNCTION_TYPE.setPrototypeBasedOn(ERROR_TYPE);
+    registerNativeType(
+        JSTypeNative.RANGE_ERROR_FUNCTION_TYPE, RANGE_ERROR_FUNCTION_TYPE);
+
+    ObjectType RANGE_ERROR_TYPE = RANGE_ERROR_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(JSTypeNative.RANGE_ERROR_TYPE, RANGE_ERROR_TYPE);
+
+    // ReferenceError
+    FunctionType REFERENCE_ERROR_FUNCTION_TYPE =
+        new ErrorFunctionType(this, "ReferenceError");
+    REFERENCE_ERROR_FUNCTION_TYPE.setPrototypeBasedOn(ERROR_TYPE);
+    registerNativeType(
+        JSTypeNative.REFERENCE_ERROR_FUNCTION_TYPE, REFERENCE_ERROR_FUNCTION_TYPE);
+
+    ObjectType REFERENCE_ERROR_TYPE =
+        REFERENCE_ERROR_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(JSTypeNative.REFERENCE_ERROR_TYPE, REFERENCE_ERROR_TYPE);
+
+    // SyntaxError
+    FunctionType SYNTAX_ERROR_FUNCTION_TYPE =
+        new ErrorFunctionType(this, "SyntaxError");
+    SYNTAX_ERROR_FUNCTION_TYPE.setPrototypeBasedOn(ERROR_TYPE);
+    registerNativeType(
+        JSTypeNative.SYNTAX_ERROR_FUNCTION_TYPE, SYNTAX_ERROR_FUNCTION_TYPE);
+
+    ObjectType SYNTAX_ERROR_TYPE = SYNTAX_ERROR_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(JSTypeNative.SYNTAX_ERROR_TYPE, SYNTAX_ERROR_TYPE);
+
+    // TypeError
+    FunctionType TYPE_ERROR_FUNCTION_TYPE =
+        new ErrorFunctionType(this, "TypeError");
+    TYPE_ERROR_FUNCTION_TYPE.setPrototypeBasedOn(ERROR_TYPE);
+    registerNativeType(
+        JSTypeNative.TYPE_ERROR_FUNCTION_TYPE, TYPE_ERROR_FUNCTION_TYPE);
+
+    ObjectType TYPE_ERROR_TYPE = TYPE_ERROR_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(JSTypeNative.TYPE_ERROR_TYPE, TYPE_ERROR_TYPE);
+
+    // URIError
+    FunctionType URI_ERROR_FUNCTION_TYPE =
+        new ErrorFunctionType(this, "URIError");
+    URI_ERROR_FUNCTION_TYPE.setPrototypeBasedOn(ERROR_TYPE);
+    registerNativeType(
+        JSTypeNative.URI_ERROR_FUNCTION_TYPE, URI_ERROR_FUNCTION_TYPE);
+
+    ObjectType URI_ERROR_TYPE = URI_ERROR_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(JSTypeNative.URI_ERROR_TYPE, URI_ERROR_TYPE);
+
+    // Number
+    FunctionType NUMBER_OBJECT_FUNCTION_TYPE =
+        new FunctionType(this, "Number", null, createParameters(false, ALL_TYPE),
+            NUMBER_TYPE, null, null, true, true);
+    ObjectType numberPrototype = NUMBER_OBJECT_FUNCTION_TYPE.getPrototype();
+    registerNativeType(
+        JSTypeNative.NUMBER_OBJECT_FUNCTION_TYPE, NUMBER_OBJECT_FUNCTION_TYPE);
+
+    ObjectType NUMBER_OBJECT_TYPE =
+        NUMBER_OBJECT_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(JSTypeNative.NUMBER_OBJECT_TYPE, NUMBER_OBJECT_TYPE);
+
+    // RegExp
+    FunctionType REGEXP_FUNCTION_TYPE =
+      new FunctionType(this, "RegExp", null,
+          createOptionalParameters(ALL_TYPE, ALL_TYPE),
+          null, null, null, true, true) {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public JSType getReturnType() {
+          return getInstanceType();
+        }
+      };
+    ObjectType regexpPrototype = REGEXP_FUNCTION_TYPE.getPrototype();
+    registerNativeType(JSTypeNative.REGEXP_FUNCTION_TYPE, REGEXP_FUNCTION_TYPE);
+
+    ObjectType REGEXP_TYPE = REGEXP_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(JSTypeNative.REGEXP_TYPE, REGEXP_TYPE);
+
+    // String
+    FunctionType STRING_OBJECT_FUNCTION_TYPE =
+        new FunctionType(this, "String", null, createParameters(false, ALL_TYPE),
+        STRING_TYPE, null, null, true, true);
+    ObjectType stringPrototype = STRING_OBJECT_FUNCTION_TYPE.getPrototype();
+    registerNativeType(
+        JSTypeNative.STRING_OBJECT_FUNCTION_TYPE, STRING_OBJECT_FUNCTION_TYPE);
+
+    ObjectType STRING_OBJECT_TYPE =
+        STRING_OBJECT_FUNCTION_TYPE.getInstanceType();
+    registerNativeType(
+        JSTypeNative.STRING_OBJECT_TYPE, STRING_OBJECT_TYPE);
+
+    // (Object,string,number)
+    JSType OBJECT_NUMBER_STRING =
+        createUnionType(OBJECT_TYPE, NUMBER_TYPE, STRING_TYPE);
+    registerNativeType(JSTypeNative.OBJECT_NUMBER_STRING, OBJECT_NUMBER_STRING);
+
+    // (Object,string,number,boolean)
+    JSType OBJECT_NUMBER_STRING_BOOLEAN =
+        createUnionType(OBJECT_TYPE, NUMBER_TYPE, STRING_TYPE, BOOLEAN_TYPE);
+    registerNativeType(JSTypeNative.OBJECT_NUMBER_STRING_BOOLEAN,
+        OBJECT_NUMBER_STRING_BOOLEAN);
+
+    // (string,number,boolean)
+    JSType NUMBER_STRING_BOOLEAN =
+        createUnionType(NUMBER_TYPE, STRING_TYPE, BOOLEAN_TYPE);
+    registerNativeType(JSTypeNative.NUMBER_STRING_BOOLEAN,
+        NUMBER_STRING_BOOLEAN);
+
+    // (string,number)
+    JSType NUMBER_STRING = createUnionType(NUMBER_TYPE, STRING_TYPE);
+    registerNativeType(JSTypeNative.NUMBER_STRING, NUMBER_STRING);
+
+    // Native object properties are filled in by externs...
+
+    // (String, string)
+    JSType STRING_VALUE_OR_OBJECT_TYPE =
+        createUnionType(STRING_OBJECT_TYPE, STRING_TYPE);
+    registerNativeType(
+        JSTypeNative.STRING_VALUE_OR_OBJECT_TYPE, STRING_VALUE_OR_OBJECT_TYPE);
+
+    // (Number, number)
+    JSType NUMBER_VALUE_OR_OBJECT_TYPE =
+        createUnionType(NUMBER_OBJECT_TYPE, NUMBER_TYPE);
+    registerNativeType(
+        JSTypeNative.NUMBER_VALUE_OR_OBJECT_TYPE, NUMBER_VALUE_OR_OBJECT_TYPE);
+
+    // unknown function type, i.e. (?...) -> ?
+    FunctionType U2U_FUNCTION_TYPE =
+        createFunctionType(UNKNOWN_TYPE, true, UNKNOWN_TYPE);
+    registerNativeType(JSTypeNative.U2U_FUNCTION_TYPE, U2U_FUNCTION_TYPE);
+
+    // unknown constructor type, i.e. (?...) -> ? with the NoObject type
+    // as instance type
+    FunctionType U2U_CONSTRUCTOR_TYPE =
+        // This is equivalent to
+        // createConstructorType(UNKNOWN_TYPE, true, UNKNOWN_TYPE), but,
+        // in addition, overrides getInstanceType() to return the NoObject type
+        // instead of a new anonymous object.
+        new FunctionType(this, "Function", null,
+          createParametersWithVarArgs(
+              UNKNOWN_TYPE), UNKNOWN_TYPE, NO_OBJECT_TYPE, null, true, true) {
+          private static final long serialVersionUID = 1L;
+
+          @Override public FunctionType getConstructor() {
+            return registry.getNativeFunctionType(
+                JSTypeNative.FUNCTION_FUNCTION_TYPE);
+          }
+        };
+
+    // The U2U_CONSTRUCTOR is weird, because it's the supertype of its
+    // own constructor.
+    registerNativeType(JSTypeNative.U2U_CONSTRUCTOR_TYPE, U2U_CONSTRUCTOR_TYPE);
+    registerNativeType(
+        JSTypeNative.FUNCTION_INSTANCE_TYPE, U2U_CONSTRUCTOR_TYPE);
+
+    FUNCTION_FUNCTION_TYPE.setInstanceType(U2U_CONSTRUCTOR_TYPE);
+    U2U_CONSTRUCTOR_TYPE.setImplicitPrototype(FUNCTION_PROTOTYPE);
+
+    // least function type, i.e. (All...) -> NoType
+    FunctionType LEAST_FUNCTION_TYPE =
+        createFunctionType(NO_TYPE, true, ALL_TYPE);
+    registerNativeType(JSTypeNative.LEAST_FUNCTION_TYPE, LEAST_FUNCTION_TYPE);
+
+    // the 'this' object in the global scope
+    ObjectType GLOBAL_THIS = createObjectType("global this", null,
+        UNKNOWN_TYPE /* to be resolved later */);
+    registerNativeType(JSTypeNative.GLOBAL_THIS, GLOBAL_THIS);
+
+    // greatest function type, i.e. (NoType...) -> All
+    FunctionType GREATEST_FUNCTION_TYPE =
+      createFunctionType(ALL_TYPE, true, NO_TYPE);
+    registerNativeType(JSTypeNative.GREATEST_FUNCTION_TYPE,
+        GREATEST_FUNCTION_TYPE);
+  }
+
+  private void initializeRegistry() {
+    register(getNativeType(JSTypeNative.ARRAY_TYPE));
+    register(getNativeType(JSTypeNative.BOOLEAN_OBJECT_TYPE));
+    register(getNativeType(JSTypeNative.BOOLEAN_TYPE));
+    register(getNativeType(JSTypeNative.DATE_TYPE));
+    register(getNativeType(JSTypeNative.NULL_TYPE));
+    register(getNativeType(JSTypeNative.NULL_TYPE), "Null");
+    register(getNativeType(JSTypeNative.NUMBER_OBJECT_TYPE));
+    register(getNativeType(JSTypeNative.NUMBER_TYPE));
+    register(getNativeType(JSTypeNative.OBJECT_TYPE));
+    register(getNativeType(JSTypeNative.ERROR_TYPE));
+    register(getNativeType(JSTypeNative.URI_ERROR_TYPE));
+    register(getNativeType(JSTypeNative.EVAL_ERROR_TYPE));
+    register(getNativeType(JSTypeNative.TYPE_ERROR_TYPE));
+    register(getNativeType(JSTypeNative.RANGE_ERROR_TYPE));
+    register(getNativeType(JSTypeNative.REFERENCE_ERROR_TYPE));
+    register(getNativeType(JSTypeNative.SYNTAX_ERROR_TYPE));
+    register(getNativeType(JSTypeNative.REGEXP_TYPE));
+    register(getNativeType(JSTypeNative.STRING_OBJECT_TYPE));
+    register(getNativeType(JSTypeNative.STRING_TYPE));
+    register(getNativeType(JSTypeNative.VOID_TYPE));
+    register(getNativeType(JSTypeNative.VOID_TYPE), "Undefined");
+    register(getNativeType(JSTypeNative.VOID_TYPE), "void");
+    register(getNativeType(JSTypeNative.FUNCTION_INSTANCE_TYPE), "Function");
+  }
+
+  private void register(JSType type) {
+    register(type, type.toString());
+  }
+
+  private void register(JSType type, String name) {
+    namesToTypes.put(name, type);
+
+    // Add all the namespaces in which this name lives.
+    while (name.indexOf('.') > 0) {
+      name = name.substring(0, name.lastIndexOf('.'));
+      namespaces.add(name);
+    }
+  }
+
+  private void registerNativeType(JSTypeNative typeId, JSType type) {
+    nativeTypes[typeId.ordinal()] = type;
+  }
+
+  /**
+   * Tells the type system that {@code owner} may have a property named
+   * {@code propertyName}. This allows the registry to keep track of what
+   * types a property is defined upon.
    *
-   * For each violation, one element is the expected type and the other is
-   * the type that is actually found. Order is not significant.
+   * This is NOT the same as saying that {@code owner} must have a property
+   * named type. ObjectType#hasProperty attempts to minimize false positives
+   * ("if we're not sure, then don't type check this property"). The type
+   * registry, on the other hand, should attempt to minimize false negatives
+   * ("if this property is assigned anywhere in the program, it must
+   * show up in the type registry").
    */
-  Iterable<TypeMismatch> getMismatches() {
-    return mismatches;
-  }
-
-  void setShouldReport(boolean report) {
-    this.shouldReport = report;
-  }
-
-  // All non-private methods should have the form:
-  // expectCondition(NodeTraversal t, Node n, ...);
-  // If there is a mismatch, the {@code expect} method should issue
-  // a warning and attempt to correct the mismatch, when possible.
-
-  void expectValidTypeofName(NodeTraversal t, Node n, String found) {
-    report(JSError.make(t.getSourceName(), n, UNKNOWN_TYPEOF_VALUE, found));
-  }
-
-  /**
-   * Expect the type to be an object, or a type convertible to object. If the
-   * expectation is not met, issue a warning at the provided node's source code
-   * position.
-   * @return True if there was no warning, false if there was a mismatch.
-   */
-  boolean expectObject(NodeTraversal t, Node n, JSType type, String msg) {
-    if (!type.matchesObjectContext()) {
-      mismatch(t, n, msg, type, OBJECT_TYPE);
-      return false;
+  public void registerPropertyOnType(String propertyName, ObjectType owner) {
+    Set<ObjectType> typeSet = typesIndexedByProperty.get(propertyName);
+    if (typeSet == null) {
+      typesIndexedByProperty.put(propertyName, typeSet = Sets.newHashSet());
     }
-    return true;
+    greatestSubtypeByProperty.remove(propertyName);
+    typeSet.add(owner);
   }
 
   /**
-   * Expect the type to be an object. Unlike expectObject, a type convertible
-   * to object is not acceptable.
+   * Gets the greatest subtype of the {@code type} that has a property
+   * {@code propertyName} defined on it.
    */
-  void expectActualObject(NodeTraversal t, Node n, JSType type, String msg) {
-    if (!type.isObject()) {
-      mismatch(t, n, msg, type, OBJECT_TYPE);
+  public JSType getGreatestSubtypeWithProperty(
+      JSType type, String propertyName) {
+    if (greatestSubtypeByProperty.containsKey(propertyName)) {
+      return greatestSubtypeByProperty.get(propertyName)
+          .getGreatestSubtype(type);
     }
-  }
-
-  /**
-   * Expect the type to contain an object sometimes. If the expectation is
-   * not met, issue a warning at the provided node's source code position.
-   */
-  void expectAnyObject(NodeTraversal t, Node n, JSType type, String msg) {
-    JSType anyObjectType = getNativeType(NO_OBJECT_TYPE);
-    if (!anyObjectType.isSubtype(type) && !type.isEmptyType()) {
-      mismatch(t, n, msg, type, anyObjectType);
-    }
-  }
-
-  /**
-   * Expect the type to be a string, or a type convertible to string. If the
-   * expectation is not met, issue a warning at the provided node's source code
-   * position.
-   */
-  void expectString(NodeTraversal t, Node n, JSType type, String msg) {
-    if (!type.matchesStringContext()) {
-      mismatch(t, n, msg, type, STRING_TYPE);
-    }
-  }
-
-  /**
-   * Expect the type to be a number, or a type convertible to number. If the
-   * expectation is not met, issue a warning at the provided node's source code
-   * position.
-   */
-  void expectNumber(NodeTraversal t, Node n, JSType type, String msg) {
-    if (!type.matchesNumberContext()) {
-      mismatch(t, n, msg, type, NUMBER_TYPE);
-    }
-  }
-
-  /**
-   * Expect the type to be a valid operand to a bitwise operator. This includes
-   * numbers, any type convertible to a number, or any other primitive type
-   * (undefined|null|boolean|string).
-   */
-  void expectBitwiseable(NodeTraversal t, Node n, JSType type, String msg) {
-    if (!type.matchesNumberContext() && !type.isSubtype(allValueTypes)) {
-      mismatch(t, n, msg, type, allValueTypes);
-    }
-  }
-
-  /**
-   * Expect the type to be a number or string, or a type convertible to a number
-   * or string. If the expectation is not met, issue a warning at the provided
-   * node's source code position.
-   */
-  void expectStringOrNumber(
-      NodeTraversal t, Node n, JSType type, String msg) {
-    if (!type.matchesNumberContext() && !type.matchesStringContext()) {
-      mismatch(t, n, msg, type, NUMBER_STRING);
-    }
-  }
-
-  /**
-   * Expect the type to be anything but the null or void type. If the
-   * expectation is not met, issue a warning at the provided node's
-   * source code position. Note that a union type that includes the
-   * void type and at least one other type meets the expectation.
-   * @return Whether the expectation was met.
-   */
-  boolean expectNotNullOrUndefined(
-      NodeTraversal t, Node n, JSType type, String msg, JSType expectedType) {
-    if (!type.isNoType() && !type.isUnknownType() &&
-        type.isSubtype(nullOrUndefined) &&
-        !containsForwardDeclaredUnresolvedName(type)) {
-
-      // There's one edge case right now that we don't handle well, and
-      // that we don't want to warn about.
-      // if (this.x == null) {
-      //   this.initializeX();
-      //   this.x.foo();
-      // }
-      // In this case, we incorrectly type x because of how we
-      // infer properties locally. See issue 109.
-      // http://code.google.com/p/closure-compiler/issues/detail?id=109
-      //
-      // We do not do this inference globally.
-      if (n.isGetProp() &&
-          !t.inGlobalScope() && type.isNullType()) {
-        return true;
+    if (typesIndexedByProperty.containsKey(propertyName)) {
+      UnionTypeBuilder builder = new UnionTypeBuilder(this);
+      for (JSType alt : typesIndexedByProperty.get(propertyName)) {
+        builder.addAlternate(alt);
       }
-
-      mismatch(t, n, msg, type, expectedType);
-      return false;
+      JSType built = builder.build();
+      greatestSubtypeByProperty.put(propertyName, built);
+      return built.getGreatestSubtype(type);
     }
-    return true;
+    return getNativeType(NO_TYPE);
   }
 
-  private boolean containsForwardDeclaredUnresolvedName(JSType type) {
-    if (type.isUnionType()) {
-      for (JSType alt : type.toMaybeUnionType().getAlternates()) {
-        if (containsForwardDeclaredUnresolvedName(alt)) {
+  /**
+   * Returns whether the given property can possibly be set on the given type.
+   */
+  public boolean canPropertyBeDefined(JSType type, String propertyName) {
+    if (typesIndexedByProperty.containsKey(propertyName)) {
+      for (JSType alt : typesIndexedByProperty.get(propertyName)) {
+        if (alt.isSubtype(type) || type.isSubtype(alt)) {
           return true;
         }
       }
     }
-    return type.isNoResolvedType();
+
+    return false;
   }
 
   /**
-   * Expect that the type of a switch condition matches the type of its
-   * case condition.
+   * Returns each type that has a property {@code propertyName} defined on it.
    */
-  void expectSwitchMatchesCase(NodeTraversal t, Node n, JSType switchType,
-      JSType caseType) {
-    // ECMA-262, page 68, step 3 of evaluation of CaseBlock,
-    // but allowing extra autoboxing.
-    // TODO(user): remove extra conditions when type annotations
-    // in the code base have adapted to the change in the compiler.
-    if (!switchType.canTestForShallowEqualityWith(caseType) &&
-        (caseType.autoboxesTo() == null ||
-            !caseType.autoboxesTo().isSubtype(switchType))) {
-      mismatch(t, n.getFirstChild(),
-          "case expression doesn't match switch",
-          caseType, switchType);
+  public Set<ObjectType> getTypesWithProperty(String propertyName) {
+    Set<ObjectType> typeSet = typesIndexedByProperty.get(propertyName);
+    if (typeSet == null) {
+      return Sets.newHashSet(getNativeObjectType(NO_TYPE));
     }
+    return typeSet;
   }
 
   /**
-   * Expect that the first type can be addressed with GETELEM syntax,
-   * and that the second type is the right type for an index into the
-   * first type.
+   * Increments the current generation. Clients must call this in order to
+   * move to the next generation of type resolution, allowing types to attempt
+   * resolution again.
+   */
+  public void incrementGeneration() {
+    for (NamedType type : resolvedNamedTypes.values()) {
+      type.clearResolved();
+    }
+    unresolvedNamedTypes.putAll(resolvedNamedTypes);
+    resolvedNamedTypes.clear();
+  }
+
+  boolean isLastGeneration() {
+    return lastGeneration;
+  }
+
+  /**
+   * Sets whether this is the last generation. In the last generation,
+   * {@link NamedType} warns about unresolved types.
+   */
+  public void setLastGeneration(boolean lastGeneration) {
+    this.lastGeneration = lastGeneration;
+  }
+
+  /**
+   * Tells the type system that {@code type} implements interface {@code
+   * InterfaceInstance}.
+   * {@code inter} must be an ObjectType for the instance of the interface as it
+   * could be a named type and not yet have the constructor.
+   */
+  void registerTypeImplementingInterface(
+      FunctionType type, ObjectType interfaceInstance) {
+    interfaceToImplementors.put(interfaceInstance.getReferenceName(), type);
+  }
+
+  /**
+   * Returns a collection of types that directly implement {@code
+   * interfaceInstance}.  Subtypes of implementing types are not guaranteed to
+   * be returned.  {@code interfaceInstance} must be an ObjectType for the
+   * instance of the interface.
+   */
+  public Collection<FunctionType> getDirectImplementors(
+      ObjectType interfaceInstance) {
+    return interfaceToImplementors.get(interfaceInstance.getReferenceName());
+  }
+
+  /**
+   * Records declared type names. Given the limited scopes of JavaScript, all
+   * named types are dumped in a common global scope. We may need to revise this
+   * assumption in the future.
    *
-   * @param t The node traversal.
-   * @param n The GETELEM node to issue warnings on.
-   * @param objType The type of the left side of the GETELEM.
-   * @param indexType The type inside the brackets of the GETELEM.
+   * @param name The name of the type to be recorded.
+   * @param t The actual type being associated with the name.
+   * @return True if this name is not already defined, false otherwise.
    */
-  void expectIndexMatch(NodeTraversal t, Node n, JSType objType,
-                        JSType indexType) {
-    Preconditions.checkState(n.isGetElem());
-    Node indexNode = n.getLastChild();
-    if (objType.isStruct()) {
-      report(JSError.make(t.getSourceName(), indexNode,
-                          ILLEGAL_PROPERTY_ACCESS, "'[]'", "struct"));
-    }
-    if (objType.isUnknownType()) {
-      expectStringOrNumber(t, indexNode, indexType, "property access");
-    } else {
-      ObjectType dereferenced = objType.dereference();
-      if (dereferenced != null && dereferenced.getIndexType() != null) {
-        expectCanAssignTo(t, indexNode, indexType, dereferenced.getIndexType(),
-            "restricted index type");
-      } else if (dereferenced != null && dereferenced.isArrayType()) {
-        expectNumber(t, indexNode, indexType, "array access");
-      } else if (objType.matchesObjectContext()) {
-        expectString(t, indexNode, indexType, "property access");
-      } else {
-        mismatch(t, n, "only arrays or objects can be accessed",
-            objType,
-            typeRegistry.createUnionType(ARRAY_TYPE, OBJECT_TYPE));
-      }
-    }
-  }
-
-  /**
-   * Expect that the first type can be assigned to a symbol of the second
-   * type.
-   *
-   * @param t The node traversal.
-   * @param n The node to issue warnings on.
-   * @param rightType The type on the RHS of the assign.
-   * @param leftType The type of the symbol on the LHS of the assign.
-   * @param owner The owner of the property being assigned to.
-   * @param propName The name of the property being assigned to.
-   * @return True if the types matched, false otherwise.
-   */
-  boolean expectCanAssignToPropertyOf(NodeTraversal t, Node n, JSType rightType,
-      JSType leftType, Node owner, String propName) {
-    // The NoType check is a hack to make typedefs work OK.
-    if (!leftType.isNoType() && !rightType.isSubtype(leftType)) {
-      // Do not type-check interface methods, because we expect that
-      // they will have dummy implementations that do not match the type
-      // annotations.
-      JSType ownerType = getJSType(owner);
-      if (ownerType.isFunctionPrototypeType()) {
-        FunctionType ownerFn = ownerType.toObjectType().getOwnerFunction();
-        if (ownerFn.isInterface() &&
-            rightType.isFunctionType() && leftType.isFunctionType()) {
-          return true;
-        }
-      }
-
-      mismatch(t, n,
-          "assignment to property " + propName + " of " +
-          getReadableJSTypeName(owner, true),
-          rightType, leftType);
+  public boolean declareType(String name, JSType t) {
+    if (namesToTypes.containsKey(name)) {
       return false;
     }
+    register(t, name);
     return true;
   }
 
   /**
-   * Expect that the first type can be assigned to a symbol of the second
-   * type.
-   *
-   * @param t The node traversal.
-   * @param n The node to issue warnings on.
-   * @param rightType The type on the RHS of the assign.
-   * @param leftType The type of the symbol on the LHS of the assign.
-   * @param msg An extra message for the mismatch warning, if necessary.
-   * @return True if the types matched, false otherwise.
+   * Records a forward-declared type name. We will not emit errors if this
+   * type name never resolves to anything.
    */
-  boolean expectCanAssignTo(NodeTraversal t, Node n, JSType rightType,
-      JSType leftType, String msg) {
-    if (!rightType.isSubtype(leftType)) {
-      mismatch(t, n, msg, rightType, leftType);
-      return false;
-    }
-    return true;
+  public void forwardDeclareType(String name) {
+    forwardDeclaredTypes.add(name);
   }
 
   /**
-   * Expect that the type of an argument matches the type of the parameter
-   * that it's fulfilling.
-   *
-   * @param t The node traversal.
-   * @param n The node to issue warnings on.
-   * @param argType The type of the argument.
-   * @param paramType The type of the parameter.
-   * @param callNode The call node, to help with the warning message.
-   * @param ordinal The argument ordinal, to help with the warning message.
+   * Whether this is a forward-declared type name.
    */
-  void expectArgumentMatchesParameter(NodeTraversal t, Node n, JSType argType,
-      JSType paramType, Node callNode, int ordinal) {
-    if (!argType.isSubtype(paramType)) {
-      mismatch(t, n,
-          String.format("actual parameter %d of %s does not match " +
-              "formal parameter", ordinal,
-              getReadableJSTypeName(callNode.getFirstChild(), false)),
-          argType, paramType);
-    }
+  public boolean isForwardDeclaredType(String name) {
+    return forwardDeclaredTypes.contains(name);
+  }
+
+  /** Determines whether the given JS package exists. */
+  public boolean hasNamespace(String name) {
+    return namespaces.contains(name);
   }
 
   /**
-   * Expect that the first type can override a property of the second
-   * type.
+   * Looks up a type by name.
    *
-   * @param t The node traversal.
-   * @param n The node to issue warnings on.
-   * @param overridingType The overriding type.
-   * @param hiddenType The type of the property being overridden.
-   * @param propertyName The name of the property, for use in the
-   *     warning message.
-   * @param ownerType The type of the owner of the property, for use
-   *     in the warning message.
+   * @param jsTypeName The name string.
+   * @return the corresponding JSType object or {@code null} it cannot be found
    */
-  void expectCanOverride(NodeTraversal t, Node n, JSType overridingType,
-      JSType hiddenType, String propertyName, JSType ownerType) {
-    if (!overridingType.isSubtype(hiddenType)) {
-      registerMismatch(overridingType, hiddenType,
-          report(t.makeError(n, HIDDEN_PROPERTY_MISMATCH, propertyName,
-            ownerType.toString(), hiddenType.toString(),
-            overridingType.toString())));
+  public JSType getType(String jsTypeName) {
+    // TODO(user): Push every local type name out of namesToTypes so that
+    // NamedType#resolve is correct.
+    if (jsTypeName.equals(templateTypeName)) {
+      return templateType;
     }
+    return namesToTypes.get(jsTypeName);
+  }
+
+  public JSType getNativeType(JSTypeNative typeId) {
+    return nativeTypes[typeId.ordinal()];
+  }
+
+  public ObjectType getNativeObjectType(JSTypeNative typeId) {
+    return (ObjectType) getNativeType(typeId);
+  }
+
+  public FunctionType getNativeFunctionType(JSTypeNative typeId) {
+    return (FunctionType) getNativeType(typeId);
   }
 
   /**
-   * Expect that the first type is the direct superclass of the second type.
+   * Looks up a type by name. To allow for forward references to types, an
+   * unrecognized string has to be bound to a NamedType object that will be
+   * resolved later.
    *
-   * @param t The node traversal.
-   * @param n The node where warnings should point to.
-   * @param superObject The expected super instance type.
-   * @param subObject The sub instance type.
+   * @param scope A scope for doing type name resolution.
+   * @param jsTypeName The name string.
+   * @param sourceName The name of the source file where this reference appears.
+   * @param lineno The line number of the reference.
+   * @return a NamedType if the string argument is not one of the known types,
+   *     otherwise the corresponding JSType object.
    */
-  void expectSuperType(NodeTraversal t, Node n, ObjectType superObject,
-      ObjectType subObject) {
-    FunctionType subCtor = subObject.getConstructor();
-    ObjectType implicitProto = subObject.getImplicitPrototype();
-    ObjectType declaredSuper =
-        implicitProto == null ? null : implicitProto.getImplicitPrototype();
-    if (declaredSuper != null &&
-        !(superObject instanceof UnknownType) &&
-        !declaredSuper.isEquivalentTo(superObject)) {
-      if (declaredSuper.isEquivalentTo(getNativeType(OBJECT_TYPE))) {
-        registerMismatch(superObject, declaredSuper, report(
-            t.makeError(n, MISSING_EXTENDS_TAG_WARNING, subObject.toString())));
-      } else {
-        mismatch(t.getSourceName(), n,
-            "mismatch in declaration of superclass type",
-            superObject, declaredSuper);
-      }
-
-      // Correct the super type.
-      if (!subCtor.hasCachedValues()) {
-        subCtor.setPrototypeBasedOn(superObject);
-      }
+  public JSType getType(StaticScope<JSType> scope, String jsTypeName,
+      String sourceName, int lineno, int charno) {
+    JSType type = getType(jsTypeName);
+    if (type == null) {
+      // TODO(user): Each instance should support named type creation using
+      // interning.
+      NamedType namedType =
+          new NamedType(this, jsTypeName, sourceName, lineno, charno);
+      unresolvedNamedTypes.put(scope, namedType);
+      type = namedType;
     }
+    return type;
   }
 
-  /**
-   * Expect that the first type can be cast to the second type. The first type
-   * should be either a subtype or supertype of the second.
-   *
-   * @param t The node traversal.
-   * @param n The node where warnings should point.
-   * @param type The type being cast from.
-   * @param castType The type being cast to.
-   */
-  void expectCanCast(NodeTraversal t, Node n, JSType type, JSType castType) {
-    castType = castType.restrictByNotNullOrUndefined();
-    type = type.restrictByNotNullOrUndefined();
-
-    if (!type.isSubtype(castType) && !castType.isSubtype(type)) {
-      registerMismatch(type, castType, report(t.makeError(n, INVALID_CAST,
-          castType.toString(), type.toString())));
-    }
-  }
-
-  /**
-   * Expect that the given variable has not been declared with a type.
-   *
-   * @param sourceName The name of the source file we're in.
-   * @param n The node where warnings should point to.
-   * @param parent The parent of {@code n}.
-   * @param var The variable that we're checking.
-   * @param variableName The name of the variable.
-   * @param newType The type being applied to the variable. Mostly just here
-   *     for the benefit of the warning.
-   * @return The variable we end up with. Most of the time, this will just
-   *     be {@code var}, but in some rare cases we will need to declare
-   *     a new var with new source info.
-   */
-  Var expectUndeclaredVariable(String sourceName, CompilerInput input,
-      Node n, Node parent, Var var, String variableName, JSType newType) {
-    Var newVar = var;
-    boolean allowDupe = false;
-    if (n.isGetProp() ||
-        NodeUtil.isObjectLitKey(n, parent)) {
-      JSDocInfo info = n.getJSDocInfo();
-      if (info == null) {
-        info = parent.getJSDocInfo();
-      }
-      allowDupe =
-          info != null && info.getSuppressions().contains("duplicate");
+  public void resolveTypesInScope(StaticScope<JSType> scope) {
+    for (NamedType type : unresolvedNamedTypes.get(scope)) {
+      type.resolve(reporter, scope);
     }
 
-    JSType varType = var.getType();
+    resolvedNamedTypes.putAll(scope, unresolvedNamedTypes.removeAll(scope));
 
-    // Only report duplicate declarations that have types. Other duplicates
-    // will be reported by the syntactic scope creator later in the
-    // compilation process.
-    if (varType != null &&
-        varType != typeRegistry.getNativeType(UNKNOWN_TYPE) &&
-        newType != null &&
-        newType != typeRegistry.getNativeType(UNKNOWN_TYPE)) {
-      // If there are two typed declarations of the same variable, that
-      // is an error and the second declaration is ignored, except in the
-      // case of native types. A null input type means that the declaration
-      // was made in TypedScopeCreator#createInitialScope and is a
-      // native type. We should redeclare it at the new input site.
-      if (var.input == null) {
-        Scope s = var.getScope();
-        s.undeclare(var);
-        newVar = s.declare(variableName, n, varType, input, false);
-
-        n.setJSType(varType);
-        if (parent.isVar()) {
-          if (n.getFirstChild() != null) {
-            n.getFirstChild().setJSType(varType);
-          }
+    if (scope != null && scope.getParentScope() == null) {
+      // By default, the global "this" type is just an anonymous object.
+      // If the user has defined a Window type, make the Window the
+      // implicit prototype of "this".
+      PrototypeObjectType globalThis = (PrototypeObjectType) getNativeType(
+          JSTypeNative.GLOBAL_THIS);
+      JSType windowType = getType("Window");
+      if (globalThis.isUnknownType()) {
+        if (windowType instanceof ObjectType) {
+          globalThis.setImplicitPrototype((ObjectType) windowType);
         } else {
-          Preconditions.checkState(parent.isFunction());
-          parent.setJSType(varType);
+          globalThis.setImplicitPrototype(
+              getNativeObjectType(JSTypeNative.OBJECT_TYPE));
         }
+      }
+    }
+  }
+
+  /**
+   * Creates a type representing optional values of the given type.
+   * @return the union of the type and the void type
+   */
+  public JSType createOptionalType(JSType type) {
+    if (type instanceof UnknownType || type.isAllType()) {
+      return type;
+    } else {
+      return createUnionType(type, getNativeType(JSTypeNative.VOID_TYPE));
+    }
+  }
+
+  /**
+   * Creates a type representing nullable values of the given type.
+   * @return the union of the type and the Null type
+   */
+  public JSType createNullableType(JSType type) {
+    return createUnionType(type, getNativeType(JSTypeNative.NULL_TYPE));
+  }
+
+  /**
+   * Creates a nullabel and undefine-able value of the given type.
+   * @return The union of the type and null and undefined.
+   */
+  public JSType createOptionalNullableType(JSType type) {
+    return createUnionType(type, getNativeType(JSTypeNative.VOID_TYPE),
+        getNativeType(JSTypeNative.NULL_TYPE));
+  }
+
+  /**
+   * Creates a union type whose variants are the arguments.
+   */
+  public JSType createUnionType(JSType... variants) {
+    UnionTypeBuilder builder = new UnionTypeBuilder(this);
+    for (JSType type : variants) {
+      builder.addAlternate(type);
+    }
+    return builder.build();
+  }
+
+  /**
+   * Creates a union type whose variants are the builtin types specified
+   * by the arguments.
+   */
+  public JSType createUnionType(JSTypeNative... variants) {
+    UnionTypeBuilder builder = new UnionTypeBuilder(this);
+    for (JSTypeNative typeId : variants) {
+      builder.addAlternate(getNativeType(typeId));
+    }
+    return builder.build();
+  }
+
+  /**
+   * Creates an enum type.
+   */
+  public EnumType createEnumType(String name, JSType elementsType) {
+    return new EnumType(this, name, elementsType);
+  }
+
+  /**
+   * Creates a function type.
+   *
+   * @param returnType the function's return type
+   * @param parameterTypes the parameters' types
+   */
+  public FunctionType createFunctionType(
+      JSType returnType, JSType... parameterTypes) {
+    return new FunctionType(
+        this, null, null, createParameters(parameterTypes), returnType);
+  }
+
+  /**
+   * Creates a function type. The last parameter type of the function is
+   * considered a variable length argument.
+   *
+   * @param returnType the function's return type
+   * @param parameterTypes the parameters' types
+   */
+  public FunctionType createFunctionTypeWithVarArgs(
+      JSType returnType, List<JSType> parameterTypes) {
+    return new FunctionType(
+        this, null, null, createParametersWithVarArgs(parameterTypes),
+        returnType);
+  }
+
+  /**
+   * Creates a function type.
+   *
+   * @param returnType the function's return type
+   * @param parameterTypes the parameters' types
+   */
+  public FunctionType createFunctionType(
+      JSType returnType, List<JSType> parameterTypes) {
+    return new FunctionType(
+        this, null, null, createParameters(parameterTypes), returnType);
+  }
+
+  /**
+   * Creates a function type. The last parameter type of the function is
+   * considered a variable length argument.
+   *
+   * @param returnType the function's return type
+   * @param parameterTypes the parameters' types
+   */
+  public FunctionType createFunctionTypeWithVarArgs(
+      JSType returnType, JSType... parameterTypes) {
+    return new FunctionType(
+        this, null, null, createParametersWithVarArgs(parameterTypes), returnType);
+  }
+
+  /**
+   * Creates a function type which can act as a constructor.
+   *
+   * @param returnType the function's return type
+   * @param parameterTypes the parameters' types
+   */
+  public FunctionType createConstructorType(
+      JSType returnType, JSType... parameterTypes) {
+    return createConstructorType(
+        null, null, createParameters(parameterTypes), returnType);
+  }
+
+  /**
+   * Creates a function type which can act as a constructor. The last
+   * parameter type of the constructor is considered a variable length argument.
+   *
+   * @param returnType the function's return type
+   * @param parameterTypes the parameters' types
+   */
+  public FunctionType createConstructorTypeWithVarArgs(
+      JSType returnType, JSType... parameterTypes) {
+    return createConstructorType(
+        null, null, createParametersWithVarArgs(parameterTypes), returnType);
+  }
+
+  /**
+   * Creates a function type in which {@code this} refers to an object instance.
+   *
+   * @param instanceType the type of {@code this}
+   * @param returnType the function's return type
+   * @param parameterTypes the parameters' types
+   */
+  public JSType createFunctionType(ObjectType instanceType,
+      JSType returnType, List<JSType> parameterTypes) {
+    return new FunctionType(this, null, null, createParameters(parameterTypes),
+        returnType, instanceType);
+  }
+
+  /**
+   * Creates a function type in which {@code this} refers to an object instance.
+   * The last parameter type of the function is considered a variable length
+   * argument.
+   *
+   * @param instanceType the type of {@code this}
+   * @param returnType the function's return type
+   * @param parameterTypes the parameters' types
+   */
+  public JSType createFunctionTypeWithVarArgs(ObjectType instanceType,
+      JSType returnType, List<JSType> parameterTypes) {
+    return new FunctionType(this, null, null,
+        createParametersWithVarArgs(parameterTypes), returnType, instanceType);
+  }
+
+  /**
+   * Creates a tree hierarchy representing a typed argument list.
+   *
+   * @param parameterTypes the parameter types.
+   * @return a tree hierarchy representing a typed argument list.
+   */
+  public Node createParameters(List<JSType> parameterTypes) {
+    return createParameters(
+        parameterTypes.toArray(new JSType[parameterTypes.size()]));
+  }
+
+  /**
+   * Creates a tree hierarchy representing a typed argument list. The last
+   * parameter type is considered a variable length argument.
+   *
+   * @param parameterTypes the parameter types. The last element of this array
+   *     is considered a variable length argument.
+   * @return a tree hierarchy representing a typed argument list.
+   */
+  public Node createParametersWithVarArgs(List<JSType> parameterTypes) {
+    return createParametersWithVarArgs(
+        parameterTypes.toArray(new JSType[parameterTypes.size()]));
+  }
+
+  /**
+   * Creates a tree hierarchy representing a typed argument list.
+   *
+   * @param parameterTypes the parameter types.
+   * @return a tree hierarchy representing a typed argument list.
+   */
+  public Node createParameters(JSType... parameterTypes) {
+    return createParameters(false, parameterTypes);
+  }
+
+  /**
+   * Creates a tree hierarchy representing a typed argument list. The last
+   * parameter type is considered a variable length argument.
+   *
+   * @param parameterTypes the parameter types. The last element of this array
+   *     is considered a variable length argument.
+   * @return a tree hierarchy representing a typed argument list.
+   */
+  public Node createParametersWithVarArgs(JSType... parameterTypes) {
+    return createParameters(true, parameterTypes);
+  }
+
+  /**
+   * Creates a tree hierarchy representing a typed parameter list in which
+   * every parameter is optional.
+   */
+  public Node createOptionalParameters(JSType... parameterTypes) {
+    FunctionParamBuilder builder = new FunctionParamBuilder(this);
+    builder.addOptionalParams(parameterTypes);
+    return builder.build();
+  }
+
+  /**
+   * Creates a tree hierarchy representing a typed argument list.
+   *
+   * @param lastVarArgs whether the last type should considered as a variable
+   *     length argument.
+   * @param parameterTypes the parameter types. The last element of this array
+   *     is considered a variable length argument is {@code lastVarArgs} is
+   *     {@code true}.
+   * @return a tree hierarchy representing a typed argument list
+   */
+  private Node createParameters(boolean lastVarArgs, JSType... parameterTypes) {
+    FunctionParamBuilder builder = new FunctionParamBuilder(this);
+    int max = parameterTypes.length - 1;
+    for (int i = 0; i <= max; i++) {
+      if (lastVarArgs && i == max) {
+        builder.addVarArgs(parameterTypes[i]);
       } else {
-        // Always warn about duplicates if the overridden type does not
-        // match the original type.
-        //
-        // If the types match, suppress the warning iff there was a @suppress
-        // tag, or if the original declaration was a stub.
-        if (!(allowDupe ||
-              var.getParentNode().isExprResult()) ||
-            !newType.isEquivalentTo(varType)) {
-          report(JSError.make(sourceName, n, DUP_VAR_DECLARATION,
-              variableName, newType.toString(), var.getInputName(),
-              String.valueOf(var.nameNode.getLineno()),
-              varType.toString()));
-        }
+        builder.addRequiredParams(parameterTypes[i]);
       }
     }
-
-    return newVar;
+    return builder.build();
   }
 
   /**
-   * Expect that all properties on interfaces that this type implements are
-   * implemented and correctly typed.
+   * Creates a function type.
+   * @param returnType the function's return type
+   * @param lastVarArgs whether the last parameter type should be considered as
+   * an extensible var_args parameter
+   * @param parameterTypes the parameters' types
    */
-  void expectAllInterfaceProperties(NodeTraversal t, Node n,
-      FunctionType type) {
-    ObjectType instance = type.getInstanceType();
-    for (ObjectType implemented : type.getAllImplementedInterfaces()) {
-      if (implemented.getImplicitPrototype() != null) {
-        for (String prop :
-             implemented.getImplicitPrototype().getOwnPropertyNames()) {
-          expectInterfaceProperty(t, n, instance, implemented, prop);
-        }
-      }
-    }
-  }
-
-  /**
-   * Expect that the property in an interface that this type implements is
-   * implemented and correctly typed.
-   */
-  private void expectInterfaceProperty(NodeTraversal t, Node n,
-      ObjectType instance, ObjectType implementedInterface, String prop) {
-    StaticSlot<JSType> propSlot = instance.getSlot(prop);
-    if (propSlot == null) {
-      // Not implemented
-      String sourceName = n.getSourceFileName();
-      sourceName = sourceName == null ? "" : sourceName;
-      registerMismatch(instance, implementedInterface,
-          report(JSError.make(sourceName, n,
-          INTERFACE_METHOD_NOT_IMPLEMENTED,
-          prop, implementedInterface.toString(), instance.toString())));
+  public FunctionType createFunctionType(JSType returnType,
+      boolean lastVarArgs, JSType... parameterTypes) {
+    if (lastVarArgs) {
+      return createFunctionTypeWithVarArgs(returnType, parameterTypes);
     } else {
-      Node propNode = propSlot.getDeclaration() == null ?
-          null : propSlot.getDeclaration().getNode();
+      return createFunctionType(returnType, parameterTypes);
+    }
+  }
 
-      // Fall back on the constructor node if we can't find a node for the
-      // property.
-      propNode = propNode == null ? n : propNode;
+  /**
+   * Creates a new function type based on an existing function type but
+   * with a new return type.
+   * @param existingFunctionType the existing function type.
+   * @param returnType the new return type.
+   */
+  public FunctionType createFunctionTypeWithNewReturnType(
+      FunctionType existingFunctionType, JSType returnType) {
+    return new FunctionType(
+        this,
+        existingFunctionType.getReferenceName(),
+        /** source node */ null,
+        existingFunctionType.getParametersNode(),
+        returnType,
+        existingFunctionType.getTypeOfThis(),
+        existingFunctionType.getTemplateTypeName());
+  }
 
-      JSType found = propSlot.getType();
-      JSType required
-          = implementedInterface.getImplicitPrototype().getPropertyType(prop);
-      found = found.restrictByNotNullOrUndefined();
-      required = required.restrictByNotNullOrUndefined();
-      if (!found.isSubtype(required)) {
-        // Implemented, but not correctly typed
-        FunctionType constructor =
-            implementedInterface.toObjectType().getConstructor();
-        registerMismatch(found, required, report(t.makeError(propNode,
-            HIDDEN_INTERFACE_PROPERTY_MISMATCH, prop,
-            constructor.getTopMostDefiningType(prop).toString(),
-            required.toString(), found.toString())));
+  /**
+   * Creates a function type which can act as a constructor.
+   * @param returnType the function's return type
+   * @param lastVarArgs whether the last parameter type should be considered as
+   * an extensible var_args parameter
+   * @param parameterTypes the parameters' types
+   */
+  public FunctionType createConstructorType(JSType returnType,
+      boolean lastVarArgs, JSType... parameterTypes) {
+    if (lastVarArgs) {
+      return createConstructorTypeWithVarArgs(returnType, parameterTypes);
+    } else {
+      return createConstructorType(returnType, parameterTypes);
+    }
+  }
+
+  /**
+   * Create an object type.
+   */
+  public ObjectType createObjectType(ObjectType implicitPrototype) {
+    return createObjectType(null, null, implicitPrototype);
+  }
+
+  /**
+   * Creates a record type.
+   */
+  public RecordType createRecordType(Map<String, JSType> properties) {
+    return new RecordType(this, properties);
+  }
+
+  /**
+   * Create an object type.
+   */
+  public ObjectType createObjectType(String name, Node n,
+      ObjectType implicitPrototype) {
+    return new PrototypeObjectType(this, name, implicitPrototype);
+  }
+
+  /**
+   * Create an anonymous object type.
+   */
+  public ObjectType createAnonymousObjectType() {
+    return createObjectType(null, null, null);
+  }
+
+  /**
+   * Creates a constructor function type.
+   * @param name the function's name or {@code null} to indicate that the
+   *     function is anonymous.
+   * @param source the node defining this function. Its type
+   *     ({@link Node#getType()}) must be {@link Token#FUNCTION}.
+   * @param parameters the function's parameters or {@code null}
+   *     to indicate that the parameter types are unknown.
+   * @param returnType the function's return type or {@code null} to indicate
+   *     that the return type is unknown.
+   */
+  public FunctionType createConstructorType(String name, Node source,
+      Node parameters, JSType returnType) {
+    return new FunctionType(this, name, source, parameters, returnType, null,
+        null, true, false);
+  }
+
+  /**
+   * Creates an interface function type.
+   * @param name the function's name
+   * @param source the node defining this function. Its type
+   *     ({@link Node#getType()}) must be {@link Token#FUNCTION}.
+   */
+  public FunctionType createInterfaceType(String name, Node source) {
+    return new FunctionType(this, name, source);
+  }
+
+  /**
+   * Creates a parameterized type.
+   */
+  public ParameterizedType createParameterizedType(
+      ObjectType objectType, JSType parameterType) {
+    return new ParameterizedType(this, objectType, parameterType);
+  }
+
+  /**
+   * Identifies the name of an enum before we actually declare it.
+   */
+  public void identifyEnumName(String name) {
+    enumTypeNames.add(name);
+  }
+
+
+  /**
+   * Creates a RecordType from the nodes representing said record type.
+   * @param n The node with type info.
+   * @param sourceName The source file name.
+   * @param scope A scope for doing type name lookups.
+   */
+  public JSType createRecordTypeFromNodes(Node n, String sourceName,
+      StaticScope<JSType> scope) {
+
+    RecordTypeBuilder builder = new RecordTypeBuilder(this);
+
+    // For each of the fields in the record type.
+    for (Node fieldTypeNode = n.getFirstChild();
+         fieldTypeNode != null;
+         fieldTypeNode = fieldTypeNode.getNext()) {
+
+      // Get the property's name.
+      Node fieldNameNode = fieldTypeNode;
+      boolean hasType = false;
+
+      if (fieldTypeNode.getType() == Token.COLON) {
+        fieldNameNode = fieldTypeNode.getFirstChild();
+        hasType = true;
       }
-    }
-  }
 
-  /**
-   * Report a type mismatch
-   */
-  private void mismatch(NodeTraversal t, Node n,
-                        String msg, JSType found, JSType required) {
-    mismatch(t.getSourceName(), n, msg, found, required);
-  }
+      String fieldName = fieldNameNode.getString();
 
-  private void mismatch(NodeTraversal t, Node n,
-                        String msg, JSType found, JSTypeNative required) {
-    mismatch(t, n, msg, found, getNativeType(required));
-  }
-
-  private void mismatch(String sourceName, Node n,
-                        String msg, JSType found, JSType required) {
-    registerMismatch(found, required, report(
-        JSError.make(sourceName, n, TYPE_MISMATCH_WARNING,
-                     formatFoundRequired(msg, found, required))));
-  }
-
-  private void registerMismatch(JSType found, JSType required, JSError error) {
-    // Don't register a mismatch for differences in null or undefined or if the
-    // code didn't downcast.
-    found = found.restrictByNotNullOrUndefined();
-    required = required.restrictByNotNullOrUndefined();
-    if (found.isSubtype(required) || required.isSubtype(found)) {
-      return;
-    }
-
-    mismatches.add(new TypeMismatch(found, required, error));
-    if (found.isFunctionType() &&
-        required.isFunctionType()) {
-      FunctionType fnTypeA = found.toMaybeFunctionType();
-      FunctionType fnTypeB = required.toMaybeFunctionType();
-      Iterator<Node> paramItA = fnTypeA.getParameters().iterator();
-      Iterator<Node> paramItB = fnTypeB.getParameters().iterator();
-      while (paramItA.hasNext() && paramItB.hasNext()) {
-        registerIfMismatch(paramItA.next().getJSType(),
-            paramItB.next().getJSType(), error);
+      // TODO(user): Move this into the lexer/parser.
+      // Remove the string literal characters around a field name,
+      // if any.
+      if (fieldName.startsWith("'") || fieldName.startsWith("\"")) {
+        fieldName = fieldName.substring(1, fieldName.length() - 1);
       }
 
-      registerIfMismatch(
-          fnTypeA.getReturnType(), fnTypeB.getReturnType(), error);
-    }
-  }
+      // Get the property's type.
+      JSType fieldType = null;
 
-  private void registerIfMismatch(
-      JSType found, JSType required, JSError error) {
-    if (found != null && required != null &&
-        !found.isSubtype(required)) {
-      registerMismatch(found, required, error);
+      if (hasType) {
+        // We have a declared type.
+        fieldType = createFromTypeNodes(
+            fieldTypeNode.getLastChild(), sourceName, scope);
+      } else {
+        // Otherwise, the type is UNKNOWN.
+        fieldType = getNativeType(JSTypeNative.UNKNOWN_TYPE);
+      }
+
+      // Add the property to the record.
+      builder.addProperty(fieldName, fieldType);
     }
+
+    return builder.build();
   }
 
   /**
-   * Formats a found/required error message.
+   * Creates a JSType from the nodes representing a type.
+   * @param n The node with type info.
+   * @param sourceName The source file name.
+   * @param scope A scope for doing type name lookups.
    */
-  private String formatFoundRequired(String description, JSType found,
-      JSType required) {
-    return MessageFormat.format(FOUND_REQUIRED, description, found, required);
-  }
+  public JSType createFromTypeNodes(Node n, String sourceName,
+      StaticScope<JSType> scope) {
+    switch (n.getType()) {
+      case Token.LC: // Record type.
+        return createRecordTypeFromNodes(n.getFirstChild(), sourceName, scope);
 
-  /**
-   * Given a node, get a human-readable name for the type of that node so
-   * that will be easy for the programmer to find the original declaration.
-   *
-   * For example, if SubFoo's property "bar" might have the human-readable
-   * name "Foo.prototype.bar".
-   *
-   * @param n The node.
-   * @param dereference If true, the type of the node will be dereferenced
-   *     to an Object type, if possible.
-   */
-  String getReadableJSTypeName(Node n, boolean dereference) {
-    // If we're analyzing a GETPROP, the property may be inherited by the
-    // prototype chain. So climb the prototype chain and find out where
-    // the property was originally defined.
-    if (n.isGetProp()) {
-      ObjectType objectType = getJSType(n.getFirstChild()).dereference();
-      if (objectType != null) {
-        String propName = n.getLastChild().getString();
-        if (objectType.getConstructor() != null &&
-            objectType.getConstructor().isInterface()) {
-          objectType = FunctionType.getTopDefiningInterface(
-              objectType, propName);
-        } else {
-          // classes
-          while (objectType != null && !objectType.hasOwnProperty(propName)) {
-            objectType = objectType.getImplicitPrototype();
+      case Token.BANG: // Not nullable
+        return createFromTypeNodes(n.getFirstChild(), sourceName, scope)
+            .restrictByNotNullOrUndefined();
+
+      case Token.QMARK: // Nullable
+        return createNullableType(
+            createFromTypeNodes(n.getFirstChild(), sourceName, scope));
+
+      case Token.EQUALS: // Optional
+        return createOptionalType(
+            createFromTypeNodes(n.getFirstChild(), sourceName, scope));
+
+      case Token.ELLIPSIS: // Var args
+        return createOptionalType(
+            createFromTypeNodes(n.getFirstChild(), sourceName, scope));
+
+      case Token.STAR: // The AllType
+        return getNativeType(ALL_TYPE);
+
+      case Token.LB: // Array type
+        // TODO(nicksantos): Enforce membership restrictions on the Array.
+        return getNativeType(ARRAY_TYPE);
+
+      case Token.PIPE: // Union type
+        UnionTypeBuilder builder = new UnionTypeBuilder(this);
+        for (Node child = n.getFirstChild(); child != null;
+             child = child.getNext()) {
+          builder.addAlternate(createFromTypeNodes(child, sourceName, scope));
+        }
+        return builder.build();
+
+      case Token.EMPTY: // When the return value of a function is not specified
+        return getNativeType(UNKNOWN_TYPE);
+
+      case Token.VOID: // Only allowed in the return value of a function.
+        return getNativeType(VOID_TYPE);
+
+      case Token.STRING:
+        JSType namedType = getType(scope, n.getString(), sourceName,
+            n.getLineno(), n.getCharno());
+        if ((namedType instanceof ObjectType) &&
+            !(enumTypeNames.contains(n.getString()))) {
+          Node typeList = n.getFirstChild();
+          if (typeList != null &&
+              ("Array".equals(n.getString()) ||
+               "Object".equals(n.getString()))) {
+            JSType parameterType =
+                createFromTypeNodes(
+                    typeList.getLastChild(), sourceName, scope);
+            namedType = new ParameterizedType(
+                this, (ObjectType) namedType, parameterType);
+            if (typeList.hasMoreThanOneChild()) {
+              JSType indexType =
+                  createFromTypeNodes(
+                      typeList.getFirstChild(), sourceName, scope);
+              namedType = new IndexedType(
+                  this, (ObjectType) namedType, indexType);
+            }
           }
+          return createNullableType(namedType);
+
+        } else {
+          return namedType;
         }
 
-        // Don't show complex function names or anonymous types.
-        // Instead, try to get a human-readable type name.
-        if (objectType != null &&
-            (objectType.getConstructor() != null ||
-             objectType.isFunctionPrototypeType())) {
-          return objectType.toString() + "." + propName;
+      case Token.FUNCTION:
+        ObjectType thisType = null;
+        Node current = n.getFirstChild();
+        if (current.getType() == Token.THIS) {
+          Node thisNode = current.getFirstChild();
+          JSType maybeThisType =
+              createFromTypeNodes(thisNode, sourceName, scope)
+              .restrictByNotNullOrUndefined();
+          if (maybeThisType instanceof ObjectType) {
+            thisType = (ObjectType) maybeThisType;
+          } else {
+            reporter.warning(
+                ScriptRuntime.getMessage0("msg.jsdoc.function.thisnotobject"),
+                sourceName, thisNode.getLineno(), "", thisNode.getCharno());
+          }
+
+          current = current.getNext();
         }
-      }
+
+        FunctionParamBuilder paramBuilder = new FunctionParamBuilder(this);
+
+        if (current.getType() == Token.LP) {
+          Node args = current.getFirstChild();
+          for (Node arg = current.getFirstChild(); arg != null;
+               arg = arg.getNext()) {
+            if (arg.getType() == Token.ELLIPSIS) {
+              if (arg.getChildCount() == 0) {
+                paramBuilder.addVarArgs(getNativeType(UNKNOWN_TYPE));
+              } else {
+                paramBuilder.addVarArgs(
+                    createFromTypeNodes(
+                        arg.getFirstChild(), sourceName, scope));
+              }
+            } else {
+              JSType type = createFromTypeNodes(arg, sourceName, scope);
+              if (arg.getType() == Token.EQUALS) {
+                boolean addSuccess = paramBuilder.addOptionalParams(type);
+                if (!addSuccess) {
+                  reporter.warning(
+                      ScriptRuntime.getMessage0("msg.jsdoc.function.varargs"),
+                      sourceName, arg.getLineno(), "", arg.getCharno());
+                }
+              } else {
+                paramBuilder.addRequiredParams(type);
+              }
+            }
+          }
+          current = current.getNext();
+        }
+
+        JSType returnType = createFromTypeNodes(current, sourceName, scope);
+
+        return new FunctionType(this, null, null, paramBuilder.build(),
+             returnType, thisType, null);
     }
 
-    JSType type = getJSType(n);
-    if (dereference) {
-      ObjectType dereferenced = type.dereference();
-      if (dereferenced != null) {
-        type = dereferenced;
-      }
-    }
-
-    String qualifiedName = n.getQualifiedName();
-    if (type.isFunctionPrototypeType() ||
-        (type.toObjectType() != null &&
-         type.toObjectType().getConstructor() != null)) {
-      return type.toString();
-    } else if (qualifiedName != null) {
-      return qualifiedName;
-    } else if (type.isFunctionType()) {
-      // Don't show complex function names.
-      return "function";
-    } else {
-      return type.toString();
-    }
+    throw new IllegalStateException(
+        "Unexpected node in type expression: " + n.toString());
   }
 
   /**
-   * This method gets the JSType from the Node argument and verifies that it is
-   * present.
+   * Sets the template type name.
    */
-  private JSType getJSType(Node n) {
-    JSType jsType = n.getJSType();
-    if (jsType == null) {
-      // TODO(user): This branch indicates a compiler bug, not worthy of
-      // halting the compilation but we should log this and analyze to track
-      // down why it happens. This is not critical and will be resolved over
-      // time as the type checker is extended.
-      return getNativeType(UNKNOWN_TYPE);
-    } else {
-      return jsType;
-    }
-  }
-
-  private JSType getNativeType(JSTypeNative typeId) {
-    return typeRegistry.getNativeType(typeId);
-  }
-
-  private JSError report(JSError error) {
-    if (shouldReport) {
-      compiler.report(error);
-    }
-    return error;
+  public void setTemplateTypeName(String name) {
+    templateTypeName = name;
+    templateType = new TemplateType(this, name);
   }
 
   /**
-   * Signals that the first type and the second type have been
-   * used interchangeably.
-   *
-   * Type-based optimizations should take this into account
-   * so that they don't wreck code with type warnings.
+   * Clears the template type name.
    */
-  static class TypeMismatch {
-    final JSType typeA;
-    final JSType typeB;
-    final JSError src;
-
-    /**
-     * It's the responsibility of the class that creates the
-     * {@code TypeMismatch} to ensure that {@code a} and {@code b} are
-     * non-matching types.
-     */
-    TypeMismatch(JSType a, JSType b, JSError src) {
-      this.typeA = a;
-      this.typeB = b;
-      this.src = src;
-    }
-
-    @Override public boolean equals(Object object) {
-      if (object instanceof TypeMismatch) {
-        TypeMismatch that = (TypeMismatch) object;
-        return (that.typeA.isEquivalentTo(this.typeA)
-                && that.typeB.isEquivalentTo(this.typeB))
-            || (that.typeB.isEquivalentTo(this.typeA)
-                && that.typeA.isEquivalentTo(this.typeB));
-      }
-      return false;
-    }
-
-    @Override public int hashCode() {
-      return Objects.hashCode(typeA, typeB);
-    }
-
-    @Override public String toString() {
-      return "(" + typeA + ", " + typeB + ")";
-    }
+  public void clearTemplateTypeName() {
+    templateTypeName = null;
+    templateType = null;
   }
 }
