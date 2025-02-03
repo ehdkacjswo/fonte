@@ -69,7 +69,7 @@ def main(pid, vid):
     # Encode diff for every settings
     encode_dict = dict()
     vocab_dict = dict()
-    use_stopword_list = [True, False]
+    use_stopword_list = [True]
 
     for stage2, sub_dict in stage2_dict.items():
         encode_dict[stage2] = dict()

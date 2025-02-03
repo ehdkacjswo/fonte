@@ -20,29 +20,28 @@ def log(txt, out_txt=None, err_txt=None):
         if err_txt is not None:
             file.write('[ERROR] ERR\n' + err_txt.decode(encoding='utf-8', errors='ignore') + '\n')
 
-# Get the unchanged file data
-# [(commit, src_path)]
-def get_style_change_data(coredir, tool='git', with_Rewrite=True):
-    if with_Rewrite == 'skip':
+# Get style change data list [(commit, before_src_path, after_src_path)]
+def get_style_change_data(coredir, tool='git', stage2='skip'):
+    if stage2 == 'skip':
         return []
 
-    elif with_Rewrite == 'precise':
+    elif stage2 == 'precise':
         val_df = pd.read_csv(
-            os.path.join(coredir, tool, f"precise_validation_noOpenRewrite.csv"), 
+            os.path.join(coredir, tool, f"precise_validation.csv"), 
             header=None,
             names=["commit", "before_src_path", "after_src_path", "AST_diff"])
 
         unchanged_df = val_df[val_df["AST_diff"] == "U"]
         return list(zip(unchanged_df["commit"], unchanged_df["before_src_path"], unchanged_df["after_src_path"]))
 
-    else:
+    """else:
         val_df = pd.read_csv(
             os.path.join(coredir, tool, f"validation_noOpenRewrite.csv"), 
             header=None,
             names=["commit", "src_path", "AST_diff"])
 
         unchanged_df = val_df[val_df["AST_diff"] == "U"]
-        return list(zip(unchanged_df["commit"], unchanged_df["src_path"], unchanged_df["src_path"]))
+        return list(zip(unchanged_df["commit"], unchanged_df["src_path"], unchanged_df["src_path"]))"""
 
 def git_stage2(pid, vid, stage2):
     # Load related diff data

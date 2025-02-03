@@ -18,22 +18,18 @@ def load_commit_history(fault_dir, tool):
     return com_df
 
 # 
-def get_style_change_commits(fault_dir, tool, precise=True):
-    #postfix = "" if with_Rewrite else "_noOpenRewrite"
-    postfix = "" if precise else ""
-    prefix = "precise_" if precise else ""
-    val_df = pd.read_csv(
-        os.path.join(fault_dir, tool, f"{prefix}validation{postfix}.csv"), 
-        header=None,
-        names=["commit", "before_src_path", "after_src_path", "AST_diff"])
-    
-    style_df = val_df[val_df["AST_diff"] == "U"]
-    return set(zip(style_df["commit"], style_df["before_src_path"], style_df["after_src_path"]))
+def get_style_change_commits(fault_dir, tool='git', stage2='precise'):
+    if stage2 == 'skip':
+        return set()
 
-
-    """val_df["unchanged"] = val_df["AST_diff"] == "U"
-    agg_df = val_df.groupby("commit").all()[["unchanged"]]
-    return agg_df.index[agg_df["unchanged"]].tolist()"""
+    if stage2 == 'precise':
+        val_df = pd.read_csv(
+            os.path.join(fault_dir, tool, f"precise_validation.csv"), 
+            header=None,
+            names=["commit", "before_src_path", "after_src_path", "AST_diff"])
+        
+        style_df = val_df[val_df["AST_diff"] == "U"]
+        return set(zip(style_df["commit"], style_df["before_src_path"], style_df["after_src_path"]))
 
 # Deleted method level
 def vote_for_commits(fault_dir, tool, formula, decay, voting_func,

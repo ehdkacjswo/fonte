@@ -20,6 +20,31 @@ def log(txt, out_txt=None, err_txt=None):
         if err_txt is not None:
             file.write('[ERROR] ERR\n' + err_txt.decode(encoding='utf-8', errors='ignore') + '\n')
 
+def get_style_change_commits(fault_dir, tool='git', stage2='precise'):
+    if stage2 == 'skip':
+        return []
+    
+    if stage2 == 'precise':
+        val_df = pd.read_csv(
+            os.path.join(fault_dir, tool, f"precise_validation.csv"), 
+            header=None,
+            names=["commit", "before_src_path", "after_src_path", "AST_diff"])
+
+    val_df["unchanged"] = val_df["AST_diff"] == "U"
+    agg_df = val_df.groupby("commit").all()[["unchanged"]]
+    style_change_commits = agg_df.index[agg_df["unchanged"]].tolist()
+
+    # Current precise style change doesn't include '/dev/null' path
+    # Have to exclude commits that have '/dev/null' path
+    # Can be deleted if it handles the cases
+    com_df = pd.read_pickle(os.path.join(fault_dir, tool, "commits.pkl"))
+    com_df["commit_hash"] = com_df["commit_hash"].apply(lambda s: str(s)[:7])
+
+    valid_commits = com_df[~com_df[['before_src_path', 'after_src_path']].\
+        isin(['/dev/null']).any(axis=1)]['commit_hash'].unique()
+    
+    return [commit for commit in style_change_commits if commit in valid_commits]
+
 # Perform bisecion
 def main(pid, vid):
     log(f'Working on {pid}_{vid}b')
@@ -51,10 +76,9 @@ def main(pid, vid):
         ensemble_iter[stage2] = dict()
 
         # Get list of target commits
-        if stage2 == 'skip':
-            style_change_commits = []
-        else:
-            style_change_commits = get_style_change_commits(fault_dir, tool, with_Rewrite=(stage2=='True'))
+        style_change_commits = get_style_change_commits(fault_dir)
+
+        # May check score contains 0 or not later
 
         C_BIC = [c for c in all_commits if c in fonte_df.index and c not in style_change_commits]
 

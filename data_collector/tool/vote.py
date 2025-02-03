@@ -96,12 +96,8 @@ def vote_fonte(pid, vid):
     fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
     res_dict = dict()
 
-    for stage2 in ['skip']:
-        if stage2 == 'skip':
-            #excluded = []
-            excluded = get_style_change_commits(fault_dir, tool='git') #?
-        else:
-            excluded = get_style_change_commits(fault_dir, tool='git') #?
+    for stage2 in ['skip', 'precise']:
+        excluded = excluded = get_style_change_commits(fault_dir, tool='git', stage2=stage2)
             
         res_dict[stage2] = vote_for_commits(fault_dir, tool='git', formula='Ochiai', decay=0.1, \
             voting_func=(lambda r: 1/r.max_rank), use_method_level_score=False, excluded=excluded, adjust_depth=True)
