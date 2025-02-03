@@ -2,9 +2,9 @@ import subprocess, os
 
 if __name__ == "__main__":
     pid = 'Closure'
-    vid = '30'
-    commit_hash = 'e33e925'
-    src_path = 'src/com/google/javascript/jscomp/DefinitionsRemover.java'
+    vid = '60'
+    commit_hash = 'ee83440'
+    src_path = 'src/com/google/javascript/jscomp/CodeGenerator.java'
 
     # Checkout Defects4J project
     p = subprocess.Popen(f'sh /root/workspace/data_collector/tool/checkout.sh {pid} {vid}', \
@@ -20,8 +20,8 @@ if __name__ == "__main__":
     except:
         exit(1)
 
+    # Copy current version of file
     p = subprocess.Popen(f'git show {commit_hash}:{src_path}', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
     code_txt, err_txt = p.communicate()
 
     # Error raised while copying file
@@ -29,7 +29,17 @@ if __name__ == "__main__":
         exit(1)
     
     else:
-        #code_txt = code_txt.decode(encoding='utf-8', errors='ignore')
+        with open('/root/workspace/data_collector/after.java', 'wb') as file:
+            file.write(code_txt)
+    
+    # Copy before version of file
+    p = subprocess.Popen(f'git show {commit_hash}~1:{src_path}', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    code_txt, err_txt = p.communicate()
 
-        with open('/root/workspace/data_collector/copy1.java', 'wb') as file:
+    # Error raised while copying file
+    if p.returncode != 0:
+        exit(1)
+    
+    else:
+        with open('/root/workspace/data_collector/before.java', 'wb') as file:
             file.write(code_txt)

@@ -21,7 +21,7 @@ python /root/workspace/precise_style_change/tools/get_touched_files.py $commit_l
   --commit $sha
 
 echo "- Commit:" $sha
-cat $workdir/modified_files_${sha} | while read after_src_path before_src_path; do
+cat $workdir/modified_files_${sha} | while read before_src_path after_src_path; do
   #after_src_path=src/com/google/javascript/jscomp/NodeUtil.java
   #before_src_path=src/com/google/javascript/jscomp/NodeUtil.java
   echo "-- File:" $after_src_path
@@ -31,8 +31,9 @@ cat $workdir/modified_files_${sha} | while read after_src_path before_src_path; 
     astyle --mode=java --style=java $after_src_path
   fi
   cp $after_src_path /root/workspace/tmp/after.java
+  echo $after_src_path
   # checkout to $sha~1
-  git checkout $sha~1 $before_src_path
+  before_check=$(git checkout $sha~1 $before_src_path 2>&1)
   if [ $? -eq 0 ]; then
     # only when $file is a valid path in $sha~1
     if [ "$use_Rewrite" = true ]; then
@@ -41,8 +42,9 @@ cat $workdir/modified_files_${sha} | while read after_src_path before_src_path; 
     cp $before_src_path /root/workspace/tmp/before.java
 
     # compare AST
-    is_isomorphic=$(docker run --rm -v /home/coinse/doam/fonte/tmp:/diff gumtree isotest \
-      -g java-jdtnc before.java after.java 2>&1)
+    #is_isomorphic=$(docker run --rm -v /home/coinse/doam/fonte/tmp:/diff gumtree isotest \
+    #  -g java-jdtnc before.java after.java 2>&1)
+    is_isomorphic=$(python /root/workspace/precise_style_change/tools/check_astdiff.py 2>&1)
     if [ $? -eq 0 ]; then
       case "$is_isomorphic" in
         "true") result='U' ;;
@@ -62,6 +64,7 @@ cat $workdir/modified_files_${sha} | while read after_src_path before_src_path; 
     #rm $after_src_path.$sha
 
     echo "$before_src_path may not exist in $sha~1"
+    echo $before_check
     echo "$before_src_path,$after_src_path,N" >> $output
   fi
   #exit 1

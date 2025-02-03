@@ -3,13 +3,11 @@ import pandas as pd
 import numpy as np
 from scipy.spatial.distance import cosine
 
-sys.path.append('/root/workspace/lib/')
-from experiment_utils import *
-
 sys.path.append('/root/workspace/data_collector/lib/')
 from BM25_Custom import BM25_Encode
 from gumtree import *
 from encoder import *
+from vote_util import *
 
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core'
@@ -100,9 +98,11 @@ def vote_fonte(pid, vid):
 
     for stage2 in ['skip']:
         if stage2 == 'skip':
-            excluded = []
+            #excluded = []
+            excluded = get_style_change_commits(fault_dir, tool='git') #?
         else:
-            excluded = get_style_change_commits(fault_dir, tool='git', with_Rewrite=stage2) #?
+            excluded = get_style_change_commits(fault_dir, tool='git') #?
+            
         res_dict[stage2] = vote_for_commits(fault_dir, tool='git', formula='Ochiai', decay=0.1, \
             voting_func=(lambda r: 1/r.max_rank), use_method_level_score=False, excluded=excluded, adjust_depth=True)
     
@@ -150,7 +150,7 @@ def main(pid, vid):
     use_diff_list = [True, False]
     param_list = list(itertools.product(use_br_list, use_diff_list))
 
-    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
+    """with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
         feature_dict = pickle.load(file)
 
     for stage2, sub_dict in feature_dict.items():
@@ -161,13 +161,14 @@ def main(pid, vid):
                 new_diff_type = diff_type if use_diff else 'no_diff'
                 res_dict[stage2][(new_diff_type, use_stopword, adddel, use_br)] = \
                     vote_bug2commit(pid, vid, feature_data=feature_data, stage2=stage2, \
-                    diff_type=new_diff_type, use_stopword=use_stopword, adddel=adddel, use_br=use_br)
+                    diff_type=new_diff_type, use_stopword=use_stopword, adddel=adddel, use_br=use_br)"""
     
-    with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
+    print(vote_fonte(pid, vid))
+    """with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)
 
     with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
         pickle.dump(vote_fonte(pid, vid), file)
 
     with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
-        pickle.dump(vote_ensemble(pid, vid), file)
+        pickle.dump(vote_ensemble(pid, vid), file)"""

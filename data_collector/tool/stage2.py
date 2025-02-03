@@ -25,11 +25,8 @@ def log(txt, out_txt=None, err_txt=None):
 def get_style_change_data(coredir, tool='git', with_Rewrite=True):
     if with_Rewrite == 'skip':
         return []
-    #postfix = "" if with_Rewrite else "_noOpenRewrite"
-    #postfix = "" if with_Rewrite else ""
-    postfix = ""
 
-    if with_Rewrite == 'precise':
+    elif with_Rewrite == 'precise':
         val_df = pd.read_csv(
             os.path.join(coredir, tool, f"precise_validation_noOpenRewrite.csv"), 
             header=None,
@@ -219,7 +216,7 @@ def main(pid, vid):
         return
 
     diff_type_list = ['git', 'gumtree_base', 'gumtree_class']
-    stage2_list = ['skip'] # ['skip', True, False] Skip stage or use OpenRewrite or not
+    stage2_list = ['skip', 'precise'] # ['skip', True, False] Skip stage or use OpenRewrite or not
 
     save_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
     os.makedirs(save_dir, exist_ok=True)
@@ -234,5 +231,5 @@ def main(pid, vid):
             else:
                 res_dict[stage2][diff_type] = gumtree_stage2(pid, vid, stage2, diff_type.endswith('class'))
 
-    with open(os.path.join(save_dir, f'stage2.pkl'), 'wb') as file:
+    with open(os.path.join(save_dir, f'stage21.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)
