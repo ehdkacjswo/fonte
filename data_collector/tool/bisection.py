@@ -52,6 +52,7 @@ def main(pid, vid):
     # Basic commit info
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
+    print(BIC)
 
     fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
     all_commits = get_all_commits(fault_dir)
@@ -84,13 +85,16 @@ def main(pid, vid):
 
         # Bisection with scores
         votes = [float(fonte_df.loc[c, "vote"]) for c in C_BIC]
+        print('fonte')
         fonte_iter[stage2] = weighted_bisection(C_BIC, votes, BIC, ignore_zero=False)
 
         for key, bug2commit_df in sub_dict.items():
+            print('bug2commit')
             votes = [float(bug2commit_df.loc[c, "vote"]) for c in C_BIC]
             bug2commit_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC, ignore_zero=False)
         
         for key, ensemble_df in ensemble_dict[stage2].items():
+            print('ensemble')
             votes = [float(ensemble_df.loc[c, "vote"]) for c in C_BIC]
             ensemble_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC, ignore_zero=False)
     

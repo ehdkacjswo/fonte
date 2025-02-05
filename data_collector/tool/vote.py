@@ -151,7 +151,7 @@ def main(pid, vid):
     with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
         feature_dict = pickle.load(file)
 
-    for stage2, sub_dict in feature_dict.items():
+    """for stage2, sub_dict in feature_dict.items():
         res_dict[stage2] = dict()
 
         for (diff_type, use_stopword, adddel), feature_data in sub_dict.items():
@@ -162,10 +162,10 @@ def main(pid, vid):
                     diff_type=new_diff_type, use_stopword=use_stopword, adddel=adddel, use_br=use_br)
 
     with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
-        pickle.dump(res_dict, file)
+        pickle.dump(res_dict, file)"""
 
     with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
         pickle.dump(vote_fonte(pid, vid), file)
 
-    with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
-        pickle.dump(vote_ensemble(pid, vid), file)
+    """with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
+        pickle.dump(vote_ensemble(pid, vid), file)"""

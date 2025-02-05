@@ -1,10 +1,13 @@
 import subprocess, os
 
 if __name__ == "__main__":
-    pid = 'Time'
-    vid = '2'
-    commit_hash = 'df4a82f'
-    src_path = 'src/main/java/org/joda/time/base/BaseLocal.java'
+    #a2715a5,src/com/google/javascript/jscomp/Tracer.java,src/com/google/javascript/jscomp/Tracer.java,U
+    #a2715a5,src/com/google/javascript/rhino/TokenStream.java,src/com/google/javascript/rhino/TokenStream.java,U
+    pid = 'Closure'
+    vid = '131'
+    commit_hash = 'a2715a5'
+    before_src_path = 'src/com/google/javascript/jscomp/Tracer.java'
+    after_src_path = 'src/com/google/javascript/jscomp/Tracer.java'
 
     # Checkout Defects4J project
     p = subprocess.Popen(f'sh /root/workspace/data_collector/tool/checkout.sh {pid} {vid}', \
@@ -21,7 +24,7 @@ if __name__ == "__main__":
         exit(1)
 
     # Copy current version of file
-    p = subprocess.Popen(f'git show {commit_hash}:{src_path}', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(f'git show {commit_hash}:{after_src_path}', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     code_txt, err_txt = p.communicate()
 
     # Error raised while copying file
@@ -33,7 +36,7 @@ if __name__ == "__main__":
             file.write(code_txt)
     
     # Copy before version of file
-    p = subprocess.Popen(f'git show {commit_hash}~1:JodaTime/src/main/java/org/joda/time/base/BaseLocal.java', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(f'git show {commit_hash}~1:{before_src_path}', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     code_txt, err_txt = p.communicate()
 
     # Error raised while copying file

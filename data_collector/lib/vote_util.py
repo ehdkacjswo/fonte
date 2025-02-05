@@ -40,7 +40,7 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
 
     # Style change exists > Update commit depth
     if len(excluded) > 0:
-        # Excluded commits have "None" depth
+        # Excluded commits have "None" 
         mask = commit_df.apply(lambda row: (row["commit_hash"], row["before_src_path"], row["after_src_path"]) in excluded, axis=1)
         commit_df.loc[mask, "new_depth"] = None
 
@@ -49,7 +49,7 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
             ":L" + commit_df.begin_line.astype(str) + "," + commit_df.end_line.astype(str)
 
         # Adjust depth for each suspicious methods
-        for (method_id), group in commit_df.groupby(["method_identifier"]):
+        for (src_path, method_id), group in commit_df.groupby(["src_path", "method_identifier"]):
             affected_depths = sorted(group.loc[group["new_depth"].isna(), "depth"].tolist())
             
             if not affected_depths:

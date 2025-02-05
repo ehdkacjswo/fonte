@@ -61,7 +61,7 @@ if __name__ == "__main__":
                 print(y)
         
         # Original results
-        with open(os.path.join(proj_dir, 'validation_noOpenRewrite.csv'), 'r') as file:
+        with open(os.path.join(proj_dir, 'validation.csv'), 'r') as file:
             c = file.readlines()
         
         c_dict = {}
