@@ -6,8 +6,8 @@ if __name__ == "__main__":
     pid = 'Closure'
     vid = '131'
     commit_hash = 'a2715a5'
-    before_src_path = 'src/com/google/javascript/jscomp/Tracer.java'
-    after_src_path = 'src/com/google/javascript/jscomp/Tracer.java'
+    before_src_path = 'test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java'
+    after_src_path = 'test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java '
 
     # Checkout Defects4J project
     p = subprocess.Popen(f'sh /root/workspace/data_collector/tool/checkout.sh {pid} {vid}', \
