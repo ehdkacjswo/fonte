@@ -12,12 +12,11 @@ if __name__ == "__main__":
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
 
-        """if pid == 'Closure' and vid == '133':
+        if pid == 'Closure' and vid == '133':
             skip = False
-            continue
 
         if skip:
-            continue"""
+            continue
 
         #pid, vid = 'Closure', '131'
 

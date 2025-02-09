@@ -85,10 +85,10 @@ if __name__ == "__main__":
             is_style_change = is_style_change.decode(encoding='utf-8', errors='ignore')
 
             if is_style_change == 'true':
-                s_true += 1
+                style_true += 1
             
             elif is_style_change == 'false':
                 print(f"{BIC} {before_src_path} {after_src_path} {is_style_change}")
-                s_false += 1
+                style_false += 1
             
-        print(tot, s_true, s_false)
+        print(tot, style_true, style_false)

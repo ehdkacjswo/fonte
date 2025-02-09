@@ -8,13 +8,14 @@ import pandas as pd
 import csv
 
 sys.path.append('/root/workspace/diff_util/lib/')
-from encoder import savepath_postfix
+#from encoder import savepath_postfix
 from tqdm import tqdm
 
 sys.path.append('/root/workspace/lib/')
 from experiment_utils import *
 
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
+RESULT_DATA_DIR = '/root/workspace/data/Defects4J/result'
 
 voting_functions = {
     # key: (alpha, tau)
@@ -144,23 +145,27 @@ def metrics_to_csv(bug2commit=True):
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     project_metric_dict = dict()
 
-    for project in tqdm(os.listdir(DIFF_DATA_DIR)):
-        [pid, vid] = project[:-1].split("-")
+    for _, row in GT.iterrows():
+        pid, vid, BIC = row.pid, row.vid, row.commit
+        #[pid, vid] = project[:-1].split("-")
         BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
-        project_dir = os.path.join(DIFF_DATA_DIR, project)
+        project_dir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b')
 
         metric_dict = dict()
 
-        with open(os.path.join(project_dir, 'num_iters.pkl'), 'rb') as file:
-            num_iter_dict = pickle.load(file)
-    
-        fonte_scores_df = pd.read_hdf(os.path.join(project_dir, 'fonte_scores.hdf'))
+        with open(os.path.join(project_dir, 'iteration', 'bug2commit.pkl'), 'rb') as file:
+            iter_dict = pickle.load(file)
+        
+        with open(os.path.join(project_dir, 'vote', 'bug2commit.pkl'), 'rb') as file:
+            vote_dict = pickle.load(file)
 
         # Iterate through extra scores of every settings
         # Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
-        for setting, row in fonte_scores_df.iterrows():
+        for setting, vote_df in vote_dict['skip'].items():
+            BIC_rank = vote_df.loc[BIC, 'rank']
+            print(setting, BIC_rank)
 
-            # Consider Bug2Commit score only cases
+            """# Consider Bug2Commit score only cases
             if bug2commit and setting[2] != 'extra':
                 continue
             
@@ -186,11 +191,11 @@ def metrics_to_csv(bug2commit=True):
                 print('ERRORRRRR!!!!!!!')
             
             metric_dict[setting_tup]['rank'] = int(BIC_rank)
-            metric_dict[setting_tup]['num_iters'] = num_iter_dict[tuple(setting)]
+            metric_dict[setting_tup]['num_iters'] = num_iter_dict[tuple(setting)]"""
         
-        project_metric_dict[project] = metric_dict
+        #project_metric_dict[project] = metric_dict
     
-    with open(savepath, 'w', newline='') as file:
+    """with open(savepath, 'w', newline='') as file:
         writer = csv.writer(file)
         if bug2commit:
             field = ['project', 'score_mode', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel', 'DependentName', 'DependentValue']
@@ -208,12 +213,12 @@ def metrics_to_csv(bug2commit=True):
             for project, metric_dict in project_metric_dict.items():
                 for (HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel), val in metric_dict.items():
                     writer.writerow([project, HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel, 'rank', val['rank']])
-                    writer.writerow([project, HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])
+                    writer.writerow([project, HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])"""
 
 if __name__ == "__main__":
     # Generate score data
     #print('Generating score data')
-    for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
+    """for folder in tqdm(os.listdir(DIFF_DATA_DIR)):
         # Get BIC data
         print(f'Fonte_score_eval : Working on {folder}')
         [pid, vid] = folder[:-1].split("-")
@@ -232,7 +237,7 @@ if __name__ == "__main__":
         result_dict = bisection_all(pid, vid)
 
         with open(os.path.join(DIFF_DATA_DIR, folder, 'num_iters.pkl'), 'wb') as file:
-            pickle.dump(result_dict, file)
+            pickle.dump(result_dict, file)"""
     
     # Generating csv file
     metrics_to_csv(False)

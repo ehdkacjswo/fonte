@@ -1,486 +1,460 @@
 /*
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//cli/src/java/org/apache/commons/cli/Parser.java,v 1.11 2002/12/09 23:47:25 jkeyes Exp $
+ * $Revision: 1.11 $
+ * $Date: 2002/12/09 23:47:25 $
  *
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0
+ * ====================================================================
  *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
+ * The Apache Software License, Version 1.1
  *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * reserved.
  *
- * The Original Code is Rhino code, released
- * May 6, 1999.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
  *
- * The Initial Developer of the Original Code is
- * Netscape Communications Corporation.
- * Portions created by the Initial Developer are Copyright (C) 1997-1999
- * the Initial Developer. All Rights Reserved.
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * Contributor(s):
- *   Nick Santos
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * Alternatively, the contents of this file may be used under the terms of
- * the GNU General Public License Version 2 or later (the "GPL"), in which
- * case the provisions of the GPL are applicable instead of those above. If
- * you wish to allow use of your version of this file only under the terms of
- * the GPL and not to allow others to use your version of this file under the
- * MPL, indicate your decision by deleting the provisions above and replacing
- * them with the notice and other provisions required by the GPL. If you do
- * not delete the provisions above, a recipient may use your version of this
- * file under either the MPL or the GPL.
+ * 3. The end-user documentation included with the redistribution, if
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
  *
- * ***** END LICENSE BLOCK ***** */
+ * 4. The names "The Jakarta Project", "Commons", and "Apache Software
+ *    Foundation" must not be used to endorse or promote products derived
+ *    from this software without prior written permission. For written
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache"
+ *    nor may "Apache" appear in their names without prior written
+ *    permission of the Apache Group.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ *
+ */
+package org.apache.commons.cli;
 
-package com.google.javascript.rhino;
-
-import static com.google.javascript.rhino.Token.ADD;
-import static com.google.javascript.rhino.Token.ANNOTATION;
-import static com.google.javascript.rhino.Token.BANG;
-import static com.google.javascript.rhino.Token.COLON;
-import static com.google.javascript.rhino.Token.COMMA;
-import static com.google.javascript.rhino.Token.DOT;
-import static com.google.javascript.rhino.Token.ELLIPSIS;
-import static com.google.javascript.rhino.Token.ELSE;
-import static com.google.javascript.rhino.Token.EOC;
-import static com.google.javascript.rhino.Token.EOF;
-import static com.google.javascript.rhino.Token.EOL;
-import static com.google.javascript.rhino.Token.EQUALS;
-import static com.google.javascript.rhino.Token.GT;
-import static com.google.javascript.rhino.Token.IF;
-import static com.google.javascript.rhino.Token.LB;
-import static com.google.javascript.rhino.Token.LC;
-import static com.google.javascript.rhino.Token.LP;
-import static com.google.javascript.rhino.Token.LT;
-import static com.google.javascript.rhino.Token.NAME;
-import static com.google.javascript.rhino.Token.PIPE;
-import static com.google.javascript.rhino.Token.QMARK;
-import static com.google.javascript.rhino.Token.RB;
-import static com.google.javascript.rhino.Token.RC;
-import static com.google.javascript.rhino.Token.RP;
-import static com.google.javascript.rhino.Token.STAR;
-import static com.google.javascript.rhino.Token.STRING;
-import static com.google.javascript.rhino.Token.name;
-
-import com.google.common.collect.ImmutableList;
-
-import junit.framework.TestCase;
-
-import java.io.IOException;
-import java.io.StringReader;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Properties;
 
-public class TokenStreamTest extends TestCase {
+/**
+ * <p><code>Parser</code> creates {@link CommandLine}s.</p>
+ *
+ * @author John Keyes (john at integralsource.com)
+ * @see Parser
+ * @version $Revision: 1.11 $
+ */
+public abstract class Parser implements CommandLineParser {
 
-  public void testLinenoCharnoGetUngetchar() throws Exception {
-    TokenStream stream = stream("some\nrandom\nstring");
+    /** commandline instance */
+    private CommandLine cmd;
 
-    int c;
-    assertLinenoOffset(stream, 0, -1);
-    c = getAndTestChar(stream, 's');
-    assertLinenoOffset(stream, 0, 0);
-    stream.ungetChar(c);
-    assertLinenoOffset(stream, 0, -1);
-    c = getAndTestChar(stream, 's');
-    c = getAndTestChar(stream, 'o');
-    assertLinenoOffset(stream, 0, 1);
-    stream.ungetChar(c);
-    assertLinenoOffset(stream, 0, 0);
-    c = getAndTestChar(stream, 'o');
-    assertLinenoOffset(stream, 0, 1);
-    c = getAndTestChar(stream, 'm');
-    assertLinenoOffset(stream, 0, 2);
-    stream.ungetChar(c);
-    assertLinenoOffset(stream, 0, 1);
-    c = getAndTestChar(stream, 'm');
-    c = getAndTestChar(stream, 'e');
-    assertLinenoOffset(stream, 0, 3);
-    c = getAndTestChar(stream, '\n');
-    assertLinenoOffset(stream, 0, 4);
-    c = getAndTestChar(stream, 'r');
-    assertLinenoOffset(stream, 1, 0);
-    c = getAndTestChar(stream, 'a');
-    assertLinenoOffset(stream, 1, 1);
-    c = getAndTestChar(stream, 'n');
-    assertLinenoOffset(stream, 1, 2);
-    c = getAndTestChar(stream, 'd');
-    assertLinenoOffset(stream, 1, 3);
-    stream.ungetChar(c);
-    stream.ungetChar('n');
-    c = getAndTestChar(stream, 'n');
-    assertLinenoOffset(stream, 1, 2);
-    c = getAndTestChar(stream, 'd');
-    assertLinenoOffset(stream, 1, 3);
-    c = getAndTestChar(stream, 'o');
-    assertLinenoOffset(stream, 1, 4);
-    c = getAndTestChar(stream, 'm');
-    assertLinenoOffset(stream, 1, 5);
-    c = getAndTestChar(stream, '\n');
-    assertLinenoOffset(stream, 1, 6);
-    c = getAndTestChar(stream, 's');
-    assertLinenoOffset(stream, 2, 0);
-    c = getAndTestChar(stream, 't');
-    assertLinenoOffset(stream, 2, 1);
-    c = getAndTestChar(stream, 'r');
-    assertLinenoOffset(stream, 2, 2);
-    c = getAndTestChar(stream, 'i');
-    assertLinenoOffset(stream, 2, 3);
-    c = getAndTestChar(stream, 'n');
-    assertLinenoOffset(stream, 2, 4);
-    c = getAndTestChar(stream, 'g');
-    assertLinenoOffset(stream, 2, 5);
-  }
+    /** current Options */
+    private Options options;
 
-  private int getAndTestChar(TokenStream stream, char e) throws IOException {
-    int c = stream.getChar();
-    assertEquals(e, (char) c);
-    return c;
-  }
+    /** list of required options strings */
+    private List requiredOptions;
 
-  public void testLinenoCharno1() throws Exception {
-    TokenStream stream = stream("if else");
-    testNextTokenPosition(stream, IF, 0, 0);
-    testNextTokenPosition(stream, ELSE, 0, 3);
-  }
+    /**
+     * <p>Subclasses must implement this method to reduce
+     * the <code>arguments</code> that have been passed to the parse 
+     * method.</p>
+     *
+     * @param opts The Options to parse the arguments by.
+     * @param arguments The arguments that have to be flattened.
+     * @param stopAtNonOption specifies whether to stop 
+     * flattening when a non option has been encountered
+     * @return a String array of the flattened arguments
+     */
+    protected abstract String[] flatten(Options opts, String[] arguments, 
+                                        boolean stopAtNonOption);
 
-  public void testLinenoCharno2() throws Exception {
-    TokenStream stream = stream(" if   else");
-    testNextTokenPosition(stream, IF, 0, 1);
-    testNextTokenPosition(stream, ELSE, 0, 6);
-  }
-
-  public void testLinenoCharno3() throws Exception {
-    TokenStream stream = stream(" if \n  else");
-    testNextTokenPosition(stream, IF, 0, 1);
-    testNextTokenPosition(stream, EOL, 0, 4);
-    testNextTokenPosition(stream, ELSE, 1, 2);
-  }
-
-  public void testLinenoCharno4() throws Exception {
-    TokenStream stream = stream("foo.bar");
-    testNextTokenPosition(stream, NAME, 0, 0);
-    testNextTokenPosition(stream, DOT, 0, 3);
-    testNextTokenPosition(stream, NAME, 0, 4);
-  }
-
-  public void testLinenoCharno5() throws Exception {
-    TokenStream stream = stream("   foo  \n + \n  (");
-    testNextTokenPosition(stream, NAME, 0, 3);
-    testNextTokenPosition(stream, EOL, 0, 8);
-    testNextTokenPosition(stream, ADD, 1, 1);
-    testNextTokenPosition(stream, EOL, 1, 3);
-    testNextTokenPosition(stream, LP, 2, 2);
-  }
-
-  public void testJSDocTokenization1() throws Exception {
-    List<Integer> tokens = ImmutableList.of(
-        STAR, ANNOTATION, LC, STRING, RC, EOL, STAR, ANNOTATION);
-    List<String> strings = ImmutableList.of("type", "string", "private");
-    testJSDocTokenStream(" * @type {string}\n * @private", tokens, strings);
-    testJSDocTokenStream(" *    @type { string } \n * @private",
-        tokens, strings);
-    testJSDocTokenStream(" * @type   {  string}\n * @private", tokens, strings);
-    testJSDocTokenStream(" * @type {string  }\n * @private", tokens, strings);
-    testJSDocTokenStream(" * @type {string}\n *   @private", tokens, strings);
-    testJSDocTokenStream(" * @type {string}   \n * @private", tokens, strings);
-  }
-
-  public void testJSDocTokenization2() throws Exception {
-    List<Integer> tokens = ImmutableList.of(
-        ANNOTATION, LC, STRING, LT, STRING, PIPE, STRING, GT, RC);
-    List<String> strings = ImmutableList.of("param", "Array", "string", "null");
-    testJSDocTokenStream("@param {Array.<string|null>}", tokens, strings);
-    testJSDocTokenStream("@param {Array.<string|null>}", tokens, strings);
-    testJSDocTokenStream("@param {Array.<string |null>}", tokens, strings);
-    testJSDocTokenStream(" @param {Array.<string |  null>}", tokens, strings);
-    testJSDocTokenStream(" @param {Array.<string|null  >}", tokens, strings);
-    testJSDocTokenStream("@param {Array  .<string|null>}", tokens, strings);
-    testJSDocTokenStream("@param   {Array.<string|null>}", tokens, strings);
-    testJSDocTokenStream("@param {  Array.<string|null>}", tokens, strings);
-    testJSDocTokenStream("@param {Array.<string|   null>}  ", tokens, strings);
-    testJSDocTokenStream("@param {Array.<string|null>}", tokens, strings);
-    testJSDocTokenStream("     @param { Array .< string |null > } ",
-        tokens, strings);
-  }
-
-  public void testJSDocTokenization3() throws Exception {
-    List<Integer> tokens = ImmutableList.of(
-        ANNOTATION, LC, STRING, LT, STRING, PIPE, STRING, GT, RC);
-    List<String> strings = ImmutableList.of("param", "Array", "string", "null");
-    testJSDocTokenStream("@param {Array.<string||null>}", tokens, strings);
-    testJSDocTokenStream("@param {Array.< string || null> }", tokens, strings);
-    testJSDocTokenStream("@param {Array.<string || null >  } ",
-        tokens, strings);
-    testJSDocTokenStream("@param {Array .<string   ||null>}", tokens, strings);
-    testJSDocTokenStream("@param {Array.< string||null>}", tokens, strings);
-    testJSDocTokenStream("@param {  Array.<string||null>}", tokens, strings);
-    testJSDocTokenStream(" @param   {Array.<string||null>}", tokens, strings);
-    testJSDocTokenStream("@param   {   Array.<string|| null> }",
-        tokens, strings);
-  }
-
-  public void testJSDocTokenization4() throws Exception {
-    List<Integer> tokens = ImmutableList.of(
-        ANNOTATION, LC, STRING, LT, LP, STRING, COMMA, STRING, RP, GT, RC, EOF);
-    List<String> strings = ImmutableList.of("param", "Array", "string", "null");
-    testJSDocTokenStream("@param {Array.<(string,null)>}", tokens, strings);
-    testJSDocTokenStream("@param {Array  .<(string,null)> } ", tokens, strings);
-    testJSDocTokenStream(" @param {Array.<  (  string,null)>}",
-        tokens, strings);
-    testJSDocTokenStream("@param {Array.<(string  , null)>}", tokens, strings);
-    testJSDocTokenStream("@param {Array.<(string,   null)  > }  ",
-        tokens, strings);
-    testJSDocTokenStream("@param {  Array  .<  (string,null)>}   ",
-        tokens, strings);
-  }
-
-  public void testJSDocTokenization5() throws Exception {
-    List<Integer> tokens = ImmutableList.of(ANNOTATION, STRING, EOC, EOF);
-    List<String> strings = ImmutableList.of("param", "foo.Bar");
-    testJSDocTokenStream("@param foo.Bar*/", tokens, strings);
-    testJSDocTokenStream(" @param   foo.Bar*/", tokens, strings);
-    testJSDocTokenStream(" @param foo.Bar   */", tokens, strings);
-  }
-
-  public void testJSDocTokenization6() throws Exception {
-    List<Integer> tokens = ImmutableList.of(
-        ANNOTATION, EOL, ANNOTATION, EOL, ANNOTATION, EOC);
-    List<String> strings = ImmutableList.of("hidden", "static", "desc");
-    testJSDocTokenStream("@hidden\n@static\n@desc*/", tokens, strings);
-    testJSDocTokenStream("@hidden\n @static\n@desc*/", tokens, strings);
-    testJSDocTokenStream("@hidden\n@static\n @desc*/", tokens, strings);
-    testJSDocTokenStream("@hidden\n@static\n@desc */", tokens, strings);
-    testJSDocTokenStream(" @hidden \n@static\n @desc*/", tokens, strings);
-    testJSDocTokenStream("@hidden\n@static    \n @desc  */", tokens, strings);
-    testJSDocTokenStream("@hidden\n@static\n@desc*/", tokens, strings);
-    testJSDocTokenStream("@hidden   \n@static   \n @desc*/", tokens, strings);
-  }
-
-  public void testJSDocTokenization7() throws Exception {
-    List<Integer> tokens = ImmutableList.of(
-        ELLIPSIS, ELLIPSIS, ELLIPSIS, ELLIPSIS, ELLIPSIS, LT, EOC);
-    List<String> strings = ImmutableList.of();
-
-    testJSDocTokenStream("................<*/", tokens, strings);
-    testJSDocTokenStream("............... .<*/", tokens, strings);
-    testJSDocTokenStream("................< */", tokens, strings);
-    testJSDocTokenStream("............... .< */", tokens, strings);
-    testJSDocTokenStream("............... .< */ ", tokens, strings);
-    testJSDocTokenStream(" ............... .< */ ", tokens, strings);
-  }
-
-  public void testJSDocTokenization8() throws Exception {
-    List<Integer> tokens = ImmutableList.of(
-        STAR, ANNOTATION, STRING, STRING, STRING, STRING, STRING, STRING,
-        STRING, EOL, EOC);
-    List<String> strings = ImmutableList.of(
-        "param", "foo.Bar", "opt_name", "this", "parameter", "is", "a", "name");
-    testJSDocTokenStream(
-        " * @param foo.Bar opt_name this parameter is a name\n" +
-        " */", tokens, strings);
-    testJSDocTokenStream(
-        "  *  @param foo.Bar opt_name this parameter is a name \n" +
-        " */ ", tokens, strings);
-  }
-
-  public void testJSDocTokenization9() throws Exception {
-    List<Integer> tokens = ImmutableList.of(
-        STAR, ANNOTATION, STRING, STRING, STRING, STRING, STRING, ANNOTATION,
-        STRING, EOL, EOC);
-    List<String> strings = ImmutableList.of(
-        "param", "foo.Bar", "opt_name", "this", "parameter", "does",
-        "media", "blah");
-    testJSDocTokenStream(
-        " * @param foo.Bar opt_name this parameter does @media blah\n" +
-        " */", tokens, strings);
-  }
-
-  public void testJSDocTokenization10() throws Exception {
-    List<Integer> tokens = ImmutableList.of(STRING, GT, EOC);
-    List<String> strings = ImmutableList.of("Array<String");
-    testJSDocTokenStream("Array<String>*/", tokens, strings);
-  }
-
-  public void testJSDocTokenization11() throws Exception {
-    List<Integer> tokens = ImmutableList.of(
-        ANNOTATION, LC, STRING, QMARK, RC, EOC, EOF);
-    List<String> strings = ImmutableList.of("param", "string");
-    testJSDocTokenStream("@param {string?}*/", tokens, strings);
-    testJSDocTokenStream(" @param {string?}*/", tokens, strings);
-    testJSDocTokenStream("@param { string?}*/", tokens, strings);
-    testJSDocTokenStream("@param {string ?}*/", tokens, strings);
-    testJSDocTokenStream("@param  {string ?  } */", tokens, strings);
-    testJSDocTokenStream("@param { string  ?  }*/", tokens, strings);
-    testJSDocTokenStream("@param {string?  }*/", tokens, strings);
-  }
-
-  public void testJSDocTokenization12() throws Exception {
-    List<Integer> tokens = ImmutableList.of(STRING, ELLIPSIS, EOC);
-    List<String> strings = ImmutableList.of("function");
-
-    testJSDocTokenStream("function ...*/", tokens, strings);
-  }
-
-  public void testJSDocTokenization13() throws Exception {
-    List<Integer> tokens = ImmutableList.of(ELLIPSIS, LB, STRING, RB, EOC);
-    List<String> strings = ImmutableList.of("number");
-
-    testJSDocTokenStream("...[number]*/", tokens, strings);
-  }
-
-  public void testJSDocTokenization14() throws Exception {
-    // Since ES4 type parsing only requires to parse an ellispis when it is
-    // followed by a comma (,) we are allowing this case to parse this way.
-    // This is a simplification of the tokenizer, but the extra complexity is
-    // never used.
-    List<Integer> tokens = ImmutableList.of(STRING, LB, STRING, EOC);
-    List<String> strings = ImmutableList.of("foo", "bar...");
-
-    testJSDocTokenStream("foo[ bar...*/", tokens, strings);
-  }
-
-  public void testJSDocTokenization15() throws Exception {
-    List<Integer> tokens = ImmutableList.of(
-        STRING, LB, STRING, COMMA, ELLIPSIS, EOC);
-    List<String> strings = ImmutableList.of("foo", "bar");
-
-    testJSDocTokenStream("foo[ bar,...*/", tokens, strings);
-    testJSDocTokenStream("foo[ bar ,...*/", tokens, strings);
-    testJSDocTokenStream("foo[bar, ...*/", tokens, strings);
-    testJSDocTokenStream("foo[ bar  ,   ...  */", tokens, strings);
-    testJSDocTokenStream("foo [bar,... */", tokens, strings);
-  }
-
-  public void testJSDocTokenization16() throws Exception {
-    List<Integer> tokens = ImmutableList.of(
-        STRING, COLON, COLON, COLON, ELLIPSIS, STRING, COLON, STRING, EOC);
-    List<String> strings = ImmutableList.of("foo", "bar", "bar2");
-
-    testJSDocTokenStream("foo:::...bar:bar2*/", tokens, strings);
-  }
-
-  public void testJSDocTokenization17() throws Exception {
-    List<Integer> tokens = ImmutableList.of(STRING, EOL, EOC);
-    List<String> strings = ImmutableList.of("..");
-
-    testJSDocTokenStream("..\n*/", tokens, strings);
-  }
-
-  public void testJSDocTokenization18() throws Exception {
-    List<Integer> tokens = ImmutableList.of(STRING, EOL, EOC);
-    List<String> strings = ImmutableList.of(".");
-
-    testJSDocTokenStream(".\n*/", tokens, strings);
-  }
-
-  public void testJSDocTokenization19() throws Exception {
-    List<Integer> tokens = ImmutableList.of(ANNOTATION, LC, STAR, RC, EOC);
-    List<String> strings = ImmutableList.of("type", "*");
-
-    testJSDocTokenStream("@type {*}*/", tokens, strings);
-  }
-
-  public void testJSDocTokenization20() throws Exception {
-    List<Integer> tokens = ImmutableList.of(
-        ANNOTATION, LC, BANG, STRING, RC, EOC, EOF);
-    List<String> strings = ImmutableList.of("param", "Object");
-    testJSDocTokenStream("@param {!Object}*/", tokens, strings);
-    testJSDocTokenStream(" @param {!Object}*/", tokens, strings);
-    testJSDocTokenStream("@param {! Object}*/", tokens, strings);
-    testJSDocTokenStream("@param { !Object}*/", tokens, strings);
-    testJSDocTokenStream("@param  {!Object  } */", tokens, strings);
-    testJSDocTokenStream("@param {  ! Object  }*/", tokens, strings);
-    testJSDocTokenStream("@param {!Object  }*/", tokens, strings);
-  }
-
-  public void testJSDocTokenization21() throws Exception {
-    List<Integer> tokens = ImmutableList.of(
-        ANNOTATION, LC, STRING, EQUALS, RC, EOC, EOF);
-    List<String> strings = ImmutableList.of("param", "Object");
-    testJSDocTokenStream("@param {Object=}*/", tokens, strings);
-    testJSDocTokenStream(" @param {Object=}*/", tokens, strings);
-    testJSDocTokenStream("@param { Object =}*/", tokens, strings);
-    testJSDocTokenStream("@param { Object=}*/", tokens, strings);
-    testJSDocTokenStream("@param  {Object=  } */", tokens, strings);
-    testJSDocTokenStream("@param { Object = }*/", tokens, strings);
-    testJSDocTokenStream("@param {Object=  }*/", tokens, strings);
-  }
-  
-  public void testJSDocLinenoCharno1() throws Exception {
-    TokenStream stream = stream(" * @type {string}\n  *   @private");
-    testNextJSDocTokenPosition(stream, STAR, 0, 1);
-    testNextJSDocTokenPosition(stream, ANNOTATION, 0, 3);
-    testNextJSDocTokenPosition(stream, LC, 0, 9);
-    testNextJSDocTokenPosition(stream, STRING, 0, 10);
-    testNextJSDocTokenPosition(stream, RC, 0, 16);
-    testNextJSDocTokenPosition(stream, EOL, 0, 17);
-    testNextJSDocTokenPosition(stream, STAR, 1, 2);
-    testNextJSDocTokenPosition(stream, ANNOTATION, 1, 6);
-  }
-
-  public void testJSDocLinenoCharno2() throws Exception {
-    TokenStream stream = stream("@param \n  {Array .<string\n  | null>}");
-    testNextJSDocTokenPosition(stream, ANNOTATION, 0, 0);
-    testNextJSDocTokenPosition(stream, EOL, 0, 7);
-    testNextJSDocTokenPosition(stream, LC, 1, 2);
-    testNextJSDocTokenPosition(stream, STRING, 1, 3);
-    testNextJSDocTokenPosition(stream, LT, 1, 9);
-    testNextJSDocTokenPosition(stream, STRING, 1, 11);
-    testNextJSDocTokenPosition(stream, EOL, 1, 17);
-    testNextJSDocTokenPosition(stream, PIPE, 2, 2);
-    testNextJSDocTokenPosition(stream, STRING, 2, 4);
-    testNextJSDocTokenPosition(stream, GT, 2, 8);
-    testNextJSDocTokenPosition(stream, RC, 2, 9);
-  }
-
-  private void testJSDocTokenStream(String comment, List<Integer> tokens,
-      List<String> strings) throws IOException {
-    TokenStream stream = stream(comment);
-    int stringsIndex = 0;
-    for (int token : tokens) {
-      int readToken = stream.getJSDocToken();
-
-      // token equality
-      if (token != readToken) {
-        assertEquals(name(token), name(readToken));
-      }
-
-      // string equality
-      if (token == ANNOTATION || token == STRING) {
-        assertEquals(strings.get(stringsIndex++), stream.getString());
-      }
+    /**
+     * <p>Parses the specified <code>arguments</code> 
+     * based on the specifed {@link Options}.</p>
+     *
+     * @param options the <code>Options</code>
+     * @param arguments the <code>arguments</code>
+     * @return the <code>CommandLine</code>
+     * @throws ParseException if an error occurs when parsing the
+     * arguments.
+     */
+    public CommandLine parse(Options options, String[] arguments)
+                      throws ParseException
+    {
+        return parse(options, arguments, null, false);
     }
-  }
 
-  private void testNextTokenPosition(TokenStream stream, int token,
-      int lineno, int charno) throws IOException {
-    assertEquals(token, stream.getToken());
-    assertLinenoCharno(stream, lineno, charno);
-  }
+    /**
+     * Parse the arguments according to the specified options and
+     * properties.
+     *
+     * @param options the specified Options
+     * @param arguments the command line arguments
+     * @param properties command line option name-value pairs
+     * @return the list of atomic option and value tokens
+     *
+     * @throws ParseException if there are any problems encountered
+     * while parsing the command line tokens.
+     */
+    public CommandLine parse(Options options, String[] arguments, 
+                             Properties properties)
+        throws ParseException
+    {
+        return parse(options, arguments, properties, false);
+    }
 
-  private void testNextJSDocTokenPosition(TokenStream stream, int token,
-      int lineno, int charno) throws IOException {
-    assertEquals(token, stream.getJSDocToken());
-    assertLinenoCharno(stream, lineno, charno);
-  }
+    /**
+     * <p>Parses the specified <code>arguments</code> 
+     * based on the specifed {@link Options}.</p>
+     *
+     * @param options the <code>Options</code>
+     * @param arguments the <code>arguments</code>
+     * @param stopAtNonOption specifies whether to stop 
+     * interpreting the arguments when a non option has 
+     * been encountered and to add them to the CommandLines
+     * args list.
+     *
+     * @return the <code>CommandLine</code>
+     * @throws ParseException if an error occurs when parsing the
+     * arguments.
+     */
+    public CommandLine parse(Options options, String[] arguments, 
+                             boolean stopAtNonOption)
+        throws ParseException
+    {
+        return parse(options, arguments, null, stopAtNonOption);
+    }
 
-  private void assertLinenoCharno(TokenStream stream, int lineno, int charno) {
-    assertEquals("lineno", lineno, stream.getLineno());
-    assertEquals("charno", charno, stream.getCharno());
-  }
+    /**
+     * Parse the arguments according to the specified options and
+     * properties.
+     *
+     * @param options the specified Options
+     * @param arguments the command line arguments
+     * @param properties command line option name-value pairs
+     * @param stopAtNonOption stop parsing the arguments when the first
+     * non option is encountered.
+     *
+     * @return the list of atomic option and value tokens
+     *
+     * @throws ParseException if there are any problems encountered
+     * while parsing the command line tokens.
+     */
+    public CommandLine parse(Options options, String[] arguments, 
+                             Properties properties, boolean stopAtNonOption)
+        throws ParseException
+    {
+        // initialise members
+        this.options = options;
+        requiredOptions = options.getRequiredOptions();
+        cmd = new CommandLine();
 
-  private void assertLinenoOffset(TokenStream stream, int lineno,
-      int charnoCursor) {
-    assertEquals("lineno", lineno, stream.getLineno());
-    assertEquals("offset", charnoCursor, stream.getOffset());
-  }
+        boolean eatTheRest = false;
 
-  private TokenStream stream(String source) {
-    return new TokenStream(new Parser(null, null),
-        new StringReader(source), null, 0);
-  }
+        if (arguments == null)
+        {
+            arguments = new String[0];
+        }
+
+        List tokenList = Arrays.asList(flatten(this.options, 
+                                               arguments, 
+                                               stopAtNonOption));
+
+        ListIterator iterator = tokenList.listIterator();
+
+        // process each flattened token
+        while (iterator.hasNext())
+        {
+            String t = (String) iterator.next();
+
+            // the value is the double-dash
+            if ("--".equals(t))
+            {
+                eatTheRest = true;
+            }
+
+            // the value is a single dash
+            else if ("-".equals(t))
+            {
+                if (stopAtNonOption)
+                {
+                    eatTheRest = true;
+                }
+                else
+                {
+                    cmd.addArg(t);
+                }
+            }
+
+            // the value is an option
+            else if (t.startsWith("-"))
+            {
+                if (stopAtNonOption && !options.hasOption(t))
+                {
+                    eatTheRest = true;
+                    cmd.addArg(t);
+                }
+                else
+                {
+                    processOption(t, iterator);
+                }
+            }
+
+            // the value is an argument
+            else
+            {
+                cmd.addArg(t);
+
+                if (stopAtNonOption)
+                {
+                    eatTheRest = true;
+                }
+            }
+
+            // eat the remaining tokens
+            if (eatTheRest)
+            {
+                while (iterator.hasNext())
+                {
+                    String str = (String) iterator.next();
+
+                    // ensure only one double-dash is added
+                    if (!"--".equals(str))
+                    {
+                        cmd.addArg(str);
+                    }
+                }
+            }
+        }
+
+        processProperties(properties);
+        checkRequiredOptions();
+
+        return cmd;
+    }
+
+    /**
+     * <p>Sets the values of Options using the values in 
+     * <code>properties</code>.</p>
+     *
+     * @param properties The value properties to be processed.
+     */
+    private void processProperties(Properties properties)
+    {
+        if (properties == null)
+        {
+            return;
+        }
+
+        for (Enumeration e = properties.propertyNames(); e.hasMoreElements();)
+        {
+            String option = e.nextElement().toString();
+
+            if (!cmd.hasOption(option))
+            {
+                Option opt = options.getOption(option);
+
+                // get the value from the properties instance
+                String value = properties.getProperty(option);
+
+                if (opt.hasArgs())
+                {
+                    if ((opt.getValues() == null)
+                        || (opt.getValues().length == 0))
+                    {
+                        try
+                        {
+                            opt.addValue(value);
+                        }
+                        catch (RuntimeException exp)
+                        {
+                            // if we cannot add the value don't worry about it
+                        }
+                    }
+                }
+                else if (!("yes".equalsIgnoreCase(value) 
+                           || "true".equalsIgnoreCase(value)
+                           || "1".equalsIgnoreCase(value)))
+                {
+                    // if the value is not yes, true or 1 then don't add the
+                    // option to the CommandLine
+                    break;
+                }
+
+                cmd.addOption(opt);
+            }
+        }
+    }
+
+    /**
+     * <p>Throws a {@link MissingOptionException} if all of the
+     * required options are no present.</p>
+     *
+     * @throws MissingOptionException if any of the required Options
+     * are not present.
+     */
+    private void checkRequiredOptions()
+        throws MissingOptionException
+    {
+        // if there are required options that have not been
+        // processsed
+        if (requiredOptions.size() > 0)
+        {
+            Iterator iter = requiredOptions.iterator();
+            StringBuffer buff = new StringBuffer();
+
+            // loop through the required options
+            while (iter.hasNext())
+            {
+                buff.append(iter.next());
+            }
+
+            throw new MissingOptionException(buff.toString());
+        }
+    }
+
+    /**
+     * <p>Process the argument values for the specified Option
+     * <code>opt</code> using the values retrieved from the 
+     * specified iterator <code>iter</code>.
+     *
+     * @param opt The current Option
+     * @param iter The iterator over the flattened command line
+     * Options.
+     *
+     * @throws ParseException if an argument value is required
+     * and it is has not been found.
+     */
+    public void processArgs(Option opt, ListIterator iter)
+        throws ParseException
+    {
+        // loop until an option is found
+        while (iter.hasNext())
+        {
+            String str = (String) iter.next();
+
+            // found an Option
+            if (options.hasOption(str))
+            {
+                iter.previous();
+
+                break;
+            }
+
+            // found a value
+            else
+            {
+                try
+                {
+                    opt.addValue(str);
+                }
+                catch (RuntimeException exp)
+                {
+                    iter.previous();
+
+                    break;
+                }
+            }
+        }
+
+        if ((opt.getValues() == null) && !opt.hasOptionalArg())
+        {
+            throw new MissingArgumentException("no argument for:"
+                                               + opt.getKey());
+        }
+    }
+
+    /**
+     * <p>Process the Option specified by <code>arg</code>
+     * using the values retrieved from the specfied iterator
+     * <code>iter</code>.
+     *
+     * @param arg The String value representing an Option
+     * @param iter The iterator over the flattened command 
+     * line arguments.
+     *
+     * @throws ParseException if <code>arg</code> does not
+     * represent an Option
+     */
+    private void processOption(String arg, ListIterator iter)
+        throws ParseException
+    {
+        // get the option represented by arg
+        Option opt = null;
+
+        boolean hasOption = options.hasOption(arg);
+
+        // if there is no option throw an UnrecognisedOptionException
+        if (!hasOption)
+        {
+            throw new UnrecognizedOptionException("Unrecognized option: " 
+                                                  + arg);
+        }
+        else
+        {
+            opt = (Option) options.getOption(arg);
+        }
+
+        // if the option is a required option remove the option from
+        // the requiredOptions list
+        if (opt.isRequired())
+        {
+            requiredOptions.remove(opt.getKey());
+        }
+
+        // if the option is in an OptionGroup make that option the selected
+        // option of the group
+        if (options.getOptionGroup(opt) != null)
+        {
+            OptionGroup group = (OptionGroup) options.getOptionGroup(opt);
+
+            if (group.isRequired())
+            {
+                requiredOptions.remove(group);
+            }
+
+            group.setSelected(opt);
+        }
+
+        // if the option takes an argument value
+        if (opt.hasArg())
+        {
+            processArgs(opt, iter);
+        }
+
+
+        // set the option on the command line
+        cmd.addOption(opt);
+    }
 }
