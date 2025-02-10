@@ -7,24 +7,20 @@ from experiment_utils import load_BIC_GT
 
 if __name__ == "__main__":
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
-    skip = True
 
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
 
-        if pid == 'Closure' and vid == '133':
-            skip = False
-
-        if skip:
+        if pid == 'Closure' and vid == '131':
             continue
 
         #pid, vid = 'Closure', '131'
 
         #collect_diff.main(pid, vid)
-        stage2.main(pid, vid)
-        encode.main(pid, vid)
-        get_feature.main(pid, vid)
-        vote.main(pid, vid)
-        #bisection.main(pid, vid)
+        #stage2.main(pid, vid)
+        #encode.main(pid, vid)
+        #get_feature.main(pid, vid)
+        #vote.main(pid, vid)
+        bisection.main(pid, vid)
 
         #break

@@ -12,6 +12,10 @@ if __name__ == "__main__":
     buggy_dict = dict()
     ensemble_dict = dict()
 
+    fonte_vote = dict()
+    bug_dict = dict()
+    ensemble_dict = dict()
+
     bug_no = 0
     bug_git = 0
     bug_base = 0
@@ -26,11 +30,11 @@ if __name__ == "__main__":
             fonte_dict = pickle.load(file)
             fonte_iter += fonte_dict['skip']
         
-        with open(os.path.join(iter_dir, 'bug2commit.pkl'), 'rb') as file:
+        """with open(os.path.join(iter_dir, 'bug2commit.pkl'), 'rb') as file:
             bug_dict = pickle.load(file)
             for key, item in bug_dict['skip'].items():
                 if not key[3] and key[1]:
-                    buggy_dict[key] = buggy_dict.get(key, 0) + item
+                    buggy_dict[key] = buggy_dict.get(key, 0) + item"""
         
         with open(os.path.join(iter_dir, 'ensemble.pkl'), 'rb') as file:
             bug_dict = pickle.load(file)
@@ -39,16 +43,22 @@ if __name__ == "__main__":
                     ensemble_dict[key] = ensemble_dict.get(key, 0) + item
         
         # Vote
-        """[pid, vid] = project[:-1].split('-')
+        [pid, vid] = project[:-1].split('-')
         BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
 
         vote_dir = os.path.join(RESULT_DATA_DIR, project, 'vote')
 
         with open(os.path.join(vote_dir, 'fonte.pkl'), 'rb') as file:
-            fonte_dict = pickle.load(file)
-            fonte_iter += fonte_dict['skip']
+            temp_dict = pickle.load(file)
         
-        with open(os.path.join(vote_dir, 'bug2commit.pkl'), 'rb') as file:
+        for stage2, fonte_df in temp_dict.items():
+            fonte_df["rank"] = fonte_df["vote"].rank(ascending=False, method="max")
+            fonte_df["rank"] = fonte_df["rank"].astype(int)
+
+            if fonte_df['vote'].get(BIC, None) == 0:
+                print(pid, vid, stage2, fonte_df['rank'].get(BIC, None), fonte_df['vote'].get(BIC, None))
+
+        """with open(os.path.join(vote_dir, 'bug2commit.pkl'), 'rb') as file:
             bug_dict = pickle.load(file)
             for key, item in bug_dict['skip'].items():
                 if not key[3] and key[1]:
