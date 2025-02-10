@@ -85,16 +85,13 @@ def main(pid, vid):
 
         # Bisection with scores
         votes = [float(fonte_df.loc[c, "vote"]) for c in C_BIC]
-        #print('fonte')
         fonte_iter[stage2] = weighted_bisection(C_BIC, votes, BIC)
 
         """for key, bug2commit_df in sub_dict.items():
-            print('bug2commit')
             votes = [float(bug2commit_df.loc[c, "vote"]) for c in C_BIC]
             bug2commit_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC)"""
         
         for key, ensemble_df in ensemble_dict[stage2].items():
-            #print('ensemble')
             votes = [float(ensemble_df.loc[c, "vote"]) for c in C_BIC]
             ensemble_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC)
     
@@ -104,8 +101,8 @@ def main(pid, vid):
     with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
         pickle.dump(fonte_iter, file)
     
-    with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
-        pickle.dump(bug2commit_iter, file)
+    """with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
+        pickle.dump(bug2commit_iter, file)"""
     
     with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
         pickle.dump(ensemble_iter, file)

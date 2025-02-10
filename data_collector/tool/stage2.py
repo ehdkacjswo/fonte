@@ -225,10 +225,12 @@ def main(pid, vid):
         res_dict[stage2] = dict()
         
         for diff_type in diff_type_list:
+            setting = frozenset({'diff_type' : diff_type}.items())
+
             if diff_type == 'git':
-                res_dict[stage2][diff_type] = git_stage2(pid, vid, stage2)
+                res_dict[stage2][setting] = git_stage2(pid, vid, stage2)
             else:
-                res_dict[stage2][diff_type] = gumtree_stage2(pid, vid, stage2, diff_type.endswith('class'))
+                res_dict[stage2][setting] = gumtree_stage2(pid, vid, stage2, diff_type.endswith('class'))
 
     with open(os.path.join(save_dir, f'stage2.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)
