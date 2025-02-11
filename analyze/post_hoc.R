@@ -23,37 +23,15 @@ opt <- parse_args(opt_parser)
 # Load data
 if (opt$bug2commit) {
   data <- read.csv("/root/workspace/analyze/data/bug2commit/metrics.csv", stringsAsFactors = FALSE)
-
-  data <- data %>%
-    mutate(
-      project = as.factor(project),
-      score_mode = as.factor(score_mode),
-      use_br = as.factor(use_br),
-      use_diff = as.factor(use_diff),
-      stage2 = as.factor(stage2),
-      use_stopword = as.factor(use_stopword),
-      adddel = as.factor(adddel),
-      DependentName = as.factor(DependentName),
-      DependentValue = as.numeric(DependentValue)
-    )
 } else {
   data <- read.csv("/root/workspace/analyze/data/all/metrics.csv", stringsAsFactors = FALSE)
+}
 
-  data <- data %>%
+data <- data %>%
   mutate(
-    project = as.factor(project),
-    HSFL = as.factor(HSFL),
-    score_mode = as.factor(score_mode),
-    ensemble = as.factor(ensemble),
-    use_br = as.factor(use_br),
-    use_diff = as.factor(use_diff),
-    stage2 = as.factor(stage2),
-    use_stopword = as.factor(use_stopword),
-    adddel = as.factor(adddel),
-    DependentName = as.factor(DependentName),
+    across(!DependentValue, as.factor)
     DependentValue = as.numeric(DependentValue)
   )
-}
 
 # Parse excluded variables and reorder them in same order of columns in the data
 excluded_vars <- unlist(strsplit(opt$exclude, ","))

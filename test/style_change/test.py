@@ -43,8 +43,8 @@ if __name__ == "__main__":
             # Source path changed
             else:
                 precise_diff[x[3]] += 1
-                #if x[3] == 'N':
-                #    print(f'[{project}] {x[1]}, {x[2]}')
+                if x[3] == 'U':
+                    print(f'[{project}] Different path update {x[0]} : {x[1]}, {x[2]}')
 
             # Error check
             if x != y:
@@ -61,7 +61,7 @@ if __name__ == "__main__":
                 print(y)
         
         # Original results
-        with open(os.path.join(proj_dir, 'validation_noOpenRewrite.csv'), 'r') as file:
+        with open(os.path.join(proj_dir, 'validation.csv'), 'r') as file:
             c = file.readlines()
         
         c_dict = {}

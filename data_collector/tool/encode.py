@@ -23,7 +23,7 @@ def log(txt, out_txt=None, err_txt=None):
 # skip_stage_2 = Excluding style change diff, with_Rewrite = , use_stopword
 # Encoded data : {commit_hash : [addition_list, deletion_list, msg_encode]}
 # addition/deletion dict : [(before/after_src_path_encode, content_encode_sum)]
-def encode(stage2_data, pid, vid, diff_type, use_stopword):
+def encode(stage2_data, pid, vid, use_stopword):
     encoder = Encoder()
     res_dict = dict()
 
@@ -69,19 +69,21 @@ def main(pid, vid):
     # Encode diff for every settings
     encode_dict = dict()
     vocab_dict = dict()
-    use_stopword_list = [True, False]
+    use_stopword_list = [True]
 
     for stage2, sub_dict in stage2_dict.items():
         encode_dict[stage2] = dict()
         vocab_dict[stage2] = dict()
 
-        for diff_type, stage2_data in sub_dict.items():
-            for use_stopword in use_stopword_list:
-                encode_res, vocab = encode(stage2_data=stage2_data, pid=pid, vid=vid, \
-                    diff_type=diff_type, use_stopword=use_stopword)
+        for setting, stage2_data in sub_dict.items():
+            setting_dict = dict(setting)
 
-                encode_dict[stage2][(diff_type, use_stopword)] = encode_res
-                vocab_dict[stage2][(diff_type, use_stopword)] = vocab
+            for use_stopword in use_stopword_list:
+                new_setting = frozenset((setting_dict | {'use_stopword' : True}).items())
+                encode_res, vocab = encode(stage2_data=stage2_data, pid=pid, vid=vid, use_stopword=use_stopword)
+
+                encode_dict[stage2][new_setting] = encode_res
+                vocab_dict[stage2][new_setting] = vocab
 
     diff_data_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
     os.makedirs(diff_data_dir, exist_ok=True)

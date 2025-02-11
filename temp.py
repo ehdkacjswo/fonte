@@ -1,87 +1,89 @@
 from scipy import sparse
 import pandas as pd
 from sbfl.base import SBFL
-import os
+import os, pickle
 from intervaltree import Interval, IntervalTree
 
-CORE_DIR = '/root/workspace/data/Defects4J/core'
-
-# Total number of validations, Results changed + New style change
-
-def get_style_change_commits(with_Rewrite=True):
-    res = dict()
-    
-    for project in os.listdir(CORE_DIR):
-        if with_Rewrite:
-            val_df = pd.read_csv(
-                os.path.join(CORE_DIR, project, 'git', "validation.csv"), 
-                header=None,
-                names=["commit", "src_path", "AST_diff"])
-            
-            for row in val_df.itertuples(index=True):
-                res[(project, row.commit, row.src_path, row.src_path)] = row.AST_diff
-        
-        else:
-            val_df = pd.read_csv(
-                #os.path.join(CORE_DIR, project, 'git', "precise_validation.csv"), 
-                os.path.join(CORE_DIR, project, 'git', "validation_noOpenRewrite.csv"), 
-                header=None,
-                #names=["commit", "before_src_path", "after_src_path", "AST_diff"])
-                names=["commit", "src_path", "AST_diff"])
-            
-            for row in val_df.itertuples(index=True):
-                #res[(project, row.commit, row.before_src_path, row.after_src_path)] = row.AST_diff
-                res[(project, row.commit, row.src_path, row.src_path)] = row.AST_diff
-
-    return res
+DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
+RESULT_DATA_DIR = '/root/workspace/data/Defects4J/result'
 
 if __name__ == "__main__":
-    basic = get_style_change_commits(True)
-    precise = get_style_change_commits(False)
+    for project in os.listdir(DIFF_DATA_DIR):
+        project_dir = os.path.join(RESULT_DATA_DIR_DATA_DIR, project)
 
-    print(f"Total number of validation : {len(basic)} {len(precise)}")
-
-    changed = []
-    new_change = []
-    err_num = 0
-    new_err_num = 0
-
-    """for (project, commit, before_src_path, after_src_path), result in basic.items():
-        if (project, commit, before_src_path, after_src_path) not in precise:
-            print(commit, before_src_path, after_src_path)"""
-
-    precise_err_prj = set()
-    basic_err_prj = set()
-
-    for (project, commit, before_src_path, after_src_path), result in precise.items():
-        if result == 'E':
-            print(project, commit, before_src_path, after_src_path)
+        """with open(os.path.join(project_dir, 'stage2.pkl'), 'rb') as file:
+            a = pickle.load(file)
         
-        """if result == 'U' and basic[(project, commit, before_src_path, after_src_path)] == 'E':
-            print((project, commit, before_src_path, after_src_path))"""
-            
+        new_dict = dict()
         
-        """elif result == 'U':
-            if (project, commit, before_src_path, after_src_path) not in basic:
-                print(project, commit, before_src_path, after_src_path)
-                print(before_src_path == after_src_path)
-            elif basic[(project, commit, before_src_path, after_src_path)] != 'U':
-                print(project, commit, before_src_path, after_src_path)
-                print(before_src_path == after_src_path)"""
+        for stage2, sub_dict in a.items():
+            new_dict[stage2] = dict()
+
+            for key, value in sub_dict.items():
+                new_key = frozenset({'diff_type' : key}.items())
+                new_dict[stage2][new_key] = value
         
-        """if (project, commit, before_src_path, after_src_path) in basic:
-            if result != basic[(project, commit, before_src_path, after_src_path)]:
-                print(project, commit, before_src_path, after_src_path, result, basic[(project, commit, before_src_path, after_src_path)])"""
-    
-    for (project, commit, before_src_path, after_src_path), result in basic.items():
-        if result == 'E':   
-            basic_err_prj.add(project)
-            err_num += 1
-    
-    print(err_num, basic_err_prj)
-    print(new_err_num, precise_err_prj)
-    print(len(basic_err_prj), len(precise_err_prj))
-    print(len(basic_err_prj | precise_err_prj))
-    print(basic_err_prj | precise_err_prj)
-    
-    #print(err_num)
+        with open(os.path.join(project_dir, 'stage2.pkl'), 'wb') as file:
+            pickle.dump(new_dict, file)"""
+        
+        """with open(os.path.join(project_dir, 'encode.pkl'), 'rb') as file:
+            a = pickle.load(file)
+        
+        new_dict = dict()
+        
+        for stage2, sub_dict in a.items():
+            new_dict[stage2] = dict()
+
+            for key, value in sub_dict.items():
+                new_key = frozenset({'diff_type' : key[0], 'use_stopword' : key[1]}.items())
+                new_dict[stage2][new_key] = value
+        
+        with open(os.path.join(project_dir, 'encode.pkl'), 'wb') as file:
+            pickle.dump(new_dict, file)"""
+        
+        """with open(os.path.join(project_dir, 'vocab.pkl'), 'rb') as file:
+            a = pickle.load(file)
+        
+        new_dict = dict()
+        
+        for stage2, sub_dict in a.items():
+            new_dict[stage2] = dict()
+
+            for key, value in sub_dict.items():
+                new_key = frozenset({'diff_type' : key[0], 'use_stopword' : key[1]}.items())
+                new_dict[stage2][new_key] = value
+        
+        with open(os.path.join(project_dir, 'vocab.pkl'), 'wb') as file:
+            pickle.dump(new_dict, file)"""
+        
+        """with open(os.path.join(project_dir, 'feature.pkl'), 'rb') as file:
+            a = pickle.load(file)
+        
+        new_dict = dict()
+        
+        for stage2, sub_dict in a.items():
+            new_dict[stage2] = dict()
+
+            for key, value in sub_dict.items():
+                new_key = frozenset({'diff_type' : key[0], 'use_stopword' : key[1], 'adddel' : key[2]}.items())
+                new_dict[stage2][new_key] = value
+        
+        with open(os.path.join(project_dir, 'feature.pkl'), 'wb') as file:
+            pickle.dump(new_dict, file)"""
+        
+        with open(os.path.join(project_dir, 'feature.pkl'), 'rb') as file:
+            a = pickle.load(file)
+        
+        new_dict = dict()
+        
+        for stage2, sub_dict in a.items():
+            new_dict[stage2] = dict()
+
+            for key, value in sub_dict.items():
+                new_key = frozenset({'diff_type' : key[0], 'use_stopword' : key[1], 'adddel' : key[2]}.items())
+                new_dict[stage2][new_key] = value
+        
+        with open(os.path.join(project_dir, 'feature.pkl'), 'wb') as file:
+            pickle.dump(new_dict, file)
+        
+        

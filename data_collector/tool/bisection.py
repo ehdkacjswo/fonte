@@ -20,6 +20,31 @@ def log(txt, out_txt=None, err_txt=None):
         if err_txt is not None:
             file.write('[ERROR] ERR\n' + err_txt.decode(encoding='utf-8', errors='ignore') + '\n')
 
+def get_style_change_commits(fault_dir, tool='git', stage2='precise'):
+    if stage2 == 'skip':
+        return []
+    
+    if stage2 == 'precise':
+        val_df = pd.read_csv(
+            os.path.join(fault_dir, tool, f"precise_validation.csv"), 
+            header=None,
+            names=["commit", "before_src_path", "after_src_path", "AST_diff"])
+
+    val_df["unchanged"] = val_df["AST_diff"] == "U"
+    agg_df = val_df.groupby("commit").all()[["unchanged"]]
+    style_change_commits = agg_df.index[agg_df["unchanged"]].tolist()
+
+    # Current precise style change doesn't include '/dev/null' path
+    # Have to exclude commits that have '/dev/null' path
+    # Can be deleted if it handles the cases
+    com_df = pd.read_pickle(os.path.join(fault_dir, tool, "commits.pkl"))
+    com_df["commit_hash"] = com_df["commit_hash"].apply(lambda s: str(s)[:7])
+
+    valid_commits = com_df[~com_df[['before_src_path', 'after_src_path']].\
+        isin(['/dev/null']).any(axis=1)]['commit_hash'].unique()
+    
+    return [commit for commit in style_change_commits if commit in valid_commits]
+
 # Perform bisecion
 def main(pid, vid):
     log(f'Working on {pid}_{vid}b')
@@ -27,6 +52,7 @@ def main(pid, vid):
     # Basic commit info
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
+    #print(BIC)
 
     fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
     all_commits = get_all_commits(fault_dir)
@@ -51,24 +77,23 @@ def main(pid, vid):
         ensemble_iter[stage2] = dict()
 
         # Get list of target commits
-        if stage2 == 'skip':
-            style_change_commits = []
-        else:
-            style_change_commits = get_style_change_commits(fault_dir, tool, with_Rewrite=(stage2=='True'))
+        style_change_commits = get_style_change_commits(fault_dir)
+
+        # May check score contains 0 or not later
 
         C_BIC = [c for c in all_commits if c in fonte_df.index and c not in style_change_commits]
 
         # Bisection with scores
         votes = [float(fonte_df.loc[c, "vote"]) for c in C_BIC]
-        fonte_iter[stage2] = weighted_bisection(C_BIC, votes, BIC, ignore_zero=False)
+        fonte_iter[stage2] = weighted_bisection(C_BIC, votes, BIC)
 
-        for key, bug2commit_df in sub_dict.items():
+        """for key, bug2commit_df in sub_dict.items():
             votes = [float(bug2commit_df.loc[c, "vote"]) for c in C_BIC]
-            bug2commit_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC, ignore_zero=False)
+            bug2commit_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC)"""
         
         for key, ensemble_df in ensemble_dict[stage2].items():
             votes = [float(ensemble_df.loc[c, "vote"]) for c in C_BIC]
-            ensemble_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC, ignore_zero=False)
+            ensemble_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC)
     
     savedir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'iteration')
     os.makedirs(savedir, exist_ok=True)
@@ -76,8 +101,8 @@ def main(pid, vid):
     with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
         pickle.dump(fonte_iter, file)
     
-    with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
-        pickle.dump(bug2commit_iter, file)
+    """with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
+        pickle.dump(bug2commit_iter, file)"""
     
     with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
         pickle.dump(ensemble_iter, file)

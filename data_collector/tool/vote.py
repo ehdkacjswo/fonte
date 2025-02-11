@@ -28,17 +28,24 @@ def log(txt, out_txt=None, err_txt=None):
 # Bug2Commit with diff info
 # 특정 버전에 대하여 vote for commits와 동일한 방법으로 evolve relationship 구축하고
 # 해당 
-def vote_bug2commit(pid, vid, feature_data, stage2, diff_type, use_stopword, adddel, use_br):
+def vote_bug2commit(pid, vid, feature_data, setting_dict, stage2):
     core_data_dir = os.path.join(CORE_DATA_DIR, f"{pid}-{vid}b")
     diff_data_dir = os.path.join(DIFF_DATA_DIR, f"{pid}-{vid}b")
     baseline_data_dir = os.path.join(BASELINE_DATA_DIR, f"{pid}-{vid}b")
     commit_dir = os.path.join(baseline_data_dir, "commits")
+
+    # Retreive settings
+    diff_type = setting_dict['diff_type']
+    use_stopword = setting_dict['use_stopword']
+    adddel = setting_dict['adddel']
+    use_br = setting_dict['use_br']
     
     # Load vocab and build encoder
     with open(os.path.join(diff_data_dir, f'vocab.pkl'), 'rb') as file:
         vocab_dict = pickle.load(file)
 
-    encoder = Encoder(vocab_dict[stage2][('git' if diff_type == 'no_diff' else diff_type, use_stopword)])
+    encoder = Encoder(vocab_dict[stage2][frozenset({'diff_type' : 'git' if diff_type == 'no_diff' else diff_type, \
+        'use_stopword' : use_stopword}.items())])
     
     # Encode query features
     query_feature = []
@@ -70,12 +77,14 @@ def vote_bug2commit(pid, vid, feature_data, stage2, diff_type, use_stopword, add
         # Vectorize query, commit features & evaluate similarity
         query_vector = bm25.vectorize_complex(query_feature)
         if np.all(query_vector == 0):
+            score_rows.append([commit_hash, 0])
             continue
 
         for commit_hash, commit_feature in feature_data.items():
             commit_vector = bm25.vectorize_complex([commit_feature[i]])
 
             if np.all(commit_vector == 0):
+                score_rows.append([commit_hash, 0])
                 continue
             
             else:
@@ -96,15 +105,17 @@ def vote_fonte(pid, vid):
     fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
     res_dict = dict()
 
-    for stage2 in ['skip']:
-        if stage2 == 'skip':
-            #excluded = []
-            excluded = get_style_change_commits(fault_dir, tool='git') #?
-        else:
-            excluded = get_style_change_commits(fault_dir, tool='git') #?
+    for stage2 in ['skip', 'precise']:
+        excluded = get_style_change_commits(fault_dir, tool='git', stage2=stage2)
             
-        res_dict[stage2] = vote_for_commits(fault_dir, tool='git', formula='Ochiai', decay=0.1, \
+        fonte_df = vote_for_commits(fault_dir, tool='git', formula='Ochiai', decay=0.1, \
             voting_func=(lambda r: 1/r.max_rank), use_method_level_score=False, excluded=excluded, adjust_depth=True)
+        
+        # Add ranking
+        fonte_df["rank"] = fonte_df["vote"].rank(ascending=False, method="max")
+        fonte_df["rank"] = fonte_df["rank"].astype(int)
+
+        res_dict[stage2] = fonte_df
     
     return res_dict
 
@@ -122,11 +133,11 @@ def vote_ensemble(pid, vid):
         fonte_df = fonte_dict[stage2]
         res_dict[stage2] = dict()
 
-        for (diff_type, use_stopword, adddel, use_br), bug2commit_df in sub_dict.items():
+        for setting, bug2commit_df in sub_dict.items():
             merged_df = fonte_df.merge(bug2commit_df, on='commit', how='left', suffixes=('_fonte', '_bug2commit'))
             merged_df['vote_bug2commit'].fillna(0, inplace=True)
 
-            for beta in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]:
+            for beta in [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]:
                 merged_df['vote'] = merged_df['vote_fonte'] * (1 + beta * merged_df['vote_bug2commit'])
                 result_df = merged_df[['vote']].copy()
 
@@ -134,7 +145,9 @@ def vote_ensemble(pid, vid):
                 result_df["rank"] = result_df["rank"].astype(int)
                 result_df = result_df.sort_values(by="rank")
 
-                res_dict[stage2][(diff_type, use_stopword, adddel, use_br, beta)] = result_df
+                # Update setting with beta
+                new_setting = frozenset((dict(setting) | {'beta' : beta}).items())
+                res_dict[stage2][new_setting] = result_df
     
     return res_dict
 
@@ -150,25 +163,28 @@ def main(pid, vid):
     use_diff_list = [True, False]
     param_list = list(itertools.product(use_br_list, use_diff_list))
 
-    """with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
+    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
         feature_dict = pickle.load(file)
 
     for stage2, sub_dict in feature_dict.items():
         res_dict[stage2] = dict()
 
-        for (diff_type, use_stopword, adddel), feature_data in sub_dict.items():
+        for setting, feature_data in sub_dict.items():
+            setting_dict = dict(setting)
+
             for (use_br, use_diff) in param_list:
-                new_diff_type = diff_type if use_diff else 'no_diff'
-                res_dict[stage2][(new_diff_type, use_stopword, adddel, use_br)] = \
-                    vote_bug2commit(pid, vid, feature_data=feature_data, stage2=stage2, \
-                    diff_type=new_diff_type, use_stopword=use_stopword, adddel=adddel, use_br=use_br)"""
-    
-    print(vote_fonte(pid, vid))
-    """with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
+                diff_type = setting_dict['diff_type'] if use_diff else 'no_diff'
+
+                new_setting_dict = setting_dict | {'diff_type' : diff_type, 'use_br' : use_br}
+                new_setting = frozenset(new_setting_dict.items())
+
+                res_dict[stage2][new_setting] = vote_bug2commit(pid, vid, feature_data=feature_data, setting_dict=new_setting_dict, stage2=stage2)
+
+    with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)
 
     with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
         pickle.dump(vote_fonte(pid, vid), file)
 
     with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
-        pickle.dump(vote_ensemble(pid, vid), file)"""
+        pickle.dump(vote_ensemble(pid, vid), file)

@@ -27,7 +27,9 @@ def log(txt, out_txt=None, err_txt=None):
             file.write('[ERROR] ERR\n' + err_txt.decode(encoding='utf-8', errors='ignore') + '\n')
 
 # data : 
-def get_feature(encode_data, diff_type):
+def get_feature(encode_data, setting_dict):
+    diff_type = setting_dict['diff_type']
+
     res_dict = {adddel : dict() for adddel in adddel_list}
     encode_type_list = encode_type_dict[diff_type]
 
@@ -105,11 +107,13 @@ def main(pid, vid):
     for stage2, sub_dict in encode_dict.items():
         res_dict[stage2] = dict()
 
-        for (diff_type, use_stopword), encode_data in sub_dict.items():
-            feature_dict = get_feature(encode_data=encode_data, diff_type=diff_type)
+        for setting, encode_data in sub_dict.items():
+            setting_dict = dict(setting)
+            feature_dict = get_feature(encode_data=encode_data, setting_dict=setting_dict)
 
             for adddel, feature_data in feature_dict.items():
-                res_dict[stage2][(diff_type, use_stopword, adddel)] = feature_data
+                new_setting = frozenset((setting_dict | {'adddel' : adddel}).items())
+                res_dict[stage2][new_setting] = feature_data
     
     with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)

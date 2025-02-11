@@ -304,27 +304,21 @@ def standard_bisection(commits: list, BIC, verbose=False, return_pivots=False):
     else:
         return num_iterations
 
-def weighted_bisection(commits: list, scores: list, BIC, ignore_zero=False, verbose=False,
+def weighted_bisection(commits: list, scores: list, BIC, verbose=False,
     return_pivots=False):
     assert BIC in commits
     assert len(commits) == len(scores)
     # pre-condition: commit[i] is newer than commit[i+1]
     # pre-condition: score[i] is the score of commit[i]
     # return: the number of required iterations until the BIC is found
-    if ignore_zero:
-        commits = [c for c, s in zip(commits, scores) if s > 0]
-        scores = [s for s in scores if s > 0]
-
-    if BIC not in commits:
-        return None
-    
+    commits = [c for c, s in zip(commits, scores) if s > 0]
+    scores = [s for s in scores if s > 0]
     BIC_index = commits.index(BIC)
     bad_index = 0
     good_index = len(commits)
     num_iterations = 0
     if return_pivots:
         pivots = []
-        
     while good_index > bad_index + 1:
         num_iterations += 1
         """
@@ -340,19 +334,6 @@ def weighted_bisection(commits: list, scores: list, BIC, ignore_zero=False, verb
             else:
                 # already pass the min, now increasing
                 break
-
-        # Extra code for 0 score cases
-        if not ignore_zero and scores[pivot_index] == 0:
-            min_pivot_index = pivot_index
-            max_pivot_index = pivot_index
-
-            while min_pivot_index > bad_index + 1 and scores[min_pivot_index] == 0:
-                min_pivot_index -= 1
-            while max_pivot_index < good_index - 1 and scores[max_pivot_index] == 0:
-                max_pivot_index += 1
-            
-            pivot_index = int((min_pivot_index + max_pivot_index) / 2)
-            
         if verbose:
             print(f"Test {pivot_index}")
         if return_pivots:
