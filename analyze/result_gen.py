@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from scipy.stats import wilcoxon, ttest_rel
 from statistics import mean
+from typing import Literal
 import numpy
 import pandas as pd
 import csv
@@ -70,47 +71,47 @@ def handle_metric(metric_dict, rank):
 
 # Get metric dictionary for bug2commit
 # method : fonte, bug2commit, ensemble
-# mode : 
+# mode : all, project
 # metric : mean rank, mean number of iterations
-def get_metric_dict(method, mode):
-    """savepath = f"/root/workspace/analyze/data/{'bug2commit' if bug2commit else 'all'}/metric_dict.pkl"
+def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Literal['all', 'project']):
+    savepath = f"/root/workspace/analyze/data/{method}/metric_{mode}.pkl"
 
     # If file already exists, read it
     if os.path.isfile(savepath):
         with open(savepath, 'rb') as file:
-            return pickle.load(file)"""
+            return pickle.load(file)
     
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
-
     res_dict = dict()
 
     # Iterate through projects
     for _, row in GT.iterrows():
         pid, vid, BIC = row.pid, row.vid, row.commit
 
+        # Closure-131b has wrong BIC data
         if pid == 'Closure' and vid == '131':
             continue
         
         proj_dir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b')
 
         # Get rank
-        print(pid, vid)
         with open(os.path.join(proj_dir, 'vote', f'{method}.pkl'), 'rb') as file:
             vote_dict = pickle.load(file)
         
         for stage2, value in vote_dict.items():
-            if method == 'fonte':
+            if method == 'fonte': # Fonte doesn't have extra setting
                 rank = value['rank'].get(BIC)
                 setting_key = frozenset({'stage2' : stage2}.items())
 
-                if mode:
+                if mode == 'project':
                     if setting_key not in res_dict:
                         res_dict[setting_key] = dict()
 
                     res_dict[setting_key][f'{pid}-{vid}b'] = {'rank' : rank}
+
                 else:
                     if setting_key not in res_dict:
-                        res_dict[setting_key] = {'MRR' : 0, 'acc@1' : 0, 'acc@2' : 0, 'acc@3' : 0, 'acc@5' : 0, 'acc@10' : 0}
+                        res_dict[setting_key] = {'MRR': 0, 'acc@1': 0, 'acc@2': 0, 'acc@3': 0, 'acc@5': 0, 'acc@10': 0, 'num_iter': 0}
 
                     res_dict[setting_key]['MRR'] += 1 / (rank * 129)
                     res_dict[setting_key]['acc@1'] += 1 if rank <= 1 else 0
@@ -119,19 +120,20 @@ def get_metric_dict(method, mode):
                     res_dict[setting_key]['acc@5'] += 1 if rank <= 5 else 0
                     res_dict[setting_key]['acc@10'] += 1 if rank <= 10 else 0
 
-            else:
+            else: # Bug2Commit and Ensemble have extra settings
                 for setting, vote_df in value.items():
                     rank = vote_df['rank'].get(BIC)
                     setting_key = frozenset((dict(setting) | {'stage2' : stage2}).items())
 
-                    if mode:
+                    if mode == 'project':
                         if setting_key not in res_dict:
                             res_dict[setting_key] = dict()
 
                         res_dict[setting_key][f'{pid}-{vid}b'] = {'rank' : rank}
+
                     else:
                         if setting_key not in res_dict:
-                            res_dict[setting_key] = {'MRR' : 0, 'acc@1' : 0, 'acc@2' : 0, 'acc@3' : 0, 'acc@5' : 0, 'acc@10' : 0, 'num_iter' : 0}
+                            res_dict[setting_key] = {'MRR': 0, 'acc@1': 0, 'acc@2': 0, 'acc@3': 0, 'acc@5': 0, 'acc@10': 0, 'num_iter': 0}
 
                         res_dict[setting_key]['MRR'] += 1 / (rank * 129)
                         res_dict[setting_key]['acc@1'] += 1 if rank <= 1 else 0
@@ -140,207 +142,63 @@ def get_metric_dict(method, mode):
                         res_dict[setting_key]['acc@5'] += 1 if rank <= 5 else 0
                         res_dict[setting_key]['acc@10'] += 1 if rank <= 10 else 0
         
-        # Get iteration
+        # Get iteration (Bug2Commit doesn't have iteration data for possible 0 score BIC)
         if method != 'bug2commit':
             with open(os.path.join(proj_dir, 'iteration', f'{method}.pkl'), 'rb') as file:
                 iter_dict = pickle.load(file)
         
             for stage2, value in iter_dict.items():
-                if method == 'fonte':
+                if method == 'fonte': # Fonte doesn't have extra setting
                     setting_key = frozenset({'stage2' : stage2}.items())
 
-                    if mode:
+                    if mode == 'project':
                         res_dict[setting_key][f'{pid}-{vid}b']['num_iter'] = value
                     else:
                         res_dict[setting_key]['num_iter'] += value
                 
-                else:
+                else: #Ensemble has extra settings
                     for setting, num_iter in value.items():
                         setting_key = frozenset((dict(setting) | {'stage2' : stage2}).items())
 
-                        if mode:
+                        if mode == 'project':
                             res_dict[setting_key][f'{pid}-{vid}b']['num_iter'] = num_iter
                         else:
                             res_dict[setting_key]['num_iter'] += num_iter
-    return res_dict
-        
-
-        
-    """for project in tqdm(os.listdir(RESULT_DATA_DIR)):
-        [pid, vid] = project[:-1].split("-")
-        BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
-        project_dir = os.path.join(DIFF_DATA_DIR, project)
-
-        with open(os.path.join(project_dir, 'num_iters.pkl'), 'rb') as file:
-            num_iter_dict = pickle.load(file)
     
-        # Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
-        fonte_scores_df = pd.read_hdf(os.path.join(project_dir, 'fonte_scores.hdf'))
-
-        # Iterate through extra scores of every settings
-        for setting, row in fonte_scores_df.iterrows():
-            if bug2commit: # Bug2Commit only case
-                if setting[2] != 'extra':
-                    continue
-                metric_dict_key = tuple(option for ind, option in enumerate(tuple(setting)) if ind not in [0, 2])
-            
-            else: # Bug2Commit with Fonte
-                if setting[2] in ['extra', '(\'add\', 0.0)']:
-                    continue
-                metric_dict_key = tuple(setting)
-
-            commit_df = row['commit'].dropna()
-            score_df = row['vote'].dropna()
-            rank_df = score_df.rank(method='max', ascending=False)
-
-            # Index of the BIC
-            BIC_ind = commit_df.loc[commit_df == BIC].index[0]
-            BIC_rank = rank_df.loc[BIC_ind]
-
-            setting_tup = tuple(setting)
-            n_list = [1, 2, 3, 5, 10]
-
-            if metric_dict_key not in tot_metric_dict:
-                tot_metric_dict[metric_dict_key] = dict()
-                tot_metric_dict[metric_dict_key]['rank'] = 0
-                tot_metric_dict[metric_dict_key]['num_iters'] = 0
-                tot_metric_dict[metric_dict_key]['MRR'] = 0
-
-                for n in n_list:
-                    tot_metric_dict[metric_dict_key][f'acc@{n}'] = 0
-
-            tot_metric_dict[metric_dict_key]['rank'] += BIC_rank / 130
-            tot_metric_dict[metric_dict_key]['num_iters'] += num_iter_dict[setting_tup] / 130
-
-            tot_metric_dict[metric_dict_key]['MRR'] += 1 / (BIC_rank * 130)
-            for n in n_list:
-                if BIC_rank <= n:
-                    tot_metric_dict[metric_dict_key][f'acc@{n}'] += 1
-    
+    # Save & return the dictionary
+    #os.makedirs(savepath, exist_ok=True)
     with open(savepath, 'wb') as file:
-        pickle.dump(tot_metric_dict, file)
-    
-    return tot_metric_dict"""
+        pickle.dump(res_dict, file)
 
-def metrics_to_csv(bug2commit=True):
-    savepath = f"/root/workspace/analyze/data/{'bug2commit' if bug2commit else 'all'}/metrics.csv"
+    return res_dict
+
+# Create csv file for ART ANOVA
+def metrics_to_csv(method: Literal['fonte', 'bug2commit', 'ensemble']):
+    savepath = f"/root/workspace/analyze/data/{method}/metrics.csv"
 
     """if os.path.isfile(savepath):
         print(f'{savepath} already exists!')
         return"""
     
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+    metric_dict = get_metric_dict(method, mode='project')
+    
+    setting_key_list = list(dict(next(iter(metric_dict))).keys())
+    field = ['project'] + setting_key_list + ['DependentName', 'DependentValue']
 
     with open(savepath, 'w', newline='') as file:
         writer = csv.writer(file)
+        writer.writerow(field)
 
-    # Iterate through projects
-    for _, row in GT.iterrows():
-        pid, vid, BIC = row.pid, row.vid, row.commit
+        for setting, proj_dict in metric_dict.items():
+            setting_dict = dict(setting)
+            setting_row = [setting_dict[key] for key in setting_key_list]
 
-        if pid == 'Closure' and vid == '131':
-            continue
-        
-        proj_dir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b')
-
-        # Get rank
-        with open(os.path.join(proj_dir, 'vote', f'{method}.pkl')) as file:
-            vote_dict = pickle.load(file)
-        
-        for stage2, value in vote_dict.items():
-            if method == 'fonte':
-                rank = value['rank'].get(BIC)
-            
-            else:
-                for setting, vote_df in value.items():
-                    rank = vote_df['rank'].get(BIC)
-        
-        # Get iteration
-        if method != 'bug2commit':
-            with open(os.path.join(proj_dir, 'iteration', f'{method}.pkl')):
-                iter_dict = pickle.load(file)
-        
-            for stage2, value in iter_dict.items():
-                if method == 'fonte':
-                    a = 1
+            for project, sub_dict in proj_dict.items():
+                writer.writerow([project] + setting_row + ['rank', sub_dict['rank']])
                 
-                else:
-                    for setting, num_iter in value.items():
-                        a = 1
-
-    for _, row in GT.iterrows():
-        pid, vid, BIC = row.pid, row.vid, row.commit
-
-        if pid == 'Closure' and vid == '131':
-            coninue
-
-        #[pid, vid] = project[:-1].split("-")
-        BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
-        project_dir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b')
-
-        metric_dict = dict()
-
-        with open(os.path.join(project_dir, 'iteration', 'bug2commit.pkl'), 'rb') as file:
-            iter_dict = pickle.load(file)
-        
-        with open(os.path.join(project_dir, 'vote', 'bug2commit.pkl'), 'rb') as file:
-            vote_dict = pickle.load(file)
-
-        # Iterate through extra scores of every settings
-        # Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
-        for setting, vote_df in vote_dict['skip'].items():
-            BIC_rank = vote_df.loc[BIC, 'rank']
-            print(setting, BIC_rank)
-
-            """# Consider Bug2Commit score only cases
-            if bug2commit and setting[2] != 'extra':
-                continue
-            
-            if not bug2commit and (setting[2] in ['extra', '(\'add\', 0.0)']):
-                continue
-
-            commit_df = row['commit'].dropna()
-            score_df = row['vote'].dropna()
-            rank_df = score_df.rank(method='max', ascending=False)
-
-            # Index of the BIC
-            BIC_ind = commit_df.loc[commit_df == BIC].index[0]
-            BIC_rank = rank_df.loc[BIC_ind]
-            
-            if bug2commit: # Ignore HSFL and ensemble
-                setting_tup = tuple(option for ind, option in enumerate(tuple(setting)) if ind not in [0, 2])
-            else:
-                setting_tup = tuple(setting)
-
-            if setting_tup not in metric_dict:
-                metric_dict[setting_tup] = dict()
-            else:
-                print('ERRORRRRR!!!!!!!')
-            
-            metric_dict[setting_tup]['rank'] = int(BIC_rank)
-            metric_dict[setting_tup]['num_iters'] = num_iter_dict[tuple(setting)]"""
-        
-        #project_metric_dict[project] = metric_dict
-    
-    """with open(savepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        if bug2commit:
-            field = ['project', 'score_mode', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel', 'DependentName', 'DependentValue']
-            writer.writerow(field)
-
-            for project, metric_dict in project_metric_dict.items():
-                for (score_mode, use_br, use_diff, stage2, use_stopword, adddel), val in metric_dict.items():
-                    writer.writerow([project, score_mode, use_br, use_diff, stage2, use_stopword, adddel, 'rank', val['rank']])
-                    writer.writerow([project, score_mode, use_br, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])
-            
-        else:
-            field = ['project', 'HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel', 'DependentName', 'DependentValue']
-            writer.writerow(field)
-
-            for project, metric_dict in project_metric_dict.items():
-                for (HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel), val in metric_dict.items():
-                    writer.writerow([project, HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel, 'rank', val['rank']])
-                    writer.writerow([project, HSFL, score_mode, ensemble, use_br, use_diff, stage2, use_stopword, adddel, 'num_iters', val['num_iters']])"""
+                if method != 'bug2commit': # Bug2Commit doesn't have iteration data
+                    writer.writerow([project] + setting_row + ['num_iter', sub_dict['num_iter']])
 
 if __name__ == "__main__":
     # Generate score data
@@ -369,4 +227,5 @@ if __name__ == "__main__":
     # Generating csv file
     #metrics_to_csv(False)
     #metrics_to_csv(True)
-    print(get_metric_dict('ensemble', False))
+    #print(get_metric_dict('ensemble', False))
+    metrics_to_csv('bug2commit')
