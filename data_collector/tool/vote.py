@@ -137,7 +137,7 @@ def vote_ensemble(pid, vid):
             merged_df = fonte_df.merge(bug2commit_df, on='commit', how='left', suffixes=('_fonte', '_bug2commit'))
             merged_df['vote_bug2commit'].fillna(0, inplace=True)
 
-            for beta in [0.2, 0.4, 0.6, 0.8, 1.0]:
+            for beta in [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]:
                 merged_df['vote'] = merged_df['vote_fonte'] * (1 + beta * merged_df['vote_bug2commit'])
                 result_df = merged_df[['vote']].copy()
 

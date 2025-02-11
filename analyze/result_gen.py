@@ -147,6 +147,10 @@ def metrics_to_csv(bug2commit=True):
 
     for _, row in GT.iterrows():
         pid, vid, BIC = row.pid, row.vid, row.commit
+
+        if pid == 'Closure' and vid == '131':
+            coninue
+
         #[pid, vid] = project[:-1].split("-")
         BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
         project_dir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b')

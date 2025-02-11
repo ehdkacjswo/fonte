@@ -19,6 +19,9 @@ if __name__ == "__main__":
         #stage2.main(pid, vid)
         #encode.main(pid, vid)
         #get_feature.main(pid, vid)
+        if pid == 'Closure' and vid == '131':
+            continue
+            
         vote.main(pid, vid)
 
         if pid == 'Closure' and vid == '131':
