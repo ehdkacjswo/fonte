@@ -13,8 +13,8 @@ option_list <- list(
               help = "Comma-separated list of independent variables to exclude"),
   make_option(c("-b", "--bug2commit"), type = "logical", default = FALSE, 
               help = "Use bug2commit only[default: TRUE]"),
-  make_option(c("-f", "--fix"), type = "character", default = "use_br:False,use_stopword:True,HSFL:False", 
-              help = "Comma-separated list of parameters and values to fix (e.g., use_stopword:False,stage2:True)")
+  make_option(c("-f", "--fix"), type = "character", default = "use_br:False,stage2:precise,use_stopword:True", 
+              help = "Comma-separated list of parameters and values to fix (e.g., use_stopword:False,stage2:precise)")
 )
 
 opt_parser <- OptionParser(option_list = option_list)
@@ -24,12 +24,12 @@ opt <- parse_args(opt_parser)
 if (opt$bug2commit) {
   data <- read.csv("/root/workspace/analyze/data/bug2commit/metrics.csv", stringsAsFactors = FALSE)
 } else {
-  data <- read.csv("/root/workspace/analyze/data/all/metrics.csv", stringsAsFactors = FALSE)
+  data <- read.csv("/root/workspace/analyze/data/ensemble/metrics.csv", stringsAsFactors = FALSE)
 }
 
 data <- data %>%
   mutate(
-    across(!DependentValue, as.factor)
+    across(!DependentValue, as.factor),
     DependentValue = as.numeric(DependentValue)
   )
 
@@ -114,6 +114,7 @@ run_analysis <- function(dependent_vars, excluded_vars, output_file) {
   excluded_levels <- get_excluded_levels(data, excluded_vars)
   all_results <- list()
 
+  # Progress bar setting
   pb <- progress_bar$new(
     format = "Processing [:bar] :percent (:current/:total) Dependent: :dv Levels: :levels ETA: :eta",
     total = length(dependent_vars) * (if (is.null(excluded_levels)) 1 else nrow(excluded_levels)),
@@ -134,8 +135,8 @@ run_analysis <- function(dependent_vars, excluded_vars, output_file) {
           setting_2 = sub(".* - ", "", contrast),  # Extract second option
           metric = dv_name
         ) %>%
-        select(p.value, setting_1, setting_2, metric) %>%
-        filter(p.value < 0.05)
+        select(p.value, setting_1, setting_2, metric) #%>%
+        #filter(p.value < 0.05)
 
       all_results <- append(all_results, list(significant_contrasts))
       pb$tick(tokens = list(dv = dv_name, levels = "none"))
@@ -177,7 +178,9 @@ run_analysis <- function(dependent_vars, excluded_vars, output_file) {
 }
 
 # List of dependent variables
-dependent_vars <- c("rank", "num_iters")
+dependent_vars <- unique(as.character(data$DependentName))
+print(dependent_vars)
+print(c("rank", "num_iter"))
 
 fix_string <- paste(
   paste(names(fix_conditions), fix_conditions, sep = ":"),
@@ -194,7 +197,7 @@ setting_string <- paste0(
 
 # Output file path
 output_file <- paste0("/root/workspace/analyze/data/",
-  if (opt$bug2commit) "bug2commit" else "all",
+  if (opt$bug2commit) "bug2commit" else "ensemble",
   "/post_hoc/",
   setting_string,
   '.csv')

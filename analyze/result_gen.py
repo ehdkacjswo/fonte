@@ -228,4 +228,4 @@ if __name__ == "__main__":
     #metrics_to_csv(False)
     #metrics_to_csv(True)
     #print(get_metric_dict('ensemble', False))
-    metrics_to_csv('bug2commit')
+    metrics_to_csv('ensemble')
