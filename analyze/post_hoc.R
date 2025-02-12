@@ -9,9 +9,9 @@ library(progress)
 
 # Command line parser
 option_list <- list(
-  make_option(c("-e", "--exclude"), type = "character", default = "", 
+  make_option(c("-e", "--exclude"), type = "character", default = "diff_type", 
               help = "Comma-separated list of independent variables to exclude"),
-  make_option(c("-b", "--bug2commit"), type = "logical", default = FALSE, 
+  make_option(c("-b", "--bug2commit"), type = "logical", default = TRUE, 
               help = "Use bug2commit only[default: TRUE]"),
   make_option(c("-f", "--fix"), type = "character", default = "use_br:False,stage2:precise,use_stopword:True", 
               help = "Comma-separated list of parameters and values to fix (e.g., use_stopword:False,stage2:precise)")
@@ -179,8 +179,6 @@ run_analysis <- function(dependent_vars, excluded_vars, output_file) {
 
 # List of dependent variables
 dependent_vars <- unique(as.character(data$DependentName))
-print(dependent_vars)
-print(c("rank", "num_iter"))
 
 fix_string <- paste(
   paste(names(fix_conditions), fix_conditions, sep = ":"),
