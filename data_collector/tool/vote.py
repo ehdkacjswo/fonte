@@ -183,8 +183,8 @@ def main(pid, vid):
     with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)
 
-    with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
-        pickle.dump(vote_fonte(pid, vid), file)
+    #with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
+    #    pickle.dump(vote_fonte(pid, vid), file)
 
     with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
         pickle.dump(vote_ensemble(pid, vid), file)

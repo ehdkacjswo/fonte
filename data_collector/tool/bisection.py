@@ -85,7 +85,7 @@ def main(pid, vid):
 
         # Bisection with scores
         votes = [float(fonte_df.loc[c, "vote"]) for c in C_BIC]
-        fonte_iter[stage2] = weighted_bisection(C_BIC, votes, BIC)
+        #fonte_iter[stage2] = weighted_bisection(C_BIC, votes, BIC)
 
         """for key, bug2commit_df in sub_dict.items():
             votes = [float(bug2commit_df.loc[c, "vote"]) for c in C_BIC]
@@ -98,8 +98,8 @@ def main(pid, vid):
     savedir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'iteration')
     os.makedirs(savedir, exist_ok=True)
 
-    with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
-        pickle.dump(fonte_iter, file)
+    #with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
+    #    pickle.dump(fonte_iter, file)
     
     """with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
         pickle.dump(bug2commit_iter, file)"""

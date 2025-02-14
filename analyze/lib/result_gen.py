@@ -67,7 +67,12 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
             else: # Bug2Commit and Ensemble have extra settings
                 for setting, vote_df in value.items():
                     rank = vote_df['rank'].get(BIC)
+                    #vote = vote_df['vote'].get(BIC)
+                    
                     setting_key = frozenset((dict(setting) | {'stage2' : stage2}).items())
+
+                    #if vote == 0:
+                    #    print('0 score BIC', pid, vid, setting_key)
 
                     if mode == 'project':
                         if setting_key not in res_dict:

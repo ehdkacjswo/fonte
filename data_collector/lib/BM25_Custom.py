@@ -31,7 +31,7 @@ class BM25_Encode(BM25Okapi):
                 doc_len += freq
 
             vector = [self.idf[word] * (feature_dict.get(word, 0) * (self.k1 + 1) /
-                (self.idf[word] + self.k1 * (1 - self.b + self.b * doc_len / self.avgdl))) for word in self.nd.keys()]
+                (feature_dict.get(word, 0) + self.k1 * (1 - self.b + self.b * doc_len / self.avgdl))) for word in self.nd.keys()]
 
             vector_sum += np.array(vector, dtype='float')
         return vector_sum / len(features)
