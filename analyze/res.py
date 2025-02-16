@@ -211,14 +211,80 @@ def check_filtering():
         bug_query = encoder.encode(bug_query.strip(), use_stopword=True, update_vocab=False)
         bug_query.sort(key=lambda x: x[1], reverse=True)
 
+        # Classify removed / remaining tokens (Consider only diff)
+        # By tokenization, sometimes gumtree contains other tokens than git
+        # For now, new query is empty
+        git_token_set = set()
+        for commit, feature_list in git_dict.items():
+            git_token_set.update([x[0] for x in feature_list[2]])
+            git_dict[commit] = feature_list[2]
+        
+        gumtree_token_set = set()
+        for commit, feature_list in gumtree_dict.items():
+            sum_feature = sum_encode(feature_list[2], sum_encode(feature_list[3], sum_encode(feature_list[4], feature_list[5])))
+            gumtree_token_set.update([x[0] for x in sum_feature])
+            gumtree_dict[commit] = sum_feature
+        
+        # Set of removed/remaining/new tokens
+        removed_token_set = git_token_set - gumtree_token_set
+        remain_token_set = git_token_set & gumtree_token_set
+        new_token_set = gumtree_token_set - git_token_set
+
+        # Tokens of query removed/remaining/new
+        removed_query = [x for x in bug_query if x[0] in removed_token_set]
+        remain_query = [x for x in bug_query if x[0] in remain_token_set]
+        new_query = [x for x in bug_query if x[0] in new_token_set]
+        
+        # 
+        git_BIC, git_else = [], [], [], []
+        git_remain_BIC, git_remain_else, gumtree_remain_BIC, gumtree_remain_else = [], [], [], []
+        git_removed_BIC, git_removed_else = [], []
+        commit_num = len(git_dict) - 1
+        
         for commit, git_feature in git_dict.items():
-            gumtree_feature = gumtree_feature.get(commit, [])
+            gumtree_feature = gumtree_dict[commit]
+
+            git = {word : freq for (word, freq) in git_feature}
+            gumtree = {word : freq for (word, freq) in gumtree_feature}
+
+            if commit == BIC:
+                for ind, (word, freq) in enumerate(removed_query | remain_query):
+                    git_BIC.append(git.get(word, 0))
+
+                for ind, (word, freq) in enumerate(removed_query):
+                    git_removed_BIC.append(git.get(word, 0))
+                
+                for ind, (word, freq) in enumerate(remain_query):
+                    git_remain_BIC.append(git.get(word, 0))
+                    gumtree_remain_BIC.append(gumtree.get(word, 0))
+
+            else:
+                for ind, (word, freq) in enumerate(removed_query | remain_query):
+                    if len(git_else) <= ind:
+                        git_else.append(git.get(word, 0) / commit_num)
+                    else:
+                        git_else[ind] += git.get(word, 0) / commit_num
+
+                for ind, (word, freq) in enumerate(removed_query):
+                    if len(git_removed_else) <= ind:
+                        git_removed_else.append(git.get(word, 0) / commit_num)
+                    else:
+                        git_removed_else[ind] += git.get(word, 0) / commit_num
+                
+                for ind, (word, freq) in enumerate(remain_query):
+                    if len(git_remain_else) <= ind:
+                        git_remain_else.append(git.get(word, 0) / commit_num)
+                        gumtree_remain_else.apend(gumtree.get(word, 0) / commit_num)
+                    else:
+                        git_remain_else += git.get(word, 0) / commit_num
+                        gumtree_remain_else += gumtree.get(word, 0) / commit_num
 
 
 
 # res_dict[stage2][(new_diff_type, use_stopword, adddel, use_br)]
 if __name__ == "__main__":
     # Bug2Commit
+    #print(get_metric_dict(method='bug2commit', mode='all'))
     #org_setting = frozenset({'stage2':'precise', 'use_stopword':True, 'use_br':True, 'diff_type':'no_diff', 'adddel':'del'}.items())
     #new_setting = frozenset({'stage2':'precise', 'use_stopword':True, 'use_br':True, 'diff_type':'gumtree_class', 'adddel':'all-uni'}.items())
 
@@ -251,4 +317,10 @@ if __name__ == "__main__":
 
     #get_metric_dict(method='bug2commit', mode='project')
 
-    check_filtering()
+    #check_filtering()
+
+    for setting, metric in get_metric_dict(method='bug2commit', mode='all').items():
+        setting_dict = dict(setting)
+
+        if setting_dict['use_br'] == True and setting_dict['diff_type'] == 'gumtree_base' and setting_dict['stage2'] == 'skip':
+            print(setting, metric)
