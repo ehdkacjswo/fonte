@@ -63,32 +63,49 @@ def encode(stage2_data, pid, vid, use_stopword):
 def main(pid, vid):
     log(f'Working on {pid}_{vid}b')
 
-    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'stage2.pkl'), 'rb') as file:
+    diff_data_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
+    os.makedirs(diff_data_dir, exist_ok=True)
+
+    with open(os.path.join(diff_data_dir, 'stage2.pkl'), 'rb') as file:
         stage2_dict = pickle.load(file)
+    
+    # Load the previous result if possible
+    encode_save_path = os.path.join(diff_data_dir, f'encode.pkl')
+    vocab_save_path = os.path.join(diff_data_dir, f'vocab.pkl')
+
+    if os.path.isfile(encode_save_path) and os.path.isfile(vocab_save_path):
+        with open(encode_save_path, 'rb') as file:
+            encode_dict = pickle.load(file)
+        with open(vocab_save_path, 'rb') as file:
+            vocab_dict = pickle.load(file)
+    
+    else:
+        encode_dict = dict()
+        vocab_dict = dict()
 
     # Encode diff for every settings
-    encode_dict = dict()
-    vocab_dict = dict()
     use_stopword_list = [True]
 
     for stage2, sub_dict in stage2_dict.items():
-        encode_dict[stage2] = dict()
-        vocab_dict[stage2] = dict()
+        encode_dict[stage2] = encode_dict.get(stage2, dict())
+        vocab_dict[stage2] = vocab_dict.get(stage2, dict())
 
         for setting, stage2_data in sub_dict.items():
             setting_dict = dict(setting)
 
             for use_stopword in use_stopword_list:
                 new_setting = frozenset((setting_dict | {'use_stopword' : True}).items())
+
+                # Skip already visited setting
+                if new_setting in encode_dict[stage2] and new_setting in vocab_dict[stage2]:
+                    continue
+                
                 encode_res, vocab = encode(stage2_data=stage2_data, pid=pid, vid=vid, use_stopword=use_stopword)
 
                 encode_dict[stage2][new_setting] = encode_res
                 vocab_dict[stage2][new_setting] = vocab
 
-    diff_data_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
-    os.makedirs(diff_data_dir, exist_ok=True)
-
-    with open(os.path.join(diff_data_dir, f'encode.pkl'), 'wb') as file:
+    with open(encode_save_path, 'wb') as file:
         pickle.dump(encode_dict, file)
-    with open(os.path.join(diff_data_dir, f'vocab.pkl'), 'wb') as file:
+    with open(vocab_save_path, 'wb') as file:
         pickle.dump(vocab_dict, file)

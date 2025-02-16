@@ -43,6 +43,68 @@ def get_style_change_data(coredir, tool='git', stage2='skip'):
         unchanged_df = val_df[val_df["AST_diff"] == "U"]
         return list(zip(unchanged_df["commit"], unchanged_df["src_path"], unchanged_df["src_path"]))"""
 
+# Use whole file as commit information
+def file_stage2(pid, vid, stage2):
+    # Load related diff data
+    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'git_diff.pkl'), 'rb') as file:
+        git_diff = pickle.load(file)
+    
+    # Get list of style change commits
+    excluded = get_style_change_data(os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b/'), 'git', stage2)
+
+    # Merge the diff data
+    res_dict = dict()
+
+    for commit_hash, commit_diff in git_diff.items(): # Iterate through commits
+        addition_dict = dict()
+        deletion_dict = dict()
+
+        for (before_src_path, after_src_path), src_diff in commit_diff.items(): # Iterate through source files editted by commit
+            if (commit_hash, before_src_path, after_src_path) in excluded: # Exclude style change
+                continue
+
+            # Consider existing file with acutal addition happened
+            if after_src_path != '/dev/null' and len(src_diff['addition']) > 0:
+                p = subprocess.Popen(f'git show {commit_hash}:{after_src_path}', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                code_txt, err_txt = p.communicate()
+
+                # Error raised while copying file
+                if p.returncode != 0:
+                    # Actual addition occured but failed to copy file
+                    log(f'[ERROR] Failed to copy file {commit_hash}:{after_src_path}', code_txt, err_txt)
+                
+                else:
+                    code_txt = code_txt.decode(encoding='utf-8', errors='ignore').splitlines()
+
+                    if after_src_path not in addition_dict:
+                        addition_dict[after_src_path] = {'file' : code_txt}
+                    
+                    elif code_txt != addition_dict[after_src_path]['file']:
+                        log(f'[ERROR] Different addition content!!! {commit_hash} {after_src_path}')
+            
+            # Consider existing file with acutal deletion happened
+            if before_src_path != '/dev/null' and len(src_diff['deletion']) > 0:
+                p = subprocess.Popen(f'git show {commit_hash}~1:{before_src_path}', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                code_txt, err_txt = p.communicate()
+
+                # Error raised while copying file
+                if p.returncode != 0:
+                    # Actual addition occured but failed to copy file
+                    log(f'[ERROR] Failed to copy file {commit_hash}~1:{before_src_path}', code_txt, err_txt)
+                
+                else:
+                    code_txt = code_txt.decode(encoding='utf-8', errors='ignore').splitlines()
+
+                    if before_src_path not in deletion_dict:
+                        deletion_dict[before_src_path] = {'file' : code_txt}
+                    
+                    elif code_txt != deletion_dict[before_src_path]['file']:
+                        log(f'[ERROR] Different deletion content!!! {commit_hash} {before_src_path}')
+        
+        res_dict[commit_hash] = {'addition' : addition_dict, 'deletion' : deletion_dict}
+    
+    return res_dict
+
 def git_stage2(pid, vid, stage2):
     # Load related diff data
     with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'git_diff.pkl'), 'rb') as file:
@@ -213,24 +275,39 @@ def main(pid, vid):
     except:
         log('[ERROR] Moving directory failed')
         return
-
-    diff_type_list = ['git', 'gumtree_base', 'gumtree_class']
-    stage2_list = ['skip', 'precise'] # ['skip', True, False] Skip stage or use OpenRewrite or not
-
+    
+    # Load the previous result if possible
     save_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
     os.makedirs(save_dir, exist_ok=True)
+
+    save_path = os.path.join(save_dir, f'stage2.pkl')
+
+    if os.path.isfile(save_path):
+        with open(save_path, 'rb') as file:
+            res_dict = pickle.load(file)
     
+    else:
+        res_dict = dict()
+
     res_dict = dict()
+    diff_type_list = ['file', 'git', 'gumtree_base', 'gumtree_class']
+    stage2_list = ['skip', 'precise'] # ['skip', True, False] Skip stage or use OpenRewrite or not
+    
     for stage2 in stage2_list:
-        res_dict[stage2] = dict()
+        res_dict[stage2] = res_dict.get(stage2, dict())
         
         for diff_type in diff_type_list:
             setting = frozenset({'diff_type' : diff_type}.items())
 
+            if setting in res_dict[stage2]:
+                continue
+
             if diff_type == 'git':
                 res_dict[stage2][setting] = git_stage2(pid, vid, stage2)
+            elif diff_type == 'file':
+                res_dict[stage2][setting] = file_stage2(pid, vid, stage2)
             else:
                 res_dict[stage2][setting] = gumtree_stage2(pid, vid, stage2, diff_type.endswith('class'))
 
-    with open(os.path.join(save_dir, f'stage2.pkl'), 'wb') as file:
+    with open(save_path, 'wb') as file:
         pickle.dump(res_dict, file)

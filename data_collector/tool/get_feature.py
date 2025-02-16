@@ -13,7 +13,7 @@ BIC_GT_DIR = "/root/workspace/data/Defects4J/BIC_dataset"
 BASELINE_DATA_DIR = "/root/workspace/data/Defects4J/baseline"
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 
-encode_type_dict = {'git' : ['diff'], 'gumtree_base' : ['diff'], 'gumtree_class' : ['class', 'method', 'variable', 'comment']}
+encode_type_dict = {'file' : ['file'], 'git' : ['diff'], 'gumtree_base' : ['diff'], 'gumtree_class' : ['class', 'method', 'variable', 'comment']}
 adddel_list = ['add', 'del', 'all-uni', 'all-sep']
 
 def log(txt, out_txt=None, err_txt=None):
@@ -98,10 +98,23 @@ def get_feature(encode_data, setting_dict):
 
 def main(pid, vid):
     log(f'Working on project {pid}-{vid}b')
+    
+    diff_data_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
+    os.makedirs(diff_data_dir, exist_ok=True)
 
-    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'encode.pkl'), 'rb') as file:
+    with open(os.path.join(diff_data_dir, 'encode.pkl'), 'rb') as file:
         encode_dict = pickle.load(file)
-            
+    
+    # Load the previous result if possible
+    feature_save_path = os.path.join(diff_data_dir, f'feature.pkl')
+
+    """if os.path.isfile(feature_save_path):
+        with open(feature_save_path, 'rb') as file:
+            res_dict = pickle.load(file)
+    
+    else:
+        res_dict = dict()"""
+    
     res_dict = dict()
 
     for stage2, sub_dict in encode_dict.items():
@@ -115,5 +128,5 @@ def main(pid, vid):
                 new_setting = frozenset((setting_dict | {'adddel' : adddel}).items())
                 res_dict[stage2][new_setting] = feature_data
     
-    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'wb') as file:
+    with open(os.path.join(diff_data_dir, 'feature.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)

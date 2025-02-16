@@ -157,6 +157,16 @@ def main(pid, vid):
     savedir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote')
     os.makedirs(savedir, exist_ok=True)
 
+    # Load the previous result if possible
+    bug2commit_save_path = os.path.join(savedir, f'bug2commit.pkl')
+
+    if os.path.isfile(bug2commit_save_path):
+        with open(bug2commit_save_path, 'rb') as file:
+            res_dict = pickle.load(file)
+    
+    else:
+        res_dict = dict()
+
     # Bug2Commit
     res_dict = dict()
     use_br_list = [True, False]
@@ -167,7 +177,7 @@ def main(pid, vid):
         feature_dict = pickle.load(file)
 
     for stage2, sub_dict in feature_dict.items():
-        res_dict[stage2] = dict()
+        res_dict[stage2] = res_dict.get(stage2, dict())
 
         for setting, feature_data in sub_dict.items():
             setting_dict = dict(setting)
@@ -177,10 +187,11 @@ def main(pid, vid):
 
                 new_setting_dict = setting_dict | {'diff_type' : diff_type, 'use_br' : use_br}
                 new_setting = frozenset(new_setting_dict.items())
+                
+                if new_setting not in res_dict[stage2]:
+                    res_dict[stage2][new_setting] = vote_bug2commit(pid, vid, feature_data=feature_data, setting_dict=new_setting_dict, stage2=stage2)
 
-                res_dict[stage2][new_setting] = vote_bug2commit(pid, vid, feature_data=feature_data, setting_dict=new_setting_dict, stage2=stage2)
-
-    with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
+    with open(bug2commit_save_path, 'wb') as file:
         pickle.dump(res_dict, file)
 
     #with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
