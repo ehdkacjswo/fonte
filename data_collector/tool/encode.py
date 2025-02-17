@@ -27,10 +27,12 @@ def encode(stage2_data, pid, vid, use_stopword):
     encoder = Encoder()
     res_dict = dict()
 
-    for commit_hash, commit_diff in stage2_data.items(): # Iterate through commits
+    for commit_hash, commit_diff in tqdm(stage2_data.items()): # Iterate through commits
+        #print(commit_hash)
         res_dict[commit_hash] = dict()
 
         for modify, modify_diff in commit_diff.items(): # addition / deletion
+            #print(modify)
             res_dict[commit_hash][modify] = dict()
         
             for src_path, src_diff in modify_diff.items():
@@ -49,6 +51,7 @@ def encode(stage2_data, pid, vid, use_stopword):
                     encoder.encode(src_path, use_stopword=use_stopword, update_vocab=True)
             
         # Encode message
+        print('Encode message')
         base_data_dir = os.path.join(BASE_DATA_DIR, f'{pid}-{vid}b', 'commits')
 
         for filename in os.listdir(base_data_dir):
@@ -100,6 +103,7 @@ def main(pid, vid):
                 if new_setting in encode_dict[stage2] and new_setting in vocab_dict[stage2]:
                     continue
                 
+                print(new_setting)
                 encode_res, vocab = encode(stage2_data=stage2_data, pid=pid, vid=vid, use_stopword=use_stopword)
 
                 encode_dict[stage2][new_setting] = encode_res

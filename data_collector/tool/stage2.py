@@ -289,7 +289,7 @@ def main(pid, vid):
     else:
         res_dict = dict()
 
-    res_dict = dict()
+    #res_dict = dict()
     diff_type_list = ['file', 'git', 'gumtree_base', 'gumtree_class']
     stage2_list = ['skip', 'precise'] # ['skip', True, False] Skip stage or use OpenRewrite or not
     

@@ -10,6 +10,7 @@ if __name__ == "__main__":
 
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
+        #pid, vid = 'Closure', '10'
         
         if pid == 'Closure' and vid == '131':
             continue
@@ -17,12 +18,8 @@ if __name__ == "__main__":
         #collect_diff.main(pid, vid)
         stage2.main(pid, vid)
         encode.main(pid, vid)
-        get_feature.main(pid, vid)
-            
+        get_feature.main(pid, vid)    
         vote.main(pid, vid)
-
-        
-
         bisection.main(pid, vid)
 
         #break
