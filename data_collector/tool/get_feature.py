@@ -26,7 +26,7 @@ def log(txt, out_txt=None, err_txt=None):
         if err_txt is not None:
             file.write('[ERROR] ERR\n' + err_txt.decode(encoding='utf-8', errors='ignore') + '\n')
 
-# data : 
+# data : message, src_path, diff
 def get_feature(encode_data, setting_dict):
     diff_type = setting_dict['diff_type']
 

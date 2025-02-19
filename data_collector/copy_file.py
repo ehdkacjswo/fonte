@@ -4,10 +4,10 @@ if __name__ == "__main__":
     #a2715a5,src/com/google/javascript/jscomp/Tracer.java,src/com/google/javascript/jscomp/Tracer.java,U
     #a2715a5,src/com/google/javascript/rhino/TokenStream.java,src/com/google/javascript/rhino/TokenStream.java,U
     pid = 'Closure'
-    vid = '131'
-    commit_hash = 'a2715a5'
-    before_src_path = 'test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java'
-    after_src_path = 'test/com/google/javascript/jscomp/deps/JsFunctionParserTest.java '
+    vid = '121'
+    commit_hash = '78995bf'
+    before_src_path = 'src/com/google/javascript/rhino/Token.java'
+    after_src_path = 'src/com/google/javascript/rhino/Token.java'
 
     # Checkout Defects4J project
     p = subprocess.Popen(f'sh /root/workspace/data_collector/tool/checkout.sh {pid} {vid}', \
