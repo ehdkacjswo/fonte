@@ -1,466 +1,726 @@
 /*
- * Copyright (C) 2010 Google Inc.
- *
+ * Copyright 2002-2004 The Apache Software Foundation.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.commons.lang.time;
 
-package com.google.gson.stream;
-
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.TimeZone;
 
 /**
- * Writes a JSON (<a href="http://www.ietf.org/rfc/rfc4627.txt">RFC 4627</a>)
- * encoded value to a stream, one token at a time. The stream includes both
- * literal values (strings, numbers, booleans and nulls) as well as the begin
- * and end delimiters of objects and arrays.
+ * <p>A suite of utilities surrounding the use of the
+ * {@link java.util.Calendar} and {@link java.util.Date} object.</p>
  *
- * <h3>Encoding JSON</h3>
- * To encode your data as JSON, create a new {@code JsonWriter}. Each JSON
- * document must contain one top-level array or object. Call methods on the
- * writer as you walk the structure's contents, nesting arrays and objects as
- * necessary:
- * <ul>
- *   <li>To write <strong>arrays</strong>, first call {@link #beginArray()}.
- *       Write each of the array's elements with the appropriate {@link #value}
- *       methods or by nesting other arrays and objects. Finally close the array
- *       using {@link #endArray()}.
- *   <li>To write <strong>objects</strong>, first call {@link #beginObject()}.
- *       Write each of the object's properties by alternating calls to
- *       {@link #name} with the property's value. Write property values with the
- *       appropriate {@link #value} method or by nesting other objects or arrays.
- *       Finally close the object using {@link #endObject()}.
- * </ul>
- *
- * <h3>Example</h3>
- * Suppose we'd like to encode a stream of messages such as the following: <pre> {@code
- * [
- *   {
- *     "id": 912345678901,
- *     "text": "How do I stream JSON in Java?",
- *     "geo": null,
- *     "user": {
- *       "name": "json_newb",
- *       "followers_count": 41
- *      }
- *   },
- *   {
- *     "id": 912345678902,
- *     "text": "@json_newb just use JsonWriter!",
- *     "geo": [50.454722, -104.606667],
- *     "user": {
- *       "name": "jesse",
- *       "followers_count": 2
- *     }
- *   }
- * ]}</pre>
- * This code encodes the above structure: <pre>   {@code
- *   public void writeJsonStream(OutputStream out, List<Message> messages) throws IOException {
- *     JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
- *     writer.setIndentSpaces(4);
- *     writeMessagesArray(writer, messages);
- *     writer.close();
- *   }
- *
- *   public void writeMessagesArray(JsonWriter writer, List<Message> messages) throws IOException {
- *     writer.beginArray();
- *     for (Message message : messages) {
- *       writeMessage(writer, message);
- *     }
- *     writer.endArray();
- *   }
- *
- *   public void writeMessage(JsonWriter writer, Message message) throws IOException {
- *     writer.beginObject();
- *     writer.name("id").value(message.getId());
- *     writer.name("text").value(message.getText());
- *     if (message.getGeo() != null) {
- *       writer.name("geo");
- *       writeDoublesArray(writer, message.getGeo());
- *     } else {
- *       writer.name("geo").nullValue();
- *     }
- *     writer.name("user");
- *     writeUser(writer, message.getUser());
- *     writer.endObject();
- *   }
- *
- *   public void writeUser(JsonWriter writer, User user) throws IOException {
- *     writer.beginObject();
- *     writer.name("name").value(user.getName());
- *     writer.name("followers_count").value(user.getFollowersCount());
- *     writer.endObject();
- *   }
- *
- *   public void writeDoublesArray(JsonWriter writer, List<Double> doubles) throws IOException {
- *     writer.beginArray();
- *     for (Double value : doubles) {
- *       writer.value(value);
- *     }
- *     writer.endArray();
- *   }}</pre>
- *
- * <p>Each {@code JsonWriter} may be used to write a single JSON stream.
- * Instances of this class are not thread safe. Calls that would result in a
- * malformed JSON string will fail with an {@link IllegalStateException}.
- * 
- * @author Jesse Wilson
+ * @author <a href="mailto:sergek@lokitech.com">Serge Knystautas</a>
+ * @author Stephen Colebourne
+ * @author Janek Bogucki
+ * @author <a href="mailto:ggregory@seagullsw.com">Gary Gregory</a>
+ * @author Phil Steitz
+ * @since 2.0
+ * @version $Id: DateUtils.java,v 1.33 2004/10/16 17:08:42 scolebourne Exp $
  */
-public final class JsonWriter implements Closeable {
+public class DateUtils {
+    
+    /**
+     * The UTC time zone  (often referred to as GMT).
+     */
+    public static final TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone("GMT");
+    /**
+     * Number of milliseconds in a standard second.
+     * @since 2.1
+     */
+    public static final long MILLIS_PER_SECOND = 1000;
+    /**
+     * Number of milliseconds in a standard minute.
+     * @since 2.1
+     */
+    public static final long MILLIS_PER_MINUTE = 60 * MILLIS_PER_SECOND;
+    /**
+     * Number of milliseconds in a standard hour.
+     * @since 2.1
+     */
+    public static final long MILLIS_PER_HOUR = 60 * MILLIS_PER_MINUTE;
+    /**
+     * Number of milliseconds in a standard day.
+     * @since 2.1
+     */
+    public static final long MILLIS_PER_DAY = 24 * MILLIS_PER_HOUR;
 
-  /** The output data, containing at most one top-level array or object. */
-  private final Writer out;
+    /**
+     * This is half a month, so this represents whether a date is in the top
+     * or bottom half of the month.
+     */
+    public final static int SEMI_MONTH = 1001;
 
-  private final List<JsonScope> stack = new ArrayList<JsonScope>();
-  {
-    stack.add(JsonScope.EMPTY_DOCUMENT);
-  }
+    private static final int[][] fields = {
+            {Calendar.MILLISECOND},
+            {Calendar.SECOND},
+            {Calendar.MINUTE},
+            {Calendar.HOUR_OF_DAY, Calendar.HOUR},
+            {Calendar.DATE, Calendar.DAY_OF_MONTH, Calendar.AM_PM /* Calendar.DAY_OF_YEAR, Calendar.DAY_OF_WEEK, Calendar.DAY_OF_WEEK_IN_MONTH */},
+            {Calendar.MONTH, DateUtils.SEMI_MONTH},
+            {Calendar.YEAR},
+            {Calendar.ERA}};
 
-  /**
-   * A string containing a full set of spaces for a single level of
-   * indentation, or null for no pretty printing.
-   */
-  private String indent;
+    /**
+     * A week range, starting on Sunday.
+     */
+    public final static int RANGE_WEEK_SUNDAY = 1;
 
-  /**
-   * The name/value separator; either ":" or ": ".
-   */
-  private String separator = ":";
+    /**
+     * A week range, starting on Monday.
+     */
+    public final static int RANGE_WEEK_MONDAY = 2;
 
-  /**
-   * Creates a new instance that writes a JSON-encoded stream to {@code out}.
-   * For best performance, ensure {@link Writer} is buffered; wrapping in
-   * {@link java.io.BufferedWriter BufferedWriter} if necessary.
-   */
-  public JsonWriter(Writer out) {
-    if (out == null) {
-      throw new NullPointerException("out == null");
-    }
-    this.out = out;
-  }
+    /**
+     * A week range, starting on the day focused.
+     */
+    public final static int RANGE_WEEK_RELATIVE = 3;
 
-  /**
-   * Sets the indentation string to be repeated for each level of indentation
-   * in the encoded document. If {@code indent.isEmpty()} the encoded document
-   * will be compact. Otherwise the encoded document will be more
-   * human-readable.
-   *
-   * @param indent a string containing only whitespace.
-   */
-  public void setIndent(String indent) {
-    if (indent.isEmpty()) {
-      this.indent = null;
-      this.separator = ":";
-    } else {
-      this.indent = indent;
-      this.separator = ": ";
-    }
-  }
+    /**
+     * A week range, centered around the day focused.
+     */
+    public final static int RANGE_WEEK_CENTER = 4;
 
-  /**
-   * Begins encoding a new array. Each call to this method must be paired with
-   * a call to {@link #endArray}.
-   *
-   * @return this writer.
-   */
-  public JsonWriter beginArray() throws IOException {
-    return open(JsonScope.EMPTY_ARRAY, "[");
-  }
+    /**
+     * A month range, the week starting on Sunday.
+     */
+    public final static int RANGE_MONTH_SUNDAY = 5;
 
-  /**
-   * Ends encoding the current array.
-   *
-   * @return this writer.
-   */
-  public JsonWriter endArray() throws IOException {
-    return close(JsonScope.EMPTY_ARRAY, JsonScope.NONEMPTY_ARRAY, "]");
-  }
+    /**
+     * A month range, the week starting on Monday.
+     */
+    public final static int RANGE_MONTH_MONDAY = 6;
 
-  /**
-   * Begins encoding a new object. Each call to this method must be paired
-   * with a call to {@link #endObject}.
-   *
-   * @return this writer.
-   */
-  public JsonWriter beginObject() throws IOException {
-    return open(JsonScope.EMPTY_OBJECT, "{");
-  }
-
-  /**
-   * Ends encoding the current object.
-   *
-   * @return this writer.
-   */
-  public JsonWriter endObject() throws IOException {
-    return close(JsonScope.EMPTY_OBJECT, JsonScope.NONEMPTY_OBJECT, "}");
-  }
-
-  /**
-   * Enters a new scope by appending any necessary whitespace and the given
-   * bracket.
-   */
-  private JsonWriter open(JsonScope empty, String openBracket) throws IOException {
-    beforeValue(true);
-    stack.add(empty);
-    out.write(openBracket);
-    return this;
-  }
-
-  /**
-   * Closes the current scope by appending any necessary whitespace and the
-   * given bracket.
-   */
-  private JsonWriter close(JsonScope empty, JsonScope nonempty, String closeBracket)
-      throws IOException {
-    JsonScope context = peek();
-    if (context != nonempty && context != empty) {
-      throw new IllegalStateException("Nesting problem: " + stack);
+    /**
+     * <p><code>DateUtils</code> instances should NOT be constructed in
+     * standard programming. Instead, the class should be used as
+     * <code>DateUtils.parse(str);</code>.</p>
+     *
+     * <p>This constructor is public to permit tools that require a JavaBean
+     * instance to operate.</p>
+     */
+    public DateUtils() {
     }
 
-    stack.remove(stack.size() - 1);
-    if (context == nonempty) {
-      newline();
-    }
-    out.write(closeBracket);
-    return this;
-  }
-
-  /**
-   * Returns the value on the top of the stack.
-   */
-  private JsonScope peek() {
-    return stack.get(stack.size() - 1);
-  }
-
-  /**
-   * Replace the value on the top of the stack with the given value.
-   */
-  private void replaceTop(JsonScope topOfStack) {
-    stack.set(stack.size() - 1, topOfStack);
-  }
-
-  /**
-   * Encodes the property name.
-   *
-   * @param name the name of the forthcoming value. May not be null.
-   * @return this writer.
-   */
-  public JsonWriter name(String name) throws IOException {
-    if (name == null) {
-      throw new NullPointerException("name == null");
-    }
-    beforeName();
-    string(name);
-    return this;
-  }
-
-  /**
-   * Encodes {@code value}.
-   *
-   * @param value the literal string value, or null to encode a null literal.
-   * @return this writer.
-   */
-  public JsonWriter value(String value) throws IOException {
-    if (value == null) {
-      return nullValue();
-    }
-    beforeValue(false);
-    string(value);
-    return this;
-  }
-
-  /**
-   * Encodes {@code null}.
-   *
-   * @return this writer.
-   */
-  public JsonWriter nullValue() throws IOException {
-    beforeValue(false);
-    out.write("null");
-    return this;
-  }
-
-  /**
-   * Encodes {@code value}.
-   *
-   * @return this writer.
-   */
-  public JsonWriter value(boolean value) throws IOException {
-    beforeValue(false);
-    out.write(value ? "true" : "false");
-    return this;
-  }
-
-  /**
-   * Encodes {@code value}.
-   *
-   * @param value a finite value. May not be {@link Double#isNaN() NaNs} or
-   *     {@link Double#isInfinite() infinities}.
-   * @return this writer.
-   */
-  public JsonWriter value(double value) throws IOException {
-    if (Double.isNaN(value) || Double.isInfinite(value)) {
-      throw new IllegalArgumentException("Numeric values must be finite, but was " + value);
-    }
-    beforeValue(false);
-    out.append(Double.toString(value));
-    return this;
-  }
-
-  /**
-   * Encodes {@code value}.
-   *
-   * @return this writer.
-   */
-  public JsonWriter value(long value) throws IOException {
-    beforeValue(false);
-    out.write(Long.toString(value));
-    return this;
-  }
-
-  /**
-   * Encodes {@code value}.
-   *
-   * @param value a finite value. May not be {@link Double#isNaN() NaNs} or
-   *     {@link Double#isInfinite() infinities}.
-   * @return this writer.
-   */
-  public JsonWriter value(Number value) throws IOException {
-    if (value == null) {
-      return nullValue();
+    //-----------------------------------------------------------------------
+    /**
+     * <p>Checks if two date objects are on the same day ignoring time.</p>
+     *
+     * <p>28 Mar 2002 13:45 and 28 Mar 2002 06:01 would return true.
+     * 28 Mar 2002 13:45 and 12 Mar 2002 13:45 would return false.
+     * </p>
+     * 
+     * @param date1  the first date, not altered, not null
+     * @param date2  the second date, not altered, not null
+     * @return true if they represent the same day
+     * @throws IllegalArgumentException if either date is <code>null</code>
+     * @since 2.1
+     */
+    public static boolean isSameDay(Date date1, Date date2) {
+        if (date1 == null || date2 == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+        return isSameDay(cal1, cal2);
     }
 
-    String string = value.toString();
-    if (string.equals("-Infinity") || string.equals("Infinity") || string.equals("NaN")) {
-      throw new IllegalArgumentException("Numeric values must be finite, but was " + value);
-    }
-    beforeValue(false);
-    out.append(string);
-    return this;
-  }
-
-  /**
-   * Ensures all buffered data is written to the underlying {@link Writer}
-   * and flushes that writer.
-   */
-  public void flush() throws IOException {
-    out.flush();
-  }
-
-  /**
-   * Flushes and closes this writer and the underlying {@link Writer}.
-   *
-   * @throws IOException if the JSON document is incomplete.
-   */
-  public void close() throws IOException {
-    out.close();
-
-    if (peek() != JsonScope.NONEMPTY_DOCUMENT) {
-      throw new IOException("Incomplete document");
-    }
-  }
-
-  private void string(String value) throws IOException {
-    out.write("\"");
-    for (int i = 0, length = value.length(); i < length; i++) {
-      char c = value.charAt(i);
-
-      /*
-       * From RFC 4627, "All Unicode characters may be placed within the
-       * quotation marks except for the characters that must be escaped:
-       * quotation mark, reverse solidus, and the control characters
-       * (U+0000 through U+001F)."
-       */
-      if (c == '"' || c == '\\') {
-        out.write('\\');
-        out.write(c);
-      } else if (c <= 0x1F) {
-        out.write(String.format("\\u%04x", (int) c));
-      } else {
-        out.write(c);
-      }
-    }
-    out.write("\"");
-  }
-
-  private void newline() throws IOException {
-    if (indent == null) {
-      return;
+    /**
+     * <p>Checks if two calendar objects are on the same day ignoring time.</p>
+     *
+     * <p>28 Mar 2002 13:45 and 28 Mar 2002 06:01 would return true.
+     * 28 Mar 2002 13:45 and 12 Mar 2002 13:45 would return false.
+     * </p>
+     * 
+     * @param cal1  the first calendar, not altered, not null
+     * @param cal2  the second calendar, not altered, not null
+     * @return true if they represent the same day
+     * @throws IllegalArgumentException if either calendar is <code>null</code>
+     * @since 2.1
+     */
+    public static boolean isSameDay(Calendar cal1, Calendar cal2) {
+        if (cal1 == null || cal2 == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
     }
 
-    out.write("\n");
-    for (int i = 1; i < stack.size(); i++) {
-      out.write(indent);
+    //-----------------------------------------------------------------------
+    /**
+     * <p>Checks if two date objects represent the same instant in time.</p>
+     *
+     * <p>This method compares the long millisecond time of the two objects.</p>
+     * 
+     * @param date1  the first date, not altered, not null
+     * @param date2  the second date, not altered, not null
+     * @return true if they represent the same millisecond instant
+     * @throws IllegalArgumentException if either date is <code>null</code>
+     * @since 2.1
+     */
+    public static boolean isSameInstant(Date date1, Date date2) {
+        if (date1 == null || date2 == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        return (date1.getTime() == date2.getTime());
     }
-  }
 
-  /**
-   * Inserts any necessary separators and whitespace before a name. Also
-   * adjusts the stack to expect the name's value.
-   */
-  private void beforeName() throws IOException {
-    JsonScope context = peek();
-    if (context == JsonScope.NONEMPTY_OBJECT) { // first in object
-      out.write(',');
-    } else if (context != JsonScope.EMPTY_OBJECT) { // not in an object!
-      throw new IllegalStateException("Nesting problem: " + stack);
+    /**
+     * <p>Checks if two calendar objects represent the same instant in time.</p>
+     *
+     * <p>This method compares the long millisecond time of the two objects.</p>
+     * 
+     * @param cal1  the first calendar, not altered, not null
+     * @param cal2  the second calendar, not altered, not null
+     * @return true if they represent the same millisecond instant
+     * @throws IllegalArgumentException if either date is <code>null</code>
+     * @since 2.1
+     */
+    public static boolean isSameInstant(Calendar cal1, Calendar cal2) {
+        if (cal1 == null || cal2 == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        return (cal1.getTime().getTime() == cal2.getTime().getTime());
     }
-    newline();
-    replaceTop(JsonScope.DANGLING_NAME);
-  }
 
-  /**
-   * Inserts any necessary separators and whitespace before a literal value,
-   * inline array, or inline object. Also adjusts the stack to expect either a
-   * closing bracket or another element.
-   *
-   * @param root true if the value is a new array or object, the two values
-   *     permitted as top-level elements.
-   */
-  private void beforeValue(boolean root) throws IOException {
-    switch (peek()) {
-    case EMPTY_DOCUMENT: // first in document
-      if (!root) {
-        throw new IllegalStateException(
-            "JSON must start with an array or an object.");
-      }
-      replaceTop(JsonScope.NONEMPTY_DOCUMENT);
-      break;
-
-    case EMPTY_ARRAY: // first in array
-      replaceTop(JsonScope.NONEMPTY_ARRAY);
-      newline();
-      break;
-
-    case NONEMPTY_ARRAY: // another in array
-      out.append(',');
-      newline();
-      break;
-
-    case DANGLING_NAME: // value for name
-      out.append(separator);
-      replaceTop(JsonScope.NONEMPTY_OBJECT);
-      break;
-
-    case NONEMPTY_DOCUMENT:
-        throw new IllegalStateException(
-            "JSON must have only one top-level value.");
-
-    default:
-      throw new IllegalStateException("Nesting problem: " + stack);
+    //-----------------------------------------------------------------------
+    /**
+     * <p>Checks if two calendar objects represent the same local time.</p>
+     *
+     * <p>This method compares the values of the fields of the two objects.
+     * In addition, both calendars must be the same of the same type.</p>
+     * 
+     * @param cal1  the first calendar, not altered, not null
+     * @param cal2  the second calendar, not altered, not null
+     * @return true if they represent the same millisecond instant
+     * @throws IllegalArgumentException if either date is <code>null</code>
+     * @since 2.1
+     */
+    public static boolean isSameLocalTime(Calendar cal1, Calendar cal2) {
+        if (cal1 == null || cal2 == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        return (cal1.get(Calendar.MILLISECOND) == cal2.get(Calendar.MILLISECOND) &&
+                cal1.get(Calendar.SECOND) == cal2.get(Calendar.SECOND) &&
+                cal1.get(Calendar.MINUTE) == cal2.get(Calendar.MINUTE) &&
+                cal1.get(Calendar.HOUR) == cal2.get(Calendar.HOUR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+                cal1.getClass() == cal2.getClass());
     }
-  }
+
+    //-----------------------------------------------------------------------
+    /**
+     * <p>Round this date, leaving the field specified as the most
+     * significant field.</p>
+     *
+     * <p>For example, if you had the datetime of 28 Mar 2002
+     * 13:45:01.231, if this was passed with HOUR, it would return
+     * 28 Mar 2002 14:00:00.000. If this was passed with MONTH, it
+     * would return 1 April 2002 0:00:00.000.</p>
+     * 
+     * <p>For a date in a timezone that handles the change to daylight
+     * saving time, rounding to Calendar.HOUR_OF_DAY will behave as follows.
+     * Suppose daylight saving time begins at 02:00 on March 30. Rounding a 
+     * date that crosses this time would produce the following values:
+     * <ul>
+     * <li>March 30, 2003 01:10 rounds to March 30, 2003 01:00</li>
+     * <li>March 30, 2003 01:40 rounds to March 30, 2003 03:00</li>
+     * <li>March 30, 2003 02:10 rounds to March 30, 2003 03:00</li>
+     * <li>March 30, 2003 02:40 rounds to March 30, 2003 04:00</li>
+     * </ul>
+     * </p>
+     * 
+     * @param date  the date to work with
+     * @param field  the field from <code>Calendar</code>
+     *  or <code>SEMI_MONTH</code>
+     * @return the rounded date
+     * @throws IllegalArgumentException if the date is <code>null</code>
+     */
+    public static Date round(Date date, int field) {
+        if (date == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        Calendar gval = Calendar.getInstance();
+        gval.setTime(date);
+        modify(gval, field, true);
+        return gval.getTime();
+    }
+
+    /**
+     * <p>Round this date, leaving the field specified as the most
+     * significant field.</p>
+     *
+     * <p>For example, if you had the datetime of 28 Mar 2002
+     * 13:45:01.231, if this was passed with HOUR, it would return
+     * 28 Mar 2002 14:00:00.000. If this was passed with MONTH, it
+     * would return 1 April 2002 0:00:00.000.</p>
+     * 
+     * <p>For a date in a timezone that handles the change to daylight
+     * saving time, rounding to Calendar.HOUR_OF_DAY will behave as follows.
+     * Suppose daylight saving time begins at 02:00 on March 30. Rounding a 
+     * date that crosses this time would produce the following values:
+     * <ul>
+     * <li>March 30, 2003 01:10 rounds to March 30, 2003 01:00</li>
+     * <li>March 30, 2003 01:40 rounds to March 30, 2003 03:00</li>
+     * <li>March 30, 2003 02:10 rounds to March 30, 2003 03:00</li>
+     * <li>March 30, 2003 02:40 rounds to March 30, 2003 04:00</li>
+     * </ul>
+     * </p>
+     * 
+     * @param date  the date to work with
+     * @param field  the field from <code>Calendar</code>
+     *  or <code>SEMI_MONTH</code>
+     * @return the rounded date (a different object)
+     * @throws IllegalArgumentException if the date is <code>null</code>
+     */
+    public static Calendar round(Calendar date, int field) {
+        if (date == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        Calendar rounded = (Calendar) date.clone();
+        modify(rounded, field, true);
+        return rounded;
+    }
+
+    /**
+     * <p>Round this date, leaving the field specified as the most
+     * significant field.</p>
+     *
+     * <p>For example, if you had the datetime of 28 Mar 2002
+     * 13:45:01.231, if this was passed with HOUR, it would return
+     * 28 Mar 2002 14:00:00.000. If this was passed with MONTH, it
+     * would return 1 April 2002 0:00:00.000.</p>
+     * 
+     * <p>For a date in a timezone that handles the change to daylight
+     * saving time, rounding to Calendar.HOUR_OF_DAY will behave as follows.
+     * Suppose daylight saving time begins at 02:00 on March 30. Rounding a 
+     * date that crosses this time would produce the following values:
+     * <ul>
+     * <li>March 30, 2003 01:10 rounds to March 30, 2003 01:00</li>
+     * <li>March 30, 2003 01:40 rounds to March 30, 2003 03:00</li>
+     * <li>March 30, 2003 02:10 rounds to March 30, 2003 03:00</li>
+     * <li>March 30, 2003 02:40 rounds to March 30, 2003 04:00</li>
+     * </ul>
+     * </p>
+     * 
+     * @param date  the date to work with, either Date or Calendar
+     * @param field  the field from <code>Calendar</code>
+     *  or <code>SEMI_MONTH</code>
+     * @return the rounded date
+     * @throws IllegalArgumentException if the date is <code>null</code>
+     * @throws ClassCastException if the object type is not a <code>Date</code>
+     *  or <code>Calendar</code>
+     */
+    public static Date round(Object date, int field) {
+        if (date == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        if (date instanceof Date) {
+            return round((Date) date, field);
+        } else if (date instanceof Calendar) {
+            return round((Calendar) date, field).getTime();
+        } else {
+            throw new ClassCastException("Could not round " + date);
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    /**
+     * <p>Truncate this date, leaving the field specified as the most
+     * significant field.</p>
+     *
+     * <p>For example, if you had the datetime of 28 Mar 2002
+     * 13:45:01.231, if you passed with HOUR, it would return 28 Mar
+     * 2002 13:00:00.000.  If this was passed with MONTH, it would
+     * return 1 Mar 2002 0:00:00.000.</p>
+     * 
+     * @param date  the date to work with
+     * @param field  the field from <code>Calendar</code>
+     *  or <code>SEMI_MONTH</code>
+     * @return the rounded date
+     * @throws IllegalArgumentException if the date is <code>null</code>
+     */
+    public static Date truncate(Date date, int field) {
+        if (date == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        Calendar gval = Calendar.getInstance();
+        gval.setTime(date);
+        modify(gval, field, false);
+        return gval.getTime();
+    }
+
+    /**
+     * <p>Truncate this date, leaving the field specified as the most
+     * significant field.</p>
+     *
+     * <p>For example, if you had the datetime of 28 Mar 2002
+     * 13:45:01.231, if you passed with HOUR, it would return 28 Mar
+     * 2002 13:00:00.000.  If this was passed with MONTH, it would
+     * return 1 Mar 2002 0:00:00.000.</p>
+     * 
+     * @param date  the date to work with
+     * @param field  the field from <code>Calendar</code>
+     *  or <code>SEMI_MONTH</code>
+     * @return the rounded date (a different object)
+     * @throws IllegalArgumentException if the date is <code>null</code>
+     */
+    public static Calendar truncate(Calendar date, int field) {
+        if (date == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        Calendar truncated = (Calendar) date.clone();
+        modify(truncated, field, false);
+        return truncated;
+    }
+
+    /**
+     * <p>Truncate this date, leaving the field specified as the most
+     * significant field.</p>
+     *
+     * <p>For example, if you had the datetime of 28 Mar 2002
+     * 13:45:01.231, if you passed with HOUR, it would return 28 Mar
+     * 2002 13:00:00.000.  If this was passed with MONTH, it would
+     * return 1 Mar 2002 0:00:00.000.</p>
+     * 
+     * @param date  the date to work with, either <code>Date</code>
+     *  or <code>Calendar</code>
+     * @param field  the field from <code>Calendar</code>
+     *  or <code>SEMI_MONTH</code>
+     * @return the rounded date
+     * @throws IllegalArgumentException if the date
+     *  is <code>null</code>
+     * @throws ClassCastException if the object type is not a
+     *  <code>Date</code> or <code>Calendar</code>
+     */
+    public static Date truncate(Object date, int field) {
+        if (date == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        if (date instanceof Date) {
+            return truncate((Date) date, field);
+        } else if (date instanceof Calendar) {
+            return truncate((Calendar) date, field).getTime();
+        } else {
+            throw new ClassCastException("Could not truncate " + date);
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    /**
+     * <p>Internal calculation method.</p>
+     * 
+     * @param val  the calendar
+     * @param field  the field constant
+     * @param round  true to round, false to truncate
+     */
+    private static void modify(Calendar val, int field, boolean round) {
+        boolean roundUp = false;
+        for (int i = 0; i < fields.length; i++) {
+            for (int j = 0; j < fields[i].length; j++) {
+                if (fields[i][j] == field) {
+                    //This is our field... we stop looping
+                    if (round && roundUp) {
+                        if (field == DateUtils.SEMI_MONTH) {
+                            //This is a special case that's hard to generalize
+                            //If the date is 1, we round up to 16, otherwise
+                            //  we subtract 15 days and add 1 month
+                            if (val.get(Calendar.DATE) == 1) {
+                                val.add(Calendar.DATE, 15);
+                            } else {
+                                val.add(Calendar.DATE, -15);
+                                val.add(Calendar.MONTH, 1);
+                            }
+                        } else {
+                            //We need at add one to this field since the
+                            //  last number causes us to round up
+                            val.add(fields[i][0], 1);
+                        }
+                    }
+                    return;
+                }
+            }
+            //We have various fields that are not easy roundings
+            int offset = 0;
+            boolean offsetSet = false;
+            //These are special types of fields that require different rounding rules
+            switch (field) {
+                case DateUtils.SEMI_MONTH:
+                    if (fields[i][0] == Calendar.DATE) {
+                        //If we're going to drop the DATE field's value,
+                        //  we want to do this our own way.
+                        //We need to subtrace 1 since the date has a minimum of 1
+                        offset = val.get(Calendar.DATE) - 1;
+                        //If we're above 15 days adjustment, that means we're in the
+                        //  bottom half of the month and should stay accordingly.
+                        if (offset >= 15) {
+                            offset -= 15;
+                        }
+                        //Record whether we're in the top or bottom half of that range
+                        roundUp = offset > 7;
+                        offsetSet = true;
+                    }
+                    break;
+                case Calendar.AM_PM:
+                    if (fields[i][0] == Calendar.HOUR_OF_DAY) {
+                        //If we're going to drop the HOUR field's value,
+                        //  we want to do this our own way.
+                        offset = val.get(Calendar.HOUR_OF_DAY);
+                        if (offset >= 12) {
+                            offset -= 12;
+                        }
+                        roundUp = offset > 6;
+                        offsetSet = true;
+                    }
+                    break;
+            }
+            if (!offsetSet) {
+                int min = val.getActualMinimum(fields[i][0]);
+                int max = val.getActualMaximum(fields[i][0]);
+                //Calculate the offset from the minimum allowed value
+                offset = val.get(fields[i][0]) - min;
+                //Set roundUp if this is more than half way between the minimum and maximum
+                roundUp = offset > ((max - min) / 2);
+            }
+            //We need to remove this field
+            val.set(fields[i][0], val.get(fields[i][0]) - offset);
+        }
+        throw new IllegalArgumentException("The field " + field + " is not supported");
+
+    }
+
+    //-----------------------------------------------------------------------
+    /**
+     * <p>This constructs an <code>Iterator</code> that will
+     * start and stop over a date range based on the focused
+     * date and the range style.</p>
+     *
+     * <p>For instance, passing Thursday, July 4, 2002 and a
+     * <code>RANGE_MONTH_SUNDAY</code> will return an
+     * <code>Iterator</code> that starts with Sunday, June 30,
+     * 2002 and ends with Saturday, August 3, 2002.
+     * 
+     * @param focus  the date to work with
+     * @param rangeStyle  the style constant to use. Must be one of the range
+     * styles listed for the {@link #iterator(Calendar, int)} method.
+     *
+     * @return the date iterator
+     * @throws IllegalArgumentException if the date is <code>null</code> or if
+     * the rangeStyle is not 
+     */
+    public static Iterator iterator(Date focus, int rangeStyle) {
+        if (focus == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        Calendar gval = Calendar.getInstance();
+        gval.setTime(focus);
+        return iterator(gval, rangeStyle);
+    }
+
+    /**
+     * <p>This constructs an <code>Iterator</code> that will
+     * start and stop over a date range based on the focused
+     * date and the range style.</p>
+     *
+     * <p>For instance, passing Thursday, July 4, 2002 and a
+     * <code>RANGE_MONTH_SUNDAY</code> will return an
+     * <code>Iterator</code> that starts with Sunday, June 30,
+     * 2002 and ends with Saturday, August 3, 2002.
+     * 
+     * @param focus  the date to work with
+     * @param rangeStyle  the style constant to use. Must be one of
+     * {@link DateUtils#RANGE_MONTH_SUNDAY}, 
+     * {@link DateUtils#RANGE_MONTH_MONDAY},
+     * {@link DateUtils#RANGE_WEEK_SUNDAY},
+     * {@link DateUtils#RANGE_WEEK_MONDAY},
+     * {@link DateUtils#RANGE_WEEK_RELATIVE},
+     * {@link DateUtils#RANGE_WEEK_CENTER}
+     * @return the date iterator
+     * @throws IllegalArgumentException if the date is <code>null</code>
+     */
+    public static Iterator iterator(Calendar focus, int rangeStyle) {
+        if (focus == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        Calendar start = null;
+        Calendar end = null;
+        int startCutoff = Calendar.SUNDAY;
+        int endCutoff = Calendar.SATURDAY;
+        switch (rangeStyle) {
+            case RANGE_MONTH_SUNDAY:
+            case RANGE_MONTH_MONDAY:
+                //Set start to the first of the month
+                start = truncate(focus, Calendar.MONTH);
+                //Set end to the last of the month
+                end = (Calendar) start.clone();
+                end.add(Calendar.MONTH, 1);
+                end.add(Calendar.DATE, -1);
+                //Loop start back to the previous sunday or monday
+                if (rangeStyle == RANGE_MONTH_MONDAY) {
+                    startCutoff = Calendar.MONDAY;
+                    endCutoff = Calendar.SUNDAY;
+                }
+                break;
+            case RANGE_WEEK_SUNDAY:
+            case RANGE_WEEK_MONDAY:
+            case RANGE_WEEK_RELATIVE:
+            case RANGE_WEEK_CENTER:
+                //Set start and end to the current date
+                start = truncate(focus, Calendar.DATE);
+                end = truncate(focus, Calendar.DATE);
+                switch (rangeStyle) {
+                    case RANGE_WEEK_SUNDAY:
+                        //already set by default
+                        break;
+                    case RANGE_WEEK_MONDAY:
+                        startCutoff = Calendar.MONDAY;
+                        endCutoff = Calendar.SUNDAY;
+                        break;
+                    case RANGE_WEEK_RELATIVE:
+                        startCutoff = focus.get(Calendar.DAY_OF_WEEK);
+                        endCutoff = startCutoff - 1;
+                        break;
+                    case RANGE_WEEK_CENTER:
+                        startCutoff = focus.get(Calendar.DAY_OF_WEEK) - 3;
+                        endCutoff = focus.get(Calendar.DAY_OF_WEEK) + 3;
+                        break;
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("The range style " + rangeStyle + " is not valid.");
+        }
+        if (startCutoff < Calendar.SUNDAY) {
+            startCutoff += 7;
+        }
+        if (startCutoff > Calendar.SATURDAY) {
+            startCutoff -= 7;
+        }
+        if (endCutoff < Calendar.SUNDAY) {
+            endCutoff += 7;
+        }
+        if (endCutoff > Calendar.SATURDAY) {
+            endCutoff -= 7;
+        }
+        while (start.get(Calendar.DAY_OF_WEEK) != startCutoff) {
+            start.add(Calendar.DATE, -1);
+        }
+        while (end.get(Calendar.DAY_OF_WEEK) != endCutoff) {
+            end.add(Calendar.DATE, 1);
+        }
+        return new DateIterator(start, end);
+    }
+
+    /**
+     * <p>This constructs an <code>Iterator</code> that will
+     * start and stop over a date range based on the focused
+     * date and the range style.</p>
+     *
+     * <p>For instance, passing Thursday, July 4, 2002 and a
+     * <code>RANGE_MONTH_SUNDAY</code> will return an
+     * <code>Iterator</code> that starts with Sunday, June 30,
+     * 2002 and ends with Saturday, August 3, 2002.</p>
+     * 
+     * @param focus  the date to work with, either
+     *  <code>Date</code> or <code>Calendar</code>
+     * @param rangeStyle  the style constant to use. Must be one of the range
+     * styles listed for the {@link #iterator(Calendar, int)} method.
+     * @return the date iterator
+     * @throws IllegalArgumentException if the date
+     *  is <code>null</code>
+     * @throws ClassCastException if the object type is
+     *  not a <code>Date</code> or <code>Calendar</code>
+     */
+    public static Iterator iterator(Object focus, int rangeStyle) {
+        if (focus == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        if (focus instanceof Date) {
+            return iterator((Date) focus, rangeStyle);
+        } else if (focus instanceof Calendar) {
+            return iterator((Calendar) focus, rangeStyle);
+        } else {
+            throw new ClassCastException("Could not iterate based on " + focus);
+        }
+    }
+
+    /**
+     * <p>Date iterator.</p>
+     */
+    static class DateIterator implements Iterator {
+        private final Calendar endFinal;
+        private final Calendar spot;
+        
+        DateIterator(Calendar startFinal, Calendar endFinal) {
+            super();
+            this.endFinal = endFinal;
+            spot = startFinal;
+            spot.add(Calendar.DATE, -1);
+        }
+
+        public boolean hasNext() {
+            return spot.before(endFinal);
+        }
+
+        public Object next() {
+            if (spot.equals(endFinal)) {
+                throw new NoSuchElementException();
+            }
+            spot.add(Calendar.DATE, 1);
+            return spot.clone();
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
+    
+    //------------------------------------------------------------------------- 
+    // Deprecated int constants
+    // TODO: Remove in 3.0
+    
+    /**
+     * Number of milliseconds in a standard second.
+     * 
+     * @deprecated Use MILLIS_PER_SECOND. This will be removed in Commons Lang 3.0.
+     */
+    public static final int MILLIS_IN_SECOND = 1000;
+    /**
+     * Number of milliseconds in a standard minute.
+     * 
+     * @deprecated Use MILLIS_PER_MINUTE. This will be removed in Commons Lang 3.0.
+     */
+    public static final int MILLIS_IN_MINUTE = 60 * 1000;
+    /**
+     * Number of milliseconds in a standard hour.
+     * 
+     * @deprecated Use MILLIS_PER_HOUR. This will be removed in Commons Lang 3.0.
+     */
+    public static final int MILLIS_IN_HOUR = 60 * 60 * 1000;
+    /**
+     * Number of milliseconds in a standard day.
+     * 
+     * @deprecated Use MILLIS_PER_DAY. This will be removed in Commons Lang 3.0.
+     */
+    public static final int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
+    
 }

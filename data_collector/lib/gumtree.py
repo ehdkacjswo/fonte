@@ -193,6 +193,19 @@ def gumtree_diff_token_range(no_after_src, no_before_src, addition_interval, del
 
 # Parse the file and returns in json format
 def gumtree_parse(filename, token_range=CustomInterval(-inf, inf)):
+    #with open(f'/root/workspace/tmp/{filename}', 'r', encoding='utf-8', errors='ignore') as file:
+    #    filedata = file.read()
+
+    #with open(f'/root/workspace/tmp/{filename}', 'rb') as file:
+    #    filedata = file.read().decode(encoding='utf-8', errors='ignore')
+    
+    #print(filedata)
+
+    #for ind, a in enumerate(filedata):
+    #    print(ind, a)
+
+    #print('END!!')
+
     parse_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtree parse -g custom-jdt -f JSON {filename}'
     p = subprocess.Popen(parse_cmd, shell=True, stdout=subprocess.PIPE)
     stdout, _ = p.communicate()
@@ -208,7 +221,7 @@ def gumtree_parse(filename, token_range=CustomInterval(-inf, inf)):
         with open('/root/workspace/error.txt', 'a') as file:
             file.write(f'Parse output decoding error\n')
         return None # Decoding error
-    #print(json.dumps(parse_json, indent=4))
+    print(json.dumps(parse_json, indent=4))
     token_interval_dict = {'class':CustomInterval(), 'method':CustomInterval(), 'variable':CustomInterval(), 'comment':CustomInterval()}
 
     for data in parse_json:
@@ -221,17 +234,24 @@ def gumtree_parse(filename, token_range=CustomInterval(-inf, inf)):
         elif 'isVariable' in data:
             token_interval_dict['variable'] |= CustomInterval(int(data['pos']), int(data['pos']) + int(data['length']) - 1)
     
-    with open(f'/root/workspace/tmp/{filename}', 'r', encoding='utf-8', errors='ignore') as file:
-        filedata = file.read()
+    with open(f'/root/workspace/tmp/{filename}', 'rb') as file:
+        filedata = file.read().decode(encoding='utf-8', errors='ignore')
+    
+    #for a in filedata:
+    #    print(a)
 
     token_dict = dict()
     
     for token_type, token_interval in token_interval_dict.items():
         token_interval &= token_range
         token_dict[token_type] = []
+        print(token_type)
 
         for sub_interval in token_interval:
             if sub_interval[0] != sub_interval[1]:
+                print(sub_interval[0], sub_interval[1])
+                print(int(sub_interval[0]) + 1, int(sub_interval[1]) + 1)
+                print(''.join(filedata[int(sub_interval[0]) + 1 : int(sub_interval[1]) + 1]))
                 token_dict[token_type] += [''.join(filedata[int(sub_interval[0]) + 1 : int(sub_interval[1]) + 1])]
 
     return token_dict

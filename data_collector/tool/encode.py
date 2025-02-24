@@ -100,8 +100,8 @@ def main(pid, vid):
                 new_setting = frozenset((setting_dict | {'use_stopword' : True}).items())
 
                 # Skip already visited setting
-                if new_setting in encode_dict[stage2] and new_setting in vocab_dict[stage2]:
-                    continue
+                #if new_setting in encode_dict[stage2] and new_setting in vocab_dict[stage2]:
+                #    continue
                 
                 print(new_setting)
                 encode_res, vocab = encode(stage2_data=stage2_data, pid=pid, vid=vid, use_stopword=use_stopword)

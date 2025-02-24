@@ -224,6 +224,10 @@ def gumtree_stage2(pid, vid, stage2, classify_token):
     gumtree_interval = dict()
     
     for commit_hash, commit_diff in gumtree_diff.items(): # Iterate through commits
+        print(commit_hash)
+        if commit_hash != '01928b3':
+            continue
+        
         addition_interval = dict()
         deletion_interval = dict()
 
@@ -301,8 +305,8 @@ def main(pid, vid):
         for diff_type in diff_type_list:
             setting = frozenset({'diff_type' : diff_type}.items())
 
-            if setting in res_dict[stage2]:
-                continue
+            #if setting in res_dict[stage2]:
+            #    continue
 
             if diff_type == 'git':
                 res_dict[stage2][setting] = git_stage2(pid, vid, stage2)
