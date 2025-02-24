@@ -5,6 +5,7 @@ from spiral import ronin
 from collections import Counter
 from tqdm import tqdm
 
+import copy
 sys.path.append('/root/workspace/data_collector/lib/')
 from encoder import sum_encode
 
@@ -115,7 +116,7 @@ def main(pid, vid):
     else:
         res_dict = dict()"""
     
-    res_dict = dict()
+    """res_dict = dict()
 
     for stage2, sub_dict in encode_dict.items():
         res_dict[stage2] = dict()
@@ -126,7 +127,28 @@ def main(pid, vid):
 
             for adddel, feature_data in feature_dict.items():
                 new_setting = frozenset((setting_dict | {'adddel' : adddel}).items())
-                res_dict[stage2][new_setting] = feature_data
+                res_dict[stage2][new_setting] = feature_data"""
+    
+    with open(os.path.join(diff_data_dir, 'feature.pkl'), 'rb') as file:
+        res_dict = pickle.load(file)
+    
+    for stage2, sub_dict in res_dict:
+        for setting, feature_data in sub_dict.items():
+            setting_dict = dict(setting)
+
+            if setting_dict['diff_type'] != 'gumtree_class':
+                continue
+
+            new_setting = frozenset((setting_dict | {'diff_type' : 'gumtree_identifier'}).items())
+            new_feautre = copy.deepcopy(feature_data)
+
+            ind = 3 if setting_dict['adddel'] == 'all_sep' else 2
+            sub_feature = []
+            for i in range(ind, len(new_feature)):
+                sub_feature = sum_encode(sub_feature, new_feature[i])
+            
+            new_feature = new_feature[0:i] + [sub_feature]
+            res_dict[new_setting]
     
     with open(os.path.join(diff_data_dir, 'feature.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)

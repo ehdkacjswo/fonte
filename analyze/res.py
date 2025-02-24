@@ -84,7 +84,10 @@ def check_filtering():
 
     # Iterate through projects
     for _, row in GT.iterrows():
-        pid, vid, BIC = row.pid, row.vid, row.commit
+        #pid, vid, BIC = row.pid, row.vid, row.commit
+        pid = 'Closure'
+        vid = '2'
+        BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
 
         # Ignore Closure-131b
         if pid == 'Closure' and vid == '131':
@@ -129,6 +132,10 @@ def check_filtering():
         removed_token_set = git_token_set - gumtree_token_set
         remain_token_set = git_token_set & gumtree_token_set
         new_token_set = gumtree_token_set - git_token_set
+
+        if len(new_token_set):
+            print(pid, vid)
+            print(new_token_set)
 
         # Tokens of query removed/remaining/new
         removed_query = [x for x in bug_query if x[0] in removed_token_set]
@@ -178,6 +185,8 @@ def check_filtering():
                     else:
                         git_remain_else += git.get(word, 0) / commit_num
                         gumtree_remain_else += gumtree.get(word, 0) / commit_num
+        
+        break
 
 # metric_dict = {project : {metric_key : metric_value}}
 # Convert to {metric_key : {project : metric_value}}
@@ -334,42 +343,73 @@ def check_freq(pid, vid, stage2, setting):
     for ind, feature_type in feature_type_dict.items():
         print('Feature type) ', feature_type)
         
-        word_dict = {word : {'freq' : freq, 'BIC' : 0, 'other' : 0, 'num_doc' : 0} for (word, freq) in bug_query}
-        mean_len = 0
+        word_dict = {word : {'freq' : freq, 'BIC' : 0, 'all' : 0, 'num_doc' : 0} for (word, freq) in bug_query}
+        sum_len = 0
 
         for commit, feature_list in commit_dict.items():
-            feature = feature_list[ind]
+            vec = []
+            for ind in feature_type_dict.keys():
+                vec = sum_encode(vec, feature_list[ind])
 
-            if commit == BIC:
-                doc_len = 0
+            doc_len = 0
 
-                for (word, freq) in feature:
-                    doc_len += freq
-                    if word in word_dict:
+            for (word, freq) in vec:
+                doc_len += freq
+                if word in word_dict:
+                    if commit == BIC:
                         word_dict[word]['BIC'] = freq
-                        word_dict[word]['num_doc'] += 1
+
+                    word_dict[word]['num_doc'] += 1
+                    word_dict[word]['all'] += freq
                 
-                mean_len += doc_len / (num_other + 1)
+            if commit == BIC:
                 print('BIC document length) ', doc_len)
             
-            else:
-                doc_len = 0
-
-                for (word, freq) in feature:
-                    doc_len += freq
-                    if word in word_dict:
-                        word_dict[word]['other'] += freq / num_other
-                        word_dict[word]['num_doc'] += 1
-                
-                mean_len += doc_len / (num_other + 1)
-    
-        print('Mean document length) ', mean_len)
+            sum_len += doc_len
         
+        print('Mean document length) ', sum_len / (num_other + 1))
+            
         word_dict = dict(filter(lambda x: x[1]['num_doc'] > 0 and x[1]['num_doc'] * 2 < num_other + 1, word_dict.items()))
         #word_dict = dict(filter(lambda x: x[1]['num_doc'] > 0, word_dict.items()))
+        word_dict = {word : data | {'all' : data['all'] / data['num_doc']} for word, data in word_dict.items()}
         
         for word, sub_dict in sorted(word_dict.items(), key=lambda x: x[1]['freq'], reverse=True):
             print(f'{vocab[word]}) {sub_dict}')
+    
+    word_dict = {word : {'freq' : freq, 'BIC' : 0, 'all' : 0, 'num_doc' : 0} for (word, freq) in bug_query}
+    sum_len = 0
+
+    for commit, feature_list in commit_dict.items():
+        vec = []
+        for ind in feature_type_dict.keys():
+            vec = sum_encode(vec, feature_list[ind])
+
+        doc_len = 0
+
+        for (word, freq) in vec:
+            doc_len += freq
+            if word in word_dict:
+                if commit == BIC:
+                    word_dict[word]['BIC'] = freq
+
+                word_dict[word]['num_doc'] += 1
+                word_dict[word]['all'] += freq
+             
+        if commit == BIC:
+            print('BIC document length) ', doc_len)
+        
+        sum_len += doc_len
+    
+    print('Mean document length) ', sum_len / (num_other + 1))
+        
+    word_dict = dict(filter(lambda x: x[1]['num_doc'] > 0 and x[1]['num_doc'] * 2 < num_other + 1, word_dict.items()))
+    #word_dict = dict(filter(lambda x: x[1]['num_doc'] > 0, word_dict.items()))
+    word_dict = {word : data | {'all' : data['all'] / data['num_doc']} for word, data in word_dict.items()}
+    
+    for word, sub_dict in sorted(word_dict.items(), key=lambda x: x[1]['freq'], reverse=True):
+        print(f'{vocab[word]}) {sub_dict}')
+
+        
 
 # Load the feature of BIC (Commit message + Related files)
 def load_BIC_feature(pid, vid, stage2, setting):
@@ -406,7 +446,8 @@ def load_BIC_feature(pid, vid, stage2, setting):
     with open(os.path.join(f'/root/workspace/data/Defects4J/diff/{pid}-{vid}b', 'stage2.pkl'), 'rb') as file:
         stage2_dict = pickle.load(file)
     
-    for src_path, sub_dict in stage2_dict[stage2][setting][BIC]['addition'].items():
+    print(stage2_dict[stage2][setting][BIC])
+    """for src_path, sub_dict in stage2_dict[stage2][setting][BIC]['addition'].items():
         print('Addition', src_path)
         #if len(sub_dict) == 0:
         #    continue
@@ -441,7 +482,7 @@ def load_BIC_feature(pid, vid, stage2, setting):
             savepath = os.path.join('/root/workspace/analyze/tmp', 'Deletion_' + src_path.replace('/', '_'))
 
             with open(savepath, 'w') as file:
-                file.write(code_txt)
+                file.write(code_txt)"""
 
 
 
@@ -477,17 +518,22 @@ if __name__ == "__main__":
     #compare_settings(org_method='bug2commit', new_method='bug2commit', org_setting=org_setting, new_setting=new_setting)
 
     # Check token frequency of setting
-    """setting = frozenset({'use_stopword':True, 'diff_type':'file', 'adddel':'all-uni'}.items())
-    check_freq(pid='Closure', vid='17', stage2='precise', setting=setting)
+    #setting = frozenset({'use_stopword':True, 'diff_type':'git', 'adddel':'all-uni'}.items())
+    #check_freq(pid='Closure', vid='115', stage2='precise', setting=setting)
 
-    setting = frozenset({'use_stopword':True, 'diff_type':'git', 'adddel':'all-uni'}.items())
-    check_freq(pid='Closure', vid='17', stage2='precise', setting=setting)"""
+    #setting = frozenset({'use_stopword':True, 'diff_type':'gumtree_class', 'adddel':'all-uni'}.items())
+    #check_freq(pid='Closure', vid='115', stage2='precise', setting=setting)
 
     # Load the feature of BIC (Commit message + Related files)
-    setting = frozenset({'diff_type':'file'}.items())
-    load_BIC_feature(pid='Closure', vid='17', stage2='precise', setting=setting)
+    #setting = frozenset({'diff_type':'git'}.items())
+    #load_BIC_feature(pid='Closure', vid='2', stage2='precise', setting=setting)
 
-    diff_interval(pid='Closure', vid='17', stage2='precise', diff_type='git')
+    #setting = frozenset({'diff_type':'gumtree_class'}.items())
+    #load_BIC_feature(pid='Closure', vid='2', stage2='precise', setting=setting)
+
+    check_filtering()
+
+    #diff_interval(pid='Closure', vid='115', stage2='precise', diff_type='git')
 
     # Fonte
     #org_setting = frozenset({'stage2':'precise'}.items())

@@ -259,6 +259,10 @@ class Diff:
             
 def main(pid, vid):
     log(f'Working on {pid}_{vid}b'.format(pid, vid))
+    savedir = f'/root/workspace/data/Defects4J/diff/{pid}-{vid}b'
+
+    if os.path.isdir(savedir):
+        return
     
     # Checkout Defects4J project
     p = subprocess.Popen(f'sh /root/workspace/lib/checkout.sh {pid} {vid}', \
