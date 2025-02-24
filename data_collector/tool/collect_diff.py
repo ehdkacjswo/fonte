@@ -185,8 +185,8 @@ class Diff:
                 if after_src_path == '/dev/null': # No after file
                     no_after_src = True
                 else: # Copy after file
-                    p = subprocess.Popen(f'git show {commit_hash}:{after_src_path}', \
-                        shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    p = subprocess.Popen(['git', 'show', f'{commit_hash}:{after_src_path}'], \
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     after_code, err_txt = p.communicate()
 
                     # Error raised while copying file
@@ -209,8 +209,8 @@ class Diff:
                 if before_src_path == '/dev/null': # No before file
                     no_before_src = True
                 else: # Copy before file
-                    p = subprocess.Popen(f'git show {commit_hash}~1:{before_src_path}', \
-                        shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    p = subprocess.Popen(['git', 'show', f'{commit_hash}~1:{before_src_path}'], \
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     before_code, err_txt = p.communicate()
                     
                     # Error raised while copying file
@@ -261,12 +261,12 @@ def main(pid, vid):
     log(f'Working on {pid}_{vid}b'.format(pid, vid))
     savedir = f'/root/workspace/data/Defects4J/diff/{pid}-{vid}b'
 
-    if os.path.isdir(savedir):
-        return
+    #if os.path.isdir(savedir):
+    #    return
     
     # Checkout Defects4J project
-    p = subprocess.Popen(f'sh /root/workspace/lib/checkout.sh {pid} {vid}', \
-        shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(['sh', '/root/workspace/lib/checkout.sh', pid, vid], \
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out_txt, err_txt = p.communicate()
 
     if p.returncode != 0:
@@ -288,8 +288,8 @@ def main(pid, vid):
     # For each change info, run git log and parse the result
     for src_path, ranges in diff_interval.items():
         for begin_line, end_line in ranges:
-            cmd = COMMIT_LOG_CMD.format(begin_line, end_line, src_path)
-            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = subprocess.Popen(['git', 'log', '-M', '-C', '-L', f'{begin_line},{end_line}:{src_path}'], \
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout, stderr = p.communicate()
 
             if p.returncode != 0:

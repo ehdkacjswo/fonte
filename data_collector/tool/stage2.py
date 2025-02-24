@@ -65,7 +65,8 @@ def file_stage2(pid, vid, stage2):
 
             # Consider existing file with acutal addition happened
             if after_src_path != '/dev/null' and len(src_diff['addition']) > 0:
-                p = subprocess.Popen(f'git show {commit_hash}:{after_src_path}', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                p = subprocess.Popen(['git', 'show', f'{commit_hash}:{after_src_path}'], \
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 code_txt, err_txt = p.communicate()
 
                 # Error raised while copying file
@@ -84,7 +85,8 @@ def file_stage2(pid, vid, stage2):
             
             # Consider existing file with acutal deletion happened
             if before_src_path != '/dev/null' and len(src_diff['deletion']) > 0:
-                p = subprocess.Popen(f'git show {commit_hash}~1:{before_src_path}', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                p = subprocess.Popen(['git', 'show', f'{commit_hash}~1:{before_src_path}'], \
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 code_txt, err_txt = p.communicate()
 
                 # Error raised while copying file
@@ -169,9 +171,9 @@ def gumtree_stage2_commit(commit_hash, commit_interval, modify, classify_token):
             continue
 
         if modify == 'addition':
-            p = subprocess.Popen(f'git show {commit_hash}:{src_path}', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = subprocess.Popen(['git', 'show', f'{commit_hash}:{src_path}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         elif modify == 'deletion':
-            p = subprocess.Popen(f'git show {commit_hash}~1:{src_path}', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = subprocess.Popen(['git', 'show', f'{commit_hash}~1:{src_path}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         code_txt, err_txt = p.communicate()
 
@@ -261,8 +263,8 @@ def main(pid, vid):
     log(f'Working on {pid}_{vid}b')
 
     # Checkout Defects4J project
-    p = subprocess.Popen(f'sh /root/workspace/lib/checkout.sh {pid} {vid}', \
-        shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(['sh', '/root/workspace/lib/checkout.sh', pid, vid], \
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out_txt, err_txt = p.communicate()
 
     if p.returncode != 0:

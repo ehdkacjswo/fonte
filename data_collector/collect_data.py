@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
-        #pid, vid = 'Closure', '10'
+        pid, vid = 'Gson', '10'
         
         if pid == 'Closure' and vid == '131':
             continue
@@ -22,4 +22,4 @@ if __name__ == "__main__":
         #vote.main(pid, vid)
         #bisection.main(pid, vid)
 
-        #break
+        break

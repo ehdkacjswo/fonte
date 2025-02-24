@@ -1,4 +1,4 @@
-import os, json, argparse, pickle, sys, itertools, subprocess, logging
+import os, json, argparse, pickle, sys, itertools, logging
 import pandas as pd
 
 BIC_GT_DIR = "/root/workspace/data/Defects4J/BIC_dataset"
