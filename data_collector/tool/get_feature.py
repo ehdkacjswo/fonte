@@ -17,6 +17,18 @@ DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 encode_type_dict = {'file' : ['file'], 'git' : ['diff'], 'gumtree_base' : ['diff'], 'gumtree_class' : ['class', 'method', 'variable', 'comment']}
 adddel_list = ['add', 'del', 'all-uni', 'all-sep']
 
+# Convert line level range to token level range
+def line_to_token_interval(lines, line_range):
+    token_range = CustomInterval()
+    token_cnt = 0
+    
+    # Add range for line in given range
+    for line_cnt, line in enumerate(lines):
+        if line_cnt in line_range:
+            token_range |= CustomInterval(token_cnt, token_cnt + len(line) - 1)
+        token_cnt += len(line)
+    return token_range
+
 def log(txt, out_txt=None, err_txt=None):
     with open('/root/workspace/data_collector/log/get_feature.log', 'a') as file:
         file.write(txt + '\n')
@@ -103,8 +115,11 @@ def main(pid, vid):
     diff_data_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
     os.makedirs(diff_data_dir, exist_ok=True)
 
-    with open(os.path.join(diff_data_dir, 'encode.pkl'), 'rb') as file:
-        encode_dict = pickle.load(file)
+    with open(os.path.join(savedir, 'track_intvl.pkl'), 'rb') as file:
+        track_intvl = pickle.load(file)
+    
+    with open(os.path.join(savedir, 'gumtree_intvl.pkl'), 'rb') as file:
+        gumtree_intvl = pickle.load(file)
     
     # Load the previous result if possible
     feature_save_path = os.path.join(diff_data_dir, f'feature.pkl')
