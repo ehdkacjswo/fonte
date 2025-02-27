@@ -36,8 +36,22 @@ for dir in "$BASE_DIR"/*/; do
   sh /root/workspace/lib/checkout.sh $project $version
 
   # Collect relative diff
+
+  echo "Working on ${project}_${version}b" >> /root/workspace/precise_style_change/log.txt
+  start=$(date +%s%N)
   sh /root/workspace/precise_style_change/tools/detect_style_change.sh $project $version $tool $use_Rewrite
   sh /root/workspace/precise_style_change/tools/combine_style_change_results.sh $project $version $tool $use_Rewrite
+  end=$(date +%s%N)
+
+  elapsed=$(( (end - start) / 1000000 )) # Convert to milliseconds
+
+  # Convert to h:m:s:ms format
+  hours=$(( elapsed / 3600000 ))
+  minutes=$(( (elapsed % 3600000) / 60000 ))
+  seconds=$(( (elapsed % 60000) / 1000 ))
+  milliseconds=$(( elapsed % 1000 ))
+
+  echo "Elapsed Time: ${hours}h ${minutes}m ${seconds}s ${milliseconds}ms" >> /root/workspace/precise_style_change/log.txt
 
   # Clean up the tmp directory
   #cd "$original_cwd"
