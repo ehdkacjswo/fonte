@@ -4,6 +4,8 @@ from tqdm import tqdm
 
 sys.path.append('/root/workspace/data_collector/lib/')
 from encoder import *
+from gumtree import CustomInterval
+from utils import *
 
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core'
@@ -63,17 +65,73 @@ def encode(stage2_data, pid, vid, use_stopword):
     
     return res_dict, encoder.vocab
 
+# Encode the data 
+# Add file
+def pre_encode(intvl_dict, encoder):
+    file_dict = dict()
+
+    for setting, setting_dict in intvl_dict.items():
+        tracker = dict(setting)['tracker']
+        file_dict.setdefault(tracker, dict())
+
+        for commit, commit_dict in setting_dict.items():
+            file_dict[tracker].setdefault(commit, dict())
+
+            for path_tup, diff_dict in commit_dict.items():
+                file_dict[tracker][commit].setdefault(path_tup, dict())
+
+                diff_dict['encoded_path'] = (encoder.encode(path_tup[0]), encoder.encode(path_tup[1]))
+                file_dict[tracker][commit][path_tup].setdefault('encoded_path', diff_dict['encoded_path'])
+
+                # Get the corresponding code text (Possibly None)
+                after_code = get_src_from_commit(commit, path_tup[1])
+                before_code = get_src_from_commit(commit + '~1', path_tup[0])
+
+                # Get the tokens in the list
+                for diff_type, char_intvl in diff_dict['addition'].items():
+                    tokens = get_tokens_intvl(after_code, char_intvl)
+                    if tokens is None:
+                        log(f'[ERROR] Failed to get file {commit}:{path_tup[1]}')
+                        # How to handle such situations?
+                    else:
+                        diff_dict['addition'][diff_type] = [encoder.encode(token) for token in tokens]
+                
+                for diff_type, char_intvl in diff_dict['deletion'].items():
+                    tokens = get_tokens_intvl(before_code, char_intvl)
+                    if tokens is None:
+                        log(f'[ERROR] Failed to get file {commit}~1:{path_tup[0]}')
+                    else:
+                        diff_dict['deletion'][diff_type] = [encoder.encode(token) for token in tokens]
+    
+
+    
 def main(pid, vid):
     log(f'Working on {pid}_{vid}b')
 
+    # Checkout Defects4J project
+    p = subprocess.Popen(['sh', '/root/workspace/lib/checkout.sh', pid, vid], \
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out_txt, err_txt = p.communicate()
+
+    if p.returncode != 0:
+        log('[ERROR] Checkout failed', out_txt, err_txt)
+        return
+    
+    # Change working directory to target Defects4J project
+    try:
+        os.chdir(f'/tmp/{pid}-{vid}b/')
+    except:
+        log('[ERROR] Moving directory failed')
+        return
+
     diff_data_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
     os.makedirs(diff_data_dir, exist_ok=True)
-
-    with open(os.path.join(diff_data_dir, 'stage2.pkl'), 'rb') as file:
-        stage2_dict = pickle.load(file)
+    
+    with open(os.path.join(diff_data_dir, 'total_intvl.pkl'), 'rb') as file:
+        intvl_dict = pickle.load(file)
     
     # Load the previous result if possible
-    encode_save_path = os.path.join(diff_data_dir, f'encode.pkl')
+    """encode_save_path = os.path.join(diff_data_dir, f'encode.pkl')
     vocab_save_path = os.path.join(diff_data_dir, f'vocab.pkl')
 
     if os.path.isfile(encode_save_path) and os.path.isfile(vocab_save_path):
@@ -84,32 +142,13 @@ def main(pid, vid):
     
     else:
         encode_dict = dict()
-        vocab_dict = dict()
+        vocab_dict = dict()"""
 
     # Encode diff for every settings
-    use_stopword_list = [True]
+    encoder = Encoder()
+    pre_encode(intvl_dict, encoder)
 
-    for stage2, sub_dict in stage2_dict.items():
-        encode_dict[stage2] = encode_dict.get(stage2, dict())
-        vocab_dict[stage2] = vocab_dict.get(stage2, dict())
-
-        for setting, stage2_data in sub_dict.items():
-            setting_dict = dict(setting)
-
-            for use_stopword in use_stopword_list:
-                new_setting = frozenset((setting_dict | {'use_stopword' : True}).items())
-
-                # Skip already visited setting
-                #if new_setting in encode_dict[stage2] and new_setting in vocab_dict[stage2]:
-                #    continue
-                
-                print(new_setting)
-                encode_res, vocab = encode(stage2_data=stage2_data, pid=pid, vid=vid, use_stopword=use_stopword)
-
-                encode_dict[stage2][new_setting] = encode_res
-                vocab_dict[stage2][new_setting] = vocab
-
-    with open(encode_save_path, 'wb') as file:
+    """with open(encode_save_path, 'wb') as file:
         pickle.dump(encode_dict, file)
     with open(vocab_save_path, 'wb') as file:
-        pickle.dump(vocab_dict, file)
+        pickle.dump(vocab_dict, file)"""

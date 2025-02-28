@@ -69,6 +69,8 @@ def main(pid, vid):
         track_intvl = pickle.load(file)
 
     # Initialize
+    # On track intvl, addition/deletion always exists
+    # addition/deletion is added only when actual line diff is not empty
     res_dict = dict()
 
     for setting, tracker_dict in track_intvl.items():
@@ -91,6 +93,7 @@ def main(pid, vid):
                                 res_dict[setting][commit][path_tup][adddel] = dict()
     
     # Parse with GumTree
+    # Add data for empty ca
     for setting, tracker_dict in res_dict.items():
         tracker = dict(setting)['tracker']
         start_time = time.time()
@@ -148,9 +151,9 @@ def main(pid, vid):
                 if add_intvl is None or del_intvl is None:
                     log(f'[ERROR] GumTree token interval retrieval failed')
                 else:
-                    if not no_after_src:
+                    if not after_src_path:
                         path_dict['addition']['char_diff'] = add_intvl
-                    if not no_before_src:
+                    if not before_src_path:
                         path_dict['deletion']['char_diff'] = del_intvl
             
         end_time = time.time()

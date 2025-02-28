@@ -1,4 +1,4 @@
-import os, sys, json, argparse, pickle, itertools, subprocess
+import os, sys, json, argparse, pickle, itertools, subprocess, time
 import numpy as np
 import pandas as pd
 from spiral import ronin
@@ -21,8 +21,15 @@ doc_level_list = ['commit'] # Level of document unit (Per commit, Per src, Per m
 #doc_level_list = ['commit', 'src', 'method']
 # Currently method only has line range (May add data later (method name, signature available))
 
+def time_to_str(start_time, end_time):
+    hour, remainder = divmod(int(end_time - start_time), 3600)
+    minute, second = divmod(remainder, 60)
+    ms = int((end_time - start_time) * 1000) % 1000
+
+    return f'{hour}h {minute}m {second}s {ms}ms'
+
 def log(txt, out_txt=None, err_txt=None):
-    with open('/root/workspace/data_collector/log/get_feature.log', 'a') as file:
+    with open('/root/workspace/data_collector/log/gen_intvl.log', 'a') as file:
         file.write(txt + '\n')
 
         if out_txt is not None:
@@ -32,7 +39,7 @@ def log(txt, out_txt=None, err_txt=None):
             file.write('[ERROR] ERR\n' + err_txt.decode(encoding='utf-8', errors='ignore') + '\n')
 
 # Convert line level range to character level range
-def line_to_char_intvl(commit, src_path, line_intvl)
+def line_to_char_intvl(commit, src_path, line_intvl):
     
     # Empty character interval for empty line interval
     if line_intvl.is_empty():
@@ -59,17 +66,42 @@ def line_to_char_intvl(commit, src_path, line_intvl)
 
         if line_cnt in line_intvl:
             char_intvl |= CustomInterval(char_cnt, next_char_cnt - 1)
+            #print(line_cnt, ''.join(code_txt[char_cnt:next_char_cnt]))
         
         char_cnt = next_char_cnt
 
     return char_intvl
 
+"""# Convert line level range to character level range
+def aaa(commit, src_path, char_intvl):
+    
+    # Empty character interval for empty line interval
+    if char_intvl.is_empty():
+        return
+    
+    # Get the target file text
+    p = subprocess.Popen(['git', 'show', f'{commit}:{src_path}'], \
+    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    code_txt, err_txt = p.communicate()
+
+    # Error raised while copying file
+    if p.returncode != 0:
+        log(f'[ERROR] Failed to get file {commit}:{src_path}', code_txt, err_txt)
+        return None
+    
+    code_txt = code_txt.decode(encoding='utf-8', errors='ignore')
+    
+    # Add range for line in given range
+    for intvl in char_intvl:
+        print(code_txt[int(intvl[0]) + 1 : int(intvl[1]) + 1])
+"""
 
 # data : message, src_path, diff
-def get_intvl(track_intvl, gumtree_intvl, diff_tool, diff_type, doc_level):
+# Works for "git" tracker, May not be the same for others
+def gen_intvl(track_intvl, gumtree_intvl, diff_tool, diff_type, doc_level):
     ret_dict = dict()
 
-    # Get line range diff (Maybe different tracker has different level)
+    # Get line range diff 
     for src_path, src_dict in track_intvl.items():
         for method_info, method_dict in src_dict.items():
             for commit, commit_dict in method_dict.items():
@@ -86,18 +118,31 @@ def get_intvl(track_intvl, gumtree_intvl, diff_tool, diff_type, doc_level):
     #if doc_level == 'commit':
     for commit, commit_dict in ret_dict.items():
         for path_tup, intvl_dict in commit_dict.items():
-            intvl_dict['addition'] = line_to_char_intvl(commit, path_tup[1], intvl_dict['addition'])
-            intvl_dict['deletion'] = line_to_char_intvl(commit + '~1', path_tup[0], intvl_dict['deletion'])
+            add_intvl = line_to_char_intvl(commit, path_tup[1], intvl_dict['addition'])
+            del_intvl = line_to_char_intvl(commit + '~1', path_tup[0], intvl_dict['deletion'])
     
+            # Apply GumTree differencing
             if diff_tool == 'gumtree':
-                intvl_dict['addition'] |= gumtree_intvl[commit][path_tup].get('addition', {}).get('char_diff', CustomInterval())
-                intvl_dict['deletion'] |= gumtree_intvl[commit][path_tup].get('deletion', {}).get('char_diff', CustomInterval())
+                add_intvl |= gumtree_intvl[commit][path_tup].get('addition', {}).get('char_diff', CustomInterval())
+                del_intvl |= gumtree_intvl[commit][path_tup].get('deletion', {}).get('char_diff', CustomInterval())
             
+            # Get identifiers
             if diff_type == 'id':
-                intvl_dict['addition'] |= gumtree_intvl[commit][path_tup].get('addition', {}).get('char_id', CustomInterval())
-                intvl_dict['deletion'] |= gumtree_intvl[commit][path_tup].get('deletion', {}).get('char_id', CustomInterval())
+                id_add_intvl = gumtree_intvl[commit][path_tup].get('addition', {}).get('char_id', {'class':CustomInterval(), 'method':CustomInterval(), 'variable':CustomInterval(), 'comment':CustomInterval()})
+                id_del_intvl = gumtree_intvl[commit][path_tup].get('deletion', {}).get('char_id', {'class':CustomInterval(), 'method':CustomInterval(), 'variable':CustomInterval(), 'comment':CustomInterval()})
+
+                intvl_dict['addition'] = dict()
+                intvl_dict['deletion'] = dict()
+
+                for id_type in id_add_intvl.keys():
+                    intvl_dict['addition'][id_type] = add_intvl & id_add_intvl[id_type]
+                    intvl_dict['deletion'][id_type] = del_intvl & id_del_intvl[id_type]
+            
+            else:
+                intvl_dict['addition'] = {'diff' : add_intvl}
+                intvl_dict['deletion'] = {'diff' : del_intvl}
         
-    return res_dict
+    return ret_dict
 
 def main(pid, vid):
     log(f'Working on project {pid}-{vid}b')
@@ -122,15 +167,17 @@ def main(pid, vid):
     diff_data_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
     os.makedirs(diff_data_dir, exist_ok=True)
 
-    with open(os.path.join(savedir, 'track_intvl.pkl'), 'rb') as file:
+    with open(os.path.join(diff_data_dir, 'track_intvl.pkl'), 'rb') as file:
         track_intvl_dict = pickle.load(file)
     
-    with open(os.path.join(savedir, 'gumtree_intvl.pkl'), 'rb') as file:
-        gumtree_intvl = pickle.load(file)
+    with open(os.path.join(diff_data_dir, 'gumtree_intvl.pkl'), 'rb') as file:
+        gumtree_intvl_dict = pickle.load(file)
     
+    # Gather interval data
     res_dict = dict()
     param_list = list(itertools.product(diff_tool_list, diff_type_list, doc_level_list))
 
+    start_time = time.time()
     for tracker_setting, track_intvl in track_intvl_dict.items():
         setting_dict = dict(tracker_setting)
         tracker = setting_dict['tracker']
@@ -139,50 +186,9 @@ def main(pid, vid):
             res_dict[frozenset((setting_dict | \
                 {'diff_tool' : diff_tool, 'diff_type' : diff_type, 'doc_level' : doc_level}).items())] = \
                 gen_intvl(track_intvl, gumtree_intvl_dict[tracker_setting], diff_tool, diff_type, doc_level)
-
-    # Load the previous result if possible
-    feature_save_path = os.path.join(diff_data_dir, f'feature.pkl')
-
-    """if os.path.isfile(feature_save_path):
-        with open(feature_save_path, 'rb') as file:
-            res_dict = pickle.load(file)
     
-    else:
-        res_dict = dict()"""
-    
-    """res_dict = dict()
+    end_time = time.time()
+    log(f'({tracker}) : {time_to_str(start_time, end_time)}')
 
-    for stage2, sub_dict in encode_dict.items():
-        res_dict[stage2] = dict()
-
-        for setting, encode_data in sub_dict.items():
-            setting_dict = dict(setting)
-            feature_dict = get_feature(encode_data=encode_data, setting_dict=setting_dict)
-
-            for adddel, feature_data in feature_dict.items():
-                new_setting = frozenset((setting_dict | {'adddel' : adddel}).items())
-                res_dict[stage2][new_setting] = feature_data"""
-    
-    with open(os.path.join(diff_data_dir, 'feature.pkl'), 'rb') as file:
-        res_dict = pickle.load(file)
-    
-    for stage2, sub_dict in res_dict:
-        for setting, feature_data in sub_dict.items():
-            setting_dict = dict(setting)
-
-            if setting_dict['diff_type'] != 'gumtree_class':
-                continue
-
-            new_setting = frozenset((setting_dict | {'diff_type' : 'gumtree_identifier'}).items())
-            new_feautre = copy.deepcopy(feature_data)
-
-            ind = 3 if setting_dict['adddel'] == 'all_sep' else 2
-            sub_feature = []
-            for i in range(ind, len(new_feature)):
-                sub_feature = sum_encode(sub_feature, new_feature[i])
-            
-            new_feature = new_feature[0:i] + [sub_feature]
-            res_dict[new_setting]
-    
-    with open(os.path.join(diff_data_dir, 'feature.pkl'), 'wb') as file:
+    with open(os.path.join(diff_data_dir, 'total_intvl.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)

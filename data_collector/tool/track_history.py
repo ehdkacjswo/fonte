@@ -40,7 +40,7 @@ def log(txt, out_txt=None, err_txt=None):
 
 # Get line range of suspicious methods
 # Return = {src_path : set(line_start, line_end)}
-# Possible info = 'class_file',
+# Contains data for every addition/deletion + method_track/line_diff even if they are empty (+ No file)
 def get_suspicious_methods(pid, vid, tool='git'):
     commit_path = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b', tool, 'commits.pkl')
     com_df = pd.read_pickle(commit_path)
