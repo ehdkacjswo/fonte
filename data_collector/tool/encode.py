@@ -11,16 +11,6 @@ DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core'
 BASE_DATA_DIR = '/root/workspace/data/Defects4J/baseline'
 
-def log(txt, out_txt=None, err_txt=None):
-    with open('/root/workspace/data_collector/log/encode.log', 'a') as file:
-        file.write(txt + '\n')
-
-        if out_txt is not None:
-            file.write('[ERROR] OUT\n' + out_txt.decode(encoding='utf-8', errors='ignore') + '\n')
-        
-        if err_txt is not None:
-            file.write('[ERROR] ERR\n' + err_txt.decode(encoding='utf-8', errors='ignore') + '\n')
-
 # Encode the raw diff data
 # skip_stage_2 = Excluding style change diff, with_Rewrite = , use_stopword
 # Encoded data : {commit_hash : [addition_list, deletion_list, msg_encode]}
@@ -68,18 +58,9 @@ def encode(stage2_data, pid, vid, use_stopword):
 # Encode the data 
 # Add file
 def pre_encode(intvl_dict, encoder):
-    file_dict = dict()
-
     for setting, setting_dict in intvl_dict.items():
-        tracker = dict(setting)['tracker']
-        file_dict.setdefault(tracker, dict())
-
         for commit, commit_dict in setting_dict.items():
-            file_dict[tracker].setdefault(commit, dict())
-
             for path_tup, diff_dict in commit_dict.items():
-                file_dict[tracker][commit].setdefault(path_tup, dict())
-
                 diff_dict['encoded_path'] = (encoder.encode(path_tup[0]), encoder.encode(path_tup[1]))
                 file_dict[tracker][commit][path_tup].setdefault('encoded_path', diff_dict['encoded_path'])
 
@@ -91,7 +72,7 @@ def pre_encode(intvl_dict, encoder):
                 for diff_type, char_intvl in diff_dict['addition'].items():
                     tokens = get_tokens_intvl(after_code, char_intvl)
                     if tokens is None:
-                        log(f'[ERROR] Failed to get file {commit}:{path_tup[1]}')
+                        log('encode', f'[ERROR] Failed to get file {commit}:{path_tup[1]}')
                         # How to handle such situations?
                     else:
                         diff_dict['addition'][diff_type] = [encoder.encode(token) for token in tokens]
@@ -99,14 +80,14 @@ def pre_encode(intvl_dict, encoder):
                 for diff_type, char_intvl in diff_dict['deletion'].items():
                     tokens = get_tokens_intvl(before_code, char_intvl)
                     if tokens is None:
-                        log(f'[ERROR] Failed to get file {commit}~1:{path_tup[0]}')
+                        log('encode', f'[ERROR] Failed to get file {commit}~1:{path_tup[0]}')
                     else:
                         diff_dict['deletion'][diff_type] = [encoder.encode(token) for token in tokens]
     
 
     
 def main(pid, vid):
-    log(f'Working on {pid}_{vid}b')
+    log('encode', f'Working on {pid}_{vid}b')
 
     # Checkout Defects4J project
     p = subprocess.Popen(['sh', '/root/workspace/lib/checkout.sh', pid, vid], \
@@ -114,14 +95,14 @@ def main(pid, vid):
     out_txt, err_txt = p.communicate()
 
     if p.returncode != 0:
-        log('[ERROR] Checkout failed', out_txt, err_txt)
+        log('encode', '[ERROR] Checkout failed', out_txt, err_txt)
         return
     
     # Change working directory to target Defects4J project
     try:
         os.chdir(f'/tmp/{pid}-{vid}b/')
     except:
-        log('[ERROR] Moving directory failed')
+        log('encode', '[ERROR] Moving directory failed')
         return
 
     diff_data_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')

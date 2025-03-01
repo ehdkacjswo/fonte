@@ -11,17 +11,17 @@ if __name__ == "__main__":
 
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
-        pid, vid = 'Cli', '10'
+        #pid, vid = 'Cli', '10'
         
         #if pid == 'Lang' and vid == '21':
         #    continue
 
         #track_history.main(pid, vid)
         #parse_gumtree.main(pid, vid)
-        #gen_intvl.main(pid, vid)
-        encode.main(pid, vid)
+        gen_intvl.main(pid, vid)
+        #encode.main(pid, vid)
         #get_feature.main(pid, vid)    
         #vote.main(pid, vid)
         #bisection.main(pid, vid)
 
-        break
+        #break
