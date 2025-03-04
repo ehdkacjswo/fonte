@@ -104,25 +104,3 @@ def get_src_from_commit(commit, src_path):
         return None
     
     return code_txt.decode(encoding='utf-8', errors='ignore')
-
-# Code txt could be possibly "None" (Failed to get code data)
-def get_tokens_intvl(code_txt, intvl):
-    
-    # Convert index from interval to integer
-    def convert_ind(ind):
-        if ind == -inf:
-            return 0
-        if ind == inf:
-            return len(code_txt)
-        
-        return int(ind) + 1
-
-    # When interval is empty, it doesn't matter whether code_txt is None
-    if intvl.is_empty():
-        return []
-    
-    # When interval is not empty, code_txt must not be None
-    if code_txt is None:
-        return None
-
-    return [''.join(code_txt[convert_ind(sub_intvl[0]) : convert_ind(sub_intvl[1])]) for sub_intvl in intvl]

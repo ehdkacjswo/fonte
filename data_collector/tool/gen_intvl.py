@@ -21,6 +21,7 @@ doc_level_list = ['commit'] # Level of document unit (Per commit, Per src, Per m
 # Currently method only has line range (May add data later (method name, signature available))
 
 # Convert line interval to character interval
+# Problem : file level > Full intvl, but file may not exists
 def line_to_char_intvl(commit, src_path, line_intvl):
     
     # Empty character interval for empty line interval
@@ -75,12 +76,22 @@ def gen_intvl(track_intvl, gumtree_intvl, diff_tool, diff_type, doc_level):
     #if doc_level == 'commit':
     for commit, commit_dict in ret_dict.items():
         for path_tup, intvl_dict in commit_dict.items():
+            add_intvl, del_intvl = intvl_dict['addition'], intvl_dict['deletion']
+
+            # For file level differencing, use full file only when actual 
+            # 이거 line level이 아니라 method track level로 해야되는거 아니냐?
             if diff_tool == 'file':
-                add_intvl, del_intvl = CustomInterval(-inf, inf), CustomInterval(-inf, inf)
+                if not add_intvl.is_empty():
+                    add_intvl = CustomInterval(-inf, inf)
+                if not del_intvl.is_empty():
+                    del_intvl = CustomInterval(-inf, inf)
 
             else:
-                add_intvl = line_to_char_intvl(commit, path_tup[1], intvl_dict['addition'])
-                del_intvl = line_to_char_intvl(commit + '~1', path_tup[0], intvl_dict['deletion'])
+                add_intvl = line_to_char_intvl(commit, path_tup[1], add_intvl)
+                del_intvl = line_to_char_intvl(commit + '~1', path_tup[0], del_intvl)
+
+                if add_intvl is None or del_intvl is None:
+                    return None
     
                 # Apply GumTree differencing
                 if diff_tool == 'gumtree':

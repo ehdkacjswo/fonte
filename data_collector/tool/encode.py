@@ -4,12 +4,34 @@ from tqdm import tqdm
 
 sys.path.append('/root/workspace/data_collector/lib/')
 from encoder import *
-from gumtree import CustomInterval
 from utils import *
 
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core'
 BASE_DATA_DIR = '/root/workspace/data/Defects4J/baseline'
+
+# Code txt could be possibly "None" (Failed to get code data)
+def get_tokens_intvl(code_txt, intvl):
+    
+    # Convert index from interval to integer
+    def convert_ind(ind):
+        if ind == -inf:
+            return 0
+        if ind == inf:
+            return len(code_txt)
+        
+        return int(ind) + 1
+
+    # Earlier step raises error if ~~.
+    # So even the given interval is 
+    if intvl.is_empty() or code_txt is None:
+        return []
+    
+    # When interval is not empty, code_txt must not be None
+    #if code_txt is None:
+    #    return None
+
+    return [''.join(code_txt[convert_ind(sub_intvl[0]) : convert_ind(sub_intvl[1])]) for sub_intvl in intvl]
 
 # Encode the raw diff data
 # skip_stage_2 = Excluding style change diff, with_Rewrite = , use_stopword
@@ -58,11 +80,24 @@ def encode(stage2_data, pid, vid, use_stopword):
 # Encode the data 
 # Add file
 def pre_encode(intvl_dict, encoder):
+    commit_msg_dict = dict()
+
     for setting, setting_dict in intvl_dict.items():
         for commit, commit_dict in setting_dict.items():
+            
+            # Get/Encode commit message
+            base_data_dir = os.path.join(BASE_DATA_DIR, f'{pid}-{vid}b', 'commits')
+
+            for filename in os.listdir(base_data_dir):
+                if filename.startswith(f'c_{commit_hash}'):
+                    with open(os.path.join(base_data_dir, filename), "r") as file:
+                        data = json.load(file)
+                    commit_msg_dict[commit_hash] = encoder.encode(data['log'], use_stopword=use_stopword, update_vocab=True)
+                    break
+
+            # Get/Encode commit featues
             for path_tup, diff_dict in commit_dict.items():
                 diff_dict['encoded_path'] = (encoder.encode(path_tup[0]), encoder.encode(path_tup[1]))
-                file_dict[tracker][commit][path_tup].setdefault('encoded_path', diff_dict['encoded_path'])
 
                 # Get the corresponding code text (Possibly None)
                 after_code = get_src_from_commit(commit, path_tup[1])
@@ -83,6 +118,7 @@ def pre_encode(intvl_dict, encoder):
                         log('encode', f'[ERROR] Failed to get file {commit}~1:{path_tup[0]}')
                     else:
                         diff_dict['deletion'][diff_type] = [encoder.encode(token) for token in tokens]
+    
     
 
     
