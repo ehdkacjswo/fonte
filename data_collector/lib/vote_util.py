@@ -24,7 +24,7 @@ def get_style_change_commits(fault_dir, tool='git', stage2='precise'):
 
     if stage2 == 'precise':
         val_df = pd.read_csv(
-            os.path.join(fault_dir, tool, f"precise_validation.csv"), 
+            os.path.join(fault_dir, tool, f"precise_validation_noOpenRewrite.csv"), 
             header=None,
             names=["commit", "before_src_path", "after_src_path", "AST_diff"])
         
@@ -32,9 +32,8 @@ def get_style_change_commits(fault_dir, tool='git', stage2='precise'):
         return set(zip(style_df["commit"], style_df["before_src_path"], style_df["after_src_path"]))
 
 # Deleted method level
-def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
-    use_method_level_score=False, excluded=[], adjust_depth=True,
-    in_class_only=False):
+def vote_for_commits(fault_dir, tool, formula, decay, voting_func, \
+    excluded=[], adjust_depth=True, in_class_only=False):
     commit_df = load_commit_history(fault_dir, tool)
     commit_df["new_depth"] = commit_df["depth"]
 
@@ -66,9 +65,10 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func,
         covered_by_failure_only=True,
         in_class_only=in_class_only)
 
-    sbfl_df["dense_rank"] = (-sbfl_df["score"]).rank(method="dense")
+    #sbfl_df["dense_rank"] = (-sbfl_df["score"]).rank(method="dense")
     sbfl_df["max_rank"] = (-sbfl_df["score"]).rank(method="max")
     vote_rows = []
+
     for _, row in sbfl_df.reset_index().iterrows():
         vote = voting_func(row)
         

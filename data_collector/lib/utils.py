@@ -86,6 +86,20 @@ def log(filename, txt, out_txt=None, err_txt=None):
         if err_txt is not None:
             file.write('[ERROR] ERR\n' + err_txt.decode(encoding='utf-8', errors='ignore') + '\n')
 
+# Get style change data list [(commit, before_src_path, after_src_path)]
+def get_excluded(coredir, tool='git', stage2='skip'):
+    if stage2 == 'skip':
+        return []
+
+    elif stage2 == 'precise':
+        val_df = pd.read_csv(
+            os.path.join(coredir, tool, f"precise_validation_noOpenRewrite.csv"), 
+            header=None,
+            names=["commit", "before_src_path", "after_src_path", "AST_diff"])
+
+        unchanged_df = val_df[val_df["AST_diff"] == "U"]
+        return list(zip(unchanged_df["commit"], unchanged_df["before_src_path"], unchanged_df["after_src_path"]))
+
 def time_to_str(start_time, end_time):
     hour, remainder = divmod(int(end_time - start_time), 3600)
     minute, second = divmod(remainder, 60)

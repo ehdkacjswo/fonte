@@ -1,4 +1,4 @@
-import os, json, argparse, pickle, sys, itertools, logging
+import os, json, argparse, pickle, sys, itertools, time
 import pandas as pd
 
 BIC_GT_DIR = "/root/workspace/data/Defects4J/BIC_dataset"
@@ -10,32 +10,27 @@ RESULT_DATA_DIR = '/root/workspace/data/Defects4J/result'
 sys.path.append('/root/workspace/lib/')
 from experiment_utils import load_BIC_GT, weighted_bisection, get_all_commits
 
-def log(txt, out_txt=None, err_txt=None):
-    with open('/root/workspace/data_collector/log/bisection.log', 'a') as file:
-        file.write(txt + '\n')
+sys.path.append('/root/workspace/data_collector/lib/')
+from utils import log, time_to_str
 
-        if out_txt is not None:
-            file.write('[ERROR] OUT\n' + out_txt.decode(encoding='utf-8', errors='ignore') + '\n')
-        
-        if err_txt is not None:
-            file.write('[ERROR] ERR\n' + err_txt.decode(encoding='utf-8', errors='ignore') + '\n')
-
+# Get list of style change commits
 def get_style_change_commits(fault_dir, tool='git', stage2='precise'):
     if stage2 == 'skip':
         return []
     
     if stage2 == 'precise':
         val_df = pd.read_csv(
-            os.path.join(fault_dir, tool, f"precise_validation.csv"), 
+            os.path.join(fault_dir, tool, f"precise_validation_noOpenRewrite.csv"), 
             header=None,
             names=["commit", "before_src_path", "after_src_path", "AST_diff"])
 
-    val_df["unchanged"] = val_df["AST_diff"] == "U"
+    # Get list of commits with every change is style change
+    val_df["unchanged"] = (val_df["AST_diff"] == "U")
     agg_df = val_df.groupby("commit").all()[["unchanged"]]
     style_change_commits = agg_df.index[agg_df["unchanged"]].tolist()
 
-    # Current precise style change doesn't include '/dev/null' path
-    # Have to exclude commits that have '/dev/null' path
+    # Precise style change doesn't consider path '/dev/null'
+    # Exclude commits that have '/dev/null' path (File creation / deletion)
     # Can be deleted if it handles the cases
     com_df = pd.read_pickle(os.path.join(fault_dir, tool, "commits.pkl"))
     com_df["commit_hash"] = com_df["commit_hash"].apply(lambda s: str(s)[:7])
@@ -47,7 +42,8 @@ def get_style_change_commits(fault_dir, tool='git', stage2='precise'):
 
 # Perform bisecion
 def main(pid, vid):
-    log(f'Working on {pid}_{vid}b')
+    log('bisection', f'Working on {pid}_{vid}b')
+    start_time = time.time()
 
     # Basic commit info
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
@@ -85,24 +81,34 @@ def main(pid, vid):
 
         # Bisection with scores
         votes = [float(fonte_df.loc[c, "vote"]) for c in C_BIC]
-        #fonte_iter[stage2] = weighted_bisection(C_BIC, votes, BIC)
+        fonte_iter[stage2] = weighted_bisection(C_BIC, votes, BIC)
 
-        """for key, bug2commit_df in sub_dict.items():
-            votes = [float(bug2commit_df.loc[c, "vote"]) for c in C_BIC]
-            bug2commit_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC)"""
+        for setting, bug2commit_df in sub_dict.items():
+            votes = [float(bug2commit_df['all'].loc[c, "vote"]) for c in C_BIC]
+            
+            # Apply positive score for all 0 score commits
+            min_vote = min((vote for vote in votes if vote > 0), default=1)
+            zero_ind = [ind for ind, vote in enumerate(votes) if vote == 0]
+
+            for beta in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]:
+                new_votes = [vote if vote > 0 else beta * min_vote for vote in votes]
+                bug2commit_iter[stage2][frozenset((dict(setting) | {'beta' : beta}).items())] = weighted_bisection(C_BIC, new_votes, BIC)
         
-        for key, ensemble_df in ensemble_dict[stage2].items():
+        for setting, ensemble_df in ensemble_dict[stage2].items():
             votes = [float(ensemble_df.loc[c, "vote"]) for c in C_BIC]
-            ensemble_iter[stage2][key] = weighted_bisection(C_BIC, votes, BIC)
+            ensemble_iter[stage2][setting] = weighted_bisection(C_BIC, votes, BIC)
     
     savedir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'iteration')
     os.makedirs(savedir, exist_ok=True)
 
-    #with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
-    #    pickle.dump(fonte_iter, file)
+    with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
+        pickle.dump(fonte_iter, file)
     
-    """with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
-        pickle.dump(bug2commit_iter, file)"""
+    with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
+        pickle.dump(bug2commit_iter, file)
     
     with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
         pickle.dump(ensemble_iter, file)
+    
+    end_time = time.time()
+    log('bisection', f'{time_to_str(start_time, end_time)}')

@@ -24,6 +24,30 @@ CORE_DATA_DIR = '/root/workspace/data/Defects4J/core'
 BASE_DATA_DIR = '/root/workspace/data/Defects4J/baseline'
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 
+"""
+def diff_interval(pid, vid, stage2, diff_type):
+    excluded = get_style_change_data(os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b/'), 'git', stage2)
+    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+    BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
+
+    diff_data_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
+
+    if diff_type == 'git':
+        with open(os.path.join(diff_data_dir, 'git_diff.pkl'), 'rb') as file:
+            diff_dict = pickle.load(file)[BIC]
+        
+    for (before_src_path, after_src_path), sub_dict in diff_dict.items():
+        if (before_src_path, after_src_path) in excluded:
+            continue
+        
+        print('Before src path) ', before_src_path)
+        print('After src path) ', after_src_path)
+
+        for adddel, line_dict in sub_dict.items():
+            print(adddel, ')')
+            print(', '.join(map(str, line_dict.keys())))
+"""
+
 # Print vocab
 def abc(project, stage2, setting):
     # Load data
@@ -199,6 +223,7 @@ def metric_converter(metric_dict):
     
     return dict(res_dict)
 
+# Compare the settings
 def compare_settings(org_method, new_method, org_setting, new_setting):
     org_metric_dict = get_metric_dict(method=org_method, mode='project')
     org_metric = metric_converter(org_metric_dict[org_setting])
@@ -206,8 +231,13 @@ def compare_settings(org_method, new_method, org_setting, new_setting):
     new_metric_dict = get_metric_dict(method=new_method, mode='project')
     new_metric = metric_converter(new_metric_dict[new_setting])
 
-    for metric_key in org_metric.keys():
+    # Bug2Commit의 경우, num_iter에만 beta가 있다
+
+    for metric_key in ['MRR', 'acc@1', 'acc@2', 'acc@3', 'acc@5', 'acc@10', 'num_iter']:
         print(f'Metric) {metric_key}')
+
+        if metric_key != 'num_iter':
+            if 
 
         # Project level comparison
         num_better, num_same, num_worse = 0, 0, 0
@@ -484,30 +514,35 @@ def load_BIC_feature(pid, vid, stage2, setting):
             with open(savepath, 'w') as file:
                 file.write(code_txt)"""
 
-
-
-def diff_interval(pid, vid, stage2, diff_type):
-    excluded = get_style_change_data(os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b/'), 'git', stage2)
+# Print metrics in order (best > worst) for given method
+# 
+def print_metric(method='bug2commit', fix={'stage2' : 'precise'}):
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
-    BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
+    metric_dict = get_metric_dict(method=method, mode='all')
+    
+    res_list = list()
 
-    diff_data_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
-
-    if diff_type == 'git':
-        with open(os.path.join(diff_data_dir, 'git_diff.pkl'), 'rb') as file:
-            diff_dict = pickle.load(file)[BIC]
+    # Iterate through projects
+    for _, row in GT.iterrows():
+        pid, vid, BIC = row.pid, row.vid, row.commit
+    
+    for setting, setting_dict in metric_dict.items():
         
-    for (before_src_path, after_src_path), sub_dict in diff_dict.items():
-        if (before_src_path, after_src_path) in excluded:
+        # Consider settings with target fixed settings
+        is_target = True
+        for key, value in fix.items():
+            is_target &= (key in dict(setting) and dict(setting)[key] == value)
+        
+        if not is_target:
             continue
         
-        print('Before src path) ', before_src_path)
-        print('After src path) ', after_src_path)
-
-        for adddel, line_dict in sub_dict.items():
-            print(adddel, ')')
-            print(', '.join(map(str, line_dict.keys())))
-
+        res_list.append((setting, setting_dict))
+    
+    for metric in ['MRR', 'num_iter']:
+        print('Target metric : ', metric)
+        new_list = [data for data in res_list if metric in dict(data[0])] # Bug2Commit uses different settings for MRR and num_iter
+        new_list.sort(key=lambda x: x[metric], reverse=(metric == 'MRR')) # Bigger MRR, Smaller num_iter is better
+        print(new_list)
 
 # res_dict[stage2][(new_diff_type, use_stopword, adddel, use_br)]
 if __name__ == "__main__":

@@ -17,8 +17,23 @@ DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 diff_tool_list = ['base', 'gumtree', 'file'] # Tool to get diff (Tracker, Tracker + GumTree, Whole file)
 diff_type_list = ['base', 'id'] # Type of diff data (Pure code, Identifier)
 doc_level_list = ['commit'] # Level of document unit (Per commit, Per src, Per method)
+stage2_list = ['skip', 'precise']
 #doc_level_list = ['commit', 'src', 'method']
 # Currently method only has line range (May add data later (method name, signature available))
+
+# Get style change data list [(commit, before_src_path, after_src_path)]
+def get_excluded(coredir, tool='git', stage2='skip'):
+    if stage2 == 'skip':
+        return []
+
+    elif stage2 == 'precise':
+        val_df = pd.read_csv(
+            os.path.join(coredir, tool, f"precise_validation_noOpenRewrite.csv"), 
+            header=None,
+            names=["commit", "before_src_path", "after_src_path", "AST_diff"])
+
+        unchanged_df = val_df[val_df["AST_diff"] == "U"]
+        return list(zip(unchanged_df["commit"], unchanged_df["before_src_path"], unchanged_df["after_src_path"]))
 
 # Convert line interval to character interval
 # Problem : file level > Full intvl, but file may not exists
@@ -50,69 +65,71 @@ def line_to_char_intvl(commit, src_path, line_intvl):
 
     return char_intvl
 
-# data : message, src_path, diff
-# Works for "git" tracker, May not be the same for others
-def gen_intvl(track_intvl, gumtree_intvl, diff_tool, diff_type, doc_level):
+# Aggregate line intervals
+def aggr_line_intvl(track_intvl, doc_level, excluded):
+    # Get line interval data
     ret_dict = dict()
 
-    # Get line range diff 
     for src_path, src_dict in track_intvl.items():
         for method_info, method_dict in src_dict.items():
             for commit, commit_dict in method_dict.items():
-                ret_dict.setdefault(commit, dict())
-
                 for path_tup, intvl_dict in commit_dict.items():
+                    # Ignore style changes
+                    if (commit, path_tup[0], path_tup[1]) in excluded:
+                        continue
+
                     #if doc_level == 'commit':
-                    if diff_tool == 'file': # Whole file doesn't need line difference
-                        ret_dict[commit].setdefault(path_tup, {'addition' : CustomInterval(-inf, inf), 'deletion' : CustomInterval(-inf, inf)})
-                    
-                    else: 
-                        ret_dict[commit].setdefault(path_tup, {'addition' : CustomInterval(), 'deletion' : CustomInterval()})
-                
-                        ret_dict[commit][path_tup]['addition'] |= intvl_dict['addition']['line_diff']
-                        ret_dict[commit][path_tup]['deletion'] |= intvl_dict['deletion']['line_diff']
+                    # Add commit only when at least one change is not style change
+                    ret_dict.setdefault(commit, dict())
+                    ret_dict[commit].setdefault(path_tup, {'addition' : CustomInterval(), 'deletion' : CustomInterval()})
+            
+                    ret_dict[commit][path_tup]['addition'] |= intvl_dict['addition']['line_diff']
+                    ret_dict[commit][path_tup]['deletion'] |= intvl_dict['deletion']['line_diff']
     
+    return ret_dict
+
+# data : message, src_path, diff
+# Works for "git" tracker, May not be the same for others
+def gen_intvl(line_intvl_dict, gumtree_intvl, diff_tool, diff_type, doc_level):
     # Line range diff to char range diff
     #if doc_level == 'commit':
-    for commit, commit_dict in ret_dict.items():
-        for path_tup, intvl_dict in commit_dict.items():
-            add_intvl, del_intvl = intvl_dict['addition'], intvl_dict['deletion']
+    ret_dict = dict()
 
-            # For file level differencing, use full file only when actual 
-            # 이거 line level이 아니라 method track level로 해야되는거 아니냐?
-            if diff_tool == 'file':
-                if not add_intvl.is_empty():
-                    add_intvl = CustomInterval(-inf, inf)
-                if not del_intvl.is_empty():
-                    del_intvl = CustomInterval(-inf, inf)
+    for commit, commit_dict in line_intvl_dict.items():
+        ret_dict.setdefault(commit, {'addition' : dict(), 'deletion' : dict()})
 
-            else:
-                add_intvl = line_to_char_intvl(commit, path_tup[1], add_intvl)
-                del_intvl = line_to_char_intvl(commit + '~1', path_tup[0], del_intvl)
+        for path_tup, path_tup_dict in commit_dict.items():
+            for adddel, line_intvl in path_tup_dict.items():
+                # For file level differencing, use full file only when actual 
+                # 이거 line level이 아니라 method track level로 해야되는거 아니냐?
+                if not line_intvl.is_empty():
+                    src_path = path_tup[1 if adddel == 'addition' else 0]
+                    ret_dict[commit][adddel].setdefault(src_path, dict())
 
-                if add_intvl is None or del_intvl is None:
-                    return None
-    
-                # Apply GumTree differencing
-                if diff_tool == 'gumtree':
-                    add_intvl |= gumtree_intvl[commit][path_tup].get('addition', {}).get('char_diff', CustomInterval())
-                    del_intvl |= gumtree_intvl[commit][path_tup].get('deletion', {}).get('char_diff', CustomInterval())
+                    if diff_tool == 'file':
+                        token_intvl = CustomInterval(-inf, inf)
+                    else:
+                        token_intvl = line_to_char_intvl(commit + ('' if adddel == 'addition' else '~1'), src_path, line_intvl)
+
+                        # Failed to get tokens
+                        if token_intvl is None:
+                            return None
             
-            # Get identifiers
-            if diff_type == 'id':
-                id_add_intvl = gumtree_intvl[commit][path_tup].get('addition', {}).get('char_id', {'class':CustomInterval(), 'method':CustomInterval(), 'variable':CustomInterval(), 'comment':CustomInterval()})
-                id_del_intvl = gumtree_intvl[commit][path_tup].get('deletion', {}).get('char_id', {'class':CustomInterval(), 'method':CustomInterval(), 'variable':CustomInterval(), 'comment':CustomInterval()})
+                        # Apply GumTree differencing
+                        if diff_tool == 'gumtree':
+                            token_intvl &= gumtree_intvl[commit][path_tup].get(adddel, {}).get('char_diff', CustomInterval())
+                    
+                    # Get identifiers
+                    if diff_type == 'id':
+                        id_intvl_dict = gumtree_intvl[commit][path_tup].get(adddel, {}).get('char_id', {})
 
-                intvl_dict['addition'] = dict()
-                intvl_dict['deletion'] = dict()
-
-                for id_type in id_add_intvl.keys():
-                    intvl_dict['addition'][id_type] = add_intvl & id_add_intvl[id_type]
-                    intvl_dict['deletion'][id_type] = del_intvl & id_del_intvl[id_type]
-            
-            else:
-                intvl_dict['addition'] = {'diff' : add_intvl}
-                intvl_dict['deletion'] = {'diff' : del_intvl}
+                        ret_dict[commit][adddel][src_path] = \
+                            {id_type : ret_dict[commit][adddel][src_path].get(id_type, CustomInterval()) | \
+                            (token_intvl & id_intvl) for id_type, id_intvl in id_intvl_dict.items()}
+                    
+                    else:
+                        ret_dict[commit][adddel][src_path]['diff'] = \
+                            ret_dict[commit][adddel][src_path].get('diff', CustomInterval()) | token_intvl
         
     return ret_dict
 
@@ -147,20 +164,27 @@ def main(pid, vid):
     
     # Gather interval data
     res_dict = dict()
-    param_list = list(itertools.product(diff_tool_list, diff_type_list, doc_level_list))
+    param_list = list(itertools.product(diff_tool_list, diff_type_list))
 
     start_time = time.time()
-    for tracker_setting, track_intvl in track_intvl_dict.items():
-        setting_dict = dict(tracker_setting)
+    for setting, track_intvl in track_intvl_dict.items():
+        setting_dict = dict(setting)
         tracker = setting_dict['tracker']
 
-        for (diff_tool, diff_type, doc_level) in param_list:
-            res_dict[frozenset((setting_dict | \
-                {'diff_tool' : diff_tool, 'diff_type' : diff_type, 'doc_level' : doc_level}).items())] = \
-                gen_intvl(track_intvl, gumtree_intvl_dict[tracker_setting], diff_tool, diff_type, doc_level)
+        for stage2 in stage2_list:
+            res_dict.setdefault(stage2, dict())
+            excluded = get_excluded(os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b/'), tracker, stage2)
+
+            for doc_level in doc_level_list:
+                line_intvl_dict = aggr_line_intvl(track_intvl, doc_level, excluded)
+
+                for (diff_tool, diff_type) in param_list:
+                    res_dict[stage2][frozenset((setting_dict | \
+                        {'diff_tool' : diff_tool, 'diff_type' : diff_type, 'doc_level' : doc_level}).items())] = \
+                        gen_intvl(line_intvl_dict, gumtree_intvl_dict[setting], diff_tool, diff_type, doc_level)
     
     end_time = time.time()
-    log('gen_intvl', f'({tracker}) : {time_to_str(start_time, end_time)}')
+    log('gen_intvl', f'{time_to_str(start_time, end_time)}')
 
     with open(os.path.join(diff_data_dir, 'total_intvl.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)

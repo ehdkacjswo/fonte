@@ -22,10 +22,10 @@ class Encoder():
         text = re.sub(r'[^A-Za-z0-9]', ' ', text) 
 
         token_list = ronin.split(text) # Split the text
-        print(token_list)
+        #print(token_list)
         token_list = [self.stemmer.stem(token.lower()) for token in token_list] # Apply lowercase
         #token_list = [token.lower() for token in token_list] # Apply lowercase
-        print(token_list)
+        #print(token_list)
 
         # Remove single character, numbers and stopwords
         if use_stopword:

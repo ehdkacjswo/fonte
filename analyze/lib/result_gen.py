@@ -32,9 +32,9 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
     for _, row in GT.iterrows():
         pid, vid, BIC = row.pid, row.vid, row.commit
 
-        # Closure-131b has wrong BIC data
+        """# Closure-131b has wrong BIC data
         if pid == 'Closure' and vid == '131':
-            continue
+            continue"""
         
         proj_dir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b')
 
@@ -57,7 +57,7 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
                     if setting_key not in res_dict:
                         res_dict[setting_key] = {'MRR': 0, 'acc@1': 0, 'acc@2': 0, 'acc@3': 0, 'acc@5': 0, 'acc@10': 0, 'num_iter': 0}
 
-                    res_dict[setting_key]['MRR'] += 1 / (rank * 129)
+                    res_dict[setting_key]['MRR'] += 1 / (rank * len(GT))
                     res_dict[setting_key]['acc@1'] += 1 if rank <= 1 else 0
                     res_dict[setting_key]['acc@2'] += 1 if rank <= 2 else 0
                     res_dict[setting_key]['acc@3'] += 1 if rank <= 3 else 0
@@ -66,7 +66,7 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
 
             else: # Bug2Commit and Ensemble have extra settings
                 for setting, vote_df in value.items():
-                    rank = vote_df['rank'].get(BIC)
+                    rank = vote_df['all']['rank'].get(BIC) if mode == 'bug2commit' else vote_df['rank'].get(BIC)
                     #vote = vote_df['vote'].get(BIC)
                     
                     setting_key = frozenset((dict(setting) | {'stage2' : stage2}).items())
@@ -84,7 +84,7 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
                         if setting_key not in res_dict:
                             res_dict[setting_key] = {'MRR': 0, 'acc@1': 0, 'acc@2': 0, 'acc@3': 0, 'acc@5': 0, 'acc@10': 0, 'num_iter': 0}
 
-                        res_dict[setting_key]['MRR'] += 1 / (rank * 129)
+                        res_dict[setting_key]['MRR'] += 1 / (rank * len(GT))
                         res_dict[setting_key]['acc@1'] += 1 if rank <= 1 else 0
                         res_dict[setting_key]['acc@2'] += 1 if rank <= 2 else 0
                         res_dict[setting_key]['acc@3'] += 1 if rank <= 3 else 0
@@ -92,27 +92,26 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
                         res_dict[setting_key]['acc@10'] += 1 if rank <= 10 else 0
         
         # Get iteration (Bug2Commit doesn't have iteration data for possible 0 score BIC)
-        if method != 'bug2commit':
-            with open(os.path.join(proj_dir, 'iteration', f'{method}.pkl'), 'rb') as file:
-                iter_dict = pickle.load(file)
-        
-            for stage2, value in iter_dict.items():
-                if method == 'fonte': # Fonte doesn't have extra setting
-                    setting_key = frozenset({'stage2' : stage2}.items())
+        with open(os.path.join(proj_dir, 'iteration', f'{method}.pkl'), 'rb') as file:
+            iter_dict = pickle.load(file)
+    
+        for stage2, value in iter_dict.items():
+            if method == 'fonte': # Fonte doesn't have extra setting
+                setting_key = frozenset({'stage2' : stage2}.items())
+
+                if mode == 'project':
+                    res_dict[setting_key][f'{pid}-{vid}b']['num_iter'] = value
+                else:
+                    res_dict[setting_key]['num_iter'] += value / len(GT)
+            
+            else: #Ensemble has extra settings
+                for setting, num_iter in value.items():
+                    setting_key = frozenset((dict(setting) | {'stage2' : stage2}).items())
 
                     if mode == 'project':
-                        res_dict[setting_key][f'{pid}-{vid}b']['num_iter'] = value
+                        res_dict[setting_key][f'{pid}-{vid}b']['num_iter'] = num_iter
                     else:
-                        res_dict[setting_key]['num_iter'] += value
-                
-                else: #Ensemble has extra settings
-                    for setting, num_iter in value.items():
-                        setting_key = frozenset((dict(setting) | {'stage2' : stage2}).items())
-
-                        if mode == 'project':
-                            res_dict[setting_key][f'{pid}-{vid}b']['num_iter'] = num_iter
-                        else:
-                            res_dict[setting_key]['num_iter'] += num_iter
+                        res_dict[setting_key]['num_iter'] += num_iter / len(GT)
     
     # Save & return the dictionary
     #os.makedirs(savepath, exist_ok=True)
