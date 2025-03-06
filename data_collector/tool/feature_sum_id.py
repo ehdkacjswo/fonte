@@ -54,8 +54,8 @@ def main(pid, vid):
         for setting, setting_dict in temp_dict.items():
             stage2_dict[setting] = setting_dict
     
-    #with open(os.path.join(diff_data_dir, 'feature.pkl'), 'wb') as file:
-    #    pickle.dump(res_dict, file)
+    with open(os.path.join(diff_data_dir, 'feature.pkl'), 'wb') as file:
+        pickle.dump(feature_dict, file)
     
     end_time = time.time()
     log('feature_sum_id', f'{time_to_str(start_time, end_time)}')

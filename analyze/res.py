@@ -14,10 +14,10 @@ from result_gen import get_metric_dict
 
 sys.path.append('/root/workspace/data_collector/lib/')
 from encoder import *
-from gumtree import CustomInterval
+from utils import CustomInterval
 
 sys.path.append('/root/workspace/data_collector/tool/')
-from stage2 import get_style_change_data
+#from stage2 import get_style_change_data
 
 RESULT_DATA_DIR = '/root/workspace/data/Defects4J/result'
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core'
@@ -102,7 +102,7 @@ def abc(project, stage2, setting):
         if bug_freq is not None:
             print(f'Word: {vocab[ind]}, Bug: {bug_freq}, BIC: {BIC_freq}')
 
-def check_filtering():
+def check_filtering(pid, vid, org_setting, new_setting):
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     res_dict = dict()
 
@@ -112,10 +112,6 @@ def check_filtering():
         pid = 'Closure'
         vid = '2'
         BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
-
-        # Ignore Closure-131b
-        if pid == 'Closure' and vid == '131':
-            continue
 
         # Load data
         with open(os.path.join(f'/root/workspace/data/Defects4J/diff/{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
