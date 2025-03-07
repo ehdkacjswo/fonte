@@ -73,17 +73,34 @@ def main(pid, vid):
         ensemble_iter[stage2] = dict()
 
         # Get list of target commits
-        style_change_commits = get_style_change_commits(fault_dir)
+        # Currently using only git, but have to change it later
+        style_change_commits = get_style_change_commits(fault_dir, stage2=stage2)
 
         # May check score contains 0 or not later
 
         C_BIC = [c for c in all_commits if c in fonte_df.index and c not in style_change_commits]
 
+        # Automatically driven BIC could be style change commit
+        if BIC not in C_BIC:
+            log('bisection', f'[ERROR] BIC({BIC}) is style change commit for stage2({stage2})')
+            continue
+
         # Bisection with scores
-        votes = [float(fonte_df.loc[c, "vote"]) for c in C_BIC]
-        fonte_iter[stage2] = weighted_bisection(C_BIC, votes, BIC)
+        if float(fonte_df.loc[BIC, "vote"]) == 0: # When BIC has 0 score with Fonte, unable to perform bisection
+            log('bisection', f'[ERROR] BIC({BIC}) has 0 Fonte score for stage2({stage2})')
+
+        else:
+            votes = [float(fonte_df.loc[c, "vote"]) for c in C_BIC]
+            fonte_iter[stage2] = weighted_bisection(C_BIC, votes, BIC)
+
+            for setting, ensemble_df in ensemble_dict[stage2].items():
+                votes = [float(ensemble_df.loc[c, "vote"]) for c in C_BIC]
+                ensemble_iter[stage2][setting] = weighted_bisection(C_BIC, votes, BIC)
 
         for setting, bug2commit_df in sub_dict.items():
+            if float(bug2commit_df['all'].loc[BIC, "vote"]) == 0:
+                log('bisection', f'[INFO] BIC({BIC}) has 0 Bug2Commit score for stage2({stage2}), {str(setting)}')
+
             votes = [float(bug2commit_df['all'].loc[c, "vote"]) for c in C_BIC]
             
             # Apply positive score for all 0 score commits
@@ -94,10 +111,6 @@ def main(pid, vid):
                 new_votes = [vote if vote > 0 else beta * min_vote for vote in votes]
                 bug2commit_iter[stage2][frozenset((dict(setting) | {'beta' : beta}).items())] = weighted_bisection(C_BIC, new_votes, BIC)
         
-        for setting, ensemble_df in ensemble_dict[stage2].items():
-            votes = [float(ensemble_df.loc[c, "vote"]) for c in C_BIC]
-            ensemble_iter[stage2][setting] = weighted_bisection(C_BIC, votes, BIC)
-    
     savedir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'iteration')
     os.makedirs(savedir, exist_ok=True)
 
