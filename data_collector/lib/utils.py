@@ -22,7 +22,7 @@ class CustomInterval():
     def __init__(self, start=None, end=None):
         self.interval_data = self.wide_interval(start, end)
     
-    # Intersection / Union
+    # Intersection
     def __and__(self, other:CustomInterval):
         ret = CustomInterval()
         ret.interval_data = self.interval_data & other.interval_data
@@ -31,6 +31,7 @@ class CustomInterval():
     def __rand__(self, other:CustomInterval):
         return self & other
     
+    # Union
     def __or__(self, other:CustomInterval):
         ret = CustomInterval()
         ret.interval_data = self.interval_data | other.interval_data
@@ -38,6 +39,15 @@ class CustomInterval():
     
     def __ror__(self, other:CustomInterval):
         return self | other
+    
+    # Subtraction
+    def __sub__(self, other:CustomInterval):
+        ret = CustomInterval()
+        ret.interval_data = self.interval_data - other.interval_data
+        return ret
+    
+    def __rsub__(self, other:CustomInterval):
+        return self - other
     
     def __contains__(self, item):
         if isinstance(item, int):
