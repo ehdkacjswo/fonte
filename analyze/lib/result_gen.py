@@ -25,16 +25,19 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
         with open(savepath, 'rb') as file:
             return pickle.load(file)
     
-    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+    # Load manual data only
+    all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+    GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
+
     res_dict = dict()
 
     # Iterate through projects
     for _, row in GT.iterrows():
         pid, vid, BIC = row.pid, row.vid, row.commit
 
-        """# Closure-131b has wrong BIC data
+        # Closure-131b has wrong BIC data
         if pid == 'Closure' and vid == '131':
-            continue"""
+            continue
         
         proj_dir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b')
 
@@ -66,7 +69,7 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
 
             else: # Bug2Commit and Ensemble have extra settings
                 for setting, vote_df in value.items():
-                    rank = vote_df['all']['rank'].get(BIC) if mode == 'bug2commit' else vote_df['rank'].get(BIC)
+                    rank = vote_df['all']['rank'].get(BIC) if method == 'bug2commit' else vote_df['rank'].get(BIC)
                     #vote = vote_df['vote'].get(BIC)
                     
                     setting_key = frozenset((dict(setting) | {'stage2' : stage2}).items())
@@ -75,14 +78,12 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
                     #    print('0 score BIC', pid, vid, setting_key)
 
                     if mode == 'project':
-                        if setting_key not in res_dict:
-                            res_dict[setting_key] = dict()
-
+                        res_dict.setdefault(setting_key, dict())
                         res_dict[setting_key][f'{pid}-{vid}b'] = {'rank' : rank}
 
                     else:
                         if setting_key not in res_dict:
-                            res_dict[setting_key] = {'MRR': 0, 'acc@1': 0, 'acc@2': 0, 'acc@3': 0, 'acc@5': 0, 'acc@10': 0, 'num_iter': 0}
+                            res_dict[setting_key] = {'MRR': 0, 'acc@1': 0, 'acc@2': 0, 'acc@3': 0, 'acc@5': 0, 'acc@10': 0}
 
                         res_dict[setting_key]['MRR'] += 1 / (rank * len(GT))
                         res_dict[setting_key]['acc@1'] += 1 if rank <= 1 else 0
@@ -107,11 +108,13 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
             else: #Ensemble has extra settings
                 for setting, num_iter in value.items():
                     setting_key = frozenset((dict(setting) | {'stage2' : stage2}).items())
+                    res_dict.setdefault(setting_key, dict())
 
                     if mode == 'project':
+                        res_dict[setting_key].setdefault(f'{pid}-{vid}b', dict())
                         res_dict[setting_key][f'{pid}-{vid}b']['num_iter'] = num_iter
                     else:
-                        res_dict[setting_key]['num_iter'] += num_iter / len(GT)
+                        res_dict[setting_key]['num_iter'] = res_dict[setting_key].get('num_iter', 0) + num_iter / len(GT)
     
     # Save & return the dictionary
     #os.makedirs(savepath, exist_ok=True)
