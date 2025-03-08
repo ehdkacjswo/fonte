@@ -24,80 +24,73 @@ def file_encode(no_after_src, no_before_src):
 
 # Return addition, deletion token range
 # addition, deletion = Token range
-def gumtree_diff(no_after_src, no_before_src):
-    # File creation/deletion (Update has to be empty)
-    if no_after_src:
-        return CustomInterval(), CustomInterval(-inf, inf)
+def gumtree_diff(before_src_path, after_src_path):
+    diff_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtree textdiff -g java-jdtc -m gumtree-simple -f JSON {before_src_path} {after_src_path}'
+    p = subprocess.Popen(diff_cmd, shell=True, stdout=subprocess.PIPE)
+    stdout, _ = p.communicate()
+
+    # Diff error
+    if p.returncode != 0: 
+        #with open('/root/workspace/error.txt', 'a') as file:
+        #    file.write(f'GumTreeDiff returns error : {stdout}\n')
+        return None, None
+
+    try:
+        diff_json = json.loads(stdout.decode(encoding='utf-8', errors='ignore'))
+    except:
+        #with open('/root/workspace/error.txt', 'a') as file:
+        #    file.write(f'Diff output decoding error\n')
+        return None, None # Decoding error
     
-    elif no_before_src:
-        return CustomInterval(-inf, inf), CustomInterval()
+    tree_pattern = r".+\[(\d+),(\d+)\]"
+    add_intvl = CustomInterval()
+    del_intvl = CustomInterval()
 
-    # File modification
-    else:
-        diff_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtree textdiff -g java-jdtc -m gumtree-simple -f JSON before.java after.java'
-        p = subprocess.Popen(diff_cmd, shell=True, stdout=subprocess.PIPE)
-        stdout, _ = p.communicate()
+    # {'action': 'action', 'tree': 'type:'}
+    for action in diff_json['actions']:
+        # Insertion (tree, node) action
+        if action['action'].startswith('insert'):
+            match = re.match(tree_pattern, action['tree'])
 
-        if p.returncode != 0: # Diff error
-            with open('/root/workspace/error.txt', 'a') as file:
-                file.write(f'GumTreeDiff returns error : {stdout}\n')
-            return None, None
-
-        try:
-            diff_json = json.loads(stdout.decode(encoding='utf-8', errors='ignore'))
-        except:
-            with open('/root/workspace/error.txt', 'a') as file:
-                file.write(f'Diff output decoding error\n')
-            return None, None # Decoding error
-        
-        tree_pattern = r".+\[(\d+),(\d+)\]"
-        add_intvl = CustomInterval()
-        del_intvl = CustomInterval()
-
-        # {'action': 'action', 'tree': 'type:'}
-        for action in diff_json['actions']:
-            # Insertion (tree, node) action
-            if action['action'].startswith('insert'):
-                match = re.match(tree_pattern, action['tree'])
-
-                if match:
-                    start_pos = int(match.group(1))
-                    end_pos = int(match.group(2))
-                    add_intvl |= CustomInterval(start_pos, end_pos - 1)
-                
-            # Update node action
-            # {'action': 'update-node', 'tree': 'SimpleName: classNames [2810,2820]', 'label': 'className'}
-            elif action['action'] == 'update-node':
-                match = re.match(tree_pattern, action['tree'])
-
-                if match:
-                    start_pos = int(match.group(1))
-                    end_pos = int(match.group(2))
-                    #gumtree_update_dict[CustomInterval(start_pos, end_pos - 1)] = action['label']
-                    del_intvl |= CustomInterval(start_pos, end_pos - 1)
-                    add_intvl |= CustomInterval(action['targetPos'], action['targetPos'] + action['targetLength'] - 1)
-
-            # Deletion (tree, node) action
-            # {'action': 'delete-tree', 'tree': 'ReturnStatement [14519,14532]'}
-            elif action['action'].startswith('delete'):
-                match = re.match(tree_pattern, action['tree'])
-
-                if match:
-                    start_pos = int(match.group(1))
-                    end_pos = int(match.group(2))
-                    del_intvl |= CustomInterval(start_pos, end_pos - 1)
+            if match:
+                start_pos = int(match.group(1))
+                end_pos = int(match.group(2))
+                add_intvl |= CustomInterval(start_pos, end_pos - 1)
             
-            """
-            # {'action': 'move-tree', 'tree': 'IfStatement [14204,14459]', 'parent': 'Block [12965,14472]', 'at': 7}
-            elif action['action'] == 'move-tree':
-                match = re.match(tree_pattern, action['tree'])
+        # Update node action
+        # {'action': 'update-node', 'tree': 'SimpleName: classNames [2810,2820]', 'label': 'className'}
+        elif action['action'] == 'update-node':
+            match = re.match(tree_pattern, action['tree'])
 
-                if match:
-                    start_pos = int(match.group(1))
-                    end_pos = int(match.group(2))
-            """
+            if match:
+                start_pos = int(match.group(1))
+                end_pos = int(match.group(2))
+                #gumtree_update_dict[CustomInterval(start_pos, end_pos - 1)] = action['label']
+                del_intvl |= CustomInterval(start_pos, end_pos - 1)
+                add_intvl |= CustomInterval(action['targetPos'], action['targetPos'] + action['targetLength'] - 1)
 
-        return add_intvl, del_intvl
+        # Deletion (tree, node) action
+        # {'action': 'delete-tree', 'tree': 'ReturnStatement [14519,14532]'}
+        elif action['action'].startswith('delete'):
+            match = re.match(tree_pattern, action['tree'])
+
+            if match:
+                start_pos = int(match.group(1))
+                end_pos = int(match.group(2))
+                del_intvl |= CustomInterval(start_pos, end_pos - 1)
+        
+        """
+        # Move action
+        # {'action': 'move-tree', 'tree': 'IfStatement [14204,14459]', 'parent': 'Block [12965,14472]', 'at': 7}
+        elif action['action'] == 'move-tree':
+            match = re.match(tree_pattern, action['tree'])
+
+            if match:
+                start_pos = int(match.group(1))
+                end_pos = int(match.group(2))
+        """
+
+    return add_intvl, del_intvl
 
 # Parse the file and returns in json format
 def gumtree_parse(filename):

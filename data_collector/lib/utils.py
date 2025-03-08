@@ -110,6 +110,7 @@ def get_excluded(coredir, tool='git', stage2='skip'):
         unchanged_df = val_df[val_df["AST_diff"] == "U"]
         return list(zip(unchanged_df["commit"], unchanged_df["before_src_path"], unchanged_df["after_src_path"]))
 
+# Convert elapsed time to string
 def time_to_str(start_time, end_time):
     hour, remainder = divmod(int(end_time - start_time), 3600)
     minute, second = divmod(remainder, 60)
@@ -117,8 +118,8 @@ def time_to_str(start_time, end_time):
 
     return f'{hour}h {minute}m {second}s {ms}ms'
 
+# Get source text from commit
 def get_src_from_commit(commit, src_path):
-    # Get the target file text
     p = subprocess.Popen(['git', 'show', f'{commit}:{src_path}'], \
     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     code_txt, err_txt = p.communicate()
@@ -128,3 +129,25 @@ def get_src_from_commit(commit, src_path):
         return None
     
     return code_txt.decode(encoding='utf-8', errors='ignore')
+
+# Convert line interval to character interval
+def line_to_char_intvl(code_txt, line_intvl):
+    
+    # Empty character interval for empty line interval
+    if line_intvl.is_empty():
+        return CustomInterval()
+    
+    # Split the line while preserving new lines
+    # Files use different newline character
+    lines = code_txt.splitlines(True)
+    
+    # Convert line interval to token interval
+    char_intvl, char_cnt = CustomInterval(), 0
+
+    for line_cnt, line in enumerate(lines):
+        next_char_cnt = char_cnt + len(line)
+        if line_cnt in line_intvl:
+            char_intvl |= CustomInterval(char_cnt, next_char_cnt - 1)
+        char_cnt = next_char_cnt
+
+    return char_intvl

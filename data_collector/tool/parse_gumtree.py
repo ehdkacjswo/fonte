@@ -11,33 +11,102 @@ import tempfile
 import time
 
 import pandas as pd
-from interval import interval
+from interval import inf
 
 sys.path.append('/root/workspace/data_collector/lib/')
 from gumtree import *
+from utils import *
 
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff/'
 
-def log(txt, out_txt=None, err_txt=None):
-    with open('/root/workspace/data_collector/log/parse_gumtree.log', 'a') as file:
-        file.write(txt + '\n')
+# Extract identifiers with GumTree
+def extarct_id(char_id_dict):
+    for setting, commit_dict in char_id_dict.items():
+        start_time = time.time()
 
-        if out_txt is not None:
-            file.write('[ERROR] OUT\n' + out_txt.decode(encoding='utf-8', errors='ignore') + '\n')
+        for commit, adddel_dict in commit_dict.items():
+            for adddel, path_dict in adddel_dict.items():
+                target_commit = commit + ('' if adddel == 'addition' else '~1')
+
+                for src_path in path_dict.keys():
+                    code_txt = get_src_from_commit(target_commit, src_path)
+
+                    # Failed to get the target code
+                    if code_txt is None:
+                        log('parse_gumtree', f'[ERROR] Failed to copy file {target_commit}:{src_path}')
+                        return False
+                    
+                    # Parse the code to get identifiers
+                    else:
+                        with open('/root/workspace/tmp/tmp.java', 'w') as file:
+                            file.write(code_txt)
+                        
+                        id_dict = gumtree_parse('tmp.java')
+
+                        # Failed to parse the file
+                        if id_dict is None:
+                            log('parse_gumtree', f'[ERROR] Failed to parse file {target_commit}:{src_path}')
+                            return False
+
+                        else:    
+                            path_dict[src_path] = id_dict
         
-        if err_txt is not None:
-            file.write('[ERROR] ERR\n' + err_txt.decode(encoding='utf-8', errors='ignore') + '\n')
+        end_time = time.time()
+        log('parse_gumtree', f'[INFO] ID extraction with {dict(setting)["tracker"]} : {time_to_str(start_time, end_time)}')
+    
+    return True
 
-def time_to_str(start_time, end_time):
-    hour, remainder = divmod(int(end_time - start_time), 3600)
-    minute, second = divmod(remainder, 60)
-    ms = int((end_time - start_time) * 1000) % 1000
+# Perform GumTree diff
+def perform_diff(char_diff_dict):
+    for setting, commit_dict in char_diff_dict.items():
+        start_time = time.time()
 
-    return f'{hour}h {minute}m {second}s {ms}ms'
+        for commit, path_dict in commit_dict.items():
+            for path_tup in path_dict.keys():
+
+                # Both files are empty
+                if path_tup[0] == '/dev/null' and path_tup[1] == '/dev/null':
+                    log('parse_gumtree', f'[ERROR] Both files are empty on {commit}')
+                    return False
+                
+                # One file is empty
+                elif path_tup[0] == '/dev/null' or path_tup[1] == '/dev/null':
+                    path_dict[path_tup] = {'addition' : CustomInterval(-inf, inf), 'deletion' : CustomInterval(-inf, inf)}
+                
+                # Both file exists
+                else:
+                    for ind, adddel in enumerate(['deletion', 'addition']):
+                        target_commit = commit + ('' if ind == 1 else '~1')
+                        code_txt = get_src_from_commit(target_commit, path_tup[ind])
+
+                        # Faile to get target file
+                        if code_txt is None:
+                            log('parse_gumtree', f'[ERROR] Failed to copy file {target_commit}:{path_tup[ind]}')
+                            return False
+                        
+                        else:
+                            with open(f'/root/workspace/tmp/{adddel}.java', 'w') as file:
+                                file.write(code_txt)
+                    
+                    # Perform GumTree diff
+                    add_intvl, del_intvl = gumtree_diff(before_src_path='deletion.java', after_src_path='addition.java')
+
+                    # Failed to perform GumTree diff
+                    if add_intvl is None or del_intvl is None:
+                        log('parse_gumtree', f'[ERROR] Failed to perfrom GumTree diff {commit}:{path_tup[0]}, {path_tup[1]}')
+                        return False
+                    
+                    else:
+                        path_dict[path_tup] = {'addition' : add_intvl, 'deletion' : del_intvl}
+            
+        end_time = time.time()
+        log('parse_gumtree', f'[INFO] GumTree diff with tracker({dict(setting)["tracker"]}) : {time_to_str(start_time, end_time)}')
+
+    return True
             
 def main(pid, vid):
-    log(f'Working on {pid}_{vid}b'.format(pid, vid))
+    log('parse_gumtree', f'Working on {pid}_{vid}b'.format(pid, vid))
     savedir = f'/root/workspace/data/Defects4J/diff/{pid}-{vid}b'
     
     # Checkout Defects4J project
@@ -46,14 +115,14 @@ def main(pid, vid):
     out_txt, err_txt = p.communicate()
 
     if p.returncode != 0:
-        log('[ERROR] Checkout failed', out_txt, err_txt)
+        log('parse_gumtree', '[ERROR] Checkout failed', out_txt, err_txt)
         return
     
     # Change working directory to target Defects4J project
     try:
         os.chdir(f'/tmp/{pid}-{vid}b/')
     except:
-        log('[ERROR] Moving directory failed')
+        log('parse_gumtree', '[ERROR] Moving directory failed')
         return
 
     # 
@@ -68,108 +137,34 @@ def main(pid, vid):
     with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'track_intvl.pkl'), 'rb') as file:
         track_intvl = pickle.load(file)
 
-    # Initialize
-    # On track intvl, addition/deletion always exists
-    # addition/deletion is added only when actual line diff is not empty
-    res_dict = dict()
+    # Initialize dictionary
+    # 'char_id' contains intervals of identifiers
+    # 'char_diff' contains intervals of GumTree diff
+    res_dict = {'char_id' : dict(), 'char_diff' : dict()}
 
-    for setting, tracker_dict in track_intvl.items():
-        res_dict[setting] = dict()
+    for setting, bug_src_dict in track_intvl.items():
+        res_dict['char_id'][setting], res_dict['char_diff'][setting] = dict(), dict()
 
-        for src_dict in tracker_dict.values():
-            for range_dict in src_dict.values():
-                for commit, commit_dict in range_dict.items():
-                    if commit not in res_dict[setting]:
-                        res_dict[setting][commit] = dict()
+        for bug_intvl_dict in bug_src_dict.values():
+            for commit_dict in bug_intvl_dict.values():
+                for commit, path_dict in commit_dict.items():
+                    res_dict['char_id'][setting].setdefault(commit, {'addition' : dict(), 'deletion' : dict()})
+                    res_dict['char_diff'][setting].setdefault(commit, dict())
                     
-                    for path_tup, path_dict in commit_dict.items():
-                        if path_tup not in res_dict[setting][commit]:
-                            res_dict[setting][commit][path_tup] = dict()
-
-                        for adddel, intvl_dict in path_dict.items():
-                            intvl = intvl_dict['line_diff']
-
-                            if not (adddel in res_dict[setting][commit][path_tup] or intvl.is_empty()):
-                                res_dict[setting][commit][path_tup][adddel] = dict()
+                    for path_tup, adddel_dict in path_dict.items():
+                        for ind, adddel in enumerate(['deletion', 'addition']):
+                            if path_tup[ind] != '/dev/null': # Ignore /dev/null
+                                res_dict['char_id'][setting][commit][adddel].setdefault(path_tup[ind], None)
+                        
+                        res_dict['char_diff'][setting][commit].setdefault(path_tup, None)
     
-    # Parse with GumTree
-    # Add data for empty ca
-    for setting, tracker_dict in res_dict.items():
-        tracker = dict(setting)['tracker']
-        start_time = time.time()
+    # Id extraction failed
+    if not extarct_id(res_dict['char_id']):
+        return
 
-        for commit_hash, commit_dict in tracker_dict.items():
-            for (before_src_path, after_src_path), path_dict in commit_dict.items():
-
-                if 'addition' in path_dict: # Copy after file
-                    p = subprocess.Popen(['git', 'show', f'{commit_hash}:{after_src_path}'], \
-                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    after_code, err_txt = p.communicate()
-
-                    # Error raised while copying file
-                    if p.returncode != 0:
-                        # Actual addition occured but failed to copy file
-                        log(f'[ERROR] Failed to copy file {commit_hash}:{after_src_path}', after_code, err_txt)
-                        continue
-                    
-                    else:
-                        no_after_src = False
-
-                        after_code = after_code.decode(encoding='utf-8', errors='ignore')
-                        with open('/root/workspace/tmp/after.java', 'w') as file:
-                            file.write(after_code)
-                        
-                        path_dict['addition']['char_id'] = gumtree_parse('after.java')
-                else: # No after file
-                    no_after_src = True
-
-                if 'deletion' in path_dict: # Copy after file
-                    p = subprocess.Popen(['git', 'show', f'{commit_hash}~1:{before_src_path}'], \
-                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    before_code, err_txt = p.communicate()
-                    
-                    # Error raised while copying file
-                    if p.returncode != 0:
-                        # Actual deletion occured but failed to copy file
-                        log(f'[ERROR] Failed to copy file {commit_hash}~1:{before_src_path}', before_code, err_txt)
-                        continue
-                        
-                    else:
-                        no_before_src = False
-
-                        before_code = before_code.decode(encoding='utf-8', errors='ignore')
-                        with open('/root/workspace/tmp/before.java', 'w') as file:
-                            file.write(before_code)
-                        
-                        path_dict['deletion']['char_id'] = gumtree_parse('before.java')
-                else: # No before file
-                    no_before_src = True
-                
-                # GumTree diff parsing
-                add_intvl, del_intvl = gumtree_diff(no_after_src=no_after_src, no_before_src=no_before_src)
-                
-                if add_intvl is None or del_intvl is None:
-                    log(f'[ERROR] GumTree token interval retrieval failed')
-                else:
-                    if not after_src_path:
-                        path_dict['addition']['char_diff'] = add_intvl
-                    if not before_src_path:
-                        path_dict['deletion']['char_diff'] = del_intvl
-            
-        end_time = time.time()
-        log(f'({tracker}) : {time_to_str(start_time, end_time)}')
+    # GumTree diff failed
+    if not perform_diff(res_dict['char_diff']):
+        return
         
     with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'gumtree_intvl.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)
-
-    """diff.parse_gumtree()
-
-    # Save the parsed result
-    savedir = f'/root/workspace/data/Defects4J/diff/{pid}-{vid}b'
-    os.makedirs(savedir, exist_ok=True)
-
-    with open(os.path.join(savedir, 'git_diff.pkl'), 'wb') as file:
-        pickle.dump(diff.git_diff, file)
-
-    with open(os.path.join(savedir, 'gumtree_diff_interval.pkl'), 'wb') as file:
-        pickle.dump(diff.gumtree_interval, file)"""
