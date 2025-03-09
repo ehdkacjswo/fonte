@@ -4,20 +4,22 @@ from collections import Counter
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 
+# (https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.9)
+keywords = {'abstract', 'assert', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class', \
+    'const', 'continue', 'default', 'do', 'double', 'else', 'enum', 'extends', 'final', 'finally', 'float', \
+    'for', 'if', 'goto', 'implements', 'import', 'instanceof', 'int', 'interface', 'long', 'native', 'new', \
+    'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'strictfp', 'super', 'switch', \
+    'synchronized', 'this', 'throw', 'throws', 'transient', 'try', 'void', 'volatile', 'while'}
+
 # Class that encodes string while expanding the vocabulary
 class Encoder():
     stopword_list = stopwords.words('english')
-    keyword_list = ['abstract', 'assert', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class', \
-        'const', 'continue', 'default', 'do', 'double', 'else', 'enum', 'extends', 'final', 'finally', 'float', \
-        'for', 'goto', 'if', 'implements', 'import', 'instanceof', 'int', 'interface', 'long', 'native', 'new', \
-        'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'strictfp', 'super', 'switch', \
-        'synchronized', 'this', 'throw', 'throws', 'transient', 'try', 'void', 'volatile', 'while']
 
     def __init__(self, vocab={}):
         self.vocab = vocab # {word : id}
         self.stemmer = PorterStemmer()
     
-    def tokenize(self, text, use_stopword=True):
+    def tokenize(self, text, is_id):
         # Remove characters except alphabets and numbers
         text = re.sub(r'[^A-Za-z0-9]', ' ', text) 
 
@@ -33,7 +35,7 @@ class Encoder():
                 (len(token) > 1 and \
                 not token.isdigit() and \
                 token not in Encoder.stopword_list and \
-                token not in Encoder.keyword_list)]
+                token not in keywords)]
             
         return token_list
 

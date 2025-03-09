@@ -12,15 +12,15 @@ if __name__ == "__main__":
 
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
-        pid, vid = 'Cli', '29'
+        #pid, vid = 'Cli', '29'
 
         #track_history.main(pid, vid)
-        parse_gumtree.main(pid, vid)
-        #greedy_id.main(pid, vid)
+        #parse_gumtree.main(pid, vid)
+        greedy_id.main(pid, vid)
         #gen_intvl.main(pid, vid)
         #encode.main(pid, vid)
         #feature_sum_id.main(pid, vid)    
         #vote.main(pid, vid)
         #bisection.main(pid, vid)
 
-        break
+        #break

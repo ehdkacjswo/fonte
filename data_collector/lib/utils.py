@@ -91,10 +91,10 @@ def log(filename, txt, out_txt=None, err_txt=None):
         file.write(txt + '\n')
 
         if out_txt is not None:
-            file.write('[ERROR] OUT\n' + out_txt.decode(encoding='utf-8', errors='ignore') + '\n')
+            file.write('[ERROR] OUT\n' + out_txt.decode(encoding='utf-8', errors='ignore').strip() + '\n')
         
         if err_txt is not None:
-            file.write('[ERROR] ERR\n' + err_txt.decode(encoding='utf-8', errors='ignore') + '\n')
+            file.write('[ERROR] ERR\n' + err_txt.decode(encoding='utf-8', errors='ignore').strip() + '\n')
 
 # Get style change data list [(commit, before_src_path, after_src_path)]
 def get_excluded(coredir, tool='git', stage2='skip'):

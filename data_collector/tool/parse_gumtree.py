@@ -23,6 +23,7 @@ DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff/'
 # Extract identifiers with GumTree
 def extarct_id(char_id_dict):
     for setting, commit_dict in char_id_dict.items():
+        log('parse_gumtree', f'[INFO] GumTree identifier extraction (Tracker : {dict(setting)["tracker"]})')
         start_time = time.time()
 
         for commit, adddel_dict in commit_dict.items():
@@ -53,13 +54,14 @@ def extarct_id(char_id_dict):
                             path_dict[src_path] = id_dict
         
         end_time = time.time()
-        log('parse_gumtree', f'[INFO] ID extraction with {dict(setting)["tracker"]} : {time_to_str(start_time, end_time)}')
+        log('parse_gumtree', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
     
     return True
 
 # Perform GumTree diff
 def perform_diff(char_diff_dict):
     for setting, commit_dict in char_diff_dict.items():
+        log('parse_gumtree', f'[INFO] GumTree diff (Tracker : {dict(setting)["tracker"]})')
         start_time = time.time()
 
         for commit, path_dict in commit_dict.items():
@@ -101,7 +103,7 @@ def perform_diff(char_diff_dict):
                         path_dict[path_tup] = {'addition' : add_intvl, 'deletion' : del_intvl}
             
         end_time = time.time()
-        log('parse_gumtree', f'[INFO] GumTree diff with tracker({dict(setting)["tracker"]}) : {time_to_str(start_time, end_time)}')
+        log('parse_gumtree', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
 
     return True
             

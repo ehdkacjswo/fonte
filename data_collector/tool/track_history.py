@@ -210,9 +210,10 @@ def main(pid, vid):
         setting = frozenset({'tracker' : tracker}.items())
         res_dict[setting] = dict()
 
-        if tracker == 'git':
-            start_time = time.time()
+        log('track_history', f'[INFO] Method history tracking (Tracker : {tracker})')
+        start_time = time.time()
 
+        if tracker == 'git':
             git_parser = GitParser()
             suspicious_methods = get_suspicious_methods(pid, vid)
 
@@ -227,7 +228,7 @@ def main(pid, vid):
                     stdout, stderr = p.communicate()
 
                     if p.returncode != 0:
-                        log('track_history', '[ERROR] git log failed', out_txt, err_txt)
+                        log('track_history', f'[ERROR] git log failed {begin_line},{end_line}:{src_path}', out_txt, err_txt)
                         continue
 
                     #print(stdout.decode(encoding='utf-8', errors='ignore'))
@@ -235,7 +236,7 @@ def main(pid, vid):
             
             # Check elapsed time
             end_time = time.time()
-            log('track_history', f'({tracker}) : {time_to_str(start_time, end_time)}')
+            log('track_history', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
             
     # Save the parsed result
     savedir = f'/root/workspace/data/Defects4J/diff/{pid}-{vid}b'
