@@ -65,16 +65,29 @@ def extract_id_code(commit, src_path):
         char = code_txt[ind]
 
         # Character, string literal
+        # (Character literal is allowed to contain only one character, so needs extra handling)
+        # (But we are assuming that the code is syntatically correct)
         if char == '"' or char == "'":
             start, quote = ind, char
             ind += 1
 
-            # Closing quote must not be preceded by '\\'
-            while ind < length and (code_txt[ind] != quote or code_txt[ind - 1] == '\\'):
+            while ind < length:
+                if code_txt[ind] == quote:
+                    escape_cnt, tmp_ind = 0, ind - 1
+
+                    # Closing quote must not be preceded by '\'
+                    while code_txt[tmp_ind] == '\\':
+                        escape_cnt += 1
+                        tmp_ind -= 1
+                    
+                    # Even though closing quote is preceded by '\', it's okay if it's already escaped.
+                    if escape_cnt % 2 == 0:
+                        break
+                    
                 ind += 1
 
             if ind < length:
-                non_id_intvl |= CustomInterval(start, ind)
+                non_id_intvl |= CustomInterval(start, ind + 1)
                 ind += 1
                 continue
             
