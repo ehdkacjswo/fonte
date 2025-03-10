@@ -1,41 +1,109 @@
 import regex as re
 from spiral import ronin
 from collections import Counter
+from typing import Literal
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 
+# Java keywords + Boolean / Null literals
 # (https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.9)
-keywords = {'abstract', 'assert', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class', \
+keyword_set = {'abstract', 'assert', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class', \
     'const', 'continue', 'default', 'do', 'double', 'else', 'enum', 'extends', 'final', 'finally', 'float', \
     'for', 'if', 'goto', 'implements', 'import', 'instanceof', 'int', 'interface', 'long', 'native', 'new', \
     'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'strictfp', 'super', 'switch', \
-    'synchronized', 'this', 'throw', 'throws', 'transient', 'try', 'void', 'volatile', 'while'}
+    'synchronized', 'this', 'throw', 'throws', 'transient', 'try', 'void', 'volatile', 'while', \
+    'true', 'false', 'null'}
+
+stopword_set = set(stopwords.words('english'))
+stemmer = PorterStemmer()
 
 # Class that encodes string while expanding the vocabulary
 class Encoder():
-    stopword_list = stopwords.words('english')
-
-    def __init__(self, vocab={}):
+    def __init__(self, vocab={}, id_vocab={}):
         self.vocab = vocab # {word : id}
-        self.stemmer = PorterStemmer()
+        self.id_vocab = id_vocab 
+        #self.stemmer = PorterStemmer()
     
-    def tokenize(self, text, is_id):
-        # Remove characters except alphabets and numbers
-        text = re.sub(r'[^A-Za-z0-9]', ' ', text) 
+    # Get id of given word
+    # 
+    def get_id(self, word, update_vocab, mode : Literal['id', 'code', 'text']):
+        
+        # Word exists in vocabulary
+        if word in self.all_vocab:
+            word_id = self.all_vocab[word]
 
-        token_list = ronin.split(text) # Split the text
-        #print(token_list)
-        token_list = [self.stemmer.stem(token.lower()) for token in token_list] # Apply lowercase
-        #token_list = [token.lower() for token in token_list] # Apply lowercase
-        #print(token_list)
+            # 
+            if mode =='id' and update_vocab and (word not in self.id_vocab):
+                self.id_vocab[word] = word_id
+        
+        else:
+            if update_vocab:
+                word_id = len(self.all_vocab)
+                self.all_vocab[word] = word_id
 
-        # Remove single character, numbers and stopwords
-        if use_stopword:
-            token_list = [token for token in token_list if \
-                (len(token) > 1 and \
-                not token.isdigit() and \
-                token not in Encoder.stopword_list and \
-                token not in keywords)]
+                if mode == 'id':
+                    self.id_vocab[word] = word_id
+            
+            else:
+                return None
+
+    # Update vocab False > 존재하지 않는 토큰은 무시해야 한다 > 개별 Encoding 불가가
+    # True > 존재하지 않는 토큰큰
+    # Encode token
+    def encode_token(self, token, is_id):
+        
+        if is_id:
+            self.id_vocab.setdefault(token, len(self.vocab) + len(self.id_vocab))
+            return self.id_vocab[token]
+            if token in self.id_vocab:
+                return self.id_vocab[token]
+            
+            else:
+                self.id_vocab[token]
+
+
+    # REMEBER!!!!!!! FILTERING BEFORE STEMMING!!!!!!
+    # update_vocab : False > Find ID too
+    def tokenize(self, text, update_vocab, mode : Literal['id', 'code', 'text']):
+        token_id_list = list()
+
+        # For the id, keep the full identifier
+        # Maybe already in vocab
+        if mode == 'id':
+            if update_vocab:
+                self.id_vocab.setdefault(text, len(self.vocab) + len(self.id_vocab))
+                token_id_list = [self.id_vocab[text]]
+            
+            elif text in self.id_vocab:
+                token_id_list = [self.id_vocab[text]]
+
+        # Remove special characters & split
+        # Keep _ and $ since they are available on id names (Handled on ronin)
+        token_list = re.sub(r'[^A-Za-z0-9_$]', ' ', text).split()
+
+        if mode == 'code': # Remove keywords from the code
+            token_list = [token for token in token_list if token not in keyword_set]
+        
+        # Perform ronin split
+        ronin_token_list = []
+        for token in token_list:
+            ronin_token_list += ronin.split(token)
+        
+        # Last filtering + 
+        stem_token_list = []
+
+        for token in ronin_token_list:
+            if len(token) <= 1 or token.isdigit(): # Ignore digit and
+                continue
+            
+            token = token.lower()
+            if token in stopword_set:
+                continue
+            
+            token = stemmer.stem(token)
+
+            if len(token) > 1:
+                stem_token_list.append(token)
             
         return token_list
 

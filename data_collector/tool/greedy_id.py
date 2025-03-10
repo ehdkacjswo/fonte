@@ -17,7 +17,7 @@ from interval import inf
 sys.path.append('/root/workspace/data_collector/lib/')
 from gumtree import *
 from utils import *
-from encoder import keywords
+from encoder import keyword_set
 
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff/'
@@ -48,6 +48,87 @@ non_id_regex = re.compile(r'''
 
 id_regex = re.compile(r'(?<!\w)[A-Za-z_$][A-Za-z0-9_$]*(?!\w)')
 
+# Extract identifiers from code
+# (Changed from regex based search > linear search for speed)
+def extract_id_code(commit, src_path):
+    code_txt = get_src_from_commit(commit, src_path)
+    
+    if code_txt is None:
+        log('greedy_id', f'[ERROR] Failed to copy file {commit}:{src_path}')
+        return None, None
+
+    length = len(code_txt)
+    id_intvl, non_id_intvl = CustomInterval(), CustomInterval()
+    
+    ind = 0
+    while ind < length:
+        char = code_txt[ind]
+
+        # Character, string literal
+        if char == '"' or char == "'":
+            start, quote = ind, char
+            ind += 1
+
+            # Closing quote must not be preceded by '\\'
+            while ind < length and (code_txt[ind] != quote or code_txt[ind - 1] == '\\'):
+                ind += 1
+
+            if ind < length:
+                non_id_intvl |= CustomInterval(start, ind)
+                ind += 1
+                continue
+            
+            else:
+                log('greedy_id', f'[ERROR] Character / String literal not closed {commit}:{src_path}\n{code_txt[start : ind + 1]}')
+                return None, None
+
+        # Line Comments (//...)
+        if char == '/' and ind + 1 < length and code_txt[ind + 1] == '/':
+            start = ind
+            ind += 2
+
+            while ind < length and code_txt[ind] != '\n':
+                ind += 1
+            
+            non_id_intvl |= CustomInterval(start, ind - 1)
+            ind += 1
+            continue
+
+        # Block / Javadoc comment
+        if char == '/' and ind + 1 < length and code_txt[ind + 1] == '*':
+            start = ind
+            ind += 2
+
+            # Find closing string '*/'
+            while ind + 1 < length and not (code_txt[ind] == '*' and code_txt[ind + 1] == '/'):
+                ind += 1
+
+            if ind + 1 < length: # Comment closed properly
+                non_id_intvl |= CustomInterval(start, ind + 1)
+                ind += 2
+                continue
+            
+            else: # 
+                log('greedy_id', f'[ERROR] Block / Javadoc comment not closed {commit}:{src_path}\n{code_txt[start : ind + 2]}')
+                return None, None
+
+        # Handle Identifiers (어디까지 identifier로 생각해야되지지)
+        if char.isalpha() or char == '_' or char == '$':
+            start = ind
+
+            while ind < length and (code_txt[ind].isalnum() or code_txt[ind] in "_$"):
+                ind += 1
+
+            if code_txt[start : ind] not in keyword_set:
+                id_intvl |= CustomInterval(start, ind - 1)
+
+            continue
+        
+        ind += 1
+
+    return id_intvl, non_id_intvl
+
+
 # Extract identifiers with GumTree
 def extarct_id(res_dict):
     for setting, commit_dict in res_dict.items():
@@ -59,35 +140,12 @@ def extarct_id(res_dict):
                 target_commit = commit + ('' if adddel == 'addition' else '~1')
 
                 for src_path in path_dict.keys():
-                    code_txt = get_src_from_commit(target_commit, src_path)
+                    id_intvl, non_id_intvl = extract_id_code(target_commit, src_path)
 
-                    # Failed to get the target code
-                    if code_txt is None:
-                        log('greedy_id', f'[ERROR] Failed to copy file {target_commit}:{src_path}')
+                    if id_intvl is None or non_id_intvl is None:
                         return False
-                    
-                    # Parse the code to get identifiers
-                    else:
-                        # Extract interval of string, character, line/block comment, Javadoc, annotation
-                        non_id_intvl = CustomInterval()
 
-                        for match in non_id_regex.finditer(code_txt):
-                            non_id_intvl |= CustomInterval(match.start(), match.end() - 1)
-
-                        # Extract all potential identifiers
-                        id_intvl = CustomInterval()
-
-                        for match in id_regex.finditer(code_txt):
-                            sub_intvl = CustomInterval(match.start(), match.end() - 1)
-
-                            # Does not overlap with non_id interval
-                            if (non_id_intvl & sub_intvl).is_empty():
-                                # Ignore Java keywords
-                                if match.group(0) in keywords:
-                                    continue
-                                
-                                id_intvl |= sub_intvl
-                        
+                    else:    
                         path_dict[src_path] = {'non_id' : non_id_intvl, 'id' : id_intvl}
         
         end_time = time.time()

@@ -10,18 +10,27 @@ import pickle
 import tempfile
 import time
 import math
+from spiral import ronin
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
+
 
 import pandas as pd
 from interval import inf
 
 sys.path.append('/root/workspace/data_collector/lib/')
-from gumtree import *
 from utils import *
-from encoder import java_keywords
 
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff/'
 
+keyword_set = {'abstract', 'assert', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class', \
+    'const', 'continue', 'default', 'do', 'double', 'else', 'enum', 'extends', 'final', 'finally', 'float', \
+    'for', 'if', 'goto', 'implements', 'import', 'instanceof', 'int', 'interface', 'long', 'native', 'new', \
+    'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'strictfp', 'super', 'switch', \
+    'synchronized', 'this', 'throw', 'throws', 'transient', 'try', 'void', 'volatile', 'while', \
+    'true', 'false', 'null'}
+stopword_set = set(stopwords.words('english'))
 # String : " + (Escape sequence + Any string) + "
 # (https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10.5)
 
@@ -56,15 +65,86 @@ def convert_ind(ind):
     
     return math.floor(ind) + 1
 
+# Assume given code is syntatically
+def extract_identifiers(code_txt):
+    length = len(code_txt)
+    id_intvl, non_id_intvl = CustomInterval(), CustomInterval()
+    
+    ind = 0
+    while ind < length:
+        char = code_txt[ind]
+
+        # Character, string literal
+        if char == '"' or char == "'":
+            start, quote = ind, char
+            ind += 1
+
+            # Closing quote must not be preceded by '\\'
+            while ind < length and (code_txt[ind] != quote or code_txt[ind - 1] == '\\'):
+                ind += 1
+
+            if ind < length:
+                non_id_intvl |= CustomInterval(start, ind)
+                ind += 1
+                continue
+            
+            else:
+                break
+
+        # Line Comments (//...)
+        if char == '/' and ind + 1 < length and code_txt[ind + 1] == '/':
+            start = ind
+            ind += 2
+
+            while ind < length and code_txt[ind] != '\n':
+                ind += 1
+            
+            non_id_intvl |= CustomInterval(start, ind - 1)
+            ind += 1
+            continue
+
+        # Block / Javadoc comment
+        if char == '/' and ind + 1 < length and code_txt[ind + 1] == '*':
+            start = ind
+            ind += 2
+
+            # Find closing string '*/'
+            while ind + 1 < length and not (code_txt[ind] == '*' and code_txt[ind + 1] == '/'):
+                ind += 1
+
+            if ind + 1 < length: # Comment closed properly
+                non_id_intvl |= CustomInterval(start, ind + 1)
+                ind += 2
+                continue
+            
+            else: # 
+                break
+
+        # Handle Identifiers (어디까지 identifier로 생각해야되지지)
+        if char.isalpha() or char == '_' or char == '$':
+            start = ind
+
+            while ind < length and (code_txt[ind].isalnum() or code_txt[ind] in "_$"):
+                ind += 1
+
+            if code_txt[start : ind] not in keyword_set:
+                id_intvl |= CustomInterval(start, ind - 1)
+
+            continue
+        
+        ind += 1
+
+    return id_intvl, non_id_intvl
+
 if __name__ == "__main__":
     # Extract interval of char, str, line/block comment, Javadoc, annotation
 
     with open('/root/workspace/test/greedy.java', 'r') as file:
         code_txt = file.read()
-    non_id_intvl = CustomInterval()
+    """non_id_intvl = CustomInterval()
 
     for match in non_id_regex.finditer(code_txt):
-        non_id_intvl |= CustomInterval(match.start(), match.end() - 1)
+        non_id_intvl |= CustomInterval(match.start(), match.end() - 1)"""
     
 
 
@@ -82,7 +162,7 @@ if __name__ == "__main__":
         annotations.add(annotation)"""
 
     # Extract all potential identifiers
-    id_intvl = CustomInterval()
+    """id_intvl = CustomInterval()
 
     for match in id_regex.finditer(code_txt):
         sub_intvl = CustomInterval(match.start(), match.end() - 1)
@@ -91,10 +171,17 @@ if __name__ == "__main__":
             if match.group(0) in java_keywords:
                 continue  # Ignore Java keywords
             
-            id_intvl |= sub_intvl
-        
-    for sub_intvl in non_id_intvl:
-        print('Non_Id)', code_txt[convert_ind(sub_intvl[0]) : convert_ind(sub_intvl[1])])
+            id_intvl |= sub_intvl"""
     
-    for sub_intvl in id_intvl:
-        print('Id)', code_txt[convert_ind(sub_intvl[0]) : convert_ind(sub_intvl[1])])
+    id_intvl, non_id_intvl = extract_identifiers(code_txt)
+        
+    #for sub_intvl in non_id_intvl:
+    #    print('Non_Id)', code_txt[convert_ind(sub_intvl[0]) : convert_ind(sub_intvl[1])])
+    
+    #for sub_intvl in id_intvl:
+    #    print('Id)', code_txt[convert_ind(sub_intvl[0]) : convert_ind(sub_intvl[1])])
+    
+    stemmer = PorterStemmer()
+    for keyword in stopword_set:
+        print(keyword, stemmer.stem(keyword))
+    

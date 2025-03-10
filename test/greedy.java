@@ -7,7 +7,7 @@ public class Sample {
     @Deprecated // Annotation before method
     public void method1() {
         System.out.println("This is a string, not a comment: /* real comment? */");
-        char c = 'x'; // A character literal
+        char c = '\u03a9'; // A character literal
 
         // Single-line comment with annotation: @SuppressWarnings("unused")
         int number = 42; /* Block comment before declaration */

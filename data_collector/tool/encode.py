@@ -12,87 +12,107 @@ BASE_DATA_DIR = '/root/workspace/data/Defects4J/baseline'
 
 adddel_list = ['add', 'del', 'all_uni', 'all_sep']
 
-# Get style change data list [(commit, before_src_path, after_src_path)]
-def get_excluded(coredir, tool='git', stage2='skip'):
-    if stage2 == 'skip':
-        return []
-
-    elif stage2 == 'precise':
-        val_df = pd.read_csv(
-            os.path.join(coredir, tool, f"precise_validation_noOpenRewrite.csv"), 
-            header=None,
-            names=["commit", "before_src_path", "after_src_path", "AST_diff"])
-
-        unchanged_df = val_df[val_df["AST_diff"] == "U"]
-        return list(zip(unchanged_df["commit"], unchanged_df["before_src_path"], unchanged_df["after_src_path"]))
-
-# Code txt could be possibly "None" (Failed to get code data)
-def get_tokens_intvl(commit, src_path, intvl_dict):
+# Returns total_intvl, {commit : {adddel : src_path} }, {commit : commit message}, encoder
+def load_data(pid, vid):
     
-    # Convert index from interval to integer
-    def convert_ind(ind):
-        if ind == -inf:
-            return 0
-        if ind == inf:
-            return len(code_txt)
-        
-        return math.floor(ind) + 1
+    # Load total interval data
+    with open(os.path.join(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'total_intvl.pkl')), 'rb') as file:
+        total_intvl = pickle.load(file)
+
+    # Get src paths related to commits (For faster encoding)
+    commit_path_dict = dict()
+
+    for setting_dict in total_intvl.values():
+        for commit_dict in setting_dict.values():
+            for commit, adddel_dict in commit_dict.items():
+                commit_path_dict.setdefault(commit, {'addition' : set(), 'deletion' : set()})
+
+                for adddel, path_dict in commit_dict.items():
+                    for path in path_dict.keys():
+                        commit_path_dict[commit][adddel].add(path)
     
-    # Get code text
-    code_txt = get_src_from_commit(commit, src_path)
+    # Get commit messages
+    encoder, commit_msg_dict = Encoder(), dict() 
+    base_data_dir = os.path.join(BASE_DATA_DIR, f'{pid}-{vid}b', 'commits')
 
-    # Get tokens from code
-    res_dict = dict()
-    for diff_type, intvl in intvl_dict.items():
-        if intvl.is_empty(): # Empty interval
-            res_dict[diff_type] = []
-        if code_txt is None:
-            log('encode', f'[ERROR] Failed to get file {commit}:{src_path}')
-            return None
-        
-        res_dict[diff_type] = [''.join(code_txt[convert_ind(sub_intvl[0]) : convert_ind(sub_intvl[1])]) for sub_intvl in intvl]
+    for commit in commit_path_dict.keys():
+        for filename in os.listdir(base_data_dir):
+            if filename.startswith(f'c_{commit}'):
+                with open(os.path.join(base_data_dir, filename), "r") as file:
+                    data = json.load(file)
+                    
+                commit_msg_dict[commit] = encoder.encode(data['log'], use_stopword=True, update_vocab=True)
+                break
+    
+    return total_intvl, commit_path_dict, commit_msg_dict
 
-    return res_dict
 
 # Encode the data 
 # Add file
-def pre_encode(pid, vid):
-    with open(os.path.join(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'total_intvl.pkl')), 'rb') as file:
-        intvl_dict = pickle.load(file)
+def pre_encode(total_intvl, commit_path_dict, commit_msg_dict):
+    
+    # For identifier handling, each setting needs independent vocabulary
+    encoder_dict = dict()
 
-    base_data_dir = os.path.join(BASE_DATA_DIR, f'{pid}-{vid}b', 'commits')
-    commit_msg_dict = dict()
-    encoder = Encoder()
+    # Get the tokens from interval & encode
+    for commit, adddel_dict in commit_path_dict.items():
+        for adddel, path_set in adddel_dict.items():
+            target_commit = commit + ('' if adddel == 'addition' else '~1')
 
-    for stage2, stage2_dict in intvl_dict.items():
-        for setting, setting_dict in stage2_dict.items():
-            for commit, commit_dict in setting_dict.items():
+            for src_path in path_set:
                 
-                # Get/Encode commit message
-                for filename in os.listdir(base_data_dir):
-                    if filename.startswith(f'c_{commit}'):
-                        with open(os.path.join(base_data_dir, filename), "r") as file:
-                            data = json.load(file)
-                        commit_msg_dict[commit] = encoder.encode(data['log'], use_stopword=True, update_vocab=True)
-                        break
+                # Get the code text
+                code_txt = get_src_from_commit(target_commit, src_path)
 
-                for adddel, adddel_dict in commit_dict.items(): # Get/Encode commit featues
-                    for src_path, src_intvl_dict in adddel_dict.items():
-                        # Get the tokens in the list
-                        token_dict = get_tokens_intvl(commit + ('' if adddel == 'addition' else '~1'), src_path, src_intvl_dict)
-                        
-                        if token_dict is None:
-                            return None, None, None
+                if code_txt is None:
+                    log('encode', f'[ERROR] Failed to get file {target_commit}:{src_path}')
+                    return False
+                
+                for stage2, setting_dict in total_intvl.items():
+                    encoder_dict.setdefault(stage2, dict())
 
-                        for diff_type, tokens in token_dict.items():
-                            diff_enc = []
+                    for setting, commit_dict in setting_dict.items():
+                        encoder_dict[stage2].setdefault(setting, Encoder())
 
-                            for token in tokens:
-                                diff_enc = sum_encode(diff_enc, encoder.encode(token))
+                        # Setting contains interval data for given commit, adddel, src_path
+                        if (commit in commit_dict) and (src_path in commit_dict[commit][adddel]):
                             
-                            src_intvl_dict[diff_type] = diff_enc
-                        
-                        src_intvl_dict['enc_path'] = (encoder.encode(src_path))
+                            # Get the tokens in the given interval
+                            token_intvl_dict = commit_dict[commit][adddel][adddel][src_path]
+                            token_intvl_dict = get_tokens_intvl(code_txt, token_intvl_dict)
+
+                            for diff_type, tokens in token_intvl_dict.items():
+
+                                # Encode source code (Not classified)
+                                if diff_type == 'diff':
+                                    mode = 'code'
+                                
+                                # Encode comment, string and annotation (Treated as pure text)
+                                elif diff_type == 'comment' or diff_type == 'non_id':
+                                    mode = 'text'
+                                
+                                # Encode identifier
+                                else:
+                                    mode = 'id'
+                                    
+                                tokens = encoder_dict[stage2][setting].encode()
+
+
+    for stage2, setting_dict in total_intvl.items():
+        encoder_dict.setdefault(stage2, dict())
+
+        for setting, commit_dict in setting_dict.items():
+            encoder_dict[stage2].setdefault(setting, Encoder())
+
+            # Setting contains interval data for given commit, adddel, src_path
+            if (commit in commit_dict) and (src_path in commit_dict[commit][adddel]):
+                
+                # Get the tokens in the given interval
+                token_intvl_dict = commit_dict[commit][adddel][adddel][src_path]
+                token_intvl_dict = get_tokens_intvl(code_txt, token_intvl_dict)
+
+                for diff_type, tokens in token_intvl_dict.items():
+                    tokens = encoder_dict[stage2][setting].encode()
     
     return intvl_dict, commit_msg_dict, encoder.vocab
 
@@ -119,15 +139,15 @@ def gen_feature(enc_data, commit_msg_dict):
                 # Consider only unique paths
                 if src_path not in path_set[adddel]:
                     path_set[adddel].add(src_path)
-                    path_enc[adddel] = sum_encode(path_enc[adddel], src_enc_dict['enc_path'])
+                    path_enc[adddel] = sum_encode(path_enc[adddel], src_enc_dict['path'])
 
                 if src_path not in path_set['all']:
                     path_set['all'].add(src_path)
-                    path_enc['all'] = sum_encode(path_enc['all'], src_enc_dict['enc_path'])
+                    path_enc['all'] = sum_encode(path_enc['all'], src_enc_dict['path'])
                 
                 # Aggregate encoded data (except path)
                 for diff_type, diff_enc in src_enc_dict.items():
-                    if diff_type != 'enc_path':
+                    if diff_type != 'path':
                         diff_enc_dict[adddel][diff_type] = sum_encode(diff_enc_dict[adddel].get(diff_type, []), diff_enc)
         
         # Generate feature
@@ -194,6 +214,7 @@ def main(pid, vid):
     
     # Encode the data
     start_time = time.time()
+    total_intvl, commit_path_dict, commit_msg_dict = load_data(pid, vid)
 
     encode_data, commit_msg_dict, vocab = pre_encode(pid, vid)
     if encode_data is None or commit_msg_dict is None or vocab is None:

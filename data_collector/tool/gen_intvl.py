@@ -78,6 +78,7 @@ def aggr_git_intvl(intvl_dict, excluded):
                     if (commit, path_tup[0], path_tup[1]) in excluded:
                         continue
                     
+                    # Commit is added only one at least one change is not style change
                     res_dict.setdefault(commit, {'addition' : dict(), 'deletion' : dict()})
 
                     for ind, adddel in enumerate(['deletion', 'addition']):
@@ -165,15 +166,17 @@ def gen_diff_type_intvl(diff_tool_intvl, id_intvl_dict):
 
             for adddel, path_dict in adddel_dict.items():
                 for src_path, intvl in path_dict.items():
+                    
                     # Not using identifier
                     if id_intvl_dict is None:
                         res_dict[setting][commit][adddel][src_path] = {'diff' : intvl}
                     
+                    # Using identifier
                     else:
                         res_dict[setting][commit][adddel][src_path] = dict()
 
+                        # Get identifier intervals in the diff interval
                         for id_type, id_intvl in id_intvl_dict[commit][adddel][src_path].items():
-                            #print(id_intvl)
                             res_dict[setting][commit][adddel][src_path][id_type] = id_intvl & intvl
         
     return res_dict
@@ -214,46 +217,46 @@ def main(pid, vid):
     res_dict = dict()
     param_list = list(itertools.product(diff_tool_list, diff_type_list))
 
-    start_time = time.time()
     for setting, track_intvl in track_intvl_dict.items():
-        setting_dict = dict(setting)
-        tracker = setting_dict['tracker']
+        tracker = dict(setting)['tracker']
 
         for stage2 in stage2_list:
+            log('gen_intvl', f'[INFO] Interval generation (Tracker : {tracker}, Stage2 : {stage2})')
+            start_time = time.time()
+
             res_dict.setdefault(stage2, dict())
             excluded = get_excluded(os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b/'), tracker, stage2)
 
             # Aggregate diff intervals from tracker (Convert to character level interval if neccessary)
             if tracker == 'git':
-                track_intvl_aaa = aggr_git_intvl(track_intvl, excluded)
-                if track_intvl_aaa is None:
+                new_track_intvl = aggr_git_intvl(track_intvl, excluded)
+                if new_track_intvl is None:
                     return None
             
             # Aggregate diff intervals from gumtree & Get intervals based on diff tool
             gumtree_diff = aggr_gumtree_diff(gumtree_intvl_dict['char_diff'][setting], excluded)
-            diff_tool_intvl = gen_diff_tool_intvl(track_intvl_aaa, gumtree_diff)
+            diff_tool_intvl = gen_diff_tool_intvl(new_track_intvl, gumtree_diff)
 
             for diff_type in diff_type_list:
                 # Don't use identifiers
                 if diff_type == 'base':
-                    id_intvl = None
+                    id_intvl_dict = None
 
                 # Use GumTree based identifiers
                 elif diff_type == 'gumtree_id':
-                    id_intvl = gumtree_intvl_dict['char_id'][setting]
+                    id_intvl_dict = gumtree_intvl_dict['char_id'][setting]
                 
                 # Use greedy identifiers
                 elif diff_type == 'greedy_id':
-                    id_intvl = greedy_id_dict[setting]
+                    id_intvl_dict = greedy_id_dict[setting]
 
-                diff_type_intvl = gen_diff_type_intvl(diff_tool_intvl, id_intvl)
+                diff_type_intvl = gen_diff_type_intvl(diff_tool_intvl, id_intvl_dict)
 
-                for sub_setting, asdf in diff_type_intvl.items():
-                    res_dict[stage2][frozenset((dict(sub_setting) | {'diff_type' : diff_type}).items())] = asdf
+                for sub_setting, id_intvl in diff_type_intvl.items():
+                    res_dict[stage2][frozenset((dict(sub_setting) | {'diff_type' : diff_type}).items())] = id_intvl
     
-    end_time = time.time()
-    log('gen_intvl', f'{time_to_str(start_time, end_time)}')
-    print(res_dict)
+            end_time = time.time()
+            log('gen_intvl', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
 
     with open(os.path.join(diff_data_dir, 'total_intvl.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)

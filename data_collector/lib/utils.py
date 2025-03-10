@@ -151,3 +151,26 @@ def line_to_char_intvl(code_txt, line_intvl):
         char_cnt = next_char_cnt
 
     return char_intvl
+
+# Code txt could be possibly "None" (Failed to get code data)
+def get_tokens_intvl(code_txt, intvl_dict):
+    
+    # Convert index from interval to integer
+    def convert_ind(ind):
+        if ind == -inf:
+            return 0
+        if ind == inf:
+            return len(code_txt)
+        
+        return math.floor(ind) + 1
+
+    # Get tokens from code
+    res_dict = dict()
+
+    for diff_type, intvl in intvl_dict.items():
+        if intvl.is_empty(): # Empty interval
+            res_dict[diff_type] = []
+        else:
+            res_dict[diff_type] = [code_txt[convert_ind(sub_intvl[0]) : convert_ind(sub_intvl[1])] for sub_intvl in intvl]
+
+    return res_dict
