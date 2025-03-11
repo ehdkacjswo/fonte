@@ -4,6 +4,8 @@ from collections import Counter
 from typing import Literal
 from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
+import ahocorasick, json
+
 # Same stemmer with ronin (https://github.com/casics/spiral/blob/master/spiral/ronin.py#L410)
 
 # Java keywords + Boolean / Null literals
@@ -32,7 +34,14 @@ def stem(token):
 class Encoder():
     def __init__(self, vocab={}, id_vocab={}):
         self.non_id_vocab = vocab # {word : id}
-        self.id_vocab = id_vocab 
+        self.id_vocab = id_vocab
+        self.automaton = ahocorasick.Automaton()
+    
+    def init_automaton(self):
+        for token, token_id in self.id_vocab.items():
+            self.automaton.add_word(token, token_id)
+        
+        self.automaton.make_automaton()
 
     # Update vocab False > 존재하지 않는 토큰은 무시해야 한다 > 개별 Encoding 불가가
     # True > 존재하지 않는 토큰큰
@@ -83,13 +92,20 @@ class Encoder():
 
     # Encode the list of texts based on their type
     def encode(self, text_list, update_vocab, mode : Literal['id', 'code', 'text']):
+        text_list = [text for text in text_list if len(text) > 1]
 
         # For the id, keep the full identifier
         if mode == 'id':
             id_list = self.encode_tokens(text_list, update_vocab, is_id=True)
 
+        # Find identifiers in the texts
         else:
             id_list = list()
+
+            if len(self.automaton) > 0:
+                for text in text_list:
+                    for _, token_id in self.automaton.iter(text):
+                        id_list.append(token_id)
 
         # Remove special characters & split
         # Keep _ and $ since they are available on identifiers (To avoid removing keywords in identifires)
@@ -123,13 +139,8 @@ class Encoder():
 
             if len(token) > 1:
                 final_token_list.append(token)
-        
+
         final_token_list = self.encode_tokens(final_token_list, update_vocab, is_id=False)
-        #print(id_list)
-        #print(final_token_list)
-        
-        # Find identifiers or not
-        #for token in stem_token_list:
         return Counter(id_list), Counter(final_token_list)
 
 # Return the sum of two encoded vectors
