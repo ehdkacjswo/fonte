@@ -3,7 +3,8 @@ from spiral import ronin
 from collections import Counter
 from typing import Literal
 from nltk.corpus import stopwords
-from nltk.stem.porter import PorterStemmer
+from nltk.stem import SnowballStemmer
+# Same stemmer with ronin (https://github.com/casics/spiral/blob/master/spiral/ronin.py#L410)
 
 # Java keywords + Boolean / Null literals
 # (https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.9)
@@ -15,7 +16,17 @@ keyword_set = {'abstract', 'assert', 'boolean', 'break', 'byte', 'case', 'catch'
     'true', 'false', 'null'}
 
 stopword_set = set(stopwords.words('english'))
-stemmer = PorterStemmer()
+stemmer = SnowballStemmer('english')
+
+# Stemming from ronin
+# (https://github.com/casics/spiral/blob/master/spiral/ronin.py#L672)
+def stem(token):
+    # The NLTK stemmer sometimes gives weird results, and the particular
+    # case of weird technical terms ending in 's' has been most troublesome.
+    if len(token) > 1 and token[-1:] == 's':
+        return token[:-1]
+    else:
+        return self._stemmer.stem(token)
 
 # Class that encodes string while expanding the vocabulary
 class Encoder():
@@ -78,10 +89,12 @@ class Encoder():
                 token_id_list = [self.id_vocab[text]]
 
         # Remove special characters & split
-        # Keep _ and $ since they are available on id names (Handled on ronin)
+        # Keep _ and $ since they are available on identifiers (To avoid removing keywords from identifires)
+        # 
         token_list = re.sub(r'[^A-Za-z0-9_$]', ' ', text).split()
 
-        if mode == 'code': # Remove keywords from the code
+        # Remove keywords from the code
+        if mode == 'code': 
             token_list = [token for token in token_list if token not in keyword_set]
         
         # Perform ronin split
