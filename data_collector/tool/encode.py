@@ -17,21 +17,23 @@ def load_data(pid, vid):
     
     # Load total interval data
     with open(os.path.join(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'total_intvl.pkl')), 'rb') as file:
-        total_intvl = pickle.load(file)
+        total_intvl_dict = pickle.load(file)
 
     # Get src paths related to commits (For faster encoding)
+    # {commit : {adddel : set(src_path)} }
     commit_path_dict = dict()
 
-    for setting_dict in total_intvl.values():
+    for setting_dict in total_intvl_dict.values():
         for commit_dict in setting_dict.values():
             for commit, adddel_dict in commit_dict.items():
                 commit_path_dict.setdefault(commit, {'addition' : set(), 'deletion' : set()})
 
-                for adddel, path_dict in commit_dict.items():
-                    for path in path_dict.keys():
-                        commit_path_dict[commit][adddel].add(path)
+                for adddel, path_dict in adddel_dict.items():
+                    for src_path in path_dict.keys():
+                        commit_path_dict[commit][adddel].add(src_path)
     
     # Get commit messages
+    # {commit : message}
     encoder, commit_msg_dict = Encoder(), dict() 
     base_data_dir = os.path.join(BASE_DATA_DIR, f'{pid}-{vid}b', 'commits')
 
@@ -41,15 +43,18 @@ def load_data(pid, vid):
                 with open(os.path.join(base_data_dir, filename), "r") as file:
                     data = json.load(file)
                     
-                commit_msg_dict[commit] = encoder.encode(data['log'], use_stopword=True, update_vocab=True)
+                commit_msg_dict[commit] = data['log']
                 break
+            
+            log('encode', f'[WARNING] No commit message for {commit}')
     
-    return total_intvl, commit_path_dict, commit_msg_dict
+    return total_intvl_dict, commit_path_dict, commit_msg_dict
 
 
 # Encode the data 
 # Add file
-def pre_encode(total_intvl, commit_path_dict, commit_msg_dict):
+# 
+def pre_encode(total_intvl_dict, commit_path_dict, commit_msg_dict):
     
     # For identifier handling, each setting needs independent vocabulary
     encoder_dict = dict()
@@ -66,21 +71,23 @@ def pre_encode(total_intvl, commit_path_dict, commit_msg_dict):
 
                 if code_txt is None:
                     log('encode', f'[ERROR] Failed to get file {target_commit}:{src_path}')
-                    return False
+                    return None, None, None
                 
-                for stage2, setting_dict in total_intvl.items():
+                for stage2, setting_dict in total_intvl_dict.items():
                     encoder_dict.setdefault(stage2, dict())
 
                     for setting, commit_dict in setting_dict.items():
                         encoder_dict[stage2].setdefault(setting, Encoder())
+                        encoder = encoder_dict[stage2][setting]
 
                         # Setting contains interval data for given commit, adddel, src_path
                         if (commit in commit_dict) and (src_path in commit_dict[commit][adddel]):
                             
                             # Get the tokens in the given interval
-                            token_intvl_dict = commit_dict[commit][adddel][adddel][src_path]
+                            token_intvl_dict = commit_dict[commit][adddel][src_path]
                             token_intvl_dict = get_tokens_intvl(code_txt, token_intvl_dict)
 
+                            # Should I encode identifier first and perform id encoding here too?
                             for diff_type, tokens in token_intvl_dict.items():
 
                                 # Encode source code (Not classified)
@@ -95,26 +102,29 @@ def pre_encode(total_intvl, commit_path_dict, commit_msg_dict):
                                 else:
                                     mode = 'id'
                                     
-                                tokens = encoder_dict[stage2][setting].encode()
+                                id_vec, non_id_vec = encoder.encode(tokens, update_vocab=True, mode=mode)
+                                #print(id_vec, non_id_vec)
+                                total_intvl_dict[stage2][setting][commit][adddel][src_path][diff_type] = {'id' : id_vec, 'non_id' : non_id_vec}
+                        
+                            # Encode path
+                            id_vec, non_id_vec = encoder.encode([src_path], update_vocab=True, mode='text')
+                            total_intvl_dict[stage2][setting][commit][adddel][src_path]['path'] = {'id' : id_vec, 'non_id' : non_id_vec}
+    
+    # Encode commit message 
+    enc_commit_msg_dict = dict()
 
-
-    for stage2, setting_dict in total_intvl.items():
-        encoder_dict.setdefault(stage2, dict())
+    for stage2, setting_dict in total_intvl_dict.items():
+        enc_commit_msg_dict[stage2] = dict()
 
         for setting, commit_dict in setting_dict.items():
-            encoder_dict[stage2].setdefault(setting, Encoder())
+            enc_commit_msg_dict[stage2][setting] = dict()
+            encoder = encoder_dict[stage2][setting]
 
-            # Setting contains interval data for given commit, adddel, src_path
-            if (commit in commit_dict) and (src_path in commit_dict[commit][adddel]):
-                
-                # Get the tokens in the given interval
-                token_intvl_dict = commit_dict[commit][adddel][adddel][src_path]
-                token_intvl_dict = get_tokens_intvl(code_txt, token_intvl_dict)
-
-                for diff_type, tokens in token_intvl_dict.items():
-                    tokens = encoder_dict[stage2][setting].encode()
+            for commit in commit_dict.keys():
+                id_vec, non_id_vec = encoder.encode([commit_msg_dict[commit]], update_vocab=True, mode='text')
+                enc_commit_msg_dict[stage2][setting][commit] = {'id' : id_vec, 'non_id' : non_id_vec}
     
-    return intvl_dict, commit_msg_dict, encoder.vocab
+    return total_intvl_dict, enc_commit_msg_dict, encoder_dict
 
 # Encode the raw diff data
 # skip_stage_2 = Excluding style change diff, with_Rewrite = , use_stopword
@@ -122,73 +132,112 @@ def pre_encode(total_intvl, commit_path_dict, commit_msg_dict):
 # addition/deletion dict : [(before/after_src_path_encode, content_encode_sum)]
 # data : message, src_path, diff
 # No diff 추가(는 나중에?)
-def gen_feature(enc_data, commit_msg_dict):
-    res_dict = {adddel : dict() for adddel in adddel_list}
-    no_diff_dict = {adddel : dict() for adddel in adddel_list}
+# No diff, no id
+def gen_feature(enc_dict, commit_msg_dict):
+    res_dict = {}
 
-    # Iterate through commits
-    for commit, commit_dict in enc_data.items():
-        path_set = {'addition' : set(), 'deletion' : set(), 'all' : set()}
-        path_enc = {'addition' : list(), 'deletion' : list(), 'all' : list()}
-        diff_enc_dict = {'addition' : dict(), 'deletion' : dict()}
+    for stage2, setting_dict in enc_dict.items():
+        res_dict.setdefault(stage2, dict())
 
-        # Aggregate encoded data of commit
-        for adddel, adddel_dict in commit_dict.items(): # adddel : addition, deletion
-            for src_path, src_enc_dict in adddel_dict.items():
-                    
-                # Consider only unique paths
-                if src_path not in path_set[adddel]:
-                    path_set[adddel].add(src_path)
-                    path_enc[adddel] = sum_encode(path_enc[adddel], src_enc_dict['path'])
-
-                if src_path not in path_set['all']:
-                    path_set['all'].add(src_path)
-                    path_enc['all'] = sum_encode(path_enc['all'], src_enc_dict['path'])
+        for setting, commit_dict in setting_dict.items():
+            for commit, adddel_dict in commit_dict.items():
                 
-                # Aggregate encoded data (except path)
-                for diff_type, diff_enc in src_enc_dict.items():
-                    if diff_type != 'path':
-                        diff_enc_dict[adddel][diff_type] = sum_encode(diff_enc_dict[adddel].get(diff_type, []), diff_enc)
+                # Aggregate encoded data of commit
+                path_set_dict = {'addition' : set(), 'deletion' : set(), 'all' : set()}
+
+                path_vec_dict = {'addition' : {'id' : Counter(), 'non_id' : Counter()}, \
+                    'deletion' : {'id' : Counter(), 'non_id' : Counter()}, \
+                    'all' : {'id' : Counter(), 'non_id' : Counter()}}
+
+                diff_vec_dict = {'addition' : dict(), 'deletion' : dict()}
+
+                for adddel, path_dict in adddel_dict.items(): # adddel : addition, deletion
+                    for src_path, vec_dict in path_dict.items():
+                            
+                        # Consider only unique paths
+                        if src_path not in path_set_dict[adddel]:
+                            path_set_dict[adddel].add(src_path)
+                            
+                            for is_id, vec in vec_dict['path'].items():
+                                path_vec_dict[adddel][is_id] += vec
+
+                        if src_path not in path_set_dict['all']:
+                            path_set_dict['all'].add(src_path)
+                            for is_id, vec in vec_dict['path'].items():
+                                path_vec_dict[adddel][is_id] += vec
+                        
+                        # Aggregate encoded data (except path)
+                        for diff_type, diff_vec in vec_dict.items():
+                            if diff_type != 'path':
+                                diff_vec_dict[adddel].setdefault(diff_type, {'id' : Counter(), 'non_id' : Counter()})
+
+                                for is_id, vec in diff_vec.items():
+                                    diff_vec_dict[adddel][diff_type][is_id] += vec
+                
+                # Generate feature
+                for adddel in adddel_list: # adddel : add, del, all_uni, all_sep
+                    diff_setting = frozenset((dict(setting) | {'adddel' : adddel}).items())
+                    #print(dict(setting))
+                    no_diff_setting = frozenset({'tracker' : dict(setting)['tracker'], 'diff_tool' : None, 'adddel' : adddel}.items())
+
+                    res_dict[stage2].setdefault(diff_setting, {sub_adddel : dict() for sub_adddel in adddel_list})
+                    res_dict[stage2].setdefault(no_diff_setting, {sub_adddel : dict() for sub_adddel in adddel_list})
+
+                    diff_dict, no_diff_dict = res_dict[stage2][diff_setting], res_dict[stage2][no_diff_setting]
+
+                    diff_dict[adddel][commit] = {'msg' : commit_msg_dict.get(commit, Counter())}
+                    no_diff_dict[adddel][commit] = {'msg' : commit_msg_dict.get(commit, Counter())}
+
+                    # Aggregate addition/deletion together
+                    if adddel == 'all_uni':
+                        diff_dict[adddel][commit]['path'] = path_vec_dict['all']
+                        no_diff_dict[adddel][commit]['path'] = path_vec_dict['all']
+
+                        for diff_type, add_diff_vec in diff_vec_dict['addition'].items():
+                            diff_dict[adddel][commit].setdefault(diff_type, {'id' : Counter(), 'non_id' : Counter()})
+
+                            for is_id, add_vec in add_diff_vec.items():
+                                diff_dict[adddel][commit][diff_type][is_id] += add_vec + diff_vec_dict['deletion'][diff_type][is_id]
+                    
+                    # sdf
+                    elif adddel == 'all_sep':
+                        diff_dict[adddel][commit]['add_path'] = path_vec_dict['addition']
+                        diff_dict[adddel][commit]['del_path'] = path_vec_dict['deletion']
+
+                        no_diff_dict[adddel][commit]['add_path'] = path_vec_dict['addition']
+                        no_diff_dict[adddel][commit]['del_path'] = path_vec_dict['deletion']
+
+                        for diff_type, add_diff_vec in diff_vec_dict['addition'].items():
+                            diff_dict[adddel][commit].setdefault('add_' + diff_type, {'id' : Counter(), 'non_id' : Counter()})
+                            diff_dict[adddel][commit].setdefault('del_' + diff_type, {'id' : Counter(), 'non_id' : Counter()})
+
+                            for is_id, add_vec in add_diff_vec.items():
+                                diff_dict[adddel][commit]['add_' + diff_type][is_id] += add_vec
+                                diff_dict[adddel][commit]['del_' + diff_type][is_id] += diff_vec_dict['deletion'][diff_type][is_id]
+                    
+                    # Use only addition data
+                    elif adddel == 'add':
+                        diff_dict[adddel][commit]['path'] = path_vec_dict['addition']
+                        no_diff_dict[adddel][commit]['path'] = path_vec_dict['addition']
+
+                        for diff_type, add_diff_vec in diff_vec_dict['addition'].items():
+                            diff_dict[adddel][commit].setdefault(diff_type, {'id' : Counter(), 'non_id' : Counter()})
+
+                            for is_id, add_vec in add_diff_vec.items():
+                                diff_dict[adddel][commit][diff_type][is_id] += add_vec
+                    
+                    # Use only deltion data
+                    elif adddel == 'del':
+                        diff_dict[adddel][commit]['path'] = path_vec_dict['deletion']
+                        no_diff_dict[adddel][commit]['path'] = path_vec_dict['deletion']
+
+                        for diff_type, del_diff_vec in diff_vec_dict['deletion'].items():
+                            diff_dict[adddel][commit].setdefault(diff_type, {'id' : Counter(), 'non_id' : Counter()})
+
+                            for is_id, del_vec in del_diff_vec.items():
+                                diff_dict[adddel][commit][diff_type][is_id] += del_vec
         
-        # Generate feature
-        for adddel in adddel_list: # adddel : add, del, all_uni, all_sep
-            res_dict[adddel][commit] = {'msg' : commit_msg_dict.get(commit, [])}
-            no_diff_dict[adddel][commit] = {'msg' : commit_msg_dict.get(commit, [])}
-
-            if adddel == 'all_uni':
-                res_dict[adddel][commit]['path'] = path_enc['all']
-                no_diff_dict[adddel][commit]['path'] = path_enc['all']
-
-                for diff_type in diff_enc_dict['addition'].keys() | diff_enc_dict['deletion'].keys():
-                    res_dict[adddel][commit][diff_type] = sum_encode(diff_enc_dict['addition'].get(diff_type, []), \
-                        diff_enc_dict['deletion'].get(diff_type, []))
-            
-            elif adddel == 'all_sep':
-                res_dict[adddel][commit]['add_path'] = path_enc['addition']
-                res_dict[adddel][commit]['del_path'] = path_enc['deletion']
-
-                no_diff_dict[adddel][commit]['add_path'] = path_enc['addition']
-                no_diff_dict[adddel][commit]['del_path'] = path_enc['deletion']
-
-                for diff_type in diff_enc_dict['addition'].keys() | diff_enc_dict['deletion'].keys():
-                    res_dict[adddel][commit]['add_' + diff_type] = diff_enc_dict['addition'].get(diff_type, [])
-                    res_dict[adddel][commit]['del_' + diff_type] = diff_enc_dict['deletion'].get(diff_type, [])
-            
-            elif adddel == 'add':
-                res_dict[adddel][commit]['path'] = path_enc['addition']
-                no_diff_dict[adddel][commit]['path'] = path_enc['addition']
-
-                for diff_type, diff_enc in diff_enc_dict['addition'].items():
-                    res_dict[adddel][commit][diff_type] = diff_enc
-            
-            elif adddel == 'del':
-                res_dict[adddel][commit]['path'] = path_enc['deletion']
-                no_diff_dict[adddel][commit]['path'] = path_enc['deletion']
-
-                for diff_type, diff_enc in diff_enc_dict['deletion'].items():
-                    res_dict[adddel][commit][diff_type] = diff_enc
-        
-    return res_dict, no_diff_dict
+    return res_dict
     
 def main(pid, vid):
     log('encode', f'Working on {pid}_{vid}b')
@@ -214,14 +263,19 @@ def main(pid, vid):
     
     # Encode the data
     start_time = time.time()
-    total_intvl, commit_path_dict, commit_msg_dict = load_data(pid, vid)
+    total_intvl_dict, commit_path_dict, commit_msg_dict = load_data(pid, vid)
 
-    encode_data, commit_msg_dict, vocab = pre_encode(pid, vid)
-    if encode_data is None or commit_msg_dict is None or vocab is None:
+    enc_dict, commit_msg_dict, encoder_dict = pre_encode(total_intvl_dict, commit_path_dict, commit_msg_dict)
+    if enc_dict is None or commit_msg_dict is None or encoder_dict is None:
         return
+    
+    #print(encode_data)
+    #print(commit_msg_dict)
 
     # Generate features
-    res_dict = dict()
+    res_dict = gen_feature(enc_dict, commit_msg_dict)
+    print(res_dict)
+    """res_dict = dict()
 
     for stage2, stage2_dict in encode_data.items():
         res_dict.setdefault(stage2, dict())
@@ -242,4 +296,4 @@ def main(pid, vid):
     with open(os.path.join(diff_data_dir, 'feature.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)
     with open(os.path.join(diff_data_dir, 'vocab.pkl'), 'wb') as file:
-        pickle.dump(vocab, file)
+        pickle.dump(vocab, file)"""

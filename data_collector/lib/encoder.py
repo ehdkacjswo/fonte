@@ -26,114 +26,111 @@ def stem(token):
     if len(token) > 1 and token[-1:] == 's':
         return token[:-1]
     else:
-        return self._stemmer.stem(token)
+        return stemmer.stem(token)
 
 # Class that encodes string while expanding the vocabulary
 class Encoder():
     def __init__(self, vocab={}, id_vocab={}):
-        self.vocab = vocab # {word : id}
+        self.non_id_vocab = vocab # {word : id}
         self.id_vocab = id_vocab 
-        #self.stemmer = PorterStemmer()
-    
-    # Get id of given word
-    # 
-    def get_id(self, word, update_vocab, mode : Literal['id', 'code', 'text']):
-        
-        # Word exists in vocabulary
-        if word in self.all_vocab:
-            word_id = self.all_vocab[word]
-
-            # 
-            if mode =='id' and update_vocab and (word not in self.id_vocab):
-                self.id_vocab[word] = word_id
-        
-        else:
-            if update_vocab:
-                word_id = len(self.all_vocab)
-                self.all_vocab[word] = word_id
-
-                if mode == 'id':
-                    self.id_vocab[word] = word_id
-            
-            else:
-                return None
 
     # Update vocab False > 존재하지 않는 토큰은 무시해야 한다 > 개별 Encoding 불가가
     # True > 존재하지 않는 토큰큰
     # Encode token
-    def encode_token(self, token, is_id):
-        
-        if is_id:
-            self.id_vocab.setdefault(token, len(self.vocab) + len(self.id_vocab))
-            return self.id_vocab[token]
-            if token in self.id_vocab:
-                return self.id_vocab[token]
-            
-            else:
-                self.id_vocab[token]
-
-
-    # REMEBER!!!!!!! FILTERING BEFORE STEMMING!!!!!!
-    # update_vocab : False > Find ID too
-    def tokenize(self, text, update_vocab, mode : Literal['id', 'code', 'text']):
+    def encode_tokens(self, token_list, update_vocab, is_id):
         token_id_list = list()
 
-        # For the id, keep the full identifier
-        # Maybe already in vocab
-        if mode == 'id':
-            if update_vocab:
-                self.id_vocab.setdefault(text, len(self.vocab) + len(self.id_vocab))
-                token_id_list = [self.id_vocab[text]]
+        if is_id:
+            for token in token_list:
+                token_id = None
+
+                # Identifier on id vocabulary
+                if token in self.id_vocab: 
+                    token_id = self.id_vocab[token]
+
+                # Identifier on non_id vocabulary
+                elif token in self.non_id_vocab: 
+                    # Do I have to consider update_vocab?
+                    # Keeping it in non_id is ok?
+                    token_id = self.non_id_vocab[token]
+                    self.id_vocab[token] = token_id
+                
+                # Identifier not on vocabulary, but update it
+                elif update_vocab: 
+                    token_id = len(self.id_vocab) + len(self.non_id_vocab)
+                    self.id_vocab[token] = token_id
+                
+                if token_id is not None:
+                    token_id_list.append(token_id)
+        
+        else:
+            for token in token_list:
+                token_id = None
+
+                # Token on non_id vocabulary
+                if token in self.non_id_vocab: 
+                    token_id = self.non_id_vocab[token]
+                
+                # Token not on vocabulary, but update it
+                elif update_vocab: 
+                    token_id = len(self.id_vocab) + len(self.non_id_vocab)
+                    self.non_id_vocab[token] = token_id
+                
+                if token_id is not None:
+                    token_id_list.append(token_id)
             
-            elif text in self.id_vocab:
-                token_id_list = [self.id_vocab[text]]
+        return token_id_list
+
+    # Encode the list of texts based on their type
+    def encode(self, text_list, update_vocab, mode : Literal['id', 'code', 'text']):
+
+        # For the id, keep the full identifier
+        if mode == 'id':
+            id_list = self.encode_tokens(text_list, update_vocab, is_id=True)
+
+        else:
+            id_list = list()
 
         # Remove special characters & split
-        # Keep _ and $ since they are available on identifiers (To avoid removing keywords from identifires)
+        # Keep _ and $ since they are available on identifiers (To avoid removing keywords in identifires)
         # 
-        token_list = re.sub(r'[^A-Za-z0-9_$]', ' ', text).split()
+        token_list = list()
+
+        for text in text_list:
+            token_list += re.sub(r'[^A-Za-z0-9_$]', ' ', text).split()
 
         # Remove keywords from the code
         if mode == 'code': 
             token_list = [token for token in token_list if token not in keyword_set]
         
-        # Perform ronin split
+        # Ronin split
         ronin_token_list = []
         for token in token_list:
             ronin_token_list += ronin.split(token)
         
-        # Last filtering + 
-        stem_token_list = []
+        # Filtering + Stemming
+        final_token_list = []
 
         for token in ronin_token_list:
-            if len(token) <= 1 or token.isdigit(): # Ignore digit and
+            if len(token) <= 1 or token.isdigit(): # Ignore digit and short characters
                 continue
             
             token = token.lower()
-            if token in stopword_set:
+            if token in stopword_set: # Ignore stopwords
                 continue
             
-            token = stemmer.stem(token)
+            token = stem(token)
 
             if len(token) > 1:
-                stem_token_list.append(token)
-            
-        return token_list
-
-    # Encode the input and list of used word index and count
-    def encode(self, text, use_stopword=True, update_vocab=True):
-        encode_res = []
-        text = self.tokenize(text, use_stopword)
-
-        for word, cnt in Counter(text).items():
-            if word in self.vocab: # Word in vocab
-                encode_res.append((self.vocab[word], cnt))
-                
-            elif update_vocab: # New word
-                encode_res.append((len(self.vocab), cnt))
-                self.vocab[word] = len(self.vocab)
+                final_token_list.append(token)
         
-        return encode_res
+        final_token_list = self.encode_tokens(final_token_list, update_vocab, is_id=False)
+        #print(id_list)
+        #print(final_token_list)
+        
+        # Find identifiers or not
+        #for token in stem_token_list:
+        return Counter(id_list), Counter(final_token_list)
 
 # Return the sum of two encoded vectors
 def sum_encode(vec1, vec2):

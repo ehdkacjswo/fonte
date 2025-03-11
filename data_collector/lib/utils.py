@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import subprocess, sys, time
+import subprocess, sys, time, math
 from interval import interval, inf
 
 # -0.5, +0.5 해서 강제로 겹치게

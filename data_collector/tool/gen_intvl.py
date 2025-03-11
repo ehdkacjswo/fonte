@@ -253,7 +253,7 @@ def main(pid, vid):
                 diff_type_intvl = gen_diff_type_intvl(diff_tool_intvl, id_intvl_dict)
 
                 for sub_setting, id_intvl in diff_type_intvl.items():
-                    res_dict[stage2][frozenset((dict(sub_setting) | {'diff_type' : diff_type}).items())] = id_intvl
+                    res_dict[stage2][frozenset((dict(setting) | dict(sub_setting) | {'diff_type' : diff_type}).items())] = id_intvl
     
             end_time = time.time()
             log('gen_intvl', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
