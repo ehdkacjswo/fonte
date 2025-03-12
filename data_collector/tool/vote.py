@@ -15,10 +15,34 @@ BASE_DATA_DIR = '/root/workspace/data/Defects4J/baseline'
 RESULT_DATA_DIR = '/root/workspace/data/Defects4J/result'
 BASELINE_DATA_DIR = "/root/workspace/data/Defects4J/baseline"
 
+# Load data
+def load_data(pid, vid):
+    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
+        feature_dict = pickle.load(file)
+    
+    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'encoder.pkl'), 'rb') as file:
+        encoder_dict = pickle.load(file)
+    
+    # Bug feature
+    bug_feature_dict = dict()
+
+    with open(os.path.join(BASELINE_DATA_DIR, f'{pid}-{vid}b', "br_long.txt"), "r") as f:
+        bug_feature_dict['br_long'] = f.read().strip() # 1st bug report feature
+    with open(os.path.join(BASELINE_DATA_DIR, f'{pid}-{vid}b', "br_short.txt"), "r") as f:
+        bug_feature_dict['br_short'] = f.read().strip() # 2nd bug report feature
+    
+    # Handle failing test info
+    with open(os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b', "failing_tests"), "r") as f:
+        bug_feature_dict['failing_test'] = f.read().strip()
+    
+    return feature_dict, encoder_dict, bug_feature_dict
+
 # Bug2Commit with diff info
 # 특정 버전에 대하여 vote for commits와 동일한 방법으로 evolve relationship 구축하고
 # 해당 
-def vote_bug2commit(pid, vid, feature_dict, bug_dict):
+def vote_bug2commit(feature_dict, bug_dict, encoder):
+    # Encode bug_dict
+
     # Get list of commits/feature types
     commit_type_set = set()
 
@@ -134,32 +158,17 @@ def main(pid, vid):
 
     # Load feature & vocab for the project
     start_time = time.time()
-    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
-        feature_dict = pickle.load(file)
     
-    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'vocab.pkl'), 'rb') as file:
-        vocab = pickle.load(file)
-    
-    # Encode bug features
-    encoder = Encoder(vocab)
-    bug_feature = dict()
-
-    with open(os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b', "failing_tests"), "r") as f:
-        bug_feature['failing_test'] = encoder.encode(f.read().strip(), update_vocab=False)
-    with open(os.path.join(BASELINE_DATA_DIR, f'{pid}-{vid}b', "br_long.txt"), "r") as f:
-        bug_feature['br_long'] = encoder.encode(f.read().strip(), update_vocab=False) # 1st bug report feature
-    with open(os.path.join(BASELINE_DATA_DIR, f'{pid}-{vid}b', "br_short.txt"), "r") as f:
-        bug_feature['br_short'] = encoder.encode(f.read().strip(), update_vocab=False) # 2nd bug report feature
 
     # Bug2Commit voting
     bug2commit_vote = dict()
 
-    for stage2, stage2_dict in feature_dict.items():
+    for stage2, setting_dict in feature_dict.items():
         bug2commit_vote[stage2] = bug2commit_vote.get(stage2, dict())
 
-        for setting, setting_dict in stage2_dict.items():
+        for setting, feature_sub_dict in setting_dict.items():
             for use_br in [True, False]:
-                bug2commit_vote[stage2][frozenset((dict(setting) | {'use_br' : use_br}).items())] = vote_bug2commit(pid, vid, setting_dict, bug_feature if use_br else {'failing_test' : bug_feature['failing_test']})
+                bug2commit_vote[stage2][frozenset((dict(setting) | {'use_br' : use_br}).items())] = vote_bug2commit(feature_sub_dict, bug_feature if use_br else {'failing_test' : bug_feature['failing_test']}, encoder_dict)
     
     with open(os.path.join(savedir, f'bug2commit.pkl'), 'wb') as file:
         pickle.dump(bug2commit_vote, file)

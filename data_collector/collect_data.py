@@ -9,10 +9,17 @@ if __name__ == "__main__":
     all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
     #update = False
+    skip = True
 
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
-        pid, vid = 'Cli', '29'
+        #pid, vid = 'Cli', '29'
+
+        if pid == 'Jsoup' and vid == '47':
+            skip = False
+        
+        if skip:
+            continue
 
         #track_history.main(pid, vid)
         #parse_gumtree.main(pid, vid)
@@ -23,4 +30,4 @@ if __name__ == "__main__":
         #vote.main(pid, vid)
         #bisection.main(pid, vid)
 
-        break
+        #break

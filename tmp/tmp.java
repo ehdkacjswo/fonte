@@ -1,225 +1,128 @@
 /*
- * Joda Software License, Version 1.0
+ * Copyright 2007 The Closure Compiler Authors.
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Copyright (c) 2001-03 Stephen Colebourne.
- * All rights reserved.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:
- *       "This product includes software developed by the
- *        Joda project (http://www.joda.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
- *
- * 4. The name "Joda" must not be used to endorse or promote products
- *    derived from this software without prior written permission. For
- *    written permission, please contact licence@joda.org.
- *
- * 5. Products derived from this software may not be called "Joda",
- *    nor may "Joda" appear in their name, without prior written
- *    permission of the Joda project.
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE JODA AUTHORS OR THE PROJECT
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals on behalf of the Joda project and was originally
- * created by Stephen Colebourne <scolebourne@joda.org>. For more
- * information on the Joda project, please see <http://www.joda.org/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-package org.joda.time.chrono;
+package com.google.javascript.jscomp;
 
-import org.joda.time.DateTimeField;
+import static com.google.javascript.jscomp.LightweightMessageFormatter.LineNumberingFormatter;
 
-/**
- * General utilities that don't fit elsewhere.
- * <p>
- * Utils is thread-safe and immutable.
- *
- * @author Stephen Colebourne
- * @since 1.0
- */
-public class Utils {
+import com.google.javascript.rhino.Node;
 
-    /**
-     * Restricted constructor.
-     */
-    private Utils() {
-        super();
-    }
-    
-    //------------------------------------------------------------------------
-    /**
-     * Add two values throwing an exception if overflow occurs.
-     * 
-     * @param val1  the first value
-     * @param val2  the second value
-     * @return the new total
-     */
-    public static long safeAdd(long val1, long val2) {
-        long total = val1 + val2;
-        if (val1 > 0 && val2 > 0 && total < 0) {
-            throw new ArithmeticException("The calculation caused an overflow: " + val1 +" + " + val2);
-        }
-        if (val1 < 0 && val2 < 0 && total > 0) {
-            throw new ArithmeticException("The calculation caused an overflow: " + val1 +" + " + val2);
-        }
-        return total;
-    }
-    
-    /**
-     * Multiply two values throwing an exception if overflow occurs.
-     * 
-     * @param val1  the first value
-     * @param val2  the second value
-     * @return the new total
-     */
-    public static long safeMultiply(long val1, long val2) {
-        if (val1 == 0  || val2 == 0) {
-            return 0L;
-        }
-        long total = val1 * val2;
-        if (total / val2 != val1) {
-            throw new ArithmeticException("The calculation caused an overflow: " + val1 +" * " + val2);
-        }
-        return total;
-    }
-    
-    /**
-     * Casts to an int throwing an exception if overflow occurs.
-     * 
-     * @param value  the value
-     * @return the value as an int
-     */
-    public static int safeToInt(long value) {
-        if (Integer.MIN_VALUE <= value && value <= Integer.MAX_VALUE) {
-            return (int) value;
-        }
-        throw new ArithmeticException("Value cannot fit in an int: " + value);
-    }
+import junit.framework.TestCase;
 
-    /**
-     * Verify that input values are within specified bounds.
-     * 
-     * @param value  the value to check
-     * @param lowerBound  the lower bound allowed for value
-     * @param upperBound  the upper bound allowed for value
-     * @throws IllegalArgumentException if value is not in the specified bounds
-     */
-    public static void verifyValueBounds(DateTimeField field, 
-                                         int value, int lowerBound, int upperBound) {
-        if ((value < lowerBound) || (value > upperBound)) {
-            throw new IllegalArgumentException(
-                "Value: "
-                    + value
-                    + " for "
-                    + field.getName()
-                    + " must be in the range ("
-                    + lowerBound
-                    + ','
-                    + upperBound
-                    + ')');
-        }
-    }
+public class LightweightMessageFormatterTest extends TestCase {
+  private static final DiagnosticType FOO_TYPE =
+      DiagnosticType.error("TEST_FOO", "error description here");
 
-    /**
-     * Verify that input values are within specified bounds.
-     * 
-     * @param value  the value to check
-     * @param lowerBound  the lower bound allowed for value
-     * @param upperBound  the upper bound allowed for value
-     * @throws IllegalArgumentException if value is not in the specified bounds
-     */
-    public static void verifyValueBounds(String fieldName,
-                                         int value, int lowerBound, int upperBound) {
-        if ((value < lowerBound) || (value > upperBound)) {
-            throw new IllegalArgumentException(
-                "Value: "
-                    + value
-                    + " for "
-                    + fieldName
-                    + " must be in the range ("
-                    + lowerBound
-                    + ','
-                    + upperBound
-                    + ')');
-        }
-    }
+  public void testNull() throws Exception {
+    assertNull(format(null));
+  }
 
-    /**
-     * Utility method used by addWrapped implementations to ensure the new
-     * value lies within the field's legal value range.
-     *
-     * @param currentValue the current value of the data, which may lie outside
-     * the wrapped value range
-     * @param wrapValue  the value to add to current value before
-     *  wrapping.  This may be negative.
-     * @param minValue the wrap range minimum value.
-     * @param maxValue the wrap range maximum value.  This must be
-     *  greater than minValue (checked by the method).
-     * @return the wrapped value
-     * @throws IllegalArgumentException if minValue is greater
-     *  than or equal to maxValue
-     */
-    public static int getWrappedValue(int currentValue, int wrapValue,
-                                      int minValue, int maxValue) {
-        return getWrappedValue(currentValue + wrapValue, minValue, maxValue);
-    }
+  public void testOneLineRegion() throws Exception {
+    assertEquals("  5| hello world", format(region(5, 5, "hello world")));
+  }
 
-    /**
-     * Utility method that ensures the given value lies within the field's
-     * legal value range.
-     * 
-     * @param value  the value to fit into the wrapped value range
-     * @param minValue the wrap range minimum value.
-     * @param maxValue the wrap range maximum value.  This must be
-     *  greater than minValue (checked by the method).
-     * @return the wrapped value
-     * @throws IllegalArgumentException if minValue is greater
-     *  than or equal to maxValue
-     */
-    public static int getWrappedValue(int value, int minValue, int maxValue) {
-        if (minValue >= maxValue) {
-            throw new IllegalArgumentException("MIN > MAX");
-        }
+  public void testTwoLineRegion() throws Exception {
+    assertEquals("  5| hello world\n" +
+            "  6| foo bar", format(region(5, 6, "hello world\nfoo bar")));
+  }
 
-        int wrapRange = maxValue - minValue + 1;
-        value -= minValue;
+  public void testThreeLineRegionAcrossNumberRange() throws Exception {
+    String region = format(region(9, 11, "hello world\nfoo bar\nanother one"));
+    assertEquals("   9| hello world\n" +
+            "  10| foo bar\n" +
+            "  11| another one", region);
+  }
 
-        if (value >= 0) {
-            return (value % wrapRange) + minValue;
-        }
+  public void testThreeLineRegionEmptyLine() throws Exception {
+    String region = format(region(7, 9, "hello world\n\nanother one"));
+    assertEquals("  7| hello world\n" +
+            "  8| \n" +
+            "  9| another one", region);
+  }
 
-        int remByRange = (-value) % wrapRange;
+  public void testOnlyOneEmptyLine() throws Exception {
+    assertNull(format(region(7, 7, "")));
+  }
 
-        if (remByRange == 0) {
-            return 0 + minValue;
-        }
-        return (wrapRange - remByRange) + minValue;
-    }
+  public void testTwoEmptyLines() throws Exception {
+    assertEquals("  7| ", format(region(7, 8, "\n")));
+  }
 
+  public void testThreeLineRemoveLastEmptyLine() throws Exception {
+    String region = format(region(7, 9, "hello world\nfoobar\n"));
+    assertEquals("  7| hello world\n" +
+            "  8| foobar", region);
+  }
+
+  public void testFormatErrorSpaces() throws Exception {
+    JSError error = JSError.make("javascript/complex.js",
+        Node.newString("foobar", 5, 8), FOO_TYPE);
+    LightweightMessageFormatter formatter = formatter("    if (foobar) {");
+    assertEquals("javascript/complex.js:5: ERROR - error description here\n" +
+        "    if (foobar) {\n" +
+        "        ^\n", formatter.formatError(error));
+  }
+
+  public void testFormatErrorTabs() throws Exception {
+    JSError error = JSError.make("javascript/complex.js",
+        Node.newString("foobar", 5, 6), FOO_TYPE);
+    LightweightMessageFormatter formatter = formatter("\t\tif (foobar) {");
+    assertEquals("javascript/complex.js:5: ERROR - error description here\n" +
+        "\t\tif (foobar) {\n" +
+        "\t\t    ^\n", formatter.formatError(error));
+  }
+
+  public void testFormatErrorSpaceEndOfLine1() throws Exception {
+    JSError error = JSError.make("javascript/complex.js",
+        1, 10, FOO_TYPE);
+    LightweightMessageFormatter formatter = formatter("assert (1;");
+    assertEquals("javascript/complex.js:1: ERROR - error description here\n" +
+        "assert (1;\n" +
+        "          ^\n", formatter.formatError(error));
+  }
+
+  public void testFormatErrorSpaceEndOfLine2() throws Exception {
+    JSError error = JSError.make("javascript/complex.js",
+        6, 7, FOO_TYPE);
+    LightweightMessageFormatter formatter = formatter("if (foo");
+    assertEquals("javascript/complex.js:6: ERROR - error description here\n" +
+        "if (foo\n" +
+        "       ^\n", formatter.formatError(error));
+  }
+
+  private LightweightMessageFormatter formatter(String string) {
+    return new LightweightMessageFormatter(source(string));
+  }
+
+  private SourceExcerptProvider source(final String source) {
+    return new SourceExcerptProvider() {
+      public String getSourceLine(String sourceName, int lineNumber) {
+        return source;
+      }
+      public Region getSourceRegion(String sourceName, int lineNumber) {
+        throw new UnsupportedOperationException();
+      }
+    };
+  }
+
+  private String format(Region region) {
+    return new LineNumberingFormatter().formatRegion(region);
+  }
+
+  private Region region(final int startLine, final int endLine,
+      final String source) {
+    return new SimpleRegion(startLine, endLine, source);
+  }
 }
