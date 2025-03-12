@@ -25,7 +25,7 @@ def file_encode(no_after_src, no_before_src):
 # Return addition, deletion token range
 # addition, deletion = Token range
 def gumtree_diff(before_src_path, after_src_path):
-    diff_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtree textdiff -g java-jdtc -m gumtree-simple -f JSON {before_src_path} {after_src_path}'
+    diff_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtree textdiff -g java-jdtc -m gumtree-simple -f CUSTOM_JSON {before_src_path} {after_src_path}'
     p = subprocess.Popen(diff_cmd, shell=True, stdout=subprocess.PIPE)
     stdout, _ = p.communicate()
 
@@ -94,7 +94,7 @@ def gumtree_diff(before_src_path, after_src_path):
 
 # Parse the file and returns in json format
 def gumtree_parse(filename):
-    parse_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtree parse -g custom-jdt -f JSON {filename}'
+    parse_cmd = f'docker run --rm -v {DIR_NAME}:/diff gumtree parse -g custom-jdt -f CUSTOM_JSON {filename}'
     p = subprocess.Popen(parse_cmd, shell=True, stdout=subprocess.PIPE)
     stdout, _ = p.communicate()
 
