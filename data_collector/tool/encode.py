@@ -234,8 +234,8 @@ def gen_feature(enc_dict, commit_msg_dict):
 
                     diff_dict, no_diff_dict = res_dict[stage2][diff_setting], res_dict[stage2][no_diff_setting]
 
-                    diff_dict[commit] = {'msg' : commit_msg_dict.get(commit, Counter())}
-                    no_diff_dict[commit] = {'msg' : commit_msg_dict.get(commit, Counter())}
+                    diff_dict[commit] = {'msg' : commit_msg_dict[stage2][setting].get(commit, {'id' : Counter(), 'non_id' : Counter()})}
+                    no_diff_dict[commit] = {'msg' : commit_msg_dict[stage2][setting].get(commit, {'id' : Counter(), 'non_id' : Counter()})}
 
                     # Aggregate addition/deletion together
                     if adddel == 'all_uni':

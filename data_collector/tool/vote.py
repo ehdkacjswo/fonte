@@ -2,11 +2,12 @@ import os, json, argparse, pickle, sys, subprocess, logging, itertools, time, re
 import pandas as pd
 import numpy as np
 from scipy.spatial.distance import cosine
+from collections import Counter
 
 sys.path.append('/root/workspace/data_collector/lib/')
 from encoder import Encoder
 from vote_util import *
-from utils import log, get_excluded, time_to_str
+from utils import *
 from BM25_Custom import *
 
 DIR_NAME = '/home/coinse/doam/fonte/tmp'
@@ -18,6 +19,8 @@ BASELINE_DATA_DIR = "/root/workspace/data/Defects4J/baseline"
 
 # Load data
 def load_data(pid, vid):
+    #log('vote', '[INFO] Start loading data')
+    #start_time = time.time()
     
     # Get token interval of given test method
     # Defects4J test
@@ -229,68 +232,120 @@ def load_data(pid, vid):
         bug_feature_dict['exception'] += lines[1 : trace_start]
         bug_feature_dict['stack_trace'] += lines[trace_start : ]
     
+    #end_time = time.time()
+    #log('vote', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
     return feature_dict, encoder_dict, bug_feature_dict
 
 # Bug2Commit with diff info
 # 특정 버전에 대하여 vote for commits와 동일한 방법으로 evolve relationship 구축하고
 # 해당 
-def vote_bug2commit(feature_dict, bug_dict, encoder):
-    # Encode bug_dict
+def vote_bug2commit(total_feature_dict, total_encoder_dict, bug_feature_dict):
+    log('vote', '[INFO] Bug2Commit voting')
+    start_time = time.time()
+    res_dict = dict()
 
-    # Get list of commits/feature types
-    commit_type_set = set()
+    for stage2, setting_dict in total_feature_dict.items():
+        res_dict[stage2] = dict()
 
-    for commit_dict in feature_dict.values():
-        commit_type_set |= set(commit_dict.keys())
-        
-    # Bug2Commit scoring
-    res_dict = {'all' : list()}
-
-    for commit_type in commit_type_set:
-        
-        # Build BM25 vocabulary
-        bm25 = BM25_Encode()
-        for commit, commit_dict in feature_dict.items():
-            bm25.add_document(commit_dict.get(commit_type, [])) #???
-        bm25.init_end()
-
-        # Vectorize query, commit features & evaluate similarity
-        for bug_type, bug_feature in bug_dict.items():
-            type_setting = frozenset({'commit' : commit_type, 'bug' : bug_type}.items())
-            res_dict[type_setting] = list()
-
-            bug_vector = bm25.vectorize_complex(bug_feature)
+        for setting, commit_dict in setting_dict.items():
             
-            for commit, commit_dict in feature_dict.items():
-                if np.all(bug_vector == 0):
-                    res_dict['all'].append([commit, 0])
-                    res_dict[type_setting].append([commit, 0])
-                    continue
+            # Encode bug features
+            encoder_setting = dict(setting)
+            del encoder_setting['adddel']
+            
+            if encoder_setting['diff_tool'] is None: # dfa
+                encoder = total_encoder_dict[stage2][frozenset({'tracker' : encoder_setting['tracker'], 'diff_tool' : 'base', 'diff_type' : 'base'}.items())]
+            else:
+                encoder = total_encoder_dict[stage2][frozenset(encoder_setting.items())]
+            enc_bug_feature_dict = dict()
 
-                commit_vector = bm25.vectorize_complex(commit_dict.get(commit_type, []))
+            for bug_type, bug_feature in bug_feature_dict.items():
+                id_vec, non_id_vec = encoder.encode(bug_feature, update_vocab=False, \
+                    mode='code' if bug_type == 'test_code' else 'text')
+                enc_bug_feature_dict[bug_type] = {'id' : id_vec, 'non_id' : non_id_vec}
 
-                if np.all(commit_vector == 0):
-                    res_dict['all'].append([commit, 0])
-                    res_dict[type_setting].append([commit, 0])
+            # Get list of commit feature types
+            commit_type_set = set()
+
+            for feature_dict in commit_dict.values():
+                commit_type_set |= set(feature_dict.keys())
+            
+            # For settings using identifires, add extrac setting that don't use full identifiers
+            new_setting_list = [frozenset((dict(setting) | {'use_br' : True}).items()), frozenset((dict(setting) | {'use_br' : False}).items())]
+
+            if 'diff_type' in dict(setting) and dict(setting)['diff_type'].endswith('id'):
+                new_setting_list.append(frozenset((dict(setting) | {'diff_type' : 'no_' + dict(setting)['diff_type'], 'use_br' : True}).items()))
+                new_setting_list.append(frozenset((dict(setting) | {'diff_type' : 'no_' + dict(setting)['diff_type'], 'use_br' : False}).items()))
                 
-                else:
-                    res_dict['all'].append([commit, 1 - cosine(bug_vector, commit_vector)])
-                    res_dict[type_setting].append([commit, 1 - cosine(bug_vector, commit_vector)])
-    
-    # Format the result as DataFrame
-    for type_setting, score_rows in res_dict.items():
-        vote_df = pd.DataFrame(data=score_rows, columns=["commit", "vote"])
-        vote_df = vote_df.groupby("commit").sum()
-        vote_df["rank"] = vote_df["vote"].rank(ascending=False, method="max")
-        vote_df["rank"] = vote_df["rank"].astype(int)
-        vote_df.sort_values(by="rank", inplace=True)
-        res_dict[type_setting] = vote_df
+            for new_setting in new_setting_list:
+                res_dict[stage2][new_setting] = {'all' : list()}
+                score_dict = res_dict[stage2][new_setting]
 
+                use_id = 'diff_type' in dict(new_setting) and \
+                    dict(new_setting)['diff_type'].endswith('id') and \
+                    not dict(new_setting)['diff_type'].startswith('no_')
+                use_br = dict(new_setting)['use_br']
+
+                for commit_type in commit_type_set:
+                    # Build BM25 vocabulary
+                    bm25 = BM25_Encode()
+                    for commit, feature_dict in commit_dict.items():
+                        sub_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
+                        #print(commit_type, sub_feature_dict)
+                        if use_id:
+                            bm25.add_document(sub_feature_dict['id'] + sub_feature_dict['non_id']) 
+                        else:
+                            bm25.add_document(sub_feature_dict['non_id'])
+                    bm25.init_end()
+
+                    # Vectorize query, commit features & evaluate similarity
+                    for bug_type, bug_feature in enc_bug_feature_dict.items():
+                        if not use_br and bug_type.startswith('br'):
+                            continue
+
+                        type_setting = frozenset({'commit' : commit_type, 'bug' : bug_type}.items())
+                        score_dict[type_setting] = list()
+
+                        bug_vector = bm25.vectorize_complex(\
+                            bug_feature['id'] + bug_feature['non_id'] if use_id else bug_feature['non_id'])
+                        
+                        for commit, feature_dict in commit_dict.items():
+                            if np.all(bug_vector == 0):
+                                score_dict['all'].append([commit, 0])
+                                score_dict[type_setting].append([commit, 0])
+                                continue
+
+                            if use_id:
+                                commit_vector = bm25.vectorize_complex(sub_feature_dict['id'] + sub_feature_dict['non_id']) 
+                            else:
+                                commit_vector = bm25.vectorize_complex(sub_feature_dict['non_id']) 
+
+                            if np.all(commit_vector == 0):
+                                score_dict['all'].append([commit, 0])
+                                score_dict[type_setting].append([commit, 0])
+                            
+                            else:
+                                score_dict['all'].append([commit, 1 - cosine(bug_vector, commit_vector)])
+                                score_dict[type_setting].append([commit, 1 - cosine(bug_vector, commit_vector)])
+                
+                # Format the result as DataFrame
+                for type_setting, score_rows in score_dict.items():
+                    vote_df = pd.DataFrame(data=score_rows, columns=["commit", "vote"])
+                    vote_df = vote_df.groupby("commit").sum()
+                    vote_df["rank"] = vote_df["vote"].rank(ascending=False, method="max")
+                    vote_df["rank"] = vote_df["rank"].astype(int)
+                    vote_df.sort_values(by="rank", inplace=True)
+                    score_dict[type_setting] = vote_df
+
+    end_time = time.time()
+    log('vote', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
     return res_dict
 
 # For a given project, generate dataframe with result scores of fonte for every settings
 # Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
 def vote_fonte(pid, vid):
+    log('vote', '[INFO] Fonte voting')
+    start_time = time.time()
     fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
     res_dict = dict()
 
@@ -306,10 +361,14 @@ def vote_fonte(pid, vid):
 
         res_dict[stage2] = fonte_df
     
+    end_time = time.time()
+    log('vote', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
     return res_dict
 
 # Ensemble results from Bug2Commit & Fonte
 def vote_ensemble(bug2commit_dict, fonte_dict):
+    log('vote', '[INFO] Vote ensembling')
+    start_time = time.time()
     res_dict = dict()
     
     for stage2, sub_dict in bug2commit_dict.items():
@@ -332,6 +391,8 @@ def vote_ensemble(bug2commit_dict, fonte_dict):
                 new_setting = frozenset((dict(setting) | {'beta' : beta}).items())
                 res_dict[stage2][new_setting] = result_df
     
+    end_time = time.time()
+    log('vote', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
     return res_dict
 
 def main(pid, vid):
@@ -353,17 +414,13 @@ def main(pid, vid):
     # Load feature & vocab for the project
     start_time = time.time()
     feature_dict, encoder_dict, bug_feature_dict = load_data(pid, vid)
-    print('bug_feature_dict', json.dumps(bug_feature_dict, indent=4))
+    #print('bug_feature_dict', json.dumps(bug_feature_dict, indent=4))
+
+    if feature_dict is None or encoder_dict is None or bug_feature_dict is None:
+        return
 
     # Bug2Commit voting
-    """bug2commit_vote = dict()
-
-    for stage2, setting_dict in feature_dict.items():
-        bug2commit_vote[stage2] = bug2commit_vote.get(stage2, dict())
-
-        for setting, feature_sub_dict in setting_dict.items():
-            for use_br in [True, False]:
-                bug2commit_vote[stage2][frozenset((dict(setting) | {'use_br' : use_br}).items())] = vote_bug2commit(feature_sub_dict, bug_feature if use_br else {'failing_test' : bug_feature['failing_test']}, encoder_dict)
+    bug2commit_vote = vote_bug2commit(feature_dict, encoder_dict, bug_feature_dict)
     
     with open(os.path.join(savedir, f'bug2commit.pkl'), 'wb') as file:
         pickle.dump(bug2commit_vote, file)
@@ -376,6 +433,3 @@ def main(pid, vid):
     # Ensemble voting
     with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
         pickle.dump(vote_ensemble(bug2commit_vote, fonte_vote), file)
-
-    end_time = time.time()
-    log('vote', f'{time_to_str(start_time, end_time)}')"""

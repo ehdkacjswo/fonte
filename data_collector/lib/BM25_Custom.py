@@ -23,7 +23,7 @@ class BM25_Encode(BM25Okapi):
         doc_len = 0
         feature_dict = dict()
 
-        for (word, freq) in feature:
+        for word, freq in feature.items():
             feature_dict[word] = freq
             doc_len += freq
 
@@ -36,7 +36,7 @@ class BM25_Encode(BM25Okapi):
     def add_document(self, document):
         self.corpus_size += 1
 
-        for ind, cnt in document:
+        for ind, cnt in document.items():
             if cnt > 0:
                 self.nd[ind] = self.nd.get(ind, 0) + 1
                 self.num_doc += cnt

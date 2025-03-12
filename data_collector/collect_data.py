@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
-        pid, vid = 'Compress', '7'
+        #pid, vid = 'Cli', '29'
 
         #if pid == 'Jsoup' and vid == '47':
         #    skip = False
@@ -25,8 +25,8 @@ if __name__ == "__main__":
         #parse_gumtree.main(pid, vid)
         #greedy_id.main(pid, vid)
         #gen_intvl.main(pid, vid)
-        #encode.main(pid, vid)
+        encode.main(pid, vid)
         vote.main(pid, vid)
         #bisection.main(pid, vid)
 
-        break
+        #break
