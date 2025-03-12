@@ -1,284 +1,134 @@
 /*
- *  Copyright 2001-2005 Stephen Colebourne
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
  */
-package org.joda.time.field;
+
+package org.apache.commons.compress.archivers.tar;
 
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
-/**
- * 
- *
- * @author Brian S O'Neill
- */
-public class TestFieldUtils extends TestCase {
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
+public class TarUtilsTest extends TestCase {
+
+    
+    public void testName(){
+        byte [] buff = new byte[20];
+        String sb1 = "abcdefghijklmnopqrstuvwxyz";
+        int off = TarUtils.formatNameBytes(sb1, buff, 1, buff.length-1);
+        assertEquals(off, 20);
+        String sb2 = TarUtils.parseName(buff, 1, 10);
+        assertEquals(sb2,sb1.substring(0,10));
+        sb2 = TarUtils.parseName(buff, 1, 19);
+        assertEquals(sb2,sb1.substring(0,19));
+        buff = new byte[30];
+        off = TarUtils.formatNameBytes(sb1, buff, 1, buff.length-1);
+        assertEquals(off, 30);
+        sb2 = TarUtils.parseName(buff, 1, buff.length-1);
+        assertEquals(sb1, sb2);
+    }
+    
+    private void fillBuff(byte []buffer, String input) throws Exception{
+        for(int i=0; i<buffer.length;i++){
+            buffer[i]=0;
+        }
+        System.arraycopy(input.getBytes("UTF-8"),0,buffer,0,Math.min(buffer.length,input.length()));        
     }
 
-    public static TestSuite suite() {
-        return new TestSuite(TestFieldUtils.class);
-    }
-
-    public TestFieldUtils(String name) {
-        super(name);
-    }
-
-    public void testSafeAddInt() {
-        assertEquals(0, FieldUtils.safeAdd(0, 0));
-
-        assertEquals(5, FieldUtils.safeAdd(2, 3));
-        assertEquals(-1, FieldUtils.safeAdd(2, -3));
-        assertEquals(1, FieldUtils.safeAdd(-2, 3));
-        assertEquals(-5, FieldUtils.safeAdd(-2, -3));
-
-        assertEquals(Integer.MAX_VALUE - 1, FieldUtils.safeAdd(Integer.MAX_VALUE, -1));
-        assertEquals(Integer.MIN_VALUE + 1, FieldUtils.safeAdd(Integer.MIN_VALUE, 1));
-
-        assertEquals(-1, FieldUtils.safeAdd(Integer.MIN_VALUE, Integer.MAX_VALUE));
-        assertEquals(-1, FieldUtils.safeAdd(Integer.MAX_VALUE, Integer.MIN_VALUE));
-
+    public void testParseOctal() throws Exception{
+        byte [] buffer = new byte[20];
+        fillBuff(buffer,"777777777777 ");
+        long value; 
+        value = TarUtils.parseOctal(buffer,0, 11);
+        assertEquals(077777777777L, value);
+        value = TarUtils.parseOctal(buffer,0, 12);
+        assertEquals(0777777777777L, value);
+        buffer[11]=' ';
+        value = TarUtils.parseOctal(buffer,0, 11);
+        assertEquals(077777777777L, value);
+        buffer[11]=0;
+        value = TarUtils.parseOctal(buffer,0, 11);
+        assertEquals(077777777777L, value);
+        fillBuff(buffer, "abcdef"); // Invalid input
         try {
-            FieldUtils.safeAdd(Integer.MAX_VALUE, 1);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Integer.MAX_VALUE, 100);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Integer.MAX_VALUE, Integer.MAX_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Integer.MIN_VALUE, -1);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Integer.MIN_VALUE, -100);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Integer.MIN_VALUE, Integer.MIN_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
+            value = TarUtils.parseOctal(buffer,0, 11);
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException expected) {
         }
     }
-
-    public void testSafeAddLong() {
-        assertEquals(0L, FieldUtils.safeAdd(0L, 0L));
-
-        assertEquals(5L, FieldUtils.safeAdd(2L, 3L));
-        assertEquals(-1L, FieldUtils.safeAdd(2L, -3L));
-        assertEquals(1L, FieldUtils.safeAdd(-2L, 3L));
-        assertEquals(-5L, FieldUtils.safeAdd(-2L, -3L));
-
-        assertEquals(Long.MAX_VALUE - 1, FieldUtils.safeAdd(Long.MAX_VALUE, -1L));
-        assertEquals(Long.MIN_VALUE + 1, FieldUtils.safeAdd(Long.MIN_VALUE, 1L));
-
-        assertEquals(-1, FieldUtils.safeAdd(Long.MIN_VALUE, Long.MAX_VALUE));
-        assertEquals(-1, FieldUtils.safeAdd(Long.MAX_VALUE, Long.MIN_VALUE));
-
-        try {
-            FieldUtils.safeAdd(Long.MAX_VALUE, 1L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Long.MAX_VALUE, 100L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Long.MAX_VALUE, Long.MAX_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Long.MIN_VALUE, -1L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Long.MIN_VALUE, -100L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Long.MIN_VALUE, Long.MIN_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
+    
+    private void checkRoundTripOctal(final long value) {
+        byte [] buffer = new byte[12];
+        long parseValue;
+        TarUtils.formatLongOctalBytes(value, buffer, 0, buffer.length);
+        parseValue = TarUtils.parseOctal(buffer,0, buffer.length);
+        assertEquals(value,parseValue);
+    }
+    
+    public void testRoundTripOctal() {
+        checkRoundTripOctal(0);
+        checkRoundTripOctal(1);
+//        checkRoundTripOctal(-1); // TODO What should this do?
+        checkRoundTripOctal(077777777777L);
+//        checkRoundTripOctal(0100000000000L); // TODO What should this do?
+    }
+    
+    // Check correct trailing bytes are generated
+    public void testTrailers() {
+        byte [] buffer = new byte[12];
+        TarUtils.formatLongOctalBytes(123, buffer, 0, buffer.length);
+        assertEquals(' ', buffer[buffer.length-1]);
+        assertEquals('3', buffer[buffer.length-2]); // end of number
+        TarUtils.formatOctalBytes(123, buffer, 0, buffer.length);
+        assertEquals(0  , buffer[buffer.length-1]);
+        assertEquals(' ', buffer[buffer.length-2]);
+        assertEquals('3', buffer[buffer.length-3]); // end of number
+        TarUtils.formatCheckSumOctalBytes(123, buffer, 0, buffer.length);
+        assertEquals(' ', buffer[buffer.length-1]);
+        assertEquals(0  , buffer[buffer.length-2]);
+        assertEquals('3', buffer[buffer.length-3]); // end of number
+    }
+    
+    public void testNegative() {
+        byte [] buffer = new byte[22];
+        TarUtils.formatUnsignedOctalString(-1, buffer, 0, buffer.length);
+        assertEquals("1777777777777777777777", new String(buffer));
     }
 
-    public void testSafeSubtractLong() {
-        assertEquals(0L, FieldUtils.safeSubtract(0L, 0L));
-
-        assertEquals(-1L, FieldUtils.safeSubtract(2L, 3L));
-        assertEquals(5L, FieldUtils.safeSubtract(2L, -3L));
-        assertEquals(-5L, FieldUtils.safeSubtract(-2L, 3L));
-        assertEquals(1L, FieldUtils.safeSubtract(-2L, -3L));
-
-        assertEquals(Long.MAX_VALUE - 1, FieldUtils.safeSubtract(Long.MAX_VALUE, 1L));
-        assertEquals(Long.MIN_VALUE + 1, FieldUtils.safeSubtract(Long.MIN_VALUE, -1L));
-
-        assertEquals(0, FieldUtils.safeSubtract(Long.MIN_VALUE, Long.MIN_VALUE));
-        assertEquals(0, FieldUtils.safeSubtract(Long.MAX_VALUE, Long.MAX_VALUE));
-
+    public void testOverflow() {
+        byte [] buffer = new byte[8-1]; // a lot of the numbers have 8-byte buffers (nul term)
+        TarUtils.formatUnsignedOctalString(07777777L, buffer, 0, buffer.length);
+        assertEquals("7777777", new String(buffer));        
         try {
-            FieldUtils.safeSubtract(Long.MIN_VALUE, 1L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeSubtract(Long.MIN_VALUE, 100L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeSubtract(Long.MIN_VALUE, Long.MAX_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeSubtract(Long.MAX_VALUE, -1L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeSubtract(Long.MAX_VALUE, -100L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeSubtract(Long.MAX_VALUE, Long.MIN_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
+            TarUtils.formatUnsignedOctalString(017777777L, buffer, 0, buffer.length);
+            fail("Should have cause IllegalArgumentException");
+        } catch (IllegalArgumentException expected) {
         }
     }
-
-    //-----------------------------------------------------------------------
-    public void testSafeMultiplyLongLong() {
-        assertEquals(0L, FieldUtils.safeMultiply(0L, 0L));
-        
-        assertEquals(1L, FieldUtils.safeMultiply(1L, 1L));
-        assertEquals(3L, FieldUtils.safeMultiply(1L, 3L));
-        assertEquals(3L, FieldUtils.safeMultiply(3L, 1L));
-        
-        assertEquals(6L, FieldUtils.safeMultiply(2L, 3L));
-        assertEquals(-6L, FieldUtils.safeMultiply(2L, -3L));
-        assertEquals(-6L, FieldUtils.safeMultiply(-2L, 3L));
-        assertEquals(6L, FieldUtils.safeMultiply(-2L, -3L));
-        
-        assertEquals(Long.MAX_VALUE, FieldUtils.safeMultiply(Long.MAX_VALUE, 1L));
-        assertEquals(Long.MIN_VALUE, FieldUtils.safeMultiply(Long.MIN_VALUE, 1L));
-        assertEquals(-Long.MAX_VALUE, FieldUtils.safeMultiply(Long.MAX_VALUE, -1L));
-        
-        try {
-            FieldUtils.safeMultiply(Long.MIN_VALUE, -1L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-        
-        try {
-            FieldUtils.safeMultiply(-1L, Long.MIN_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-      
-        try {
-            FieldUtils.safeMultiply(Long.MIN_VALUE, 100L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-        
-        try {
-            FieldUtils.safeMultiply(Long.MIN_VALUE, Long.MAX_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-        
-        try {
-            FieldUtils.safeMultiply(Long.MAX_VALUE, Long.MIN_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
+    
+    public void testRoundTripNames(){
+        checkName("");
+        checkName("The quick brown fox\n");
+        checkName("\177");
+        // checkName("\0"); // does not work, because NUL is ignored
+        // COMPRESS-114
+        checkName("0302-0601-3F06W220ZBLALALACANDC04060302MOE.model");
     }
 
-    //-----------------------------------------------------------------------
-    public void testSafeMultiplyLongInt() {
-        assertEquals(0L, FieldUtils.safeMultiply(0L, 0));
-        
-        assertEquals(1L, FieldUtils.safeMultiply(1L, 1));
-        assertEquals(3L, FieldUtils.safeMultiply(1L, 3));
-        assertEquals(3L, FieldUtils.safeMultiply(3L, 1));
-        
-        assertEquals(6L, FieldUtils.safeMultiply(2L, 3));
-        assertEquals(-6L, FieldUtils.safeMultiply(2L, -3));
-        assertEquals(-6L, FieldUtils.safeMultiply(-2L, 3));
-        assertEquals(6L, FieldUtils.safeMultiply(-2L, -3));
-        
-        assertEquals(-1L * Integer.MIN_VALUE, FieldUtils.safeMultiply(-1L, Integer.MIN_VALUE));
-        
-        assertEquals(Long.MAX_VALUE, FieldUtils.safeMultiply(Long.MAX_VALUE, 1));
-        assertEquals(Long.MIN_VALUE, FieldUtils.safeMultiply(Long.MIN_VALUE, 1));
-        assertEquals(-Long.MAX_VALUE, FieldUtils.safeMultiply(Long.MAX_VALUE, -1));
-        
-        try {
-            FieldUtils.safeMultiply(Long.MIN_VALUE, -1);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-        
-        try {
-            FieldUtils.safeMultiply(Long.MIN_VALUE, 100);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-        
-        try {
-            FieldUtils.safeMultiply(Long.MIN_VALUE, Integer.MAX_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-        
-        try {
-            FieldUtils.safeMultiply(Long.MAX_VALUE, Integer.MIN_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
+    private void checkName(String string) {
+        byte buff[] = new byte[100];
+        int len = TarUtils.formatNameBytes(string, buff, 0, buff.length);
+        assertEquals(string, TarUtils.parseName(buff, 0, len));
     }
 }
-

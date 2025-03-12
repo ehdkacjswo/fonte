@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
-        #pid, vid = 'Cli', '29'
+        pid, vid = 'Compress', '7'
 
         #if pid == 'Jsoup' and vid == '47':
         #    skip = False
@@ -29,4 +29,4 @@ if __name__ == "__main__":
         vote.main(pid, vid)
         #bisection.main(pid, vid)
 
-        #break
+        break
