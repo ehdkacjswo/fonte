@@ -32,9 +32,9 @@ def stem(token):
 
 # Class that encodes string while expanding the vocabulary
 class Encoder():
-    def __init__(self, vocab={}, id_vocab={}):
-        self.non_id_vocab = vocab # {word : id}
-        self.id_vocab = id_vocab
+    def __init__(self):
+        self.non_id_vocab = dict() # {word : id}
+        self.id_vocab = dict()
         self.automaton = ahocorasick.Automaton()
     
     def init_automaton(self):
@@ -50,6 +50,7 @@ class Encoder():
         token_id_list = list()
 
         if is_id:
+            #print('encode_tokens', token_list)
             for token in token_list:
                 token_id = None
 
@@ -142,15 +143,3 @@ class Encoder():
 
         final_token_list = self.encode_tokens(final_token_list, update_vocab, is_id=False)
         return Counter(id_list), Counter(final_token_list)
-
-# Return the sum of two encoded vectors
-def sum_encode(vec1, vec2):
-    res_dict = dict()
-
-    for id, cnt in vec1:
-        res_dict[id] = cnt
-    
-    for id, cnt in vec2:
-        res_dict[id] = res_dict.get(id, 0) + cnt
-    
-    return list(res_dict.items())

@@ -14,152 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.cli;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
- * @author John Keyes (john at integralsource.com)
- * @version $Revision$
+ * @author brianegge
  */
-public class ParseRequiredTest extends TestCase
+public class UtilTest extends TestCase
 {
-
-    private Options _options = null;
-    private CommandLineParser parser = new PosixParser();
-
-    public static Test suite() { 
-        return new TestSuite(ParseRequiredTest.class); 
-    }
-
-    public ParseRequiredTest(String name)
+    public void testStripLeadingHyphens()
     {
-        super(name);
+        assertEquals("f", Util.stripLeadingHyphens("-f"));
+        assertEquals("foo", Util.stripLeadingHyphens("--foo"));
+        assertEquals("-foo", Util.stripLeadingHyphens("---foo"));
+        assertNull(Util.stripLeadingHyphens(null));
     }
 
-    public void setUp()
+    public void testStripLeadingAndTrailingQuotes()
     {
-        _options = new Options()
-            .addOption("a",
-                       "enable-a",
-                       false,
-                       "turn [a] on or off")
-            .addOption( OptionBuilder.withLongOpt( "bfile" )
-                                     .hasArg()
-                                     .isRequired()
-                                     .withDescription( "set the value of [b]" )
-                                     .create( 'b' ) );
+        assertEquals("foo", Util.stripLeadingAndTrailingQuotes("\"foo\""));
+        assertEquals("foo \"bar\"", Util.stripLeadingAndTrailingQuotes("foo \"bar\""));
+        assertEquals("\"foo\" bar", Util.stripLeadingAndTrailingQuotes("\"foo\" bar"));
+        assertEquals("\"foo\" and \"bar\"", Util.stripLeadingAndTrailingQuotes("\"foo\" and \"bar\""));
+        assertEquals("\"", Util.stripLeadingAndTrailingQuotes("\""));
     }
-
-    public void tearDown()
-    {
-
-    }
-
-    public void testWithRequiredOption()
-    {
-        String[] args = new String[] {  "-b", "file" };
-
-        try
-        {
-            CommandLine cl = parser.parse(_options,args);
-            
-            assertTrue( "Confirm -a is NOT set", !cl.hasOption("a") );
-            assertTrue( "Confirm -b is set", cl.hasOption("b") );
-            assertTrue( "Confirm arg of -b", cl.getOptionValue("b").equals("file") );
-            assertTrue( "Confirm NO of extra args", cl.getArgList().size() == 0);
-        }
-        catch (ParseException e)
-        {
-            fail( e.toString() );
-        }
-    }
-
-    public void testOptionAndRequiredOption()
-    {
-        String[] args = new String[] {  "-a", "-b", "file" };
-
-        try
-        {
-            CommandLine cl = parser.parse(_options,args);
-
-            assertTrue( "Confirm -a is set", cl.hasOption("a") );
-            assertTrue( "Confirm -b is set", cl.hasOption("b") );
-            assertTrue( "Confirm arg of -b", cl.getOptionValue("b").equals("file") );
-            assertTrue( "Confirm NO of extra args", cl.getArgList().size() == 0);
-        }
-        catch (ParseException e)
-        {
-            fail( e.toString() );
-        }
-    }
-
-    public void testMissingRequiredOption()
-    {
-        String[] args = new String[] { "-a" };
-
-        try
-        {
-            CommandLine cl = parser.parse(_options,args);
-            fail( "exception should have been thrown" );
-        }
-        catch (MissingOptionException e)
-        {
-            assertEquals( "Incorrect exception message", "Missing required option: b", e.getMessage() );
-        }
-        catch (ParseException e)
-        {
-            fail( "expected to catch MissingOptionException" );
-        }
-    }
-
-    public void testMissingRequiredOptions()
-    {
-        String[] args = new String[] { "-a" };
-
-        _options.addOption( OptionBuilder.withLongOpt( "cfile" )
-                                     .hasArg()
-                                     .isRequired()
-                                     .withDescription( "set the value of [c]" )
-                                     .create( 'c' ) );
-
-        try
-        {
-            CommandLine cl = parser.parse(_options,args);
-            fail( "exception should have been thrown" );
-        }
-        catch (MissingOptionException e)
-        {
-            assertEquals( "Incorrect exception message", "Missing required options: b, c", e.getMessage() );
-        }
-        catch (ParseException e)
-        {
-            fail( "expected to catch MissingOptionException" );
-        }
-    }
-
-    public void testReuseOptionsTwice() throws Exception
-    {
-        Options opts = new Options();
-		opts.addOption(OptionBuilder.isRequired().create('v'));
-
-		GnuParser parser = new GnuParser();
-
-        // first parsing
-        parser.parse(opts, new String[] { "-v" });
-
-        try
-        {
-            // second parsing, with the same Options instance and an invalid command line
-            parser.parse(opts, new String[0]);
-            fail("MissingOptionException not thrown");
-        }
-        catch (MissingOptionException e)
-        {
-            // expected
-        }
-    }
-
 }

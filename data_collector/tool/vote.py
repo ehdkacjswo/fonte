@@ -17,6 +17,10 @@ BASE_DATA_DIR = '/root/workspace/data/Defects4J/baseline'
 RESULT_DATA_DIR = '/root/workspace/data/Defects4J/result'
 BASELINE_DATA_DIR = "/root/workspace/data/Defects4J/baseline"
 
+use_br_list = [True, False]
+use_id_list = [True, False]
+classify_id_list = [True, False]
+
 # Load data
 def load_data(pid, vid):
     #log('vote', '[INFO] Start loading data')
@@ -249,49 +253,87 @@ def vote_bug2commit(total_feature_dict, total_encoder_dict, bug_feature_dict):
 
         for setting, commit_dict in setting_dict.items():
             
-            # Encode bug features
+            # Get corresponding encoder
             encoder_setting = dict(setting)
             del encoder_setting['adddel']
             
-            if encoder_setting['diff_tool'] is None: # dfa
+            # For the setting with 'diff_tool' is None (Not using code data), encoder for setting doesn't exists.
+            # Have to get it expliciltly
+            if encoder_setting['diff_tool'] is None:
                 encoder = total_encoder_dict[stage2][frozenset({'tracker' : encoder_setting['tracker'], 'diff_tool' : 'base', 'diff_type' : 'base'}.items())]
             else:
                 encoder = total_encoder_dict[stage2][frozenset(encoder_setting.items())]
             enc_bug_feature_dict = dict()
 
+            # Encode bug features (Only the 'test_code' is code type data)
             for bug_type, bug_feature in bug_feature_dict.items():
                 id_vec, non_id_vec = encoder.encode(bug_feature, update_vocab=False, \
                     mode='code' if bug_type == 'test_code' else 'text')
                 enc_bug_feature_dict[bug_type] = {'id' : id_vec, 'non_id' : non_id_vec}
 
-            # Get list of commit feature types
+            # Get list of commit feature types (Some features may be missing on some commits)
             commit_type_set = set()
 
             for feature_dict in commit_dict.values():
                 commit_type_set |= set(feature_dict.keys())
             
-            # For settings using identifires, add extrac setting that don't use full identifiers
-            new_setting_list = [frozenset((dict(setting) | {'use_br' : True}).items()), frozenset((dict(setting) | {'use_br' : False}).items())]
+            # Add extra setting (Use bug report or not)
+            new_setting_list = [frozenset((dict(setting) | {'use_br' : True}).items()) for use_br in use_br_list]
 
+            # For settings using identifires,
+            # add extra setting that use full identifier or not
             if 'diff_type' in dict(setting) and dict(setting)['diff_type'].endswith('id'):
-                new_setting_list.append(frozenset((dict(setting) | {'diff_type' : 'no_' + dict(setting)['diff_type'], 'use_br' : True}).items()))
-                new_setting_list.append(frozenset((dict(setting) | {'diff_type' : 'no_' + dict(setting)['diff_type'], 'use_br' : False}).items()))
+                extra_setting_list = itertools.product(new_setting_list, use_id_list)
+                new_setting_list = [frozenset((dict(new_setting) | {'use_id' : use_id}).items()) \
+                    for (new_setting, use_id) in extra_setting_list]
+
+                # For settings using GumTree based identifier extraction,
+                # add extra setting that classifies identifier or not
+                if dict(setting)['diff_type'] == 'gumtree_id':
+                    extra_setting_list = itertools.product(new_setting_list, classify_id_list)
+                    new_setting_list = [frozenset((dict(new_setting) | {'classify_id' : classify_id}).items()) \
+                        for (new_setting, use_id) in extra_setting_list]
                 
+            # Start voting
             for new_setting in new_setting_list:
                 res_dict[stage2][new_setting] = {'all' : list()}
                 score_dict = res_dict[stage2][new_setting]
 
-                use_id = 'diff_type' in dict(new_setting) and \
-                    dict(new_setting)['diff_type'].endswith('id') and \
-                    not dict(new_setting)['diff_type'].startswith('no_')
                 use_br = dict(new_setting)['use_br']
+                use_id = dict(new_setting).get('use_id', False)
+                classify_id = dict(new_setting).get('classify_id', False)
+
+                # Need extra handling to ignore ID classes
+                id_type_handled = False
 
                 for commit_type in commit_type_set:
+                    
+                    # ID class handling completed
+                    if id_type_handled and commit_type in set('class', 'method', 'variable'):
+                        continue
+                    
+                    handle_id_type = not classify_id and commit_type in set('class', 'method', 'variable')
+                    
                     # Build BM25 vocabulary
+                    # For the commits that don't have corresponding types, they are currently adding empty docuemnt
+                    # 
                     bm25 = BM25_Encode()
                     for commit, feature_dict in commit_dict.items():
-                        sub_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
+                        
+                        # Ignore type of IDs
+                        if handle_id_type:
+                            sub_feature_dict = {'id' : Counter(), 'non_id' : Counter()}
+
+                            # Sum up the ID features
+                            for id_type in ['class', 'method', 'variable']:
+                                id_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()})
+                                sub_feature_dict['id'] += id_feature_dict['id']
+                                sub_feature_dict['non_id'] += id_feature_dict['non_id']
+                        else:    
+                            sub_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
                         #print(commit_type, sub_feature_dict)
+
+                        # Use full identifier or not
                         if use_id:
                             bm25.add_document(sub_feature_dict['id'] + sub_feature_dict['non_id']) 
                         else:
@@ -300,26 +342,34 @@ def vote_bug2commit(total_feature_dict, total_encoder_dict, bug_feature_dict):
 
                     # Vectorize query, commit features & evaluate similarity
                     for bug_type, bug_feature in enc_bug_feature_dict.items():
+                        
+                        # When not using bug report, ignore bug report data
                         if not use_br and bug_type.startswith('br'):
                             continue
 
-                        type_setting = frozenset({'commit' : commit_type, 'bug' : bug_type}.items())
+                        # Pair of commit & bug feature type
+                        type_setting = frozenset({'commit' : 'id_all' if handle_id_type else commit_type, 'bug' : bug_type}.items())
                         score_dict[type_setting] = list()
 
+                        # Vectorize bug feature
                         bug_vector = bm25.vectorize_complex(\
                             bug_feature['id'] + bug_feature['non_id'] if use_id else bug_feature['non_id'])
                         
                         for commit, feature_dict in commit_dict.items():
+                            
+                            # Bug feature vector is 0
                             if np.all(bug_vector == 0):
                                 score_dict['all'].append([commit, 0])
                                 score_dict[type_setting].append([commit, 0])
                                 continue
 
+                            # Consider full identifiers or not
                             if use_id:
                                 commit_vector = bm25.vectorize_complex(sub_feature_dict['id'] + sub_feature_dict['non_id']) 
                             else:
                                 commit_vector = bm25.vectorize_complex(sub_feature_dict['non_id']) 
 
+                            # Commit feature vector is 0
                             if np.all(commit_vector == 0):
                                 score_dict['all'].append([commit, 0])
                                 score_dict[type_setting].append([commit, 0])
@@ -327,6 +377,8 @@ def vote_bug2commit(total_feature_dict, total_encoder_dict, bug_feature_dict):
                             else:
                                 score_dict['all'].append([commit, 1 - cosine(bug_vector, commit_vector)])
                                 score_dict[type_setting].append([commit, 1 - cosine(bug_vector, commit_vector)])
+                    
+                    id_type_handled |= handle_id_type
                 
                 # Format the result as DataFrame
                 for type_setting, score_rows in score_dict.items():
@@ -420,9 +472,24 @@ def main(pid, vid):
 
     if feature_dict is None or encoder_dict is None or bug_feature_dict is None:
         return
+    
+    print('Feature')
+    for stage2, setting_dict in feature_dict.items():
+        print(f'Stage2) {stage2}')
+        for setting, sub_dict in setting_dict.items():
+            print(f'Setting) {setting}')
+            print(json.dumps(sub_dict, indent=4))
 
     # Bug2Commit voting
     bug2commit_vote = vote_bug2commit(feature_dict, encoder_dict, bug_feature_dict)
+
+    print('Vote')
+    for stage2, setting_dict in bug2commit_dict.items():
+        print(f'Stage2) {stage2}')
+        for setting, sub_dict in setting_dict.items():
+            print(f'Setting) {setting}')
+            print(json.dumps(sub_dict, indent=4))
+
     
     """with open(os.path.join(savedir, f'bug2commit.pkl'), 'wb') as file:
         pickle.dump(bug2commit_vote, file)
