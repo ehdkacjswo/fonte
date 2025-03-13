@@ -256,13 +256,7 @@ def vote_bug2commit(total_feature_dict, total_encoder_dict, bug_feature_dict):
             # Get corresponding encoder
             encoder_setting = dict(setting)
             del encoder_setting['adddel']
-            
-            # For the setting with 'diff_tool' is None (Not using code data), encoder for setting doesn't exists.
-            # Have to get it expliciltly
-            if encoder_setting['diff_tool'] is None:
-                encoder = total_encoder_dict[stage2][frozenset({'tracker' : encoder_setting['tracker'], 'diff_tool' : 'base', 'diff_type' : 'base'}.items())]
-            else:
-                encoder = total_encoder_dict[stage2][frozenset(encoder_setting.items())]
+            encoder = total_encoder_dict[stage2][frozenset(encoder_setting.items())]
             enc_bug_feature_dict = dict()
 
             # Encode bug features (Only the 'test_code' is code type data)
@@ -278,7 +272,7 @@ def vote_bug2commit(total_feature_dict, total_encoder_dict, bug_feature_dict):
                 commit_type_set |= set(feature_dict.keys())
             
             # Add extra setting (Use bug report or not)
-            new_setting_list = [frozenset((dict(setting) | {'use_br' : True}).items()) for use_br in use_br_list]
+            new_setting_list = [frozenset((dict(setting) | {'use_br' : use_br}).items()) for use_br in use_br_list]
 
             # For settings using identifires,
             # add extra setting that use full identifier or not
@@ -286,13 +280,17 @@ def vote_bug2commit(total_feature_dict, total_encoder_dict, bug_feature_dict):
                 extra_setting_list = itertools.product(new_setting_list, use_id_list)
                 new_setting_list = [frozenset((dict(new_setting) | {'use_id' : use_id}).items()) \
                     for (new_setting, use_id) in extra_setting_list]
+                
+                #print(new_setting_list)
 
                 # For settings using GumTree based identifier extraction,
                 # add extra setting that classifies identifier or not
                 if dict(setting)['diff_type'] == 'gumtree_id':
                     extra_setting_list = itertools.product(new_setting_list, classify_id_list)
                     new_setting_list = [frozenset((dict(new_setting) | {'classify_id' : classify_id}).items()) \
-                        for (new_setting, use_id) in extra_setting_list]
+                        for (new_setting, classify_id) in extra_setting_list]
+                    
+                    #print(new_setting_list)
                 
             # Start voting
             for new_setting in new_setting_list:
@@ -309,10 +307,10 @@ def vote_bug2commit(total_feature_dict, total_encoder_dict, bug_feature_dict):
                 for commit_type in commit_type_set:
                     
                     # ID class handling completed
-                    if id_type_handled and commit_type in set('class', 'method', 'variable'):
+                    if id_type_handled and commit_type in set(['class', 'method', 'variable']):
                         continue
                     
-                    handle_id_type = not classify_id and commit_type in set('class', 'method', 'variable')
+                    handle_id_type = not classify_id and commit_type in set(['class', 'method', 'variable'])
                     
                     # Build BM25 vocabulary
                     # For the commits that don't have corresponding types, they are currently adding empty docuemnt
@@ -326,7 +324,7 @@ def vote_bug2commit(total_feature_dict, total_encoder_dict, bug_feature_dict):
 
                             # Sum up the ID features
                             for id_type in ['class', 'method', 'variable']:
-                                id_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()})
+                                id_feature_dict = feature_dict.get(id_type, {'id' : Counter(), 'non_id' : Counter()})
                                 sub_feature_dict['id'] += id_feature_dict['id']
                                 sub_feature_dict['non_id'] += id_feature_dict['non_id']
                         else:    
@@ -362,11 +360,26 @@ def vote_bug2commit(total_feature_dict, total_encoder_dict, bug_feature_dict):
                                 score_dict['all'].append([commit, 0])
                                 score_dict[type_setting].append([commit, 0])
                                 continue
+                            
+                            # Ignore type of IDs
+                            if handle_id_type:
+                                sub_feature_dict = {'id' : Counter(), 'non_id' : Counter()}
+
+                                # Sum up the ID features
+                                for id_type in ['class', 'method', 'variable']:
+                                    id_feature_dict = feature_dict.get(id_type, {'id' : Counter(), 'non_id' : Counter()})
+                                    sub_feature_dict['id'] += id_feature_dict['id']
+                                    sub_feature_dict['non_id'] += id_feature_dict['non_id']
+                            else:    
+                                sub_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
+                            #print(commit_type, sub_feature_dict)
 
                             # Consider full identifiers or not
                             if use_id:
-                                commit_vector = bm25.vectorize_complex(sub_feature_dict['id'] + sub_feature_dict['non_id']) 
+                                #print(commit, sub_feature_dict['id'] + sub_feature_dict['non_id'])
+                                commit_vector = bm25.vectorize_complex(sub_feature_dict['id'] + sub_feature_dict['non_id'])
                             else:
+                                #print(commit, sub_feature_dict['non_id'])
                                 commit_vector = bm25.vectorize_complex(sub_feature_dict['non_id']) 
 
                             # Commit feature vector is 0
@@ -473,25 +486,30 @@ def main(pid, vid):
     if feature_dict is None or encoder_dict is None or bug_feature_dict is None:
         return
     
-    print('Feature')
+    """print('Feature')
     for stage2, setting_dict in feature_dict.items():
         print(f'Stage2) {stage2}')
         for setting, sub_dict in setting_dict.items():
             print(f'Setting) {setting}')
-            print(json.dumps(sub_dict, indent=4))
+            print(json.dumps(sub_dict, indent=4))"""
 
     # Bug2Commit voting
     bug2commit_vote = vote_bug2commit(feature_dict, encoder_dict, bug_feature_dict)
 
-    print('Vote')
-    for stage2, setting_dict in bug2commit_dict.items():
+    """print('Vote')
+    for stage2, setting_dict in bug2commit_vote.items():
         print(f'Stage2) {stage2}')
         for setting, sub_dict in setting_dict.items():
             print(f'Setting) {setting}')
-            print(json.dumps(sub_dict, indent=4))
+            print(sub_dict.keys())
+            #for aaa, bbb in sub_dict.items():
+            #    print(f'Pair) {aaa}')
+            #    print(bbb)
+            #print(json.dumps(sub_dict, indent=4))
+    """
 
     
-    """with open(os.path.join(savedir, f'bug2commit.pkl'), 'wb') as file:
+    with open(os.path.join(savedir, f'bug2commit.pkl'), 'wb') as file:
         pickle.dump(bug2commit_vote, file)
 
     # Fonte voting
@@ -501,4 +519,4 @@ def main(pid, vid):
 
     # Ensemble voting
     with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
-        pickle.dump(vote_ensemble(bug2commit_vote, fonte_vote), file)"""
+        pickle.dump(vote_ensemble(bug2commit_vote, fonte_vote), file)

@@ -25,8 +25,8 @@ if __name__ == "__main__":
         #parse_gumtree.main(pid, vid)
         #greedy_id.main(pid, vid)
         #gen_intvl.main(pid, vid)
-        encode.main(pid, vid)
-        #vote.main(pid, vid)
+        #encode.main(pid, vid)
+        vote.main(pid, vid)
         #bisection.main(pid, vid)
 
         break
