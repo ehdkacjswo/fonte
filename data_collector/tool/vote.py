@@ -344,8 +344,8 @@ def vote_bug2commit(total_feature_dict, total_encoder_dict, bug_feature_dict):
 # For a given project, generate dataframe with result scores of fonte for every settings
 # Settings : ['HSFL', 'score_mode', 'ensemble', 'use_br', 'use_diff', 'stage2', 'use_stopword', 'adddel']
 def vote_fonte(pid, vid):
-    log('vote', '[INFO] Fonte voting')
-    start_time = time.time()
+    #log('vote', '[INFO] Fonte voting')
+    #start_time = time.time()
     fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
     res_dict = dict()
 
@@ -361,14 +361,14 @@ def vote_fonte(pid, vid):
 
         res_dict[stage2] = fonte_df
     
-    end_time = time.time()
-    log('vote', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
+    #end_time = time.time()
+    #log('vote', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
     return res_dict
 
 # Ensemble results from Bug2Commit & Fonte
 def vote_ensemble(bug2commit_dict, fonte_dict):
-    log('vote', '[INFO] Vote ensembling')
-    start_time = time.time()
+    #log('vote', '[INFO] Vote ensembling')
+    #start_time = time.time()
     res_dict = dict()
     
     for stage2, sub_dict in bug2commit_dict.items():
@@ -391,8 +391,8 @@ def vote_ensemble(bug2commit_dict, fonte_dict):
                 new_setting = frozenset((dict(setting) | {'beta' : beta}).items())
                 res_dict[stage2][new_setting] = result_df
     
-    end_time = time.time()
-    log('vote', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
+    #end_time = time.time()
+    #log('vote', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
     return res_dict
 
 def main(pid, vid):

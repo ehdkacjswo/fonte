@@ -1,6 +1,6 @@
 import sys, logging
 sys.path.append('/root/workspace/data_collector/tool/')
-import track_history, parse_gumtree, greedy_id, gen_intvl, encode, vote, bisection
+import track_history, parse_gumtree, greedy_id, gen_intvl, encode, vote, bisection, encode_fix
 
 sys.path.append('/root/workspace/lib/')
 from experiment_utils import load_BIC_GT
@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
-        #pid, vid = 'Cli', '29'
+        #pid, vid = 'Cli', '10'
 
         #if pid == 'Jsoup' and vid == '47':
         #    skip = False
@@ -25,7 +25,8 @@ if __name__ == "__main__":
         #parse_gumtree.main(pid, vid)
         #greedy_id.main(pid, vid)
         #gen_intvl.main(pid, vid)
-        encode.main(pid, vid)
+        #encode.main(pid, vid)
+        encode_fix.main(pid, vid)
         vote.main(pid, vid)
         #bisection.main(pid, vid)
 
