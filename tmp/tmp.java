@@ -1,284 +1,165 @@
-/*
- *  Copyright 2001-2005 Stephen Colebourne
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-package org.joda.time.field;
+package org.apache.commons.cli;
 
+import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * 
- *
- * @author Brian S O'Neill
+ * @author John Keyes (john at integralsource.com)
+ * @version $Revision$
  */
-public class TestFieldUtils extends TestCase {
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
+public class ParseRequiredTest extends TestCase
+{
+
+    private Options _options = null;
+    private CommandLineParser parser = new PosixParser();
+
+    public static Test suite() { 
+        return new TestSuite(ParseRequiredTest.class); 
     }
 
-    public static TestSuite suite() {
-        return new TestSuite(TestFieldUtils.class);
-    }
-
-    public TestFieldUtils(String name) {
+    public ParseRequiredTest(String name)
+    {
         super(name);
     }
 
-    public void testSafeAddInt() {
-        assertEquals(0, FieldUtils.safeAdd(0, 0));
+    public void setUp()
+    {
+        _options = new Options()
+            .addOption("a",
+                       "enable-a",
+                       false,
+                       "turn [a] on or off")
+            .addOption( OptionBuilder.withLongOpt( "bfile" )
+                                     .hasArg()
+                                     .isRequired()
+                                     .withDescription( "set the value of [b]" )
+                                     .create( 'b' ) );
+    }
 
-        assertEquals(5, FieldUtils.safeAdd(2, 3));
-        assertEquals(-1, FieldUtils.safeAdd(2, -3));
-        assertEquals(1, FieldUtils.safeAdd(-2, 3));
-        assertEquals(-5, FieldUtils.safeAdd(-2, -3));
+    public void tearDown()
+    {
 
-        assertEquals(Integer.MAX_VALUE - 1, FieldUtils.safeAdd(Integer.MAX_VALUE, -1));
-        assertEquals(Integer.MIN_VALUE + 1, FieldUtils.safeAdd(Integer.MIN_VALUE, 1));
+    }
 
-        assertEquals(-1, FieldUtils.safeAdd(Integer.MIN_VALUE, Integer.MAX_VALUE));
-        assertEquals(-1, FieldUtils.safeAdd(Integer.MAX_VALUE, Integer.MIN_VALUE));
+    public void testWithRequiredOption()
+    {
+        String[] args = new String[] {  "-b", "file" };
 
-        try {
-            FieldUtils.safeAdd(Integer.MAX_VALUE, 1);
-            fail();
-        } catch (ArithmeticException e) {
+        try
+        {
+            CommandLine cl = parser.parse(_options,args);
+            
+            assertTrue( "Confirm -a is NOT set", !cl.hasOption("a") );
+            assertTrue( "Confirm -b is set", cl.hasOption("b") );
+            assertTrue( "Confirm arg of -b", cl.getOptionValue("b").equals("file") );
+            assertTrue( "Confirm NO of extra args", cl.getArgList().size() == 0);
         }
-
-        try {
-            FieldUtils.safeAdd(Integer.MAX_VALUE, 100);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Integer.MAX_VALUE, Integer.MAX_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Integer.MIN_VALUE, -1);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Integer.MIN_VALUE, -100);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Integer.MIN_VALUE, Integer.MIN_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
+        catch (ParseException e)
+        {
+            fail( e.toString() );
         }
     }
 
-    public void testSafeAddLong() {
-        assertEquals(0L, FieldUtils.safeAdd(0L, 0L));
+    public void testOptionAndRequiredOption()
+    {
+        String[] args = new String[] {  "-a", "-b", "file" };
 
-        assertEquals(5L, FieldUtils.safeAdd(2L, 3L));
-        assertEquals(-1L, FieldUtils.safeAdd(2L, -3L));
-        assertEquals(1L, FieldUtils.safeAdd(-2L, 3L));
-        assertEquals(-5L, FieldUtils.safeAdd(-2L, -3L));
+        try
+        {
+            CommandLine cl = parser.parse(_options,args);
 
-        assertEquals(Long.MAX_VALUE - 1, FieldUtils.safeAdd(Long.MAX_VALUE, -1L));
-        assertEquals(Long.MIN_VALUE + 1, FieldUtils.safeAdd(Long.MIN_VALUE, 1L));
-
-        assertEquals(-1, FieldUtils.safeAdd(Long.MIN_VALUE, Long.MAX_VALUE));
-        assertEquals(-1, FieldUtils.safeAdd(Long.MAX_VALUE, Long.MIN_VALUE));
-
-        try {
-            FieldUtils.safeAdd(Long.MAX_VALUE, 1L);
-            fail();
-        } catch (ArithmeticException e) {
+            assertTrue( "Confirm -a is set", cl.hasOption("a") );
+            assertTrue( "Confirm -b is set", cl.hasOption("b") );
+            assertTrue( "Confirm arg of -b", cl.getOptionValue("b").equals("file") );
+            assertTrue( "Confirm NO of extra args", cl.getArgList().size() == 0);
         }
-
-        try {
-            FieldUtils.safeAdd(Long.MAX_VALUE, 100L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Long.MAX_VALUE, Long.MAX_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Long.MIN_VALUE, -1L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Long.MIN_VALUE, -100L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeAdd(Long.MIN_VALUE, Long.MIN_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
+        catch (ParseException e)
+        {
+            fail( e.toString() );
         }
     }
 
-    public void testSafeSubtractLong() {
-        assertEquals(0L, FieldUtils.safeSubtract(0L, 0L));
+    public void testMissingRequiredOption()
+    {
+        String[] args = new String[] { "-a" };
 
-        assertEquals(-1L, FieldUtils.safeSubtract(2L, 3L));
-        assertEquals(5L, FieldUtils.safeSubtract(2L, -3L));
-        assertEquals(-5L, FieldUtils.safeSubtract(-2L, 3L));
-        assertEquals(1L, FieldUtils.safeSubtract(-2L, -3L));
-
-        assertEquals(Long.MAX_VALUE - 1, FieldUtils.safeSubtract(Long.MAX_VALUE, 1L));
-        assertEquals(Long.MIN_VALUE + 1, FieldUtils.safeSubtract(Long.MIN_VALUE, -1L));
-
-        assertEquals(0, FieldUtils.safeSubtract(Long.MIN_VALUE, Long.MIN_VALUE));
-        assertEquals(0, FieldUtils.safeSubtract(Long.MAX_VALUE, Long.MAX_VALUE));
-
-        try {
-            FieldUtils.safeSubtract(Long.MIN_VALUE, 1L);
-            fail();
-        } catch (ArithmeticException e) {
+        try
+        {
+            CommandLine cl = parser.parse(_options,args);
+            fail( "exception should have been thrown" );
         }
-
-        try {
-            FieldUtils.safeSubtract(Long.MIN_VALUE, 100L);
-            fail();
-        } catch (ArithmeticException e) {
+        catch (MissingOptionException e)
+        {
+            assertEquals( "Incorrect exception message", "Missing required option: b", e.getMessage() );
         }
-
-        try {
-            FieldUtils.safeSubtract(Long.MIN_VALUE, Long.MAX_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeSubtract(Long.MAX_VALUE, -1L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeSubtract(Long.MAX_VALUE, -100L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-
-        try {
-            FieldUtils.safeSubtract(Long.MAX_VALUE, Long.MIN_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
+        catch (ParseException e)
+        {
+            fail( "expected to catch MissingOptionException" );
         }
     }
 
-    //-----------------------------------------------------------------------
-    public void testSafeMultiplyLongLong() {
-        assertEquals(0L, FieldUtils.safeMultiply(0L, 0L));
-        
-        assertEquals(1L, FieldUtils.safeMultiply(1L, 1L));
-        assertEquals(3L, FieldUtils.safeMultiply(1L, 3L));
-        assertEquals(3L, FieldUtils.safeMultiply(3L, 1L));
-        
-        assertEquals(6L, FieldUtils.safeMultiply(2L, 3L));
-        assertEquals(-6L, FieldUtils.safeMultiply(2L, -3L));
-        assertEquals(-6L, FieldUtils.safeMultiply(-2L, 3L));
-        assertEquals(6L, FieldUtils.safeMultiply(-2L, -3L));
-        
-        assertEquals(Long.MAX_VALUE, FieldUtils.safeMultiply(Long.MAX_VALUE, 1L));
-        assertEquals(Long.MIN_VALUE, FieldUtils.safeMultiply(Long.MIN_VALUE, 1L));
-        assertEquals(-Long.MAX_VALUE, FieldUtils.safeMultiply(Long.MAX_VALUE, -1L));
-        
-        try {
-            FieldUtils.safeMultiply(Long.MIN_VALUE, -1L);
-            fail();
-        } catch (ArithmeticException e) {
+    public void testMissingRequiredOptions()
+    {
+        String[] args = new String[] { "-a" };
+
+        _options.addOption( OptionBuilder.withLongOpt( "cfile" )
+                                     .hasArg()
+                                     .isRequired()
+                                     .withDescription( "set the value of [c]" )
+                                     .create( 'c' ) );
+
+        try
+        {
+            CommandLine cl = parser.parse(_options,args);
+            fail( "exception should have been thrown" );
         }
-        
-        try {
-            FieldUtils.safeMultiply(-1L, Long.MIN_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
+        catch (MissingOptionException e)
+        {
+            assertEquals( "Incorrect exception message", "Missing required options: b, c", e.getMessage() );
         }
-      
-        try {
-            FieldUtils.safeMultiply(Long.MIN_VALUE, 100L);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-        
-        try {
-            FieldUtils.safeMultiply(Long.MIN_VALUE, Long.MAX_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-        
-        try {
-            FieldUtils.safeMultiply(Long.MAX_VALUE, Long.MIN_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
+        catch (ParseException e)
+        {
+            fail( "expected to catch MissingOptionException" );
         }
     }
 
-    //-----------------------------------------------------------------------
-    public void testSafeMultiplyLongInt() {
-        assertEquals(0L, FieldUtils.safeMultiply(0L, 0));
-        
-        assertEquals(1L, FieldUtils.safeMultiply(1L, 1));
-        assertEquals(3L, FieldUtils.safeMultiply(1L, 3));
-        assertEquals(3L, FieldUtils.safeMultiply(3L, 1));
-        
-        assertEquals(6L, FieldUtils.safeMultiply(2L, 3));
-        assertEquals(-6L, FieldUtils.safeMultiply(2L, -3));
-        assertEquals(-6L, FieldUtils.safeMultiply(-2L, 3));
-        assertEquals(6L, FieldUtils.safeMultiply(-2L, -3));
-        
-        assertEquals(-1L * Integer.MIN_VALUE, FieldUtils.safeMultiply(-1L, Integer.MIN_VALUE));
-        
-        assertEquals(Long.MAX_VALUE, FieldUtils.safeMultiply(Long.MAX_VALUE, 1));
-        assertEquals(Long.MIN_VALUE, FieldUtils.safeMultiply(Long.MIN_VALUE, 1));
-        assertEquals(-Long.MAX_VALUE, FieldUtils.safeMultiply(Long.MAX_VALUE, -1));
-        
-        try {
-            FieldUtils.safeMultiply(Long.MIN_VALUE, -1);
-            fail();
-        } catch (ArithmeticException e) {
+    public void testReuseOptionsTwice() throws Exception
+    {
+        Options opts = new Options();
+		opts.addOption(OptionBuilder.isRequired().create('v'));
+
+		GnuParser parser = new GnuParser();
+
+        // first parsing
+        parser.parse(opts, new String[] { "-v" });
+
+        try
+        {
+            // second parsing, with the same Options instance and an invalid command line
+            parser.parse(opts, new String[0]);
+            fail("MissingOptionException not thrown");
         }
-        
-        try {
-            FieldUtils.safeMultiply(Long.MIN_VALUE, 100);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-        
-        try {
-            FieldUtils.safeMultiply(Long.MIN_VALUE, Integer.MAX_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
-        }
-        
-        try {
-            FieldUtils.safeMultiply(Long.MAX_VALUE, Integer.MIN_VALUE);
-            fail();
-        } catch (ArithmeticException e) {
+        catch (MissingOptionException e)
+        {
+            // expected
         }
     }
+
 }
-

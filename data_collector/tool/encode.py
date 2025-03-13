@@ -183,7 +183,7 @@ def pre_encode(total_intvl_dict, commit_path_dict, commit_msg_dict):
 # No diff 추가(는 나중에?)
 # No diff, no id
 def gen_feature(enc_dict, commit_msg_dict):
-    res_dict = {}
+    res_dict = dict()
     #log('encode', '[INFO] Generating features')
     #start_time = time.time()
 
@@ -229,7 +229,7 @@ def gen_feature(enc_dict, commit_msg_dict):
                     diff_setting = frozenset((dict(setting) | {'adddel' : adddel}).items())
                     no_diff_setting = frozenset({'tracker' : dict(setting)['tracker'], 'diff_tool' : None, 'adddel' : adddel}.items())
 
-                    res_dict[stage2][diff_setting] = dict()
+                    res_dict[stage2].setdefault(diff_setting, dict())
                     res_dict[stage2].setdefault(no_diff_setting, dict())
 
                     diff_dict, no_diff_dict = res_dict[stage2][diff_setting], res_dict[stage2][no_diff_setting]
@@ -321,18 +321,27 @@ def main(pid, vid):
     enc_dict, commit_msg_dict, encoder_dict = pre_encode(total_intvl_dict, commit_path_dict, commit_msg_dict)
     if enc_dict is None or commit_msg_dict is None or encoder_dict is None:
         return
-
-    # Generate features
-    res_dict = gen_feature(enc_dict, commit_msg_dict)
     
-    """for stage2, setting_dict in res_dict.items():
+    print('encoded_data')
+    for stage2, setting_dict in enc_dict.items():
         print(f'Stage2) {stage2}')
 
         for setting, sub_dict in setting_dict.items():
             print(f'Setting) {setting}')
-            print(json.dumps(sub_dict, indent=4))"""
+            print(sub_dict.keys())
 
-    with open(os.path.join(diff_data_dir, 'feature.pkl'), 'wb') as file:
+    # Generate features
+    res_dict = gen_feature(enc_dict, commit_msg_dict)
+    
+    print('Feature')
+    for stage2, setting_dict in res_dict.items():
+        print(f'Stage2) {stage2}')
+
+        for setting, sub_dict in setting_dict.items():
+            print(f'Setting) {setting}')
+            print(sub_dict.keys())
+
+    """with open(os.path.join(diff_data_dir, 'feature.pkl'), 'wb') as file:
         pickle.dump(res_dict, file)
     with open(os.path.join(diff_data_dir, 'encoder.pkl'), 'wb') as file:
-        pickle.dump(encoder_dict, file)
+        pickle.dump(encoder_dict, file)"""

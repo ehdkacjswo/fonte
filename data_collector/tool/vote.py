@@ -337,6 +337,8 @@ def vote_bug2commit(total_feature_dict, total_encoder_dict, bug_feature_dict):
                     vote_df.sort_values(by="rank", inplace=True)
                     score_dict[type_setting] = vote_df
 
+                    #print(res_dict[stage2][new_setting][type_setting])
+
     end_time = time.time()
     log('vote', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
     return res_dict
@@ -422,7 +424,7 @@ def main(pid, vid):
     # Bug2Commit voting
     bug2commit_vote = vote_bug2commit(feature_dict, encoder_dict, bug_feature_dict)
     
-    with open(os.path.join(savedir, f'bug2commit.pkl'), 'wb') as file:
+    """with open(os.path.join(savedir, f'bug2commit.pkl'), 'wb') as file:
         pickle.dump(bug2commit_vote, file)
 
     # Fonte voting
@@ -432,4 +434,4 @@ def main(pid, vid):
 
     # Ensemble voting
     with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
-        pickle.dump(vote_ensemble(bug2commit_vote, fonte_vote), file)
+        pickle.dump(vote_ensemble(bug2commit_vote, fonte_vote), file)"""

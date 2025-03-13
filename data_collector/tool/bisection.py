@@ -98,6 +98,7 @@ def main(pid, vid):
                 ensemble_iter[stage2][setting] = weighted_bisection(C_BIC, votes, BIC)
 
         for setting, bug2commit_df in sub_dict.items():
+            print(bug2commit_df['all'])
             if float(bug2commit_df['all'].loc[BIC, "vote"]) == 0:
                 log('bisection', f'[INFO] BIC({BIC}) has 0 Bug2Commit score for stage2({stage2}), {str(setting)}')
 
