@@ -18,7 +18,7 @@ RESULT_DATA_DIR = '/root/workspace/data/Defects4J/result'
 # mode : all, project
 # metric : mean rank, mean number of iterations
 def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Literal['all', 'project']):
-    savepath = f"/root/workspace/analyze/data/{method}/metric_{mode}.pkl"
+    savepath = f"/root/workspace/analysis/data/{method}/metric_{mode}.pkl"
 
     # If file already exists, read it
     if os.path.isfile(savepath):
@@ -31,14 +31,16 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
 
     res_dict = dict()
 
+    len_GT = 0
+    for _, row in GT.iterrows():
+        pid, vid, BIC = row.pid, row.vid, row.commit
+        len_GT += 1
+        if pid == 'Jsoup' and vid == '17':
+            break
+
     # Iterate through projects
     for _, row in GT.iterrows():
         pid, vid, BIC = row.pid, row.vid, row.commit
-
-        # Closure-131b has wrong BIC data
-        if pid == 'Closure' and vid == '131':
-            continue
-        
         proj_dir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b')
 
         # Get rank
@@ -85,14 +87,15 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
                         if setting_key not in res_dict:
                             res_dict[setting_key] = {'MRR': 0, 'acc@1': 0, 'acc@2': 0, 'acc@3': 0, 'acc@5': 0, 'acc@10': 0}
 
-                        res_dict[setting_key]['MRR'] += 1 / (rank * len(GT))
+                        #res_dict[setting_key]['MRR'] += 1 / (rank * len(GT))
+                        res_dict[setting_key]['MRR'] += 1 / (rank * len_GT)
                         res_dict[setting_key]['acc@1'] += 1 if rank <= 1 else 0
                         res_dict[setting_key]['acc@2'] += 1 if rank <= 2 else 0
                         res_dict[setting_key]['acc@3'] += 1 if rank <= 3 else 0
                         res_dict[setting_key]['acc@5'] += 1 if rank <= 5 else 0
                         res_dict[setting_key]['acc@10'] += 1 if rank <= 10 else 0
         
-        # Get iteration (Bug2Commit doesn't have iteration data for possible 0 score BIC)
+        # Get iteration
         with open(os.path.join(proj_dir, 'iteration', f'{method}.pkl'), 'rb') as file:
             iter_dict = pickle.load(file)
     
@@ -103,7 +106,8 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
                 if mode == 'project':
                     res_dict[setting_key][f'{pid}-{vid}b']['num_iter'] = value
                 else:
-                    res_dict[setting_key]['num_iter'] += value / len(GT)
+                    #res_dict[setting_key]['num_iter'] += value / len(GT)
+                    res_dict[setting_key]['num_iter'] += value / len_GT
             
             else: #Ensemble has extra settings
                 for setting, num_iter in value.items():
@@ -114,8 +118,12 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
                         res_dict[setting_key].setdefault(f'{pid}-{vid}b', dict())
                         res_dict[setting_key][f'{pid}-{vid}b']['num_iter'] = num_iter
                     else:
-                        res_dict[setting_key]['num_iter'] = res_dict[setting_key].get('num_iter', 0) + num_iter / len(GT)
+                        #res_dict[setting_key]['num_iter'] = res_dict[setting_key].get('num_iter', 0) + num_iter / len(GT)
+                        res_dict[setting_key]['num_iter'] = res_dict[setting_key].get('num_iter', 0) + num_iter / len_GT
     
+        if pid == 'Jsoup' and vid == '17':
+            break
+
     # Save & return the dictionary
     #os.makedirs(savepath, exist_ok=True)
     with open(savepath, 'wb') as file:
@@ -125,7 +133,7 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
 
 # Create csv file for ART ANOVA
 def metrics_to_csv(method: Literal['fonte', 'bug2commit', 'ensemble']):
-    savepath = f"/root/workspace/analyze/data/{method}/metrics.csv"
+    savepath = f"/root/workspace/analysis/data/{method}/metrics.csv"
 
     """if os.path.isfile(savepath):
         print(f'{savepath} already exists!')

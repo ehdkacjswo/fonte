@@ -98,7 +98,7 @@ def main(pid, vid):
                 ensemble_iter[stage2][setting] = weighted_bisection(C_BIC, votes, BIC)
 
         for setting, bug2commit_df in sub_dict.items():
-            print(bug2commit_df['all'])
+            #print(bug2commit_df['all'])
             if float(bug2commit_df['all'].loc[BIC, "vote"]) == 0:
                 log('bisection', f'[INFO] BIC({BIC}) has 0 Bug2Commit score for stage2({stage2}), {str(setting)}')
 
@@ -125,4 +125,4 @@ def main(pid, vid):
         pickle.dump(ensemble_iter, file)
     
     end_time = time.time()
-    log('bisection', f'{time_to_str(start_time, end_time)}')
+    log('bisection', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')

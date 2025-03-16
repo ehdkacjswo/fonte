@@ -18,7 +18,7 @@ RESULT_DATA_DIR = '/root/workspace/data/Defects4J/result'
 BASELINE_DATA_DIR = "/root/workspace/data/Defects4J/baseline"
 
 # Load data
-def load_data(pid, vid):
+def load_feature_data(pid, vid):
     #log('vote', '[INFO] Start loading data')
     #start_time = time.time()
     

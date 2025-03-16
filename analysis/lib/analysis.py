@@ -26,13 +26,189 @@ CORE_DATA_DIR = '/root/workspace/data/Defects4J/core'
 BASE_DATA_DIR = '/root/workspace/data/Defects4J/baseline'
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 
-def id_count(stage2='precise', \
-    encode_setting=frozenset({'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'adddel' : 'all_uni'}.items())):
-    feature_dict, encoder_dict, bug_feature_dict
+def cmp_id_class(stage2)
+
+# Print data of each ID
+def cmp_id_type(stage2='precise', \
+    feature_setting={'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'gumtree_id', 'adddel' : 'add'}, \
+    vote_setting={'use_br' : True, 'classify_id' : True}):
+
+    # Load manual data only
+    all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+    GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
+
+    # Initialize settings
+    org_setting = frozenset((base_setting | org_setting).items())
+    new_setting = frozenset((base_setting | new_setting).items())
+
+    res_dict, rank_list_dict = dict(), dict()
+
+    # Iterate through projects
+    for _, row in GT.iterrows():
+        pid, vid, BIC = row.pid, row.vid, row.commit
+
+        with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
+            feature_dict = pickle.load(file)
+
+        with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'bug2commit.pkl'), 'rb') as file:
+            vote_dict = pickle.load(file)
+        
+        feature_data = feature_dict[stage2][frozenset(feature_setting.items())]
+        vote_data = vote_dict[stage2][frozenset((feature_setting | vote_setting).items())]
+        
+        if pid == 'Jsoup' and vid == '17':
+            break
+
+# Print how using IDs affect the voting for feature pairs + 
+# Vote setting doesn't have to contain 'use_id'
+def cmp_use_id(pid='Cli', vid='10', stage2='precise', \
+    feature_setting={'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'gumtree_id', 'adddel' : 'add'}, \
+    vote_setting={'use_br' : True, 'classify_id' : True}):
+    
+    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+    BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
+
+    # Load data (Feature, encoder, bug_feature)
+    feature_dict, encoder_dict, bug_feature_dict = load_feature_data(pid, vid)
+    encoder_setting = feature_setting.copy()
+    del encoder_setting['adddel']
+    feature_data, encoder = feature_dict[stage2][frozenset(feature_setting.items())], encoder_dict[stage2][frozenset(encoder_setting.items())]
+
+    # Get vocabulary from encoder
+    id_vocab = encoder.id_vocab
+    id_vocab = {ind : word for word, ind in id_vocab.items()}
+
+    # Load voting results
+    with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'bug2commit.pkl'), 'rb') as file:
+        vote_dict = pickle.load(file)
+    
+    new_vote_dict = vote_dict[stage2][frozenset((feature_setting | vote_setting | {'use_id' : True}).items())]
+    org_vote_dict = vote_dict[stage2][frozenset((feature_setting | vote_setting | {'use_id' : False}).items())]
+
+    # Get the set of commit types
+    commit_type_set = next(iter(feature_data.values())).keys()
+    num_commits = len(feature_data)
+    
+    print(f'BIC rank : {int(org_vote_dict["all"].loc[BIC, "rank"])}/{num_commits} -> {int(new_vote_dict["all"].loc[BIC, "rank"])}/{num_commits}')
+
+    for bug_type, bug_feature in bug_feature_dict.items():
+        #if bug_type.startswith('br'):
+        #    continue
+
+        bug_feature, _ = encoder.encode(bug_feature, update_vocab=False, mode='code' if bug_type == 'test_code' else 'text')
+        bug_feature = [(word, freq) for word, freq in bug_feature.items()]
+        bug_feature.sort(key=lambda x:x[1], reverse=True)
+        
+        for commit_type in commit_type_set:
+            print(f'\nBug) {bug_type}, Commit) {commit_type}')
+            new_vote_df = new_vote_dict[frozenset({'commit' : commit_type, 'bug' : bug_type}.items())]
+            org_vote_df = org_vote_dict[frozenset({'commit' : commit_type, 'bug' : bug_type}.items())]
+
+            print(f'BIC rank : {int(org_vote_df.loc[BIC, "rank"])}/{num_commits} -> {int(new_vote_df.loc[BIC, "rank"])}/{num_commits}')
+            
+            BIC_freq_dict, commit_freq_dict = dict(), dict()
+
+            for commit, commit_feature in feature_data.items():
+                if commit == BIC:
+                    BIC_vec = commit_feature.get(commit_type, dict()).get('id', Counter())
+                    BIC_len = sum(BIC_vec.values())
+
+                    if BIC_len == 0:
+                        print('BIC doesn\'t contain any ID')
+                        continue
+                    else:
+                        for word, freq in BIC_vec.items():
+                            BIC_freq_dict[word] = freq / BIC_len
+
+                else:
+                    commit_vec = commit_feature.get(commit_type, dict()).get('id', Counter())
+                    commit_len = sum(commit_vec.values())
+
+                    if commit_len == 0:
+                        continue
+                    else:
+                        for word, freq in commit_vec.items():
+                            commit_freq_dict[word] = commit_freq_dict.get(word, 0) + freq / (commit_len * (num_commits - 1))
+            
+            for (word, freq) in bug_feature:
+                BIC_freq, commit_freq = BIC_freq_dict.get(word, 0), commit_freq_dict.get(word, 0)
+                
+                if BIC_freq > 0 or commit_freq > 0:
+                    print(f'{id_vocab[word]} : {freq} BIC : {BIC_freq * 100:.2f}%, else : {commit_freq * 100:.2f}%')
+
+# Compare how the settings affect the rank of each commit & bug feature types
+# Two settings must have same encoder (vocab), so 'tracker', 'diff_tool', 'diff_type' has to be identical
+# Two settings must have same type pairs, so 'use_br', 'classify_id' has to be identical
+def cmp_type_pair(stage2='precise',
+    base_setting={'tracker' : 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'use_br' : False}, \
+    org_setting = {'adddel' : 'add', 'use_id' : False}, \
+    new_setting = {'adddel' : 'add', 'use_id' : True}):
+
+    # Load manual data only
+    all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+    GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
+
+    # Initialize settings
+    org_setting = frozenset((base_setting | org_setting).items())
+    new_setting = frozenset((base_setting | new_setting).items())
+
+    res_dict, rank_list_dict = dict(), dict()
+
+    # Iterate through projects
+    for _, row in GT.iterrows():
+        pid, vid, BIC = row.pid, row.vid, row.commit
+        with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'bug2commit.pkl'), 'rb') as file:
+            vote_dict = pickle.load(file)
+        
+        org_vote_df, new_vote_df = vote_dict[stage2][org_setting], vote_dict[stage2][new_setting]
+
+        for type_pair in org_vote_df.keys():
+
+            # In fact, some type pair could be missing based on setting
+            # But haven't decided how to handle such cases
+            org_rank = org_vote_df[type_pair].loc[BIC, 'rank']
+            new_rank = new_vote_df[type_pair].loc[BIC, 'rank']
+
+            res_dict.setdefault(type_pair, {'better' : 0, 'same' : 0, 'worse' : 0, 'better_sum' : 0, 'worse_sum' : 0})
+            rank_list_dict.setdefault(type_pair, list())
+
+            # Save data
+            rank_list_dict[type_pair].append(org_rank - new_rank)
+
+            if org_rank > new_rank:
+                res_dict[type_pair]['better'] += 1
+                res_dict[type_pair]['better_sum'] += org_rank - new_rank
+            elif org_rank < new_rank:
+                res_dict[type_pair]['worse'] += 1
+                res_dict[type_pair]['worse_sum'] += new_rank - org_rank
+            else:
+                res_dict[type_pair]['same'] += 1
+
+        if pid == 'Jsoup' and vid == '17':
+            break
+        #break
+
+    for type_pair, type_pair_res in res_dict.items():
+        if type_pair == 'all':
+            print('All')
+        else:
+            print(f"Commit) {dict(type_pair)['commit']}, Bug) {dict(type_pair)['bug']}")
+
+        print(f"Better : {type_pair_res['better']}({type_pair_res['better_sum']}), Worse : {type_pair_res['worse']}({type_pair_res['worse_sum']}), Same : {type_pair_res['same']}")
+
+        if type_pair_res['better'] > 0 or type_pair_res['worse'] > 0:
+            w, p = wilcoxon(rank_list_dict[type_pair], alternative='greater')
+            print("WSR (Imrpoved)", w, p)
+            w, p = wilcoxon(rank_list_dict[type_pair], alternative='less')
+            print("WSR (Worsen)", w, p)
+
+    #print(bug_feature_dict)
 
 
 # Check how id filtering affects the document
-def id_filter_print(stage2='precise', setting=frozenset({'tracker': 'git', 'diff_tool' : 'base', 'doc_level' : 'commit', 'adddel' : 'all_sep'}.items())):
+# Setting fields = (tracker, diff_tool, doc_level, adddel)
+def id_filter_print(pid, vid, stage2='precise', \
+    setting=frozenset({'tracker': 'git', 'diff_tool' : 'base', 'adddel' : 'all_sep'}.items())):
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     res_dict = dict()
 
@@ -41,42 +217,35 @@ def id_filter_print(stage2='precise', setting=frozenset({'tracker': 'git', 'diff
     adddel = dict(setting)['adddel']
     target_type_list = [('add_diff', 'add_id'), ('del_diff', 'del_id')] if adddel == 'all_sep' else [('diff', 'id')]
 
-    # Iterate through projects
-    for _, row in GT.iterrows():
-        #pid, vid, BIC = row.pid, row.vid, row.commit
-        pid = 'Closure'
-        vid = '2'
-        BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
+    BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
 
-        # Load data
-        with open(os.path.join(f'/root/workspace/data/Defects4J/diff/{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
-            feature_dict = pickle.load(file)
-        
-        with open(os.path.join(f'/root/workspace/data/Defects4J/diff/{pid}-{vid}b', 'vocab.pkl'), 'rb') as file:
-            vocab = pickle.load(file)
-        
-        vocab = {ind : word for word, ind in vocab.items()}
-        org_dict = feature_dict[stage2][org_setting]
-        new_dict = feature_dict[stage2][new_setting]
+    # Load data
+    with open(os.path.join(f'/root/workspace/data/Defects4J/diff/{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
+        feature_dict = pickle.load(file)
+    
+    with open(os.path.join(f'/root/workspace/data/Defects4J/diff/{pid}-{vid}b', 'vocab.pkl'), 'rb') as file:
+        vocab = pickle.load(file)
+    
+    vocab = {ind : word for word, ind in vocab.items()}
+    org_dict = feature_dict[stage2][org_setting]
+    new_dict = feature_dict[stage2][new_setting]
 
-        for commit in org_dict.keys():
-            print(f'Commit) {commit}')
+    for commit in org_dict.keys():
+        print(f'Commit) {commit}')
 
-            org_feature, new_feature = org_dict[commit], new_dict[commit]
+        org_feature, new_feature = org_dict[commit], new_dict[commit]
 
-            for (org_type, new_type) in target_type_list:
-                aaa = {ind : freq for (ind, freq) in org_feature[org_type]}
-                bbb = {ind : freq for (ind, freq) in new_feature[new_type]}
+        for (org_type, new_type) in target_type_list:
+            aaa = {ind : freq for (ind, freq) in org_feature[org_type]}
+            bbb = {ind : freq for (ind, freq) in new_feature[new_type]}
 
-                for ind, freq in aaa.items():
-                    if bbb.get(ind, 0) < freq:
-                        print(f'Deleted token) {vocab[ind]}')
-                    
-                for ind, freq in bbb.items():
-                    if ind not in aaa:
-                        print(f'New token) {vocab[ind]}')
-        
-        break
+            for ind, freq in aaa.items():
+                if bbb.get(ind, 0) < freq:
+                    print(f'Deleted token) {vocab[ind]}')
+                
+            for ind, freq in bbb.items():
+                if ind not in aaa:
+                    print(f'New token) {vocab[ind]}')
 
 # Code txt could be possibly "None" (Failed to get code data)
 def get_tokens_intvl(code_txt, intvl):
@@ -92,7 +261,8 @@ def get_tokens_intvl(code_txt, intvl):
         
     return code_txt[convert_ind(intvl[0]) : convert_ind(intvl[1])]
 
-# Build html file that highlights components 
+# Build html file that highlights components
+# Interval setting fields = (tracker, diff_tool, diff_type)
 def build_html(pid='Cli', vid='10', stage2='precise', \
     intvl_setting=frozenset({'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id'}.items())):
 
@@ -149,8 +319,8 @@ def build_html(pid='Cli', vid='10', stage2='precise', \
     new_intvl_dict = intvl_dict[stage2][intvl_setting]
 
     # Colors of components to be highlighted
-    color_dict = {'class' : 'red', 'method' : 'green', 'variable' : 'blue', 'comment' : 'purple', \
-        'id' : 'red', 'non_id' : 'green'}
+    color_dict = {'class' : 'red', 'method' : 'green', 'variable' : 'purple', 'comment' : 'blue', \
+        'id' : 'red', 'non_id' : 'blue'}
 
     for commit, org_commit_dict in org_intvl_dict.items():
         html_lines.append(f"<h2>Commit: {commit}{'(BIC)' if commit == BIC else ''}</h2>")
@@ -341,8 +511,8 @@ def compare_settings(org_method, new_method, org_setting, new_setting):
         #plt.show()
 
 # Print metrics in order (best > worst) for given method
-# 
-def print_metric(method='bug2commit', fix={'stage2' : 'precise', 'use_br' : False}):
+# Fix the setting for given 'fix' dictionary
+def metric_by_setting(method='bug2commit', fix={'stage2' : 'precise', 'use_br' : False}):
     all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
     metric_dict = get_metric_dict(method=method, mode='all')
@@ -353,7 +523,9 @@ def print_metric(method='bug2commit', fix={'stage2' : 'precise', 'use_br' : Fals
         # Consider settings with target fixed settings
         is_target = True
         for key, value in fix.items():
-            is_target &= (key in dict(setting) and dict(setting)[key] == value)
+            if not (key in dict(setting) and dict(setting)[key] == value):
+                is_target = False
+                break
         
         if not is_target:
             continue
@@ -372,13 +544,34 @@ def print_metric(method='bug2commit', fix={'stage2' : 'precise', 'use_br' : Fals
 
 # res_dict[stage2][(new_diff_type, use_stopword, adddel, use_br)]
 if __name__ == "__main__":
+    
+    # 
+    #(stage2='precise', \
+    #    base_setting={'tracker' : 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'use_br' : False}, \
+    #    org_setting = {'adddel' : 'add', 'use_id' : False}, \
+    #    new_setting = {'adddel' : 'add', 'use_id' : True})
+    
+    #cmp_type_pair(stage2='precise', \
+    #    base_setting={'tracker' : 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'use_br' : False, 'classify_id' : True}, \
+    #    org_setting = {'adddel' : 'add', 'use_id' : False}, \
+    #    new_setting = {'adddel' : 'add', 'use_id' : True})
+
+    cmp_use_id()
+    #metric_by_setting()
+    #org_setting = frozenset({'tracker': 'git', 'stage2' : 'precise', 'use_br' : False, 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'adddel' : 'add', 'use_id' : False, 'beta' : 0.1}.items())
+    #new_setting = frozenset({'tracker': 'git', 'stage2' : 'precise', 'use_br' : False, 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'adddel' : 'add', 'use_id' : True, 'beta' : 0.1}.items())
+    #compare_settings(org_method='bug2commit', new_method='bug2commit', org_setting=org_setting, new_setting=new_setting)
+    #id_count()
+    #abc()
+    #build_html()
+    #cmp_type_pair()
     #print_metric()
     #print_metric(method='ensemble', fix={'stage2' : 'precise', 'use_br' : False})
-    org_setting = frozenset({'tracker': 'git', 'stage2' : 'precise', 'use_br' : False, 'diff_tool' : 'gumtree', 'diff_type' : 'id_all', 'adddel' : 'all_uni', 'doc_level' : 'commit', 'beta' : 0.1}.items())
-    new_setting = frozenset({'tracker': 'git', 'stage2' : 'precise', 'use_br' : False, 'diff_tool' : 'gumtree', 'diff_type' : 'id', 'adddel' : 'all_uni', 'doc_level' : 'commit', 'beta' : 0.1}.items())
-    compare_settings(org_method='bug2commit', new_method='bug2commit', org_setting=org_setting, new_setting=new_setting)
+    #org_setting = frozenset({'tracker': 'git', 'stage2' : 'precise', 'use_br' : False, 'diff_tool' : 'gumtree', 'diff_type' : 'id_all', 'adddel' : 'all_uni', 'doc_level' : 'commit', 'beta' : 0.1}.items())
+    #new_setting = frozenset({'tracker': 'git', 'stage2' : 'precise', 'use_br' : False, 'diff_tool' : 'gumtree', 'diff_type' : 'id', 'adddel' : 'all_uni', 'doc_level' : 'commit', 'beta' : 0.1}.items())
+    #compare_settings(org_method='bug2commit', new_method='bug2commit', org_setting=org_setting, new_setting=new_setting)
 
     #print_vote('Csv', '7', 'precise', frozenset({'tracker': 'git', 'use_br' : False, 'diff_tool' : 'gumtree', 'diff_type' : 'id', 'adddel' : 'all_uni', 'doc_level' : 'commit'}.items()))
     #print_vote('Csv', '7', 'precise', frozenset({'tracker': 'git', 'use_br' : False, 'diff_tool' : 'gumtree', 'diff_type' : 'id_all', 'adddel' : 'all_uni', 'doc_level' : 'commit'}.items()))
 
-    aaa(pid='Cli', vid='37', stage2='precise', setting=frozenset({'tracker': 'git', 'diff_tool' : 'base', 'doc_level' : 'commit'}.items()))
+    #aaa(pid='Cli', vid='37', stage2='precise', setting=frozenset({'tracker': 'git', 'diff_tool' : 'base', 'doc_level' : 'commit'}.items()))

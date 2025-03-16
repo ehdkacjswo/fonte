@@ -308,22 +308,6 @@ def gen_feature(enc_dict, commit_msg_dict, encoder_dict):
 def main(pid, vid):
     log('encode', f'Working on {pid}_{vid}b')
 
-    # Checkout Defects4J project
-    p = subprocess.Popen(['sh', '/root/workspace/lib/checkout.sh', pid, vid], \
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out_txt, err_txt = p.communicate()
-
-    if p.returncode != 0:
-        log('encode', '[ERROR] Checkout failed', out_txt, err_txt)
-        return
-    
-    # Change working directory to target Defects4J project
-    try:
-        os.chdir(f'/tmp/{pid}-{vid}b/')
-    except:
-        log('encode', '[ERROR] Moving directory failed')
-        return
-
     diff_data_dir = os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b')
     os.makedirs(diff_data_dir, exist_ok=True)
     
