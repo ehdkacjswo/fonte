@@ -307,6 +307,7 @@ def vote_bug2commit(total_feature_dict, total_encoder_dict, bug_feature_dict):
                             sub_feature_dict = {'id' : Counter(), 'non_id' : Counter()}
 
                             # Sum up the ID features
+                            # It doesn't work on all_sep...
                             for id_type in ['class', 'method', 'variable']:
                                 id_feature_dict = feature_dict.get(id_type, {'id' : Counter(), 'non_id' : Counter()})
                                 sub_feature_dict['id'] += id_feature_dict['id']

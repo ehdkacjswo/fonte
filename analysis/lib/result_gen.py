@@ -31,13 +31,6 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
 
     res_dict = dict()
 
-    len_GT = 0
-    for _, row in GT.iterrows():
-        pid, vid, BIC = row.pid, row.vid, row.commit
-        len_GT += 1
-        if pid == 'Jsoup' and vid == '17':
-            break
-
     # Iterate through projects
     for _, row in GT.iterrows():
         pid, vid, BIC = row.pid, row.vid, row.commit
@@ -87,8 +80,7 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
                         if setting_key not in res_dict:
                             res_dict[setting_key] = {'MRR': 0, 'acc@1': 0, 'acc@2': 0, 'acc@3': 0, 'acc@5': 0, 'acc@10': 0}
 
-                        #res_dict[setting_key]['MRR'] += 1 / (rank * len(GT))
-                        res_dict[setting_key]['MRR'] += 1 / (rank * len_GT)
+                        res_dict[setting_key]['MRR'] += 1 / (rank * len(GT))
                         res_dict[setting_key]['acc@1'] += 1 if rank <= 1 else 0
                         res_dict[setting_key]['acc@2'] += 1 if rank <= 2 else 0
                         res_dict[setting_key]['acc@3'] += 1 if rank <= 3 else 0
@@ -106,8 +98,7 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
                 if mode == 'project':
                     res_dict[setting_key][f'{pid}-{vid}b']['num_iter'] = value
                 else:
-                    #res_dict[setting_key]['num_iter'] += value / len(GT)
-                    res_dict[setting_key]['num_iter'] += value / len_GT
+                    res_dict[setting_key]['num_iter'] += value / len(GT)
             
             else: #Ensemble has extra settings
                 for setting, num_iter in value.items():
@@ -118,11 +109,7 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Li
                         res_dict[setting_key].setdefault(f'{pid}-{vid}b', dict())
                         res_dict[setting_key][f'{pid}-{vid}b']['num_iter'] = num_iter
                     else:
-                        #res_dict[setting_key]['num_iter'] = res_dict[setting_key].get('num_iter', 0) + num_iter / len(GT)
-                        res_dict[setting_key]['num_iter'] = res_dict[setting_key].get('num_iter', 0) + num_iter / len_GT
-    
-        if pid == 'Jsoup' and vid == '17':
-            break
+                        res_dict[setting_key]['num_iter'] = res_dict[setting_key].get('num_iter', 0) + num_iter / len(GT)
 
     # Save & return the dictionary
     #os.makedirs(savepath, exist_ok=True)
@@ -159,5 +146,3 @@ def metrics_to_csv(method: Literal['fonte', 'bug2commit', 'ensemble']):
                 if method != 'bug2commit': # Bug2Commit doesn't have iteration data
                     writer.writerow([project] + setting_row + ['num_iter', sub_dict['num_iter']])
 
-if __name__ == "__main__":
-    metrics_to_csv('ensemble')

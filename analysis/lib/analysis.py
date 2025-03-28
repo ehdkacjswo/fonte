@@ -1,11 +1,12 @@
 import argparse, os, copy, itertools, pickle, sys, json, subprocess, html
 import pandas as pd
-from scipy.stats import wilcoxon
+from scipy.stats import wilcoxon, kruskal
 import matplotlib.pyplot as plt
 import numpy as np
 from collections import defaultdict
 import math
 from interval import interval, inf
+from tqdm import tqdm
 
 sys.path.append('/root/workspace/lib/')
 from experiment_utils import load_BIC_GT
@@ -26,183 +27,198 @@ CORE_DATA_DIR = '/root/workspace/data/Defects4J/core'
 BASE_DATA_DIR = '/root/workspace/data/Defects4J/baseline'
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 
-def cmp_id_class(stage2)
+#def cmp_id_class(stage2)
 
-# Print data of each ID
-def cmp_id_type(stage2='precise', \
-    feature_setting={'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'gumtree_id', 'adddel' : 'add'}, \
-    vote_setting={'use_br' : True, 'classify_id' : True}):
-
-    # Load manual data only
+# Check the number of each identifiers
+# Doesn't work for all_sep (all_sep voting is not working correctly too)
+# feature_setting={'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'adddel' : 'add'}
+# feature_setting={'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'adddel' : 'add'}
+def id_dist(classify_id=True, stage2='precise', \
+    feature_setting={'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'adddel' : 'add'}):
+    classify_id &= (feature_setting.get('diff_type', None) == 'gumtree_id')
+    
     all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
-
-    # Initialize settings
-    org_setting = frozenset((base_setting | org_setting).items())
-    new_setting = frozenset((base_setting | new_setting).items())
-
-    res_dict, rank_list_dict = dict(), dict()
-
-    # Iterate through projects
-    for _, row in GT.iterrows():
+    
+    # {bug_type : {commit_type : {id_type : {rank, BIC_ratio_list, total_ratio_list}}}}
+    res_dict = dict()
+    
+    for _, row in tqdm(GT.iterrows()):
         pid, vid, BIC = row.pid, row.vid, row.commit
 
-        with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
-            feature_dict = pickle.load(file)
-
-        with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'bug2commit.pkl'), 'rb') as file:
-            vote_dict = pickle.load(file)
+        # Load feature, encoder and bug feature
+        feature_dict, encoder_dict, bug_feature_dict = load_feature_data(pid, vid)
         
-        feature_data = feature_dict[stage2][frozenset(feature_setting.items())]
-        vote_data = vote_dict[stage2][frozenset((feature_setting | vote_setting).items())]
+        encoder_setting = feature_setting.copy()
+        del encoder_setting['adddel']
+
+        feature_dict = feature_dict[stage2][frozenset(feature_setting.items())]
+        encoder = encoder_dict[stage2][frozenset(encoder_setting.items())]
+
+        # Evaluate the ratio of common identifiers
+        # {bug_type : {commit_type : {id_type : {BIC, total}}}}
+        token_ratio_dict = dict()
         
-        if pid == 'Jsoup' and vid == '17':
-            break
-
-# Print how using IDs affect the voting for feature pairs + 
-# Vote setting doesn't have to contain 'use_id'
-def cmp_use_id(pid='Cli', vid='10', stage2='precise', \
-    feature_setting={'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'gumtree_id', 'adddel' : 'add'}, \
-    vote_setting={'use_br' : True, 'classify_id' : True}):
-    
-    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
-    BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
-
-    # Load data (Feature, encoder, bug_feature)
-    feature_dict, encoder_dict, bug_feature_dict = load_feature_data(pid, vid)
-    encoder_setting = feature_setting.copy()
-    del encoder_setting['adddel']
-    feature_data, encoder = feature_dict[stage2][frozenset(feature_setting.items())], encoder_dict[stage2][frozenset(encoder_setting.items())]
-
-    # Get vocabulary from encoder
-    id_vocab = encoder.id_vocab
-    id_vocab = {ind : word for word, ind in id_vocab.items()}
-
-    # Load voting results
-    with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'bug2commit.pkl'), 'rb') as file:
-        vote_dict = pickle.load(file)
-    
-    new_vote_dict = vote_dict[stage2][frozenset((feature_setting | vote_setting | {'use_id' : True}).items())]
-    org_vote_dict = vote_dict[stage2][frozenset((feature_setting | vote_setting | {'use_id' : False}).items())]
-
-    # Get the set of commit types
-    commit_type_set = next(iter(feature_data.values())).keys()
-    num_commits = len(feature_data)
-    
-    print(f'BIC rank : {int(org_vote_dict["all"].loc[BIC, "rank"])}/{num_commits} -> {int(new_vote_dict["all"].loc[BIC, "rank"])}/{num_commits}')
-
-    for bug_type, bug_feature in bug_feature_dict.items():
-        #if bug_type.startswith('br'):
-        #    continue
-
-        bug_feature, _ = encoder.encode(bug_feature, update_vocab=False, mode='code' if bug_type == 'test_code' else 'text')
-        bug_feature = [(word, freq) for word, freq in bug_feature.items()]
-        bug_feature.sort(key=lambda x:x[1], reverse=True)
-        
-        for commit_type in commit_type_set:
-            print(f'\nBug) {bug_type}, Commit) {commit_type}')
-            new_vote_df = new_vote_dict[frozenset({'commit' : commit_type, 'bug' : bug_type}.items())]
-            org_vote_df = org_vote_dict[frozenset({'commit' : commit_type, 'bug' : bug_type}.items())]
-
-            print(f'BIC rank : {int(org_vote_df.loc[BIC, "rank"])}/{num_commits} -> {int(new_vote_df.loc[BIC, "rank"])}/{num_commits}')
+        for bug_type, bug_feature in bug_feature_dict.items():
+            token_ratio_dict[bug_type] = dict()
             
-            BIC_freq_dict, commit_freq_dict = dict(), dict()
+            # Encode bug feature
+            bug_feature_id, bug_feature_non_id = encoder.encode(bug_feature, update_vocab=False, mode='code' if bug_type == 'test_code' else 'text')
 
-            for commit, commit_feature in feature_data.items():
-                if commit == BIC:
-                    BIC_vec = commit_feature.get(commit_type, dict()).get('id', Counter())
-                    BIC_len = sum(BIC_vec.values())
+            for commit, commit_feature_dict in feature_dict.items():
+                for commit_type, commit_feature_vec in commit_feature_dict.items():
+                    
+                    # Initialize token ratio dictionaries
+                    token_ratio_dict[bug_type].setdefault(commit_type, {'id' : {'total' : list()}, 'non_id' : {'total' : list()}, 'all' : {'total' : list()}})
+                    
+                    # Count total, common identifiers
+                    for id_type in ['id', 'non_id', 'all']:
+                        total_token_cnt, common_token_cnt = 0, 0
 
-                    if BIC_len == 0:
-                        print('BIC doesn\'t contain any ID')
-                        continue
-                    else:
-                        for word, freq in BIC_vec.items():
-                            BIC_freq_dict[word] = freq / BIC_len
+                        if id_type == 'id':
+                            commit_vec, bug_vec = commit_feature_vec['id'], bug_feature_id
+                        elif id_type == 'non_id':
+                            commit_vec, bug_vec = commit_feature_vec['non_id'], bug_feature_non_id
+                        elif id_type == 'all':
+                            commit_vec, bug_vec = commit_feature_vec['id'] + commit_feature_vec['non_id'], bug_feature_id + bug_feature_non_id
 
-                else:
-                    commit_vec = commit_feature.get(commit_type, dict()).get('id', Counter())
-                    commit_len = sum(commit_vec.values())
-
-                    if commit_len == 0:
-                        continue
-                    else:
                         for word, freq in commit_vec.items():
-                            commit_freq_dict[word] = commit_freq_dict.get(word, 0) + freq / (commit_len * (num_commits - 1))
-            
-            for (word, freq) in bug_feature:
-                BIC_freq, commit_freq = BIC_freq_dict.get(word, 0), commit_freq_dict.get(word, 0)
-                
-                if BIC_freq > 0 or commit_freq > 0:
-                    print(f'{id_vocab[word]} : {freq} BIC : {BIC_freq * 100:.2f}%, else : {commit_freq * 100:.2f}%')
+                            total_token_cnt += freq
+                            if word in bug_vec:
+                                common_token_cnt += freq
+                    
+                        # Ratio of common identifiers
+                        token_ratio = common_token_cnt / total_token_cnt if total_token_cnt > 0 else 0
 
-# Compare how the settings affect the rank of each commit & bug feature types
-# Two settings must have same encoder (vocab), so 'tracker', 'diff_tool', 'diff_type' has to be identical
-# Two settings must have same type pairs, so 'use_br', 'classify_id' has to be identical
-def cmp_type_pair(stage2='precise',
-    base_setting={'tracker' : 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'use_br' : False}, \
-    org_setting = {'adddel' : 'add', 'use_id' : False}, \
-    new_setting = {'adddel' : 'add', 'use_id' : True}):
-
-    # Load manual data only
-    all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
-    GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
-
-    # Initialize settings
-    org_setting = frozenset((base_setting | org_setting).items())
-    new_setting = frozenset((base_setting | new_setting).items())
-
-    res_dict, rank_list_dict = dict(), dict()
-
-    # Iterate through projects
-    for _, row in GT.iterrows():
-        pid, vid, BIC = row.pid, row.vid, row.commit
-        with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'bug2commit.pkl'), 'rb') as file:
-            vote_dict = pickle.load(file)
+                        token_ratio_dict[bug_type][commit_type][id_type]['total'].append(token_ratio)
+                        if commit == BIC:
+                            token_ratio_dict[bug_type][commit_type][id_type]['BIC'] = token_ratio
         
-        org_vote_df, new_vote_df = vote_dict[stage2][org_setting], vote_dict[stage2][new_setting]
+        # Aggregate data
+        for bug_type, commit_type_dict in token_ratio_dict.items():
+            res_dict.setdefault(bug_type, dict())
 
-        for type_pair in org_vote_df.keys():
+            for commit_type, id_type_dict in commit_type_dict.items():
+                res_dict[bug_type].setdefault(commit_type, \
+                    {'id' : {'rank' : list(), 'BIC_ratio' : list(), 'total_ratio' : list()}, \
+                    'non_id' : {'rank' : list(), 'BIC_ratio' : list(), 'total_ratio' : list()}, \
+                    'all' : {'rank' : list(), 'BIC_ratio' : list(), 'total_ratio' : list()}})
+                
+                for id_type, sub_ratio_dict in id_type_dict.items():
+                    total_token_ratio, BIC_token_ratio = sub_ratio_dict['total'], sub_ratio_dict['BIC']
+                    total_token_ratio.sort(reverse=True)
 
-            # In fact, some type pair could be missing based on setting
-            # But haven't decided how to handle such cases
-            org_rank = org_vote_df[type_pair].loc[BIC, 'rank']
-            new_rank = new_vote_df[type_pair].loc[BIC, 'rank']
+                    # Rank of common identifier ratio
+                    BIC_ratio_rank = len(total_token_ratio) - total_token_ratio[::-1].index(BIC_token_ratio)
+                    res_dict[bug_type][commit_type][id_type]['rank'].append(BIC_ratio_rank)
 
-            res_dict.setdefault(type_pair, {'better' : 0, 'same' : 0, 'worse' : 0, 'better_sum' : 0, 'worse_sum' : 0})
-            rank_list_dict.setdefault(type_pair, list())
+                    # Common identifier ratio
+                    res_dict[bug_type][commit_type][id_type]['BIC_ratio'].append(BIC_token_ratio)
+                    res_dict[bug_type][commit_type][id_type]['total_ratio'].append(sum(total_token_ratio) / len(total_token_ratio))
+    
+    # Analyze and print results
+    for bug_type, commit_type_dict in res_dict.items():
+        print(f'Bug) {bug_type}')
 
-            # Save data
-            rank_list_dict[type_pair].append(org_rank - new_rank)
+        # Compare between identifiers
+        if classify_id:
+            classify_id_dict = {'rank' : dict(), 'ratio' : dict()}
 
-            if org_rank > new_rank:
-                res_dict[type_pair]['better'] += 1
-                res_dict[type_pair]['better_sum'] += org_rank - new_rank
-            elif org_rank < new_rank:
-                res_dict[type_pair]['worse'] += 1
-                res_dict[type_pair]['worse_sum'] += new_rank - org_rank
-            else:
-                res_dict[type_pair]['same'] += 1
+        for commit_type, id_type_dict in commit_type_dict.items():
+            print(f'Commit) {commit_type}\n')
+            rank_list_dict, total_ratio_list_dict, BIC_ratio_list_dict = dict(), dict(), dict()
 
-        if pid == 'Jsoup' and vid == '17':
-            break
-        #break
+            for id_type, sub_dict in id_type_dict.items():
+                print(f'ID type) {id_type}')
 
-    for type_pair, type_pair_res in res_dict.items():
-        if type_pair == 'all':
-            print('All')
-        else:
-            print(f"Commit) {dict(type_pair)['commit']}, Bug) {dict(type_pair)['bug']}")
+                BIC_rank_list = res_dict[bug_type][commit_type][id_type]['rank']
+                BIC_ratio_list = res_dict[bug_type][commit_type][id_type]['BIC_ratio']
+                total_ratio_list = res_dict[bug_type][commit_type][id_type]['total_ratio']
 
-        print(f"Better : {type_pair_res['better']}({type_pair_res['better_sum']}), Worse : {type_pair_res['worse']}({type_pair_res['worse_sum']}), Same : {type_pair_res['same']}")
+                # Evaluate rank metrics
+                MRR = sum(1 / rank for rank in BIC_rank_list) / len(BIC_rank_list)
+                print(f'MRR) {MRR:.3f}')
 
-        if type_pair_res['better'] > 0 or type_pair_res['worse'] > 0:
-            w, p = wilcoxon(rank_list_dict[type_pair], alternative='greater')
-            print("WSR (Imrpoved)", w, p)
-            w, p = wilcoxon(rank_list_dict[type_pair], alternative='less')
-            print("WSR (Worsen)", w, p)
+                for n in [1, 2, 3, 5, 10]:
+                    acc_n = sum(1 for rank in BIC_rank_list if rank <= n)
+                    print(f'acc@{n}) {acc_n}')
 
-    #print(bug_feature_dict)
+                # Handle ratio data
+                mean_BIC_ratio = sum(BIC_ratio_list) / len(BIC_ratio_list)
+                mean_total_ratio = sum(total_ratio_list) / len(total_ratio_list)
+                ratio = sum(BIC_ratio / total_ratio if total_ratio > 0 else 1 \
+                    for (BIC_ratio, total_ratio) in zip(BIC_ratio_list, total_ratio_list)) / len(BIC_ratio_list)
+                
+                print(f'BIC ratio) {mean_BIC_ratio:.3f}, Total ratio) {mean_total_ratio:.3f}')
+                print(f'BIC/total Ratio) {ratio:.3f}')
+                
+                # Wilcoxon signed rank test
+                try:
+                    _, better_p = wilcoxon(BIC_ratio_list, total_ratio_list, alternative='greater')
+                    _, worse_p = wilcoxon(BIC_ratio_list, total_ratio_list, alternative='less')
+                    print(f'Ratio P-value) Better : {better_p:.3f}, Worse : {worse_p:.3f}\n')
+                except:
+                    print('Identical ratio\n')
+                
+                # Save data for extra analysis
+                rank_list_dict[id_type] = BIC_rank_list.copy()
+                BIC_ratio_list_dict[id_type] = BIC_ratio_list.copy()
+                total_ratio_list_dict[id_type] = [BIC_ratio / total_ratio if total_ratio > 0 else 0 for (BIC_ratio, total_ratio) in zip(BIC_ratio_list, total_ratio_list)]
+                
+                if classify_id and id_type == 'id' and commit_type in ['class', 'method', 'variable']: # Not considering all_sep
+                    classify_id_dict['rank'][commit_type] = BIC_rank_list.copy()
+                    classify_id_dict['ratio'][commit_type] = \
+                        [BIC_ratio / total_ratio if total_ratio > 0 else 0 for (BIC_ratio, total_ratio) in zip(BIC_ratio_list, total_ratio_list)]
+            
+            # Compare rank/ratio of ID/non_ID tokens
+            print('[INFO] Non_ID/All comparison')
+
+            try:
+                _, better_p = wilcoxon(rank_list_dict['all'], rank_list_dict['non_id'], alternative='less')
+                _, worse_p = wilcoxon(rank_list_dict['all'], rank_list_dict['non_id'], alternative='greater')
+                print(f'Rank P-value) Better : {better_p:.3f}, Worse : {worse_p:.3f}')
+            except:
+                print('Identical rank')
+            
+            try:
+                _, better_p = wilcoxon(BIC_ratio_list_dict['all'], BIC_ratio_list_dict['non_id'], alternative='greater')
+                _, worse_p = wilcoxon(BIC_ratio_list_dict['all'], BIC_ratio_list_dict['non_id'], alternative='less')
+                print(f'BIC ratio P-value) Better : {better_p:.3f}, Worse : {worse_p:.3f}')
+            except:
+                print('Identical BIC ratio')
+
+            try:
+                _, better_p = wilcoxon(total_ratio_list_dict['all'], total_ratio_list_dict['non_id'], alternative='greater')
+                _, worse_p = wilcoxon(total_ratio_list_dict['all'], total_ratio_list_dict['non_id'], alternative='less')
+                print(f'Ratio P-value) Better : {better_p:.3f}, Worse : {worse_p:.3f}\n')
+            except:
+                print('Identical ratio\n')
+    
+        # Compare the different types of identifiers
+        # Not considering all_sep
+        if classify_id:
+            print('[INFO] ID type comparison')
+
+            for metric, class_dict in classify_id_dict.items():
+                
+                # Perfom Kruskal-Willis test
+                try:
+                    _, kruskal_p = kruskal(class_dict['class'], class_dict['method'], class_dict['variable'])
+                    print(f'[{metric}] Kruskal P-value) {kruskal_p}')
+                except:
+                    print(f'Identical {metric}?')
+
+                id_class_list = ['class', 'method', 'variable']
+
+                for ind1, id_class1 in enumerate(id_class_list):
+                    for ind2 in range(ind1 + 1, 3):
+                        id_class2 = id_class_list[ind2]
+                        try:
+                            _, better_p = wilcoxon(class_dict[id_class1], class_dict[id_class2], alternative='less' if metric == 'rank' else 'greater')
+                            _, worse_p = wilcoxon(class_dict[id_class1], class_dict[id_class2], alternative='greater' if metric == 'rank' else 'less')
+                            print(f'[{metric}]{id_class1}-{id_class2} P-value) Better : {better_p:.3f}, Worse : {worse_p:.3f}')
+                        except:
+                            print(f'[{metric}] {id_class1}-{id_class2} Identical')
 
 
 # Check how id filtering affects the document
@@ -286,16 +302,16 @@ def build_html(pid='Cli', vid='10', stage2='precise', \
         return"""
     
     # 
-    if not dict(intvl_setting)['diff_type'].endswith('id'):
-        print('This function is designed to higlight components')
-        return
+    #if not dict(intvl_setting)['diff_type'].endswith('id'):
+    #    print('This function is designed to higlight components')
+    #    return
 
     html_lines = ["<html><head><title>Highlighted Intervals</title></head><body>"]
 
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
 
-    org_setting = frozenset((dict(intvl_setting) | {'diff_type' : 'base'}).items())
+    org_setting = frozenset((dict(intvl_setting) | {'diff_type' : 'base', 'diff_tool' : 'base'}).items())
 
     # Checkout Defects4J project
     p = subprocess.Popen(['sh', '/root/workspace/lib/checkout.sh', pid, vid], \
@@ -320,7 +336,7 @@ def build_html(pid='Cli', vid='10', stage2='precise', \
 
     # Colors of components to be highlighted
     color_dict = {'class' : 'red', 'method' : 'green', 'variable' : 'purple', 'comment' : 'blue', \
-        'id' : 'red', 'non_id' : 'blue'}
+        'id' : 'red', 'non_id' : 'blue', 'diff' : 'red'}
 
     for commit, org_commit_dict in org_intvl_dict.items():
         html_lines.append(f"<h2>Commit: {commit}{'(BIC)' if commit == BIC else ''}</h2>")
@@ -377,142 +393,28 @@ def build_html(pid='Cli', vid='10', stage2='precise', \
         file.write('\n'.join(html_lines))
 
 # 
-def print_vote(pid, vid, stage2, setting):
-    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
-    BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
+def print_metric(method, stage2, bisect_setting):
+    metric_dict = get_metric_dict(method=method, mode='all')
+    bisect_setting['stage2'] = stage2
 
-    with open(os.path.join(f'/root/workspace/data/Defects4J/result/{pid}-{vid}b', 'vote', 'bug2commit.pkl'), 'rb') as file:
-        vote_dict = pickle.load(file)
+    sub_metric_dict = metric_dict[frozenset(bisect_setting.items())]
+    for metric_key, metric in sub_metric_dict.items():
+        print(f'{metric_key}) {metric}')
+
+    if method == 'bug2commit':
+        vote_setting = bisect_setting.copy()
+        del vote_setting['beta']
+
+        sub_metric_dict = metric_dict[frozenset(vote_setting.items())]
+        for metric_key, metric in sub_metric_dict.items():
+            print(f'{metric_key}) {metric}')
+
     
-    for vote_type, vote_df in vote_dict[stage2][setting].items():
-        print(vote_type)
-        print(vote_df.loc[BIC])
-
-# Compare the settings
-def compare_settings(org_method, new_method, org_setting, new_setting):
-    org_metric_dict = get_metric_dict(method=org_method, mode='project')
-    #org_metric = metric_converter(org_metric_dict[org_setting])
-
-    new_metric_dict = get_metric_dict(method=new_method, mode='project')
-    #new_metric = metric_converter(new_metric_dict[new_setting])
-
-    # Bug2Commit의 경우, num_iter에만 beta가 있다
-
-    for metric_key in ['rank', 'num_iter']:
-        print(f'Metric) {metric_key}')
-
-        org_metric_setting, new_metric_setting = org_setting, new_setting
-
-        # Bug2Commit uses extra setting (beta) for num_iter
-        if metric_key == 'rank':
-            if org_method == 'bug2commit':
-                org_metric_setting = dict(org_metric_setting)
-                org_metric_setting.pop('beta', None)
-                org_metric_setting = frozenset(org_metric_setting.items())
-            
-            if new_method == 'bug2commit':
-                new_metric_setting = dict(new_metric_setting)
-                new_metric_setting.pop('beta', None)
-                new_metric_setting = frozenset(new_metric_setting.items())
-        
-        #print(org_metric_dict.keys())
-        org_metric = org_metric_dict[org_metric_setting]
-        new_metric = new_metric_dict[new_metric_setting]
-
-        # Project level comparison
-        num_better, num_same, num_worse = 0, 0, 0
-        better, worse = 0, 0
-        better_dict, worse_dict = dict(), dict()
-
-        for project in org_metric.keys():
-            org_value = org_metric[project][metric_key]
-            new_value = new_metric[project][metric_key]
-
-            if org_value == new_value:
-                num_same += 1
-
-            elif org_value > new_value:
-                num_better += 1
-                better += org_value - new_value
-                better_dict[project] = org_value - new_value
-            
-            else:
-                num_worse += 1
-                worse += new_value - org_value
-                worse_dict[project] = new_value - org_value
-        
-        print(f'Total: {num_better + num_worse + num_same}, Better: {num_better} ({better}), Worse: {num_worse} ({worse}), Same: {num_same}')
-
-        print('Better projects)')
-        for project, value in sorted(better_dict.items(), key=lambda item: item[1], reverse=True):
-            print(f'{project}) {org_metric[project][metric_key]} {new_metric[project][metric_key]}')
-        
-        print('Worse projects)')
-        for project, value in sorted(worse_dict.items(), key=lambda item: item[1], reverse=True):
-            print(f'{project}) {org_metric[project][metric_key]} {new_metric[project][metric_key]}')
-        
-        print('Best project)')
-        (best_proj, best_val) = max(better_dict.items(), key=lambda x: x[1])
-        org_val = org_metric[best_proj][metric_key]
-        print(f'{best_proj} : {org_val} > {org_val - best_val}')
-
-        print('Worst project)')
-        (worst_proj, worst_val) = max(worse_dict.items(), key=lambda x: x[1])
-        org_val = org_metric[worst_proj][metric_key]
-        print(f'{worst_proj} : {org_val} > {org_val + worst_val}')
-
-        # Python 3.7+ maintains insertion order
-        # Since projects are added following GT rows, the orders are the same
-        org_list = [data[metric_key] for data in org_metric.values()]
-        new_list = [data[metric_key] for data in new_metric.values()]
-
-        cost_saving = [a - b for a, b in zip(org_list, new_list)]
-
-        plt.figure(figsize=(9, 2))
-        plt.title(f"Improved {metric_key}")
-
-        cost_saving = list(reversed(sorted(cost_saving)))
-
-        #To confirm that the median of the differences can be assumed to be positive, we use:
-        w, p = wilcoxon(cost_saving, alternative='greater')
-        print("Wilcoxon signed rank test (Excluding zeros)", w, p)
-
-        w, p = wilcoxon(cost_saving, zero_method="pratt", alternative='greater')
-        print("Wilcoxon signed rank test (Including zeros)", w, p)
-        N = len(cost_saving)
-
-        plt.bar(range(0, N), cost_saving,
-            color=["red" if d < 0 else "green" for d in cost_saving])
-        plt.axhline(0, color="black")
-
-        #plt.yticks(range(min(cost_saving), max(cost_saving)+1))
-
-        plt.axvspan(-0.5, num_better - 0.5, facecolor='green', alpha=0.1)
-        plt.axvspan(num_better + num_same -0.5, N-0.5, facecolor='red', alpha=0.1)
-
-        #if reduced > 0.05:
-        #    plt.text(N * reduced/2 - 0.5, max(cost_saving)-1, f"{reduced*100:.1f}%", horizontalalignment="center")
-        #if same > 0.05:
-        #    plt.text(N * (reduced + same/2) - 0.5, max(cost_saving)-1, f"{same*100:.1f}%", horizontalalignment="center")
-        #if increased > 0.05:
-        #    plt.text(N * (reduced + same + increased/2) - 0.5, max(cost_saving)-1, f"{increased*100:.1f}%", horizontalalignment="center")
-
-        plt.xlim((0-0.5, N-0.5))
-        ax = plt.gca()
-        ax.get_xaxis().set_visible(False)
-
-        plt.axhline(np.mean(cost_saving), color="black", linestyle="--", label=f"Average improved {metric_key}: {np.mean(cost_saving).round(1)}")
-        print(f"Average improved {metric_key}", np.mean(cost_saving))
-        plt.legend(loc="upper right")
-
-        savepath = os.path.join(f'/root/workspace/analysis/data/{new_method}', f"{metric_key}.pdf")
-        plt.savefig(savepath, bbox_inches="tight")
-        print(f"Saved to {savepath}")
-        #plt.show()
 
 # Print metrics in order (best > worst) for given method
 # Fix the setting for given 'fix' dictionary
-def metric_by_setting(method='bug2commit', fix={'stage2' : 'precise', 'use_br' : False}):
+# fix={'stage2' : 'precise', 'use_br' : False, 'diff_type' : 'gumtree_id', 'use_id' : True, 'diff_tool' : 'gumtree'}
+def metric_by_setting(method='bug2commit', fix={'stage2' : 'precise', 'use_br' : False, 'diff_type' : 'gumtree_id', 'use_id' : False, 'diff_tool' : 'gumtree'}):
     all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
     metric_dict = get_metric_dict(method=method, mode='all')
@@ -544,34 +446,24 @@ def metric_by_setting(method='bug2commit', fix={'stage2' : 'precise', 'use_br' :
 
 # res_dict[stage2][(new_diff_type, use_stopword, adddel, use_br)]
 if __name__ == "__main__":
-    
-    # 
-    #(stage2='precise', \
-    #    base_setting={'tracker' : 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'use_br' : False}, \
-    #    org_setting = {'adddel' : 'add', 'use_id' : False}, \
-    #    new_setting = {'adddel' : 'add', 'use_id' : True})
-    
-    #cmp_type_pair(stage2='precise', \
-    #    base_setting={'tracker' : 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'use_br' : False, 'classify_id' : True}, \
-    #    org_setting = {'adddel' : 'add', 'use_id' : False}, \
-    #    new_setting = {'adddel' : 'add', 'use_id' : True})
-
-    cmp_use_id()
-    #metric_by_setting()
-    #org_setting = frozenset({'tracker': 'git', 'stage2' : 'precise', 'use_br' : False, 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'adddel' : 'add', 'use_id' : False, 'beta' : 0.1}.items())
-    #new_setting = frozenset({'tracker': 'git', 'stage2' : 'precise', 'use_br' : False, 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'adddel' : 'add', 'use_id' : True, 'beta' : 0.1}.items())
-    #compare_settings(org_method='bug2commit', new_method='bug2commit', org_setting=org_setting, new_setting=new_setting)
-    #id_count()
-    #abc()
     #build_html()
-    #cmp_type_pair()
-    #print_metric()
-    #print_metric(method='ensemble', fix={'stage2' : 'precise', 'use_br' : False})
-    #org_setting = frozenset({'tracker': 'git', 'stage2' : 'precise', 'use_br' : False, 'diff_tool' : 'gumtree', 'diff_type' : 'id_all', 'adddel' : 'all_uni', 'doc_level' : 'commit', 'beta' : 0.1}.items())
-    #new_setting = frozenset({'tracker': 'git', 'stage2' : 'precise', 'use_br' : False, 'diff_tool' : 'gumtree', 'diff_type' : 'id', 'adddel' : 'all_uni', 'doc_level' : 'commit', 'beta' : 0.1}.items())
-    #compare_settings(org_method='bug2commit', new_method='bug2commit', org_setting=org_setting, new_setting=new_setting)
+    #id_dist()
+    
+    #metric_by_setting()
 
-    #print_vote('Csv', '7', 'precise', frozenset({'tracker': 'git', 'use_br' : False, 'diff_tool' : 'gumtree', 'diff_type' : 'id', 'adddel' : 'all_uni', 'doc_level' : 'commit'}.items()))
-    #print_vote('Csv', '7', 'precise', frozenset({'tracker': 'git', 'use_br' : False, 'diff_tool' : 'gumtree', 'diff_type' : 'id_all', 'adddel' : 'all_uni', 'doc_level' : 'commit'}.items()))
+    # No diff, File, Git, GumTreee
+    print_metric(method='bug2commit', stage2='precise', bisect_setting={'tracker': 'git', 'diff_tool': None, 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1})
+    print_metric(method='bug2commit', stage2='precise', bisect_setting={'tracker': 'git', 'diff_tool': 'file', 'diff_type': 'base', 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1})
+    print_metric(method='bug2commit', stage2='precise', bisect_setting={'tracker': 'git', 'diff_tool': 'base', 'diff_type': 'base', 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1})
+    print_metric(method='bug2commit', stage2='precise', bisect_setting={'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'base', 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1})
 
-    #aaa(pid='Cli', vid='37', stage2='precise', setting=frozenset({'tracker': 'git', 'diff_tool' : 'base', 'doc_level' : 'commit'}.items()))
+    # Greedy
+    #print_metric(method='bug2commit', stage2='precise', bisect_setting={'beta': 0.1, 'use_id': False, 'diff_tool': 'base', 'use_br' : False, 'adddel': 'add', 'diff_type' : 'greedy_id', 'tracker' : 'git'})
+    #print_metric(method='bug2commit', stage2='precise', bisect_setting={'beta': 0.1, 'use_id': False, 'diff_tool': 'base', 'use_br' : False, 'adddel': 'all_uni', 'diff_type' : 'greedy_id', 'tracker' : 'git'})
+    
+    # GumTree
+    #print_metric(method='bug2commit', stage2='precise', bisect_setting={'beta': 0.1, 'use_id': False, 'diff_tool': 'gumtree', 'use_br' : False, 'adddel': 'add', 'diff_type' : 'gumtree_id', 'tracker' : 'git', 'classify_id' : True})
+    #print_metric(method='bug2commit', stage2='precise', bisect_setting={'beta': 0.1, 'use_id': False, 'diff_tool': 'gumtree', 'use_br' : False, 'adddel': 'all_uni', 'diff_type' : 'gumtree_id', 'tracker' : 'git', 'classify_id' : True})
+
+    #print_metric(method='bug2commit', stage2='precise', bisect_setting={'beta': 0.1, 'use_id': True, 'diff_tool': 'gumtree', 'use_br' : False, 'adddel': 'add', 'diff_type' : 'gumtree_id', 'tracker' : 'git', 'classify_id' : False})
+    #print_metric(method='bug2commit', stage2='precise', bisect_setting={'beta': 0.1, 'use_id': True, 'diff_tool': 'gumtree', 'use_br' : False, 'adddel': 'all_uni', 'diff_type' : 'gumtree_id', 'tracker' : 'git', 'classify_id' : False})

@@ -87,7 +87,7 @@ def extract_id_code(commit, src_path):
                 ind += 1
 
             if ind < length:
-                non_id_intvl |= CustomInterval(start, ind + 1)
+                non_id_intvl |= CustomInterval(start, ind)
                 ind += 1
                 continue
             
