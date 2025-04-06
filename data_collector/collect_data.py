@@ -1,6 +1,6 @@
 import sys, logging, subprocess, os
 sys.path.append('/root/workspace/data_collector/tool/')
-import track_history, parse_gumtree, greedy_id, gen_intvl, encode, vote, bisection
+import track_history, parse_gumtree, greedy_id, gen_intvl, encode, encode_bug, vote, bisection
 
 sys.path.append('/root/workspace/lib/')
 from experiment_utils import load_BIC_GT
@@ -41,8 +41,9 @@ if __name__ == "__main__":
         #parse_gumtree.main(pid, vid)
         #greedy_id.main(pid, vid)
         #gen_intvl.main(pid, vid)
-        encode.main(pid, vid)
-        vote.main(pid, vid)
-        bisection.main(pid, vid)
+        #encode.main(pid, vid)
+        encode_bug.main(pid, vid)
+        #vote.main(pid, vid)
+        #bisection.main(pid, vid)
 
         #break

@@ -31,6 +31,71 @@ DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 
 # Check the number of each identifiers
 # Doesn't work for all_sep (all_sep voting is not working correctly too)
+# Bug, Commit > {feature type : {project : {id / non_id : token frequency} } }
+# feature_setting={'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'adddel' : 'add'}
+# feature_setting={'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'adddel' : 'add'}
+def id_dist(stage2='precise', \
+    feature_setting={'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'adddel' : 'add'}):
+    
+    all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+    GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
+    
+    bug_dict, commit_dict = dict(), dict()
+    
+    for _, row in tqdm(GT.iterrows()):
+        pid, vid, BIC = row.pid, row.vid, row.commit
+
+        # Load feature, encoder and bug feature
+        feature_dict, encoder_dict, bug_feature_dict = load_feature_data(pid, vid)
+        
+        encoder_setting = feature_setting.copy()
+        del encoder_setting['adddel']
+
+        feature_dict = feature_dict[stage2][frozenset(feature_setting.items())]
+        encoder = encoder_dict[stage2][frozenset(encoder_setting.items())]
+
+        # Evaluate the ratio of common identifiers
+        # {bug_type : {commit_type : {id_type : {BIC, total}}}}
+        token_ratio_dict = dict()
+        
+        for bug_type, bug_feature in bug_feature_dict.items():
+            token_ratio_dict[bug_type] = dict()
+            
+            # Encode bug feature
+            bug_feature_id, bug_feature_non_id = encoder.encode(bug_feature, update_vocab=False, mode='code' if bug_type == 'test_code' else 'text')
+
+            for commit, commit_feature_dict in feature_dict.items():
+                for commit_type, commit_feature_vec in commit_feature_dict.items():
+                    
+                    # Initialize token ratio dictionaries
+                    token_ratio_dict[bug_type].setdefault(commit_type, {'id' : {'total' : list()}, 'non_id' : {'total' : list()}, 'all' : {'total' : list()}})
+                    
+                    # Count total, common identifiers
+                    for id_type in ['id', 'non_id', 'all']:
+                        total_token_cnt, common_token_cnt = 0, 0
+
+                        if id_type == 'id':
+                            commit_vec, bug_vec = commit_feature_vec['id'], bug_feature_id
+                        elif id_type == 'non_id':
+                            commit_vec, bug_vec = commit_feature_vec['non_id'], bug_feature_non_id
+                        elif id_type == 'all':
+                            commit_vec, bug_vec = commit_feature_vec['id'] + commit_feature_vec['non_id'], bug_feature_id + bug_feature_non_id
+
+                        for word, freq in commit_vec.items():
+                            total_token_cnt += freq
+                            if word in bug_vec:
+                                common_token_cnt += freq
+                    
+                        # Ratio of common identifiers
+                        token_ratio = common_token_cnt / total_token_cnt if total_token_cnt > 0 else 0
+
+                        token_ratio_dict[bug_type][commit_type][id_type]['total'].append(token_ratio)
+                        if commit == BIC:
+                            token_ratio_dict[bug_type][commit_type][id_type]['BIC'] = token_ratio
+
+# Check the number of each identifiers
+# Doesn't work for all_sep (all_sep voting is not working correctly too)
+# {bug feature : {commit feature : {vote, rank, } } }
 # feature_setting={'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'adddel' : 'add'}
 # feature_setting={'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'adddel' : 'add'}
 def id_dist(classify_id=True, stage2='precise', \
@@ -279,8 +344,8 @@ def get_tokens_intvl(code_txt, intvl):
 
 # Build html file that highlights components
 # Interval setting fields = (tracker, diff_tool, diff_type)
-def build_html(pid='Cli', vid='10', stage2='precise', \
-    intvl_setting=frozenset({'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id'}.items())):
+def build_html(pid='Lang', vid='49', stage2='precise', \
+    intvl_setting=frozenset({'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'base'}.items())):
 
     # Convert index from interval to integer
     def convert_ind(ind, code_txt):
@@ -446,16 +511,16 @@ def metric_by_setting(method='bug2commit', fix={'stage2' : 'precise', 'use_br' :
 
 # res_dict[stage2][(new_diff_type, use_stopword, adddel, use_br)]
 if __name__ == "__main__":
-    #build_html()
+    build_html()
     #id_dist()
     
     #metric_by_setting()
 
     # No diff, File, Git, GumTreee
-    print_metric(method='bug2commit', stage2='precise', bisect_setting={'tracker': 'git', 'diff_tool': None, 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1})
-    print_metric(method='bug2commit', stage2='precise', bisect_setting={'tracker': 'git', 'diff_tool': 'file', 'diff_type': 'base', 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1})
-    print_metric(method='bug2commit', stage2='precise', bisect_setting={'tracker': 'git', 'diff_tool': 'base', 'diff_type': 'base', 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1})
-    print_metric(method='bug2commit', stage2='precise', bisect_setting={'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'base', 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1})
+    #print_metric(method='bug2commit', stage2='precise', bisect_setting={'tracker': 'git', 'diff_tool': None, 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1})
+    #print_metric(method='bug2commit', stage2='precise', bisect_setting={'tracker': 'git', 'diff_tool': 'file', 'diff_type': 'base', 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1})
+    #print_metric(method='bug2commit', stage2='precise', bisect_setting={'tracker': 'git', 'diff_tool': 'base', 'diff_type': 'base', 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1})
+    #print_metric(method='bug2commit', stage2='precise', bisect_setting={'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'base', 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1})
 
     # Greedy
     #print_metric(method='bug2commit', stage2='precise', bisect_setting={'beta': 0.1, 'use_id': False, 'diff_tool': 'base', 'use_br' : False, 'adddel': 'add', 'diff_type' : 'greedy_id', 'tracker' : 'git'})
