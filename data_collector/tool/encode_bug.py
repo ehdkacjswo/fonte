@@ -145,22 +145,6 @@ def load_bug_feature(pid, vid):
         # One test found
         else:
             return (test_path, test_name, test_method), code_txt[method_intvl_list[0][0] : method_intvl_list[0][1]]
-
-    # Checkout Defects4J project
-    """p = subprocess.Popen(['sh', '/root/workspace/lib/checkout.sh', pid, vid], \
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out_txt, err_txt = p.communicate()
-
-    if p.returncode != 0:
-        log('encode_bug', f'[ERROR] Checkout failed', out_txt, err_txt)
-        return None, None, None
-    
-    # Change working directory to target Defects4J project
-    try:
-        os.chdir(f'/tmp/{pid}-{vid}b/')
-    except:
-        log('encode_bug', '[ERROR] Moving directory failed')
-        return None, None, None"""
     
     log('encode_bug', '[INFO] Start loading data')
     start_time = time.time()

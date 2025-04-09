@@ -19,6 +19,7 @@ BASELINE_DATA_DIR = "/root/workspace/data/Defects4J/baseline"
 
 use_br_list = [True, False]
 use_id_list = [True, False]
+use_diff_list = [True, False]
 classify_id_list = [True, False]
 
 # Bug2Commit with diff info
@@ -35,9 +36,7 @@ def vote_bug2commit(total_feature_dict, bug_feature_dict):
         for setting, commit_dict in setting_dict.items():
             
             # Get corresponding encoded bug feature
-            encoder_setting = dict(setting)
-            del encoder_setting['adddel']
-            enc_bug_feature_dict = bug_feature_dict[stage2][frozenset(encoder_setting.items())]
+            enc_bug_feature_dict = bug_feature_dict[stage2][setting]
 
             # Get list of commit feature types (Some features may be missing on some commits)
             commit_type_set = set()
@@ -100,13 +99,13 @@ def vote_bug2commit(total_feature_dict, bug_feature_dict):
                                 sub_feature_dict['non_id'] += id_feature_dict['non_id']
                         else:    
                             sub_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
-                        #print(commit_type, sub_feature_dict)
 
                         # Use full identifier or not
                         if use_id:
                             bm25.add_document(sub_feature_dict['id'] + sub_feature_dict['non_id']) 
                         else:
                             bm25.add_document(sub_feature_dict['non_id'])
+
                     bm25.init_end()
 
                     # Vectorize query, commit features & evaluate similarity
@@ -117,7 +116,7 @@ def vote_bug2commit(total_feature_dict, bug_feature_dict):
                             continue
 
                         # Pair of commit & bug feature type
-                        type_setting = frozenset({'commit' : 'id_all' if handle_id_type else commit_type, 'bug' : bug_type}.items())
+                        type_setting = frozenset({'commit' : 'id' if handle_id_type else commit_type, 'bug' : bug_type}.items())
                         score_dict[type_setting] = list()
 
                         # Vectorize bug feature

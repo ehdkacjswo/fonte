@@ -9,10 +9,18 @@ if __name__ == "__main__":
     all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
     #update = False
-    skip = True
+    #skip = True
 
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
+
+        #pid, vid = 'Closure', '62'
+
+        #if pid == 'Jsoup' and vid == '47':
+        #    skip = False
+        
+        #if skip:
+        #    continue
 
         # Checkout Defects4J project
         p = subprocess.Popen(['sh', '/root/workspace/lib/checkout.sh', pid, vid], \
@@ -29,21 +37,14 @@ if __name__ == "__main__":
         except:
             print(f'[ERROR] Moving directory failed {pid}-{vid}b')
             continue
-        #pid, vid = 'Cli', '29'
-
-        #if pid == 'Jsoup' and vid == '47':
-        #    skip = False
-        
-        #if skip:
-        #    continue
 
         #track_history.main(pid, vid)
         #parse_gumtree.main(pid, vid)
         #greedy_id.main(pid, vid)
         #gen_intvl.main(pid, vid)
-        #encode.main(pid, vid)
+        encode.main(pid, vid)
         encode_bug.main(pid, vid)
-        #vote.main(pid, vid)
-        #bisection.main(pid, vid)
+        vote.main(pid, vid)
+        bisection.main(pid, vid)
 
         #break

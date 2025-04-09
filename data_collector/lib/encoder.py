@@ -37,10 +37,7 @@ class Encoder():
         self.id_vocab = dict()
         self.automaton = ahocorasick.Automaton()
     
-    def init_automaton(self):
-        for token, token_id in self.id_vocab.items():
-            self.automaton.add_word(token, token_id)
-        
+    def make_automaton(self):   
         self.automaton.make_automaton()
 
     # Update vocab False > 존재하지 않는 토큰은 무시해야 한다 > 개별 Encoding 불가가
@@ -57,18 +54,20 @@ class Encoder():
                 # Identifier on id vocabulary
                 if token in self.id_vocab: 
                     token_id = self.id_vocab[token]
-
-                # Identifier on non_id vocabulary
-                elif token in self.non_id_vocab: 
-                    # Do I have to consider update_vocab?
-                    # Keeping it in non_id is ok?
-                    token_id = self.non_id_vocab[token]
-                    self.id_vocab[token] = token_id
                 
-                # Identifier not on vocabulary, but update it
-                elif update_vocab: 
-                    token_id = len(self.id_vocab) + len(self.non_id_vocab)
-                    self.id_vocab[token] = token_id
+                # Identifier is not present on id vocabulary
+                # is_id mode is True only with update_vocab (for now)
+                else:
+                    if token in self.non_id_vocab: # Identifier on non_id vocabulary
+                        token_id = self.non_id_vocab[token]
+                    
+                    # Identifier not on vocabulary, but update it
+                    elif update_vocab: 
+                        token_id = len(self.id_vocab) + len(self.non_id_vocab)
+
+                    if token_id is not None:
+                        self.id_vocab[token] = token_id
+                        self.automaton.add_word(token, token_id)
                 
                 if token_id is not None:
                     token_id_list.append(token_id)
@@ -80,6 +79,10 @@ class Encoder():
                 # Token on non_id vocabulary
                 if token in self.non_id_vocab: 
                     token_id = self.non_id_vocab[token]
+
+                # Token on id vocabulary
+                elif token in self.id_vocab: 
+                    token_id = self.id_vocab[token]
                 
                 # Token not on vocabulary, but update it
                 elif update_vocab: 
@@ -110,7 +113,6 @@ class Encoder():
 
         # Remove special characters & split
         # Keep _ and $ since they are available on identifiers (To avoid removing keywords in identifires)
-        # 
         token_list = list()
 
         for text in text_list:
