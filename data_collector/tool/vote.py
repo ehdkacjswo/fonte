@@ -54,8 +54,6 @@ def vote_bug2commit(total_feature_dict, bug_feature_dict):
                 extra_setting_list = itertools.product(new_setting_list, use_id_list)
                 new_setting_list = [frozenset((dict(new_setting) | {'use_id' : use_id}).items()) \
                     for (new_setting, use_id) in extra_setting_list]
-                
-                #print(new_setting_list)
 
                 # For settings using GumTree based identifier extraction,
                 # add extra setting that classifies identifier or not
@@ -63,8 +61,6 @@ def vote_bug2commit(total_feature_dict, bug_feature_dict):
                     extra_setting_list = itertools.product(new_setting_list, classify_id_list)
                     new_setting_list = [frozenset((dict(new_setting) | {'classify_id' : classify_id}).items()) \
                         for (new_setting, classify_id) in extra_setting_list]
-                    
-                    #print(new_setting_list)
                 
             # Start voting
             for new_setting in new_setting_list:

@@ -18,8 +18,8 @@ sys.path.append('/root/workspace/data_collector/lib/')
 from encoder import *
 from utils import CustomInterval, get_src_from_commit
 
-sys.path.append('/root/workspace/analysis/lib/')
-from util import *
+#sys.path.append('/root/workspace/analysis/lib/')
+#from util import *
 #from stage2 import get_style_change_data
 
 RESULT_DATA_DIR = '/root/workspace/data/Defects4J/result'
@@ -42,7 +42,12 @@ def cmp_use_id_proj(pid='Jsoup', vid='25', stage2='precise', \
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
 
-    # Load data (Feature, encoder, bug_feature)
+    # Load data (Feature, bug_feature)
+    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
+        feature_dict = pickle.load(file)
+    
+    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'bug_feature.pkl'), 'rb') as file:
+        bug_feature_dict = pickle.load(file)
     feature_dict, encoder_dict, bug_feature_dict = load_feature_data(pid, vid)
     encoder_setting = feature_setting.copy()
     del encoder_setting['adddel']
