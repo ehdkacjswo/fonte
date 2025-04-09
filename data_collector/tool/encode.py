@@ -12,6 +12,7 @@ BASE_DATA_DIR = '/root/workspace/data/Defects4J/baseline'
 
 # Decided to use all_uni as default
 #adddel_list = ['add', 'del', 'all_uni', 'all_sep']
+classfy_id_list = [True, False]
 
 # Returns total_intvl, {commit : {adddel : src_path} }, {commit : commit message}, encoder
 def load_data(pid, vid):
@@ -55,7 +56,7 @@ def load_data(pid, vid):
 # Encode the data 
 # Add file
 # {commit : {feature_type : feature}}
-def pre_encode(total_intvl_dict, commit_path_dict, commit_msg_dict):
+def encode(total_intvl_dict, commit_path_dict, commit_msg_dict):
     # For identifier handling, each setting needs independent vocabulary
     log('encode', '[INFO] Encoding data')
     start_time = time.time()
@@ -180,6 +181,46 @@ def pre_encode(total_intvl_dict, commit_path_dict, commit_msg_dict):
                 id_vec, non_id_vec = encoder.encode([commit_msg_dict[commit]], update_vocab=True, mode='text')
                 enc_dict[stage2][setting][commit]['msg'] = {'id' : id_vec, 'non_id' : non_id_vec}
     
+    # Classify ID or not
+    for stage2, setting_dict in enc_dict.items():
+        del_setting_list, new_setting_dict = list(), dict()
+
+        for setting, commit_dict in setting_dict.items():
+            
+            # Only GumTree Identifiers can classify IDs
+            if dict(setting)['diff_type'] != 'gumtree_id':
+                continue
+            
+            del_setting_list.append(setting)
+            new_setting_dict[frozenset((dict(setting) | {'classify_id' : True}).items())] = \
+                {'encoder' : copy.deepcopy(encoder_dict[stage2][setting]), 'commit_dict' : copy.deepcopy(commit_dict)}
+            
+            # Aggregate ID types
+            new_setting = frozenset((dict(setting) | {'classify_id' : False}).items())
+            new_commit_dict = copy.deepcopy(commit_dict)
+            
+            for commit, feature_dict in new_commit_dict.items():
+                id_vec = feature_dict['class']['id'] + feature_dict['method']['id'] + feature_dict['variable']['id']
+                non_id_vec = feature_dict['class']['non_id'] + feature_dict['method']['non_id'] + feature_dict['variable']['non_id']
+
+                # Delete classes
+                del feature_dict['class']
+                del feature_dict['method']
+                del feature_dict['variable']
+
+                feature_dict['id'] = {'id' : id_vec, 'non_id' : non_id_vec}
+
+            new_setting_dict[new_setting] = {'encoder' : copy.deepcopy(encoder_dict[stage2][setting]), 'commit_dict' : new_commit_dict}
+
+        # Delete old settings & Add new settings
+        for del_setting in del_setting_list:
+            del setting_dict[del_setting]
+            del (encoder_dict[stage2])[del_setting]
+        
+        for new_setting, new_data_dict in new_setting_dict.items():
+            setting_dict[new_setting] = new_data_dict['commit_dict']
+            encoder_dict[stage2][new_setting] = new_data_dict['encoder']
+    
     # Settings not using diff
     for stage2, setting_dict in enc_dict.items():
         no_diff_dict = dict()
@@ -189,6 +230,7 @@ def pre_encode(total_intvl_dict, commit_path_dict, commit_msg_dict):
             # diff_tool & diff_type are not required
             no_diff_setting = dict(setting) | {'diff_tool' : None}
             del no_diff_setting['diff_type']
+            no_diff_setting.pop('classify_id', None)
             no_diff_setting = frozenset(no_diff_setting.items())
 
             # Setting already visited
@@ -212,71 +254,6 @@ def pre_encode(total_intvl_dict, commit_path_dict, commit_msg_dict):
     log('encode', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
     
     return enc_dict, encoder_dict
-
-# Encode the raw diff data
-# skip_stage_2 = Excluding style change diff, with_Rewrite = , use_stopword
-# Encoded data : {commit_hash : [addition_list, deletion_list, msg_encode]}
-# addition/deletion dict : [(before/after_src_path_encode, content_encode_sum)]
-# data : message, src_path, diff
-# No diff 추가(는 나중에?)
-# No diff, no id
-def gen_feature(enc_dict, commit_msg_dict, encoder_dict):
-    res_dict = dict()
-    #log('encode', '[INFO] Generating features')
-    #start_time = time.time()
-
-    for stage2, setting_dict in enc_dict.items():
-        res_dict.setdefault(stage2, dict())
-
-        for setting, commit_dict in setting_dict.items():
-            for commit, adddel_dict in commit_dict.items():
-                
-                # Aggregate encoded data of commit
-                diff_vec_dict = dict()
-
-                for adddel, path_dict in adddel_dict.items(): # adddel : addition, deletion
-                    for feature_dict in path_dict.value():
-                        for feature_type, feature_vec in feature_dict.items():
-                            diff_vec_dict.setdefault(diff_type, {'id' : Counter(), 'non_id' : Counter()})
-
-                            for is_id, vec in diff_vec.items():
-                                diff_vec_dict[diff_type][is_id] += vec
-                
-                # Generate feature
-                diff_setting = frozenset(dict(setting).items())
-                no_diff_setting = frozenset({'tracker' : dict(setting)['tracker'], 'diff_tool' : None}.items())
-
-                res_dict[stage2].setdefault(diff_setting, dict())
-                res_dict[stage2].setdefault(no_diff_setting, dict())
-
-                if res_dict[stage2][no_diff_setting].get(commit, None) is not None:
-                    skip_no_diff = True
-                else:
-                    encoder_dict[stage2][frozenset({'tracker' : dict(setting)['tracker'], 'diff_tool' : None}.items())] = copy.deepcopy(encoder_dict[stage2][setting])
-                    skip_no_diff = False
-
-                diff_dict, no_diff_dict = res_dict[stage2][diff_setting], res_dict[stage2][no_diff_setting]
-
-                diff_dict[commit] = {'msg' : commit_msg_dict[stage2][setting].get(commit, {'id' : Counter(), 'non_id' : Counter()})}
-                if not skip_no_diff:
-                    no_diff_dict[commit] = {'msg' : commit_msg_dict[stage2][setting].get(commit, {'id' : Counter(), 'non_id' : Counter()})}
-
-                # Aggregate addition/deletion together
-                diff_dict[commit]['path'] = path_vec_dict['all']
-                if not skip_no_diff:
-                    no_diff_dict[commit]['path'] = path_vec_dict['all']
-
-                for diff_type in diff_vec_dict['addition'].keys() | diff_vec_dict['deletion'].keys():
-                    diff_dict[commit].setdefault(diff_type, {'id' : Counter(), 'non_id' : Counter()})
-
-                    for is_id in ['id', 'non_id']:
-                        diff_dict[commit][diff_type][is_id] += \
-                            diff_vec_dict['addition'].get(diff_type, dict()).get(is_id, Counter()) + \
-                            diff_vec_dict['deletion'].get(diff_type, dict()).get(is_id, Counter())
-        
-    #end_time = time.time()
-    #log('encode', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
-    return res_dict
     
 def main(pid, vid):
     log('encode', f'Working on {pid}_{vid}b')
@@ -288,7 +265,7 @@ def main(pid, vid):
     start_time = time.time()
     total_intvl_dict, commit_path_dict, commit_msg_dict = load_data(pid, vid)
 
-    enc_dict, encoder_dict = pre_encode(total_intvl_dict, commit_path_dict, commit_msg_dict)
+    enc_dict, encoder_dict = encode(total_intvl_dict, commit_path_dict, commit_msg_dict)
     if enc_dict is None or commit_msg_dict is None or encoder_dict is None:
         return
     
@@ -318,6 +295,7 @@ def main(pid, vid):
                     for a in sub_dict['non_id']:
                         print(vocab[a], sub_dict['non_id'][a])"""
 
+    #print(enc_dict)
     with open(os.path.join(diff_data_dir, 'feature.pkl'), 'wb') as file:
         pickle.dump(enc_dict, file)
     with open(os.path.join(diff_data_dir, 'encoder.pkl'), 'wb') as file:

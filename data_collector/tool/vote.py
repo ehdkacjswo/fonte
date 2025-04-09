@@ -19,8 +19,6 @@ BASELINE_DATA_DIR = "/root/workspace/data/Defects4J/baseline"
 
 use_br_list = [True, False]
 use_id_list = [True, False]
-use_diff_list = [True, False]
-classify_id_list = [True, False]
 
 # Bug2Commit with diff info
 # 특정 버전에 대하여 vote for commits와 동일한 방법으로 evolve relationship 구축하고
@@ -53,13 +51,6 @@ def vote_bug2commit(total_feature_dict, bug_feature_dict):
                 extra_setting_list = itertools.product(new_setting_list, use_id_list)
                 new_setting_list = [frozenset((dict(new_setting) | {'use_id' : use_id}).items()) \
                     for (new_setting, use_id) in extra_setting_list]
-
-                # For settings using GumTree based identifier extraction,
-                # add extra setting that classifies identifier or not
-                if dict(setting)['diff_type'] == 'gumtree_id':
-                    extra_setting_list = itertools.product(new_setting_list, classify_id_list)
-                    new_setting_list = [frozenset((dict(new_setting) | {'classify_id' : classify_id}).items()) \
-                        for (new_setting, classify_id) in extra_setting_list]
                 
             # Start voting
             for new_setting in new_setting_list:
@@ -68,37 +59,14 @@ def vote_bug2commit(total_feature_dict, bug_feature_dict):
 
                 use_br = dict(new_setting)['use_br']
                 use_id = dict(new_setting).get('use_id', False)
-                classify_id = dict(new_setting).get('classify_id', False)
-
-                # Need extra handling to ignore ID classes
-                id_type_handled = False
 
                 for commit_type in commit_type_set:
-                    
-                    # ID class handling completed
-                    if id_type_handled and commit_type in set(['class', 'method', 'variable']):
-                        continue
-                    
-                    handle_id_type = not classify_id and commit_type in set(['class', 'method', 'variable'])
-                    
                     # Build BM25 vocabulary
                     # For the commits that don't have corresponding types, they are currently adding empty docuemnt
                     # 
                     bm25 = BM25_Encode()
                     for commit, feature_dict in commit_dict.items():
-                        
-                        # Ignore type of IDs
-                        if handle_id_type:
-                            sub_feature_dict = {'id' : Counter(), 'non_id' : Counter()}
-
-                            # Sum up the ID features
-                            # It doesn't work on all_sep...
-                            for id_type in ['class', 'method', 'variable']:
-                                id_feature_dict = feature_dict.get(id_type, {'id' : Counter(), 'non_id' : Counter()})
-                                sub_feature_dict['id'] += id_feature_dict['id']
-                                sub_feature_dict['non_id'] += id_feature_dict['non_id']
-                        else:    
-                            sub_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
+                        sub_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
 
                         # Use full identifier or not
                         if use_id:
@@ -116,7 +84,7 @@ def vote_bug2commit(total_feature_dict, bug_feature_dict):
                             continue
 
                         # Pair of commit & bug feature type
-                        type_setting = frozenset({'commit' : 'id' if handle_id_type else commit_type, 'bug' : bug_type}.items())
+                        type_setting = frozenset({'commit' : commit_type, 'bug' : bug_type}.items())
                         score_dict[type_setting] = list()
 
                         # Vectorize bug feature
@@ -131,18 +99,7 @@ def vote_bug2commit(total_feature_dict, bug_feature_dict):
                                 score_dict[type_setting].append([commit, 0])
                                 continue
                             
-                            # Ignore type of IDs
-                            if handle_id_type:
-                                sub_feature_dict = {'id' : Counter(), 'non_id' : Counter()}
-
-                                # Sum up the ID features
-                                for id_type in ['class', 'method', 'variable']:
-                                    id_feature_dict = feature_dict.get(id_type, {'id' : Counter(), 'non_id' : Counter()})
-                                    sub_feature_dict['id'] += id_feature_dict['id']
-                                    sub_feature_dict['non_id'] += id_feature_dict['non_id']
-                            else:    
-                                sub_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
-                            #print(commit_type, sub_feature_dict)
+                            sub_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
 
                             # Consider full identifiers or not
                             if use_id:
@@ -160,8 +117,6 @@ def vote_bug2commit(total_feature_dict, bug_feature_dict):
                             else:
                                 score_dict['all'].append([commit, 1 - cosine(bug_vector, commit_vector)])
                                 score_dict[type_setting].append([commit, 1 - cosine(bug_vector, commit_vector)])
-                    
-                    id_type_handled |= handle_id_type
                 
                 # Format the result as DataFrame
                 for type_setting, score_rows in score_dict.items():
