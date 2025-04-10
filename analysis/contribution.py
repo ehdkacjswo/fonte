@@ -11,8 +11,10 @@ from result_gen import *
 from analysis import *
 from compare import *
 
+# Check the token share ratio of files
 def use_file():
-    share_ratio_dict = token_share_ratio(stage2='precise', feature_setting={'tracker': 'git', 'diff_tool' : 'file', 'diff_type' : 'base', 'adddel' : 'all_uni'})
+    share_ratio_dict = token_share_ratio(stage2='precise', \
+        feature_setting={'tracker': 'git', 'diff_tool' : 'file', 'diff_type' : 'base'})
     res_dict = dict()
 
     # Aggregate token share ratio data
@@ -40,13 +42,15 @@ def use_file():
         _, p = wilcoxon(metric_dict['BIC_ratio'], metric_dict['avg_ratio'], alternative='greater')
         print(f'WSR : {p}')
 
+# Compare token share ratio of diff tools
 def precise_diff():
     res_dict = dict()
 
     # Aggregate token share ratio data
     for diff_tool in ['file', 'base', 'gumtree']:
         res_dict[diff_tool] = dict()
-        share_ratio_dict = token_share_ratio(stage2='precise', feature_setting={'tracker': 'git', 'diff_tool' : diff_tool, 'diff_type' : 'base', 'adddel' : 'all_uni'})
+        share_ratio_dict = token_share_ratio(stage2='precise', \
+            feature_setting=feature_setting = {'tracker': 'git', 'diff_tool' : diff_tool, 'diff_type' : 'base'})
 
         for project, bug_type_dict in share_ratio_dict.items():
             for bug_type, commit_type_dict in bug_type_dict.items():
@@ -74,8 +78,10 @@ def precise_diff():
             _, rank_p = wilcoxon(new_metric_dict['rank'], org_metric_dict['rank'], alternative='greater')
             print(f'Ratio WSR: {ratio_p}, Rank WSR : {rank_p}')
 
+# Compare token share ratio change when using full identifiers
 def use_id():
-    share_ratio_dict = token_share_ratio(no_id_class=True, stage2='precise', feature_setting={'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'adddel' : 'all_uni'})
+    share_ratio_dict = token_share_ratio(stage2='precise', \
+        feature_setting={'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'classify_id' : False})
     res_dict = dict()
 
     # Aggregate token share ratio data
@@ -101,7 +107,6 @@ def use_id():
             print(f"Org_MRR : {sum(id_type_dict['non_id']['rank']) / len(id_type_dict['non_id']['rank'])}, New_MRR : {sum(id_type_dict['all']['rank']) / len(id_type_dict['all']['rank'])}")
             print(f"Org_rel_ratio : {sum(id_type_dict['non_id']['rel_ratio']) / len(id_type_dict['non_id']['rel_ratio'])}, New_rel_ratio : {sum(id_type_dict['all']['rel_ratio']) / len(id_type_dict['all']['rel_ratio'])}")
 
-
             _, ratio_p = wilcoxon(id_type_dict['all']['rel_ratio'], id_type_dict['non_id']['rel_ratio'], alternative='greater')
             _, rank_p = wilcoxon(id_type_dict['all']['rank'], id_type_dict['non_id']['rank'], alternative='greater')
             print(f'Better ratio WSR: {ratio_p}, Better rank WSR : {rank_p}')
@@ -125,17 +130,15 @@ def use_id_proj(pid='Jsoup', vid='41'):
     with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'bug_feature.pkl'), 'rb') as file:
         bug_feature_dict = pickle.load(file)
 
-    feature_setting = {'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'adddel' : 'all_uni'}
-    encoder_setting = {'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id'}
+    setting = frozenset({'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'classify_id' : False}.items())
 
-    feature_dict = feature_dict['precise'][frozenset(feature_setting.items())]
-    encoder = encoder_dict['precise'][frozenset(encoder_setting.items())]
-    bug_feature_dict = bug_feature_dict['precise'][frozenset(encoder_setting.items())]
+    feature_dict = feature_dict['precise'][setting]
+    encoder = encoder_dict['precise'][setting]
+    bug_feature_dict = bug_feature_dict['precise'][setting]
 
     # Get vocabulary from encoder
     vocab = encoder.id_vocab.copy()
     vocab.update(encoder.non_id_vocab)
-    print(encoder.non_id_vocab)
     vocab = {ind : word for word, ind in vocab.items()}
 
     # Get the set of commit types
@@ -171,21 +174,51 @@ def use_id_proj(pid='Jsoup', vid='41'):
                         print(''.join([f'{vocab[non_id_ind]} : {non_id_vec[non_id_ind]}' for non_id_ind in non_id_vec]))
                         print(f'Bug freq) {freq}, Num_commit) {num_commit}, BIC_freq) {BIC_freq}, Mean freq) {avg_freq}')
 
-"""def classify_id():
-    share_ratio_dict = token_share_ratio(classify_id=False, stage2='precise', feature_setting={'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'adddel' : 'all_uni'})
-    res_dict = dict()
+# Print distribution of identifiers & token share ratio
+def classify_id():
+    feature_setting={'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'classify_id' : True}
+    
+    # Count distribution of identifiers
+    id_dist_dict = {'class' : 0, 'method' : 0, 'variable' : 0}
 
+    all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+    GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
+    
+    for _, row in tqdm(GT.iterrows()):
+        pid, vid, BIC = row.pid, row.vid, row.commit
+        with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
+            feature_dict = pickle.load(file)
+
+        # Count tokens of identifiers
+        id_cnt_dict = {'class' : 0, 'method' : 0, 'variable' : 0}
+
+        for commit, feature_type_dict in feature_dict['precise'][frozenset(feature_setting.items())].items():
+            for id_type in id_cnt_dict.keys():
+                feature = feature_type_dict[id_type]
+                id_cnt_dict[id_type] += sum((feature['id'] + feature['non_id']).values())
+
+        total_id_token = sum(id_cnt_dict.values())
+        for id_type in id_dist_dict.keys():
+            id_dist_dict[id_type] += id_cnt_dict[id_type] / total_id_token if total_id_token > 0 else 1 / 3
+    
+    print('Identifer token proportion')
+    for id_type, id_dist in id_dist_dict.items():
+        print(f'{id_type}) {id_dist / len(GT)}')
+    
     # Aggregate token share ratio data
+    res_dict = dict()
+    share_ratio_dict = token_share_ratio(classify_id=False, stage2='precise', feature_setting=feature_setting)
+    
     for project, bug_type_dict in share_ratio_dict.items():
         for bug_type, commit_type_dict in bug_type_dict.items():
             res_dict.setdefault(bug_type, dict(){'MRR' : 0, 'BIC_ratio' : list(), 'avg_ratio' : list()})
 
-            for commit_type, metric_dict in commit_type_dict.items():
-                
+            for commit_type in ['class', 'method', 'variable']:
+                metric_dict = commit_type_dict[commit_type]
                     
-                res_dict[bug_type]['MRR'] += 1 / (commit_type_dict['diff']['non_id']['rank'] * len(share_ratio_dict))
-                res_dict[bug_type]['BIC_ratio'].append(commit_type_dict['diff']['non_id']['BIC_ratio'])
-                res_dict[bug_type]['avg_ratio'].append(commit_type_dict['diff']['non_id']['avg_ratio'])
+                res_dict[bug_type]['MRR'] += 1 / (commit_type_dict['diff']['all']['rank'] * len(share_ratio_dict))
+                res_dict[bug_type]['BIC_ratio'].append(commit_type_dict['diff']['all']['BIC_ratio'])
+                res_dict[bug_type]['avg_ratio'].append(commit_type_dict['diff']['all']['avg_ratio'])
     
     # Print metric for each bug types
     for bug_type, metric_dict in res_dict.items():
@@ -202,7 +235,7 @@ def use_id_proj(pid='Jsoup', vid='41'):
 
         _, p = wilcoxon(metric_dict['BIC_ratio'], metric_dict['avg_ratio'], alternative='greater')
         print(f'WSR : {p}')
-"""
+
 if __name__ == "__main__":
     #use_file()
     #precise_diff()

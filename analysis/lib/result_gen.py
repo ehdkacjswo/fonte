@@ -140,14 +140,9 @@ def build_html(pid='Jsoup', vid='46', stage2='precise', \
 
 # {project : {bug type : {commit type : 
 # {id / non_id / all : 
-# rank / BIC_ratio / rel_BIC_ratio }}}}
-
-# Bug, Commit > {feature type : {project : {id / non_id : token frequency} } }
-# feature_setting={'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'adddel' : 'all_uni'}
-# feature_setting={'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'adddel' : 'all_uni'}
-def token_share_ratio(no_id_class=True, stage2='precise', \
-    feature_setting={'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id', 'adddel' : 'all_uni'}):
-    no_id_class &= (feature_setting['diff_type'] == 'gumtree_id')
+# rank / BIC_ratio / rel_BIC_ratio} } } }
+def token_share_ratio(stage2='precise', \
+    feature_setting={'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id'}):
     
     res_dict = dict()
     all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
@@ -178,19 +173,6 @@ def token_share_ratio(no_id_class=True, stage2='precise', \
             bug_feature_id, bug_feature_non_id = sub_bug_feature_dict['id'], sub_bug_feature_dict['non_id']
 
             for commit, commit_feature_dict in feature_dict.items():
-                
-                # Ignore classes of identfires
-                if no_id_class:
-                    id_vec, non_id_vec = Counter(), Counter()
-
-                    for commit_type, commit_feature_vec in commit_feature_dict.items():
-                        if commit_type.endswith(('class', 'method', 'variable')):
-                            id_vec += commit_feature_vec['id']
-                            non_id_vec += commit_feature_vec['non_id']
-                    
-                    commit_feature_dict['id'] = {'id' : id_vec, 'non_id' : non_id_vec}
-                    commit_feature_dict = {key : val for key, val in commit_feature_dict.items() if not key.endswith(('class', 'method', 'variable'))}
-
                 for commit_type, commit_feature_vec in commit_feature_dict.items():
 
                     # Initialize token ratio dictionaries
@@ -227,7 +209,6 @@ def token_share_ratio(no_id_class=True, stage2='precise', \
         for bug_type, commit_type_dict in token_ratio_dict.items():
             res_dict[project][bug_type] = dict()
 
-            # res_dict 순서는 어떻게 하는게 좋을까
             for commit_type, id_type_dict in commit_type_dict.items():
                 res_dict[project][bug_type][commit_type] = dict()
                 

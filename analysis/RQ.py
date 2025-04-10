@@ -8,12 +8,12 @@ from compare import *
 
 def RQ1():
     settings = \
-        [('No Diff', {'tracker': 'git', 'diff_tool': None, 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1}), \
-        ('Whole File', {'tracker': 'git', 'diff_tool': 'file', 'diff_type': 'base', 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1}), \
-        ('Git Diff', {'tracker': 'git', 'diff_tool': 'base', 'diff_type': 'base', 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1}), \
-        ('GumTree Diff', {'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'base', 'adddel': 'all_uni', 'use_br' : False, 'beta': 0.1})]
+        [('No Diff', {'tracker': 'git', 'diff_tool': None, 'use_br' : False, 'beta': 0.1}), \
+        ('Whole File', {'tracker': 'git', 'diff_tool': 'file', 'diff_type': 'base', 'use_br' : False, 'beta': 0.1}), \
+        ('Git Diff', {'tracker': 'git', 'diff_tool': 'base', 'diff_type': 'base', 'use_br' : False, 'beta': 0.1}), \
+        ('GumTree Diff', {'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'base', 'use_br' : False, 'beta': 0.1})]
+    
     # Print metrics
-
     for (diff_type, set_dict) in settings:
         print(f'[{diff_type}]')
         print_metric(method='bug2commit', stage2='precise', bisect_setting=set_dict)

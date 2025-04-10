@@ -1,128 +1,284 @@
 /*
- * Copyright 2007 The Closure Compiler Authors.
+ *  Copyright 2001-2005 Stephen Colebourne
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
-package com.google.javascript.jscomp;
-
-import static com.google.javascript.jscomp.LightweightMessageFormatter.LineNumberingFormatter;
-
-import com.google.javascript.rhino.Node;
+package org.joda.time.field;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
-public class LightweightMessageFormatterTest extends TestCase {
-  private static final DiagnosticType FOO_TYPE =
-      DiagnosticType.error("TEST_FOO", "error description here");
+/**
+ * 
+ *
+ * @author Brian S O'Neill
+ */
+public class TestFieldUtils extends TestCase {
+    public static void main(String[] args) {
+        junit.textui.TestRunner.run(suite());
+    }
 
-  public void testNull() throws Exception {
-    assertNull(format(null));
-  }
+    public static TestSuite suite() {
+        return new TestSuite(TestFieldUtils.class);
+    }
 
-  public void testOneLineRegion() throws Exception {
-    assertEquals("  5| hello world", format(region(5, 5, "hello world")));
-  }
+    public TestFieldUtils(String name) {
+        super(name);
+    }
 
-  public void testTwoLineRegion() throws Exception {
-    assertEquals("  5| hello world\n" +
-            "  6| foo bar", format(region(5, 6, "hello world\nfoo bar")));
-  }
+    public void testSafeAddInt() {
+        assertEquals(0, FieldUtils.safeAdd(0, 0));
 
-  public void testThreeLineRegionAcrossNumberRange() throws Exception {
-    String region = format(region(9, 11, "hello world\nfoo bar\nanother one"));
-    assertEquals("   9| hello world\n" +
-            "  10| foo bar\n" +
-            "  11| another one", region);
-  }
+        assertEquals(5, FieldUtils.safeAdd(2, 3));
+        assertEquals(-1, FieldUtils.safeAdd(2, -3));
+        assertEquals(1, FieldUtils.safeAdd(-2, 3));
+        assertEquals(-5, FieldUtils.safeAdd(-2, -3));
 
-  public void testThreeLineRegionEmptyLine() throws Exception {
-    String region = format(region(7, 9, "hello world\n\nanother one"));
-    assertEquals("  7| hello world\n" +
-            "  8| \n" +
-            "  9| another one", region);
-  }
+        assertEquals(Integer.MAX_VALUE - 1, FieldUtils.safeAdd(Integer.MAX_VALUE, -1));
+        assertEquals(Integer.MIN_VALUE + 1, FieldUtils.safeAdd(Integer.MIN_VALUE, 1));
 
-  public void testOnlyOneEmptyLine() throws Exception {
-    assertNull(format(region(7, 7, "")));
-  }
+        assertEquals(-1, FieldUtils.safeAdd(Integer.MIN_VALUE, Integer.MAX_VALUE));
+        assertEquals(-1, FieldUtils.safeAdd(Integer.MAX_VALUE, Integer.MIN_VALUE));
 
-  public void testTwoEmptyLines() throws Exception {
-    assertEquals("  7| ", format(region(7, 8, "\n")));
-  }
+        try {
+            FieldUtils.safeAdd(Integer.MAX_VALUE, 1);
+            fail();
+        } catch (ArithmeticException e) {
+        }
 
-  public void testThreeLineRemoveLastEmptyLine() throws Exception {
-    String region = format(region(7, 9, "hello world\nfoobar\n"));
-    assertEquals("  7| hello world\n" +
-            "  8| foobar", region);
-  }
+        try {
+            FieldUtils.safeAdd(Integer.MAX_VALUE, 100);
+            fail();
+        } catch (ArithmeticException e) {
+        }
 
-  public void testFormatErrorSpaces() throws Exception {
-    JSError error = JSError.make("javascript/complex.js",
-        Node.newString("foobar", 5, 8), FOO_TYPE);
-    LightweightMessageFormatter formatter = formatter("    if (foobar) {");
-    assertEquals("javascript/complex.js:5: ERROR - error description here\n" +
-        "    if (foobar) {\n" +
-        "        ^\n", formatter.formatError(error));
-  }
+        try {
+            FieldUtils.safeAdd(Integer.MAX_VALUE, Integer.MAX_VALUE);
+            fail();
+        } catch (ArithmeticException e) {
+        }
 
-  public void testFormatErrorTabs() throws Exception {
-    JSError error = JSError.make("javascript/complex.js",
-        Node.newString("foobar", 5, 6), FOO_TYPE);
-    LightweightMessageFormatter formatter = formatter("\t\tif (foobar) {");
-    assertEquals("javascript/complex.js:5: ERROR - error description here\n" +
-        "\t\tif (foobar) {\n" +
-        "\t\t    ^\n", formatter.formatError(error));
-  }
+        try {
+            FieldUtils.safeAdd(Integer.MIN_VALUE, -1);
+            fail();
+        } catch (ArithmeticException e) {
+        }
 
-  public void testFormatErrorSpaceEndOfLine1() throws Exception {
-    JSError error = JSError.make("javascript/complex.js",
-        1, 10, FOO_TYPE);
-    LightweightMessageFormatter formatter = formatter("assert (1;");
-    assertEquals("javascript/complex.js:1: ERROR - error description here\n" +
-        "assert (1;\n" +
-        "          ^\n", formatter.formatError(error));
-  }
+        try {
+            FieldUtils.safeAdd(Integer.MIN_VALUE, -100);
+            fail();
+        } catch (ArithmeticException e) {
+        }
 
-  public void testFormatErrorSpaceEndOfLine2() throws Exception {
-    JSError error = JSError.make("javascript/complex.js",
-        6, 7, FOO_TYPE);
-    LightweightMessageFormatter formatter = formatter("if (foo");
-    assertEquals("javascript/complex.js:6: ERROR - error description here\n" +
-        "if (foo\n" +
-        "       ^\n", formatter.formatError(error));
-  }
+        try {
+            FieldUtils.safeAdd(Integer.MIN_VALUE, Integer.MIN_VALUE);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+    }
 
-  private LightweightMessageFormatter formatter(String string) {
-    return new LightweightMessageFormatter(source(string));
-  }
+    public void testSafeAddLong() {
+        assertEquals(0L, FieldUtils.safeAdd(0L, 0L));
 
-  private SourceExcerptProvider source(final String source) {
-    return new SourceExcerptProvider() {
-      public String getSourceLine(String sourceName, int lineNumber) {
-        return source;
-      }
-      public Region getSourceRegion(String sourceName, int lineNumber) {
-        throw new UnsupportedOperationException();
-      }
-    };
-  }
+        assertEquals(5L, FieldUtils.safeAdd(2L, 3L));
+        assertEquals(-1L, FieldUtils.safeAdd(2L, -3L));
+        assertEquals(1L, FieldUtils.safeAdd(-2L, 3L));
+        assertEquals(-5L, FieldUtils.safeAdd(-2L, -3L));
 
-  private String format(Region region) {
-    return new LineNumberingFormatter().formatRegion(region);
-  }
+        assertEquals(Long.MAX_VALUE - 1, FieldUtils.safeAdd(Long.MAX_VALUE, -1L));
+        assertEquals(Long.MIN_VALUE + 1, FieldUtils.safeAdd(Long.MIN_VALUE, 1L));
 
-  private Region region(final int startLine, final int endLine,
-      final String source) {
-    return new SimpleRegion(startLine, endLine, source);
-  }
+        assertEquals(-1, FieldUtils.safeAdd(Long.MIN_VALUE, Long.MAX_VALUE));
+        assertEquals(-1, FieldUtils.safeAdd(Long.MAX_VALUE, Long.MIN_VALUE));
+
+        try {
+            FieldUtils.safeAdd(Long.MAX_VALUE, 1L);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+
+        try {
+            FieldUtils.safeAdd(Long.MAX_VALUE, 100L);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+
+        try {
+            FieldUtils.safeAdd(Long.MAX_VALUE, Long.MAX_VALUE);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+
+        try {
+            FieldUtils.safeAdd(Long.MIN_VALUE, -1L);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+
+        try {
+            FieldUtils.safeAdd(Long.MIN_VALUE, -100L);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+
+        try {
+            FieldUtils.safeAdd(Long.MIN_VALUE, Long.MIN_VALUE);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+    }
+
+    public void testSafeSubtractLong() {
+        assertEquals(0L, FieldUtils.safeSubtract(0L, 0L));
+
+        assertEquals(-1L, FieldUtils.safeSubtract(2L, 3L));
+        assertEquals(5L, FieldUtils.safeSubtract(2L, -3L));
+        assertEquals(-5L, FieldUtils.safeSubtract(-2L, 3L));
+        assertEquals(1L, FieldUtils.safeSubtract(-2L, -3L));
+
+        assertEquals(Long.MAX_VALUE - 1, FieldUtils.safeSubtract(Long.MAX_VALUE, 1L));
+        assertEquals(Long.MIN_VALUE + 1, FieldUtils.safeSubtract(Long.MIN_VALUE, -1L));
+
+        assertEquals(0, FieldUtils.safeSubtract(Long.MIN_VALUE, Long.MIN_VALUE));
+        assertEquals(0, FieldUtils.safeSubtract(Long.MAX_VALUE, Long.MAX_VALUE));
+
+        try {
+            FieldUtils.safeSubtract(Long.MIN_VALUE, 1L);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+
+        try {
+            FieldUtils.safeSubtract(Long.MIN_VALUE, 100L);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+
+        try {
+            FieldUtils.safeSubtract(Long.MIN_VALUE, Long.MAX_VALUE);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+
+        try {
+            FieldUtils.safeSubtract(Long.MAX_VALUE, -1L);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+
+        try {
+            FieldUtils.safeSubtract(Long.MAX_VALUE, -100L);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+
+        try {
+            FieldUtils.safeSubtract(Long.MAX_VALUE, Long.MIN_VALUE);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    public void testSafeMultiplyLongLong() {
+        assertEquals(0L, FieldUtils.safeMultiply(0L, 0L));
+        
+        assertEquals(1L, FieldUtils.safeMultiply(1L, 1L));
+        assertEquals(3L, FieldUtils.safeMultiply(1L, 3L));
+        assertEquals(3L, FieldUtils.safeMultiply(3L, 1L));
+        
+        assertEquals(6L, FieldUtils.safeMultiply(2L, 3L));
+        assertEquals(-6L, FieldUtils.safeMultiply(2L, -3L));
+        assertEquals(-6L, FieldUtils.safeMultiply(-2L, 3L));
+        assertEquals(6L, FieldUtils.safeMultiply(-2L, -3L));
+        
+        assertEquals(Long.MAX_VALUE, FieldUtils.safeMultiply(Long.MAX_VALUE, 1L));
+        assertEquals(Long.MIN_VALUE, FieldUtils.safeMultiply(Long.MIN_VALUE, 1L));
+        assertEquals(-Long.MAX_VALUE, FieldUtils.safeMultiply(Long.MAX_VALUE, -1L));
+        
+        try {
+            FieldUtils.safeMultiply(Long.MIN_VALUE, -1L);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+        
+        try {
+            FieldUtils.safeMultiply(-1L, Long.MIN_VALUE);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+      
+        try {
+            FieldUtils.safeMultiply(Long.MIN_VALUE, 100L);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+        
+        try {
+            FieldUtils.safeMultiply(Long.MIN_VALUE, Long.MAX_VALUE);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+        
+        try {
+            FieldUtils.safeMultiply(Long.MAX_VALUE, Long.MIN_VALUE);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    public void testSafeMultiplyLongInt() {
+        assertEquals(0L, FieldUtils.safeMultiply(0L, 0));
+        
+        assertEquals(1L, FieldUtils.safeMultiply(1L, 1));
+        assertEquals(3L, FieldUtils.safeMultiply(1L, 3));
+        assertEquals(3L, FieldUtils.safeMultiply(3L, 1));
+        
+        assertEquals(6L, FieldUtils.safeMultiply(2L, 3));
+        assertEquals(-6L, FieldUtils.safeMultiply(2L, -3));
+        assertEquals(-6L, FieldUtils.safeMultiply(-2L, 3));
+        assertEquals(6L, FieldUtils.safeMultiply(-2L, -3));
+        
+        assertEquals(-1L * Integer.MIN_VALUE, FieldUtils.safeMultiply(-1L, Integer.MIN_VALUE));
+        
+        assertEquals(Long.MAX_VALUE, FieldUtils.safeMultiply(Long.MAX_VALUE, 1));
+        assertEquals(Long.MIN_VALUE, FieldUtils.safeMultiply(Long.MIN_VALUE, 1));
+        assertEquals(-Long.MAX_VALUE, FieldUtils.safeMultiply(Long.MAX_VALUE, -1));
+        
+        try {
+            FieldUtils.safeMultiply(Long.MIN_VALUE, -1);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+        
+        try {
+            FieldUtils.safeMultiply(Long.MIN_VALUE, 100);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+        
+        try {
+            FieldUtils.safeMultiply(Long.MIN_VALUE, Integer.MAX_VALUE);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+        
+        try {
+            FieldUtils.safeMultiply(Long.MAX_VALUE, Integer.MIN_VALUE);
+            fail();
+        } catch (ArithmeticException e) {
+        }
+    }
 }
+
