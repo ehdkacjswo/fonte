@@ -330,7 +330,7 @@ def metric_by_setting(method='bug2commit', fix={'stage2' : 'precise', 'use_br' :
 
 # res_dict[stage2][(new_diff_type, use_stopword, adddel, use_br)]
 if __name__ == "__main__":
-    print(1)
+    metric_by_setting(method='bug2commit', fix={'stage2' : 'precise', 'use_br' : False})
     #id_dist()
     
     #metric_by_setting()

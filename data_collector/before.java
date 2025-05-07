@@ -1,399 +1,174 @@
-package org.jsoup.nodes;
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import org.jsoup.helper.StringUtil;
-import org.jsoup.helper.Validate;
-import org.jsoup.parser.Tag;
-import org.jsoup.select.Elements;
+package org.apache.commons.csv;
 
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
- A HTML Document.
+ * A CSV record parsed from a CSV file.
+ *
+ * @version $Id$
+ */
+public class CSVRecord implements Serializable, Iterable<String> {
 
- @author Jonathan Hedley, jonathan@hedley.net */
-public class Document extends Element {
-    private OutputSettings outputSettings = new OutputSettings();
-    private QuirksMode quirksMode = QuirksMode.noQuirks;
-    private String location;
+    private static final long serialVersionUID = 1L;
 
-    /**
-     Create a new, empty Document.
-     @param baseUri base URI of document
-     @see org.jsoup.Jsoup#parse
-     @see #createShell
-     */
-    public Document(String baseUri) {
-        super(Tag.valueOf("#root"), baseUri);
-        this.location = baseUri;
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
+
+    /** The values of the record */
+    private final String[] values;
+
+    /** The column name to index mapping. */
+    private final Map<String, Integer> mapping;
+
+    /** The accumulated comments (if any) */
+    private final String comment;
+
+    /** The record number. */
+    private final long recordNumber;
+
+    CSVRecord(final String[] values, final Map<String, Integer> mapping,
+            final String comment, final long recordNumber) {
+        this.recordNumber = recordNumber;
+        this.values = values != null ? values : EMPTY_STRING_ARRAY;
+        this.mapping = mapping;
+        this.comment = comment;
     }
 
     /**
-     Create a valid, empty shell of a document, suitable for adding more elements to.
-     @param baseUri baseUri of document
-     @return document with html, head, and body elements.
+     * Returns a value by index.
+     *
+     * @param i
+     *            a column index (0-based)
+     * @return the String at the given index
      */
-    static public Document createShell(String baseUri) {
-        Validate.notNull(baseUri);
-
-        Document doc = new Document(baseUri);
-        Element html = doc.appendElement("html");
-        html.appendElement("head");
-        html.appendElement("body");
-
-        return doc;
+    public String get(final int i) {
+        return values[i];
     }
 
     /**
-     * Get the URL this Document was parsed from. If the starting URL is a redirect,
-     * this will return the final URL from which the document was served from.
-     * @return location
+     * Returns a value by name.
+     *
+     * @param name
+     *            the name of the column to be retrieved.
+     * @return the column value, or {@code null} if the column name is not found
+     * @throws IllegalStateException
+     *             if no header mapping was provided
+     * @throws IllegalArgumentException
+     *             if the record is inconsistent
+     * @see #isConsistent()
      */
-    public String location() {
-     return location;
-    }
-    
-    /**
-     Accessor to the document's {@code head} element.
-     @return {@code head}
-     */
-    public Element head() {
-        return findFirstElementByTagName("head", this);
-    }
-
-    /**
-     Accessor to the document's {@code body} element.
-     @return {@code body}
-     */
-    public Element body() {
-        return findFirstElementByTagName("body", this);
-    }
-
-    /**
-     Get the string contents of the document's {@code title} element.
-     @return Trimmed title, or empty string if none set.
-     */
-    public String title() {
-        // title is a preserve whitespace tag (for document output), but normalised here
-        Element titleEl = getElementsByTag("title").first();
-        return titleEl != null ? StringUtil.normaliseWhitespace(titleEl.text()).trim() : "";
-    }
-
-    /**
-     Set the document's {@code title} element. Updates the existing element, or adds {@code title} to {@code head} if
-     not present
-     @param title string to set as title
-     */
-    public void title(String title) {
-        Validate.notNull(title);
-        Element titleEl = getElementsByTag("title").first();
-        if (titleEl == null) { // add to head
-            head().appendElement("title").text(title);
-        } else {
-            titleEl.text(title);
+    public String get(final String name) {
+        if (mapping == null) {
+            throw new IllegalStateException(
+                    "No header mapping was specified, the record values can't be accessed by name");
+        }
+        final Integer index = mapping.get(name);
+        try {
+            return index != null ? values[index.intValue()] : null;
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "Index for header '%s' is %d but CSVRecord only has %d values!",
+                            name, index.intValue(), values.length));
         }
     }
 
     /**
-     Create a new Element, with this document's base uri. Does not make the new element a child of this document.
-     @param tagName element tag name (e.g. {@code a})
-     @return new element
+     * Returns true if this record is consistent, false if not. Currently, the only check is matching the record size to
+     * the header size. Some programs can export files that fails this test but still produce parsable files.
+     *
+     * @return true of this record is valid, false if not
+     * @see CSVParserTest#org.apache.commons.csv.CSVParserTest.testMappedButNotSetAsOutlook2007ContactExport()
      */
-    public Element createElement(String tagName) {
-        return new Element(Tag.valueOf(tagName), this.baseUri());
+    public boolean isConsistent() {
+        return mapping == null ? true : mapping.size() == values.length;
     }
 
     /**
-     Normalise the document. This happens after the parse phase so generally does not need to be called.
-     Moves any text content that is not in the body element into the body.
-     @return this document after normalisation
+     * Checks whether a given column is mapped, i.e. its name has been defined to the parser.
+     *
+     * @param name
+     *            the name of the column to be retrieved.
+     * @return whether a given column is mapped.
      */
-    public Document normalise() {
-        Element htmlEl = findFirstElementByTagName("html", this);
-        if (htmlEl == null)
-            htmlEl = appendElement("html");
-        if (head() == null)
-            htmlEl.prependElement("head");
-        if (body() == null)
-            htmlEl.appendElement("body");
-
-        // pull text nodes out of root, html, and head els, and push into body. non-text nodes are already taken care
-        // of. do in inverse order to maintain text order.
-        normaliseTextNodes(head());
-        normaliseTextNodes(htmlEl);
-        normaliseTextNodes(this);
-
-        normaliseStructure("head", htmlEl);
-        normaliseStructure("body", htmlEl);
-        
-        return this;
+    public boolean isMapped(final String name) {
+        return mapping != null ? mapping.containsKey(name) : false;
     }
 
-    // does not recurse.
-    private void normaliseTextNodes(Element element) {
-        List<Node> toMove = new ArrayList<Node>();
-        for (Node node: element.childNodes) {
-            if (node instanceof TextNode) {
-                TextNode tn = (TextNode) node;
-                if (!tn.isBlank())
-                    toMove.add(tn);
-            }
-        }
-
-        for (int i = toMove.size()-1; i >= 0; i--) {
-            Node node = toMove.get(i);
-            element.removeChild(node);
-            body().prependChild(new TextNode(" ", ""));
-            body().prependChild(node);
-        }
+    /**
+     * Checks whether a given columns is mapped and has a value.
+     *
+     * @param name
+     *            the name of the column to be retrieved.
+     * @return whether a given columns is mapped and has a value
+     */
+    public boolean isSet(final String name) {
+        return isMapped(name) && mapping.get(name).intValue() < values.length;
     }
 
-    // merge multiple <head> or <body> contents into one, delete the remainder, and ensure they are owned by <html>
-    private void normaliseStructure(String tag, Element htmlEl) {
-        Elements elements = this.getElementsByTag(tag);
-        Element master = elements.first(); // will always be available as created above if not existent
-        if (elements.size() > 1) { // dupes, move contents to master
-            List<Node> toMove = new ArrayList<Node>();
-            for (int i = 1; i < elements.size(); i++) {
-                Node dupe = elements.get(i);
-                for (Node node : dupe.childNodes)
-                    toMove.add(node);
-                dupe.remove();
-            }
-
-            for (Node dupe : toMove)
-                master.appendChild(dupe);
-        }
-        // ensure parented by <html>
-        if (!master.parent().equals(htmlEl)) {
-            htmlEl.appendChild(master); // includes remove()            
-        }
+    /**
+     * Returns an iterator over the values of this record.
+     *
+     * @return an iterator over the values of this record.
+     */
+    public Iterator<String> iterator() {
+        return Arrays.asList(values).iterator();
     }
 
-    // fast method to get first by tag name, used for html, head, body finders
-    private Element findFirstElementByTagName(String tag, Node node) {
-        if (node.nodeName().equals(tag))
-            return (Element) node;
-        else {
-            for (Node child: node.childNodes) {
-                Element found = findFirstElementByTagName(tag, child);
-                if (found != null)
-                    return found;
-            }
-        }
-        return null;
+    String[] values() {
+        return values;
+    }
+
+    /**
+     * Returns the comment for this record, if any.
+     *
+     * @return the comment for this record, or null if no comment for this
+     *         record is available.
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * Returns the number of this record in the parsed CSV file.
+     *
+     * @return the number of this record.
+     */
+    public long getRecordNumber() {
+        return recordNumber;
+    }
+
+    /**
+     * Returns the number of values in this record.
+     *
+     * @return the number of values.
+     */
+    public int size() {
+        return values.length;
     }
 
     @Override
-    public String outerHtml() {
-        return super.html(); // no outer wrapper tag
+    public String toString() {
+        return Arrays.toString(values);
     }
 
-    /**
-     Set the text of the {@code body} of this document. Any existing nodes within the body will be cleared.
-     @param text unencoded text
-     @return this document
-     */
-    @Override
-    public Element text(String text) {
-        body().text(text); // overridden to not nuke doc structure
-        return this;
-    }
-
-    @Override
-    public String nodeName() {
-        return "#document";
-    }
-
-    @Override
-    public Document clone() {
-        Document clone = (Document) super.clone();
-        clone.outputSettings = this.outputSettings.clone();
-        return clone;
-    }
-
-    /**
-     * A Document's output settings control the form of the text() and html() methods.
-     */
-    public static class OutputSettings implements Cloneable {
-        private Entities.EscapeMode escapeMode = Entities.EscapeMode.base;
-        private Charset charset = Charset.forName("UTF-8");
-        private CharsetEncoder charsetEncoder = charset.newEncoder();
-        private boolean prettyPrint = true;
-        private boolean outline = false;
-        private int indentAmount = 1;
-
-        public OutputSettings() {}
-
-        /**
-         * Get the document's current HTML escape mode: <code>base</code>, which provides a limited set of named HTML
-         * entities and escapes other characters as numbered entities for maximum compatibility; or <code>extended</code>,
-         * which uses the complete set of HTML named entities.
-         * <p>
-         * The default escape mode is <code>base</code>.
-         * @return the document's current escape mode
-         */
-        public Entities.EscapeMode escapeMode() {
-            return escapeMode;
-        }
-
-        /**
-         * Set the document's escape mode
-         * @param escapeMode the new escape mode to use
-         * @return the document's output settings, for chaining
-         */
-        public OutputSettings escapeMode(Entities.EscapeMode escapeMode) {
-            this.escapeMode = escapeMode;
-            return this;
-        }
-
-        /**
-         * Get the document's current output charset, which is used to control which characters are escaped when
-         * generating HTML (via the <code>html()</code> methods), and which are kept intact.
-         * <p>
-         * Where possible (when parsing from a URL or File), the document's output charset is automatically set to the
-         * input charset. Otherwise, it defaults to UTF-8.
-         * @return the document's current charset.
-         */
-        public Charset charset() {
-            return charset;
-        }
-
-        /**
-         * Update the document's output charset.
-         * @param charset the new charset to use.
-         * @return the document's output settings, for chaining
-         */
-        public OutputSettings charset(Charset charset) {
-            // todo: this should probably update the doc's meta charset
-            this.charset = charset;
-            charsetEncoder = charset.newEncoder();
-            return this;
-        }
-
-        /**
-         * Update the document's output charset.
-         * @param charset the new charset (by name) to use.
-         * @return the document's output settings, for chaining
-         */
-        public OutputSettings charset(String charset) {
-            charset(Charset.forName(charset));
-            return this;
-        }
-
-        CharsetEncoder encoder() {
-            return charsetEncoder;
-        }
-
-        /**
-         * Get if pretty printing is enabled. Default is true. If disabled, the HTML output methods will not re-format
-         * the output, and the output will generally look like the input.
-         * @return if pretty printing is enabled.
-         */
-        public boolean prettyPrint() {
-            return prettyPrint;
-        }
-
-        /**
-         * Enable or disable pretty printing.
-         * @param pretty new pretty print setting
-         * @return this, for chaining
-         */
-        public OutputSettings prettyPrint(boolean pretty) {
-            prettyPrint = pretty;
-            return this;
-        }
-        
-        /**
-         * Get if outline mode is enabled. Default is false. If enabled, the HTML output methods will consider
-         * all tags as block.
-         * @return if outline mode is enabled.
-         */
-        public boolean outline() {
-            return outline;
-        }
-        
-        /**
-         * Enable or disable HTML outline mode.
-         * @param outlineMode new outline setting
-         * @return this, for chaining
-         */
-        public OutputSettings outline(boolean outlineMode) {
-            outline = outlineMode;
-            return this;
-        }
-
-        /**
-         * Get the current tag indent amount, used when pretty printing.
-         * @return the current indent amount
-         */
-        public int indentAmount() {
-            return indentAmount;
-        }
-
-        /**
-         * Set the indent amount for pretty printing
-         * @param indentAmount number of spaces to use for indenting each level. Must be >= 0.
-         * @return this, for chaining
-         */
-        public OutputSettings indentAmount(int indentAmount) {
-            Validate.isTrue(indentAmount >= 0);
-            this.indentAmount = indentAmount;
-            return this;
-        }
-
-        @Override
-        public OutputSettings clone() {
-            OutputSettings clone;
-            try {
-                clone = (OutputSettings) super.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            clone.charset(charset.name()); // new charset and charset encoder
-            clone.escapeMode = Entities.EscapeMode.valueOf(escapeMode.name());
-            // indentAmount, prettyPrint are primitives so object.clone() will handle
-            return clone;
-        }
-    }
-
-    /**
-     * Get the document's current output settings.
-     * @return the document's current output settings.
-     */
-    public OutputSettings outputSettings() {
-        return outputSettings;
-    }
-
-    /**
-     * Set the document's output settings.
-     * @param outputSettings new output settings.
-     * @return this document, for chaining.
-     */
-    public Document outputSettings(OutputSettings outputSettings) {
-        Validate.notNull(outputSettings);
-        this.outputSettings = outputSettings;
-        return this;
-    }
-
-    public enum QuirksMode {
-        noQuirks, quirks, limitedQuirks;
-    }
-
-    public QuirksMode quirksMode() {
-        return quirksMode;
-    }
-
-    public Document quirksMode(QuirksMode quirksMode) {
-        this.quirksMode = quirksMode;
-        return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
 }
-

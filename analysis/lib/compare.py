@@ -379,7 +379,6 @@ def compare_settings(org_method, new_method, org_setting, new_setting):
     #new_metric = metric_converter(new_metric_dict[new_setting])
 
     # Bug2Commit의 경우, num_iter에만 beta가 있다
-
     for metric_key in ['rank', 'num_iter']:
         print(f'Metric) {metric_key}')
 

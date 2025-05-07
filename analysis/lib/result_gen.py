@@ -21,7 +21,7 @@ DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 
 # Build html file that highlights components
 # Interval setting fields = (tracker, diff_tool, diff_type)
-def build_html(pid='Jsoup', vid='46', stage2='precise', \
+def build_html(pid='Cli', vid='2', stage2='precise', \
     intvl_setting=frozenset({'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id'}.items())):
 
     # Convert index from interval to integer
@@ -135,95 +135,97 @@ def build_html(pid='Jsoup', vid='46', stage2='precise', \
         file.write('\n'.join(html_lines))
 
 
+def token_share_ratio_proj(pid, vid, stage2, feature_setting, BIC=None):
+    if BIC is None:
+        GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+        BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
+
+    res_dict = dict()
+
+    # Load feature, and bug feature
+    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
+        feature_dict = pickle.load(file)
+
+    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'bug_feature.pkl'), 'rb') as file:
+        bug_feature_dict = pickle.load(file)
+    
+    feature_dict = feature_dict[stage2][frozenset(feature_setting.items())]
+    bug_feature_dict = bug_feature_dict[stage2][frozenset(feature_setting.items())]
+
+    # Evaluate the ratio of common identifiers
+    # {bug_type : {commit_type : {id_type : {BIC, total}}}}
+    token_ratio_dict = dict()
+    
+    for bug_type, sub_bug_feature_dict in bug_feature_dict.items():
+        token_ratio_dict[bug_type] = dict()
+        bug_feature_id, bug_feature_non_id = sub_bug_feature_dict['id'], sub_bug_feature_dict['non_id']
+
+        for commit, commit_feature_dict in feature_dict.items():
+            for commit_type, commit_feature_vec in commit_feature_dict.items():
+
+                # Initialize token ratio dictionaries
+                token_ratio_dict[bug_type].setdefault(commit_type, \
+                    {'id' : {'total' : list()}, 'non_id' : {'total' : list()}, 'all' : {'total' : list()}})
+                
+                # Count total, common identifiers
+                for id_type in ['id', 'non_id', 'all']:
+                    total_token_cnt, common_token_cnt = 0, 0
+
+                    if id_type == 'id':
+                        commit_vec, bug_vec = commit_feature_vec['id'], bug_feature_id
+                    elif id_type == 'non_id':
+                        commit_vec, bug_vec = commit_feature_vec['non_id'], bug_feature_non_id
+                    elif id_type == 'all':
+                        commit_vec, bug_vec = commit_feature_vec['id'] + commit_feature_vec['non_id'], bug_feature_id + bug_feature_non_id
+
+                    for word, freq in commit_vec.items():
+                        total_token_cnt += freq
+                        if word in bug_vec:
+                            common_token_cnt += freq
+                
+                    # Ratio of common identifiers
+                    token_ratio = common_token_cnt / total_token_cnt if total_token_cnt > 0 else 0
+
+                    token_ratio_dict[bug_type][commit_type][id_type]['total'].append(token_ratio)
+                    if commit == BIC:
+                        token_ratio_dict[bug_type][commit_type][id_type]['BIC'] = token_ratio
+        
+        # Aggregate data
+        for bug_type, commit_type_dict in token_ratio_dict.items():
+            res_dict[bug_type] = dict()
+
+            for commit_type, id_type_dict in commit_type_dict.items():
+                res_dict[bug_type][commit_type] = dict()
+                
+                for id_type, sub_ratio_dict in id_type_dict.items():
+                    res_dict[bug_type][commit_type][id_type] = dict()
+                    total_token_ratio, BIC_token_ratio = sub_ratio_dict['total'], sub_ratio_dict['BIC']
+                    total_token_ratio.sort(reverse=True)
+
+                    # Rank of common token ratio
+                    BIC_ratio_rank = len(total_token_ratio) - total_token_ratio[::-1].index(BIC_token_ratio)
+                    res_dict[bug_type][commit_type][id_type]['rank'] = BIC_ratio_rank
+
+                    # Common token ratio
+                    res_dict[bug_type][commit_type][id_type]['BIC_ratio'] = BIC_token_ratio
+                    res_dict[bug_type][commit_type][id_type]['avg_ratio'] =  sum(total_token_ratio) / len(total_token_ratio)
+    
+    return res_dict
+
 # Check the number of each identifiers
 # Doesn't work for all_sep (all_sep voting is not working correctly too)
 
 # {project : {bug type : {commit type : 
 # {id / non_id / all : 
 # rank / BIC_ratio / rel_BIC_ratio} } } }
-def token_share_ratio(stage2='precise', \
-    feature_setting={'tracker': 'git', 'diff_tool' : 'base', 'diff_type' : 'greedy_id'}):
-    
+def token_share_ratio(stage2, feature_setting):
     res_dict = dict()
     all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
     
     for _, row in tqdm(GT.iterrows()):
         pid, vid, BIC = row.pid, row.vid, row.commit
-
-        # Load feature, and bug feature
-        with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
-            feature_dict = pickle.load(file)
-
-        with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'bug_feature.pkl'), 'rb') as file:
-            bug_feature_dict = pickle.load(file)
-        
-        bug_feature_setting = feature_setting.copy()
-        del bug_feature_setting['adddel']
-
-        feature_dict = feature_dict[stage2][frozenset(feature_setting.items())]
-        bug_feature_dict = bug_feature_dict[stage2][frozenset(bug_feature_setting.items())]
-
-        # Evaluate the ratio of common identifiers
-        # {bug_type : {commit_type : {id_type : {BIC, total}}}}
-        token_ratio_dict = dict()
-        
-        for bug_type, sub_bug_feature_dict in bug_feature_dict.items():
-            token_ratio_dict[bug_type] = dict()
-            bug_feature_id, bug_feature_non_id = sub_bug_feature_dict['id'], sub_bug_feature_dict['non_id']
-
-            for commit, commit_feature_dict in feature_dict.items():
-                for commit_type, commit_feature_vec in commit_feature_dict.items():
-
-                    # Initialize token ratio dictionaries
-                    token_ratio_dict[bug_type].setdefault(commit_type, \
-                        {'id' : {'total' : list()}, 'non_id' : {'total' : list()}, 'all' : {'total' : list()}})
-                    
-                    # Count total, common identifiers
-                    for id_type in ['id', 'non_id', 'all']:
-                        total_token_cnt, common_token_cnt = 0, 0
-
-                        if id_type == 'id':
-                            commit_vec, bug_vec = commit_feature_vec['id'], bug_feature_id
-                        elif id_type == 'non_id':
-                            commit_vec, bug_vec = commit_feature_vec['non_id'], bug_feature_non_id
-                        elif id_type == 'all':
-                            commit_vec, bug_vec = commit_feature_vec['id'] + commit_feature_vec['non_id'], bug_feature_id + bug_feature_non_id
-
-                        for word, freq in commit_vec.items():
-                            total_token_cnt += freq
-                            if word in bug_vec:
-                                common_token_cnt += freq
-                    
-                        # Ratio of common identifiers
-                        token_ratio = common_token_cnt / total_token_cnt if total_token_cnt > 0 else 0
-
-                        token_ratio_dict[bug_type][commit_type][id_type]['total'].append(token_ratio)
-                        if commit == BIC:
-                            token_ratio_dict[bug_type][commit_type][id_type]['BIC'] = token_ratio
-        
-        # Aggregate data
-        project = f'{pid}-{vid}b'
-        res_dict[project] = dict()
-
-        for bug_type, commit_type_dict in token_ratio_dict.items():
-            res_dict[project][bug_type] = dict()
-
-            for commit_type, id_type_dict in commit_type_dict.items():
-                res_dict[project][bug_type][commit_type] = dict()
-                
-                for id_type, sub_ratio_dict in id_type_dict.items():
-                    res_dict[project][bug_type][commit_type][id_type] = dict()
-                    total_token_ratio, BIC_token_ratio = sub_ratio_dict['total'], sub_ratio_dict['BIC']
-                    total_token_ratio.sort(reverse=True)
-
-                    # Rank of common token ratio
-                    BIC_ratio_rank = len(total_token_ratio) - total_token_ratio[::-1].index(BIC_token_ratio)
-                    res_dict[project][bug_type][commit_type][id_type]['rank'] = BIC_ratio_rank
-
-                    # Common token ratio
-                    res_dict[project][bug_type][commit_type][id_type]['BIC_ratio'] = BIC_token_ratio
-                    res_dict[project][bug_type][commit_type][id_type]['avg_ratio'] =  sum(total_token_ratio) / len(total_token_ratio)
+        res_dict[f'{pid}-{vid}b'] = token_share_ratio_proj(pid=pid, vid=vid, stage2=stage2, feature_setting=feature_setting, BIC=BIC)
     
     return res_dict
 
@@ -241,13 +243,17 @@ def BIC_info(pid='Jsoup', vid='46'):
 # method : fonte, bug2commit, ensemble
 # mode : all, project
 # metric : mean rank, mean number of iterations
-def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble'], mode: Literal['all', 'project']):
+def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble', 'bert'], mode: Literal['all', 'project']):
     savepath = f"/root/workspace/analysis/data/{method}/metric_{mode}.pkl"
 
     # If file already exists, read it
     if os.path.isfile(savepath):
         with open(savepath, 'rb') as file:
             return pickle.load(file)
+
+    # 
+    if method == 'bert':
+        
     
     # Load manual data only
     all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
@@ -371,5 +377,5 @@ def metrics_to_csv(method: Literal['fonte', 'bug2commit', 'ensemble']):
                     writer.writerow([project] + setting_row + ['num_iter', sub_dict['num_iter']])
 
 if __name__ == "__main__":
-    build_html(pid='Jsoup', vid='41', stage2='precise', intvl_setting=frozenset({'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id'}.items()))
+    build_html(pid='Csv', vid='12', stage2='precise', intvl_setting=frozenset({'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id'}.items()))
     #BIC_info()
