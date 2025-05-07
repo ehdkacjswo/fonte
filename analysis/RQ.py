@@ -40,4 +40,4 @@ if __name__ == "__main__":
         [('No classifying', 'precise', {'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'gumtree_id', 'use_br' : False, 'classify_id' : False, 'use_id' : True, 'beta': 0.1}), \
         ('Classifying', 'precise', {'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'gumtree_id', 'use_br' : False, 'classify_id' : True, 'use_id' : True, 'beta': 0.1})]
     
-    RQ(RQ2)
+    RQ(RQ4)

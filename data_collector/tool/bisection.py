@@ -62,13 +62,18 @@ def main(pid, vid):
     
     with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'ensemble.pkl'), 'rb') as file:
         ensemble_dict = pickle.load(file)
+    
+    with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'fbl_bert.pkl'), 'rb') as file:
+        fbl_bert_dict = pickle.load(file)
 
     fonte_iter = dict()
     bug2commit_iter = dict()
     ensemble_iter = dict()
+    fbl_bert_iter = dict()
     
     for stage2, sub_dict in bug2commit_dict.items():
         fonte_df = fonte_dict[stage2]
+        fbl_bert_df = fbl_bert_dict[stage2]
         bug2commit_iter[stage2] = dict()
         ensemble_iter[stage2] = dict()
 
@@ -84,8 +89,9 @@ def main(pid, vid):
         if BIC not in C_BIC:
             log('bisection', f'[ERROR] BIC({BIC}) is style change commit for stage2({stage2})')
             continue
-
+        
         # Bisection with scores
+        # Fonte & Ensemble
         if float(fonte_df.loc[BIC, "vote"]) == 0: # When BIC has 0 score with Fonte, unable to perform bisection
             log('bisection', f'[ERROR] BIC({BIC}) has 0 Fonte score for stage2({stage2})')
 
@@ -96,7 +102,8 @@ def main(pid, vid):
             for setting, ensemble_df in ensemble_dict[stage2].items():
                 votes = [float(ensemble_df.loc[c, "vote"]) for c in C_BIC]
                 ensemble_iter[stage2][setting] = weighted_bisection(C_BIC, votes, BIC)
-
+        
+        # Bug2Commit 
         for setting, bug2commit_df in sub_dict.items():
             #print(bug2commit_df['all'])
             if float(bug2commit_df['all'].loc[BIC, "vote"]) == 0:
@@ -112,6 +119,24 @@ def main(pid, vid):
                 new_votes = [vote if vote > 0 else beta * min_vote for vote in votes]
                 bug2commit_iter[stage2][frozenset((dict(setting) | {'beta' : beta}).items())] = weighted_bisection(C_BIC, new_votes, BIC)
         
+        """
+        # FBL-BERT
+        if float(fbl_bert_df.loc[BIC, "vote"]) == 0:
+            log('bisection', f'[INFO] BIC({BIC}) has 0 FBL-BERT score for stage2({stage2})')
+
+        votes = [float(fbl_bert_df.loc[c, "vote"]) for c in C_BIC]
+            
+        # Apply positive score for all 0 score commits
+        min_vote = min((vote for vote in votes if vote > 0), default=1)
+        zero_ind = [ind for ind, vote in enumerate(votes) if vote == 0]
+
+        fbl_bert_iter[stage2] = dict()
+
+        for beta in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]:
+            new_votes = [vote if vote > 0 else beta * min_vote for vote in votes]
+            fbl_bert_iter[stage2][frozenset({'beta' : beta}.items())] = weighted_bisection(C_BIC, new_votes, BIC)
+        """
+        
     savedir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'iteration')
     os.makedirs(savedir, exist_ok=True)
 
@@ -123,6 +148,9 @@ def main(pid, vid):
     
     with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
         pickle.dump(ensemble_iter, file)
+    
+    #with open(os.path.join(savedir, 'fbl_bert.pkl'), 'wb') as file:
+    #    pickle.dump(fbl_bert_iter, file)
     
     end_time = time.time()
     log('bisection', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')

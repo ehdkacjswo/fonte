@@ -10,6 +10,9 @@ from vote_util import *
 from utils import *
 from BM25_Custom import *
 
+sys.path.append('/root/workspace/lib/')
+from experiment_utils import load_commit_history
+
 DIR_NAME = '/home/coinse/doam/fonte/tmp'
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core'
@@ -187,6 +190,40 @@ def vote_ensemble(bug2commit_dict, fonte_dict):
     #log('vote', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
     return res_dict
 
+# For a given project, generate dataframe with result scores of FBL_BERT
+def vote_fbl_bert(pid, vid):
+    #log('vote', '[INFO] Fonte voting')
+    #start_time = time.time()
+    fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
+    result_path = os.path.join(BASELINE_DATA_DIR, f'{pid}-{vid}b', \
+        'ranking_INDEX_FBLBERT_RN_bertoverflow_QARC_q256_d230_dim128_cosine_q256_d230_dim128_commits_token.tsv')
+
+    res_dict = dict()
+
+    # load FBL-BERT ranking
+    df = pd.read_csv(result_path, sep="\t", header=None)[[2, 5]]
+    df.columns = ["commit", "vote"]
+    df["commit"] = df["commit"].apply(lambda x: x[:7])
+    
+    commit_df = load_commit_history(fault_dir, tool='git')
+    C_susp = commit_df.commit_hash.unique().tolist()
+    df = df[df['commit'].isin(C_susp)]
+
+    for stage2 in ['skip', 'precise']:
+        excluded = get_style_change_commits(fault_dir, tool='git', stage2=stage2)
+        stage2_df = df[~df['commit'].isin(excluded)].copy()
+        
+        # Add ranking
+        stage2_df["rank"] = stage2_df["vote"].rank(ascending=False, method="max")
+        stage2_df["rank"] = stage2_df["rank"].astype(int)
+        stage2_df = stage2_df.set_index('commit')
+
+        res_dict[stage2] = stage2_df
+    
+    #end_time = time.time()
+    #log('vote', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
+    return res_dict
+
 def main(pid, vid):
     log('vote', f'Working on {pid}_{vid}b')
 
@@ -246,3 +283,7 @@ def main(pid, vid):
     # Ensemble voting
     with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
         pickle.dump(vote_ensemble(bug2commit_vote, fonte_vote), file)
+    
+    # FBL_BERT voting
+    with open(os.path.join(savedir, 'fbl_bert.pkl'), 'wb') as file:
+        pickle.dump(vote_fbl_bert(pid, vid), file)
