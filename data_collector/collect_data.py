@@ -7,7 +7,7 @@ from experiment_utils import load_BIC_GT
 
 if __name__ == "__main__":
     all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
-    GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
+    GT = all_GT[~all_GT['provenance'].str.contains("Manual", na=False)]
     #update = False
     #skip = True
 
@@ -38,12 +38,12 @@ if __name__ == "__main__":
             print(f'[ERROR] Moving directory failed {pid}-{vid}b')
             continue
 
-        #track_history.main(pid, vid)
-        #parse_gumtree.main(pid, vid)
-        #greedy_id.main(pid, vid)
-        #gen_intvl.main(pid, vid)
-        #encode.main(pid, vid)
-        #encode_bug.main(pid, vid)
+        track_history.main(pid, vid)
+        parse_gumtree.main(pid, vid)
+        greedy_id.main(pid, vid)
+        gen_intvl.main(pid, vid)
+        encode.main(pid, vid)
+        encode_bug.main(pid, vid)
         vote.main(pid, vid)
         bisection.main(pid, vid)
 
