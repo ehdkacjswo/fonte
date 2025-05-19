@@ -94,7 +94,7 @@ def main(pid, vid):
                 bug2commit_iter[stage2][frozenset((dict(setting) | {'beta' : beta}).items())] = weighted_bisection(C_BIC, new_votes, BIC)
         
         # FBL-BERT
-        if float(fbl_bert_df.loc[BIC, "vote"]) == 0:
+        if float(fbl_bert_df["vote"].get(BIC, 0)) == 0:
             log('bisection', f'[INFO] BIC({BIC}) has 0 FBL-BERT score for stage2({stage2})')
 
         votes = [float(fbl_bert_df["vote"].get(c, 0)) for c in C_BIC]
