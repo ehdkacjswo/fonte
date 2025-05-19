@@ -18,7 +18,7 @@ def load_commit_history(fault_dir, tool):
     return com_df
 
 # 
-def get_style_change_commits(fault_dir, tool='git', stage2='precise'):
+def get_style_changes(fault_dir, tool='git', stage2='precise'):
     if stage2 == 'skip':
         return set()
 
@@ -30,6 +30,33 @@ def get_style_change_commits(fault_dir, tool='git', stage2='precise'):
         
         style_df = val_df[val_df["AST_diff"] == "U"]
         return set(zip(style_df["commit"], style_df["before_src_path"], style_df["after_src_path"]))
+
+# Get list of style change commits
+def get_style_change_commits(fault_dir, tool='git', stage2='precise'):
+    if stage2 == 'skip':
+        return set()
+    
+    if stage2 == 'precise':
+        val_df = pd.read_csv(
+            os.path.join(fault_dir, tool, f"precise_validation_noOpenRewrite.csv"), 
+            header=None,
+            names=["commit", "before_src_path", "after_src_path", "AST_diff"])
+
+    # Get list of commits with every change is style change
+    val_df["unchanged"] = (val_df["AST_diff"] == "U")
+    agg_df = val_df.groupby("commit").all()[["unchanged"]]
+    style_change_commits = agg_df.index[agg_df["unchanged"]].tolist()
+
+    # Precise style change doesn't consider path '/dev/null'
+    # Exclude commits that have '/dev/null' path (File creation / deletion)
+    # Can be deleted if it handles the cases
+    com_df = pd.read_pickle(os.path.join(fault_dir, tool, "commits.pkl"))
+    com_df["commit_hash"] = com_df["commit_hash"].apply(lambda s: str(s)[:7])
+
+    valid_commits = com_df[~com_df[['before_src_path', 'after_src_path']].\
+        isin(['/dev/null']).any(axis=1)]['commit_hash'].unique()
+    
+    return set(commit for commit in style_change_commits if commit in valid_commits)
 
 # Deleted method level
 def vote_for_commits(fault_dir, tool, formula, decay, voting_func, \
@@ -79,11 +106,14 @@ def vote_for_commits(fault_dir, tool, formula, decay, voting_func, \
         ]
 
         for commit, depth in zip(com_df.commit_hash, com_df.new_depth):
-            if depth is None:
+            """if depth is None:
                 decayed_vote = 0
             else:
-                decayed_vote = vote * ((1-decay) ** depth)
-            vote_rows.append([commit, decayed_vote])
+                decayed_vote = vote * ((1-decay) ** depth)"""
+            
+            # No score for style change commit
+            if depth is not None:
+                vote_rows.append([commit, vote * ((1-decay) ** depth)])
             
     vote_df = pd.DataFrame(data=vote_rows, columns=["commit", "vote"])
     agg_vote_df = vote_df.groupby("commit").sum("vote")

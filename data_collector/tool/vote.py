@@ -145,7 +145,7 @@ def vote_fonte(pid, vid):
     res_dict = dict()
 
     for stage2 in ['skip', 'precise']:
-        excluded = get_style_change_commits(fault_dir, tool='git', stage2=stage2)
+        excluded = get_style_changes(fault_dir, tool='git', stage2=stage2)
             
         fonte_df = vote_for_commits(fault_dir, tool='git', formula='Ochiai', decay=0.1, \
             voting_func=(lambda r: 1/r.max_rank), excluded=excluded, adjust_depth=True)

@@ -246,12 +246,6 @@ def BIC_info(pid='Jsoup', vid='46'):
 def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble', 'bert'], mode: Literal['all', 'project']):
     savepath = f"/root/workspace/analysis/data/{method}/metric_{mode}.pkl"
 
-    # Load manual data only
-    all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
-    GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
-
-    print(len(GT))
-
     # If file already exists, read it
     if os.path.isfile(savepath):
         with open(savepath, 'rb') as file:
