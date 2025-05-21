@@ -285,15 +285,13 @@ def print_metric(method, stage2, bisect_setting):
     for metric_key, metric in sub_metric_dict.items():
         print(f'{metric_key}) {metric}')
 
-    if method == 'bug2commit':
+    if method == 'bug2commit' or method == 'fbl_bert':
         vote_setting = bisect_setting.copy()
         del vote_setting['beta']
 
         sub_metric_dict = metric_dict[frozenset(vote_setting.items())]
         for metric_key, metric in sub_metric_dict.items():
             print(f'{metric_key}) {metric}')
-
-    
 
 # Print metrics in order (best > worst) for given method
 # Fix the setting for given 'fix' dictionary

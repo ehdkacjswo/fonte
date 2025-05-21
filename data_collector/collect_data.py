@@ -19,7 +19,6 @@ if __name__ == "__main__":
 
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
-
         """
         pid, vid = 'Closure', '62'
         if pid == 'Closure' and vid == '60':

@@ -20,17 +20,28 @@ def RQ(settings):
             new_setting=(settings[ind + 1][3] | {'stage2' : settings[ind + 1][1]}))
 
 if __name__ == "__main__":
+    """
     RQ1 = \
         [('Bug2Commit (Bug report)', 'precise', 'bug2commit', {'tracker': 'git', 'diff_tool': None, 'use_br' : False, 'beta': 0.1}), \
         ('Fonte', 'precise', 'fonte', {}), \
-        ('Bug2Commit (Bug report)', 'precise', 'bug2commit', {'tracker': 'git', 'diff_tool': None, 'use_br' : False, 'beta': 0.1}), \
+        ('FBL-BERT', 'precise', 'fbl_bert', {'beta' : 0.1}), \
         ('New Bug2Commit', 'precise', 'bug2commit', {'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'gumtree_id', 'use_br' : False, 'classify_id' : True, 'use_id' : True, 'beta': 0.1})]
+    """
+
+    RQ1 = \
+        [('New Bug2Commit', 'precise', 'bug2commit', {'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'gumtree_id', 'use_br' : False, 'classify_id' : True, 'use_id' : True, 'beta': 0.1}),\
+        ('Fonte', 'precise', 'fonte', {})]
 
     # Fine-grained
+    """
     RQ2 = \
         [('No Diff', 'precise', 'bug2commit', {'tracker': 'git', 'diff_tool': None, 'use_br' : False, 'beta': 0.1}), \
         ('Whole File', 'precise', 'bug2commit', {'tracker': 'git', 'diff_tool': 'file', 'diff_type': 'base', 'use_br' : False, 'beta': 0.1}), \
         ('Git Diff', 'precise', 'bug2commit', {'tracker': 'git', 'diff_tool': 'base', 'diff_type': 'base', 'use_br' : False, 'beta': 0.1}), \
+        ('GumTree Diff', 'precise', 'bug2commit', {'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'base', 'use_br' : False, 'beta': 0.1})]
+    """
+    RQ2 = \
+        [('Git Diff', 'precise', 'bug2commit', {'tracker': 'git', 'diff_tool': 'base', 'diff_type': 'base', 'use_br' : False, 'beta': 0.1}), \
         ('GumTree Diff', 'precise', 'bug2commit', {'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'base', 'use_br' : False, 'beta': 0.1})]
 
     RQ3_greedy = \
@@ -46,4 +57,4 @@ if __name__ == "__main__":
         [('No classifying', 'precise', 'bug2commit', {'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'gumtree_id', 'use_br' : False, 'classify_id' : False, 'use_id' : True, 'beta': 0.1}), \
         ('Classifying', 'precise', 'bug2commit', {'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'gumtree_id', 'use_br' : False, 'classify_id' : True, 'use_id' : True, 'beta': 0.1})]
     
-    RQ(RQ1)
+    RQ(RQ3_gumtree)

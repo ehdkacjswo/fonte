@@ -386,10 +386,10 @@ def compare_settings(org_method, new_method, org_setting, new_setting):
 
         # Bug2Commit uses extra setting (beta) for num_iter
         if metric_key == 'rank':
-            if org_method == 'bug2commit':
+            if org_method == 'bug2commit' or org_method == 'fbl_bert':
                 org_metric_setting.pop('beta', None)
             
-            if new_method == 'bug2commit':
+            if new_method == 'bug2commit' or new_method == 'fbl_bert':
                 new_metric_setting.pop('beta', None)
         
         org_metric_setting = frozenset(org_metric_setting.items())

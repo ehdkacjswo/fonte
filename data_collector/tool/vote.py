@@ -10,9 +10,6 @@ from vote_util import *
 from utils import *
 from BM25_Custom import *
 
-sys.path.append('/root/workspace/lib/')
-from experiment_utils import load_commit_history
-
 DIR_NAME = '/home/coinse/doam/fonte/tmp'
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core'
@@ -26,15 +23,31 @@ use_id_list = [True, False]
 # Bug2Commit with diff info
 # 특정 버전에 대하여 vote for commits와 동일한 방법으로 evolve relationship 구축하고
 # 해당 
-def vote_bug2commit(total_feature_dict, bug_feature_dict):
+def vote_bug2commit(pid, vid):
     log('vote', '[INFO] Bug2Commit voting')
     start_time = time.time()
+    fault_dir = os.path.join(CORE_DATA_DIR, f'{pid}-{vid}b')
+
+    # Load features
+    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'feature.pkl'), 'rb') as file:
+        total_feature_dict = pickle.load(file)
+    
+    with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'bug_feature.pkl'), 'rb') as file:
+        bug_feature_dict = pickle.load(file)
+        
     res_dict = dict()
 
     for stage2, setting_dict in total_feature_dict.items():
         res_dict[stage2] = dict()
+        depth_df = load_commit_history_org(fault_dir=fault_dir, tool='git', stage2=stage2)
+        depth_dict = dict(zip(depth_df["commit_hash"], depth_df["new_depth"]))
 
         for setting, commit_dict in setting_dict.items():
+            # Ignore settings with full file, greedy_id
+            if dict(setting).get('diff_type', None) == 'greedy_id' or dict(setting).get('diff_tool', None) == 'file':
+                continue
+
+            classify_id = dict(setting).get('classify_id', True)
             
             # Get corresponding encoded bug feature
             enc_bug_feature_dict = bug_feature_dict[stage2][setting]
@@ -57,19 +70,31 @@ def vote_bug2commit(total_feature_dict, bug_feature_dict):
                 
             # Start voting
             for new_setting in new_setting_list:
-                res_dict[stage2][new_setting] = {'all' : list()}
-                score_dict = res_dict[stage2][new_setting]
-
                 use_br = dict(new_setting)['use_br']
                 use_id = dict(new_setting).get('use_id', False)
+                score_dict = {'all' : list()}
 
                 for commit_type in commit_type_set:
+                    # Currently, not classifying id distinguishes identifiers and comments
+                    # Merge them into one ('diff')
+                    if not classify_id and commit_type == 'comment':
+                        continue
+
                     # Build BM25 vocabulary
                     # For the commits that don't have corresponding types, they are currently adding empty docuemnt
                     # 
                     bm25 = BM25_Encode()
                     for commit, feature_dict in commit_dict.items():
                         sub_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
+
+                        # Currently, not classifying id distinguishes identifiers and comments
+                        # Merge them into one ('diff')
+                        if not classify_id and commit_type == 'id':
+                            comment_feature_dict = feature_dict.get('comment', {'id' : Counter(), 'non_id' : Counter()})
+                            for code_type in ['id', 'non_id']:
+                                sub_feature_dict[code_type] = sub_feature_dict[code_type] + comment_feature_dict[code_type]
+                            
+                            commit_type = 'diff'
 
                         # Use full identifier or not
                         if use_id:
@@ -102,7 +127,18 @@ def vote_bug2commit(total_feature_dict, bug_feature_dict):
                                 score_dict[type_setting].append([commit, 0])
                                 continue
                             
-                            sub_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
+                            #sub_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
+
+                            # Currently, not classifying id distinguishes identifiers and comments
+                            # Merge them into one ('diff')
+                            if not classify_id and commit_type == 'diff':
+                                sub_feature_dict = feature_dict.get('id', {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
+                                comment_feature_dict = feature_dict.get('comment', {'id' : Counter(), 'non_id' : Counter()})
+                                for code_type in ['id', 'non_id']:
+                                    sub_feature_dict[code_type] = sub_feature_dict[code_type] + comment_feature_dict[code_type]
+                            
+                            else:
+                                sub_feature_dict = feature_dict.get(commit_type, {'id' : Counter(), 'non_id' : Counter()}) # How should I handle empty type
 
                             # Consider full identifiers or not
                             if use_id:
@@ -121,16 +157,19 @@ def vote_bug2commit(total_feature_dict, bug_feature_dict):
                                 score_dict['all'].append([commit, 1 - cosine(bug_vector, commit_vector)])
                                 score_dict[type_setting].append([commit, 1 - cosine(bug_vector, commit_vector)])
                 
-                # Format the result as DataFrame
-                for type_setting, score_rows in score_dict.items():
-                    vote_df = pd.DataFrame(data=score_rows, columns=["commit", "vote"])
-                    vote_df = vote_df.groupby("commit").sum()
-                    vote_df["rank"] = vote_df["vote"].rank(ascending=False, method="max")
-                    vote_df["rank"] = vote_df["rank"].astype(int)
-                    vote_df.sort_values(by="rank", inplace=True)
-                    score_dict[type_setting] = vote_df
+                for decay in [0.0, 0.1, 0.2, 0.3, 0.4]:
+                    decay_setting = frozenset((dict(new_setting) | {'decay' : decay}).items())
+                    res_dict[stage2][decay_setting] = {}
 
-                    #print(res_dict[stage2][new_setting][type_setting])
+                    # Format the result as DataFrame
+                    for type_setting, score_rows in score_dict.items():
+                        vote_df = pd.DataFrame(data=score_rows, columns=["commit", "vote"])
+                        vote_df = vote_df.groupby("commit").sum()
+                        vote_df["vote"] = vote_df["vote"] * np.power((1 - decay), vote_df.index.map(depth_dict))
+                        vote_df["rank"] = vote_df["vote"].rank(ascending=False, method="max")
+                        vote_df["rank"] = vote_df["rank"].astype(int)
+                        vote_df.sort_values(by="rank", inplace=True)
+                        res_dict[stage2][decay_setting][type_setting] = vote_df
 
     end_time = time.time()
     log('vote', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
@@ -145,11 +184,8 @@ def vote_fonte(pid, vid):
     res_dict = dict()
 
     for stage2 in ['skip', 'precise']:
-        #excluded = get_style_changes(fault_dir, tool='git', stage2=stage2)
-        excluded = get_style_change_commits(fault_dir, tool='git', stage2=stage2)
-            
         fonte_df = vote_for_commits_org(fault_dir, tool='git', formula='Ochiai', decay=0.1, \
-            voting_func=(lambda r: 1/r.max_rank), excluded=excluded, adjust_depth=True)
+            voting_func=(lambda r: 1/r.max_rank), stage2=stage2, adjust_depth=True)
         
         # Add ranking
         fonte_df["rank"] = fonte_df["vote"].rank(ascending=False, method="max")
@@ -202,24 +238,26 @@ def vote_fbl_bert(pid, vid):
     res_dict = dict()
 
     # load FBL-BERT ranking
-    df = pd.read_csv(result_path, sep="\t", header=None)[[2, 5]]
-    df.columns = ["commit", "vote"]
-    df["commit"] = df["commit"].apply(lambda x: x[:7])
-    
-    commit_df = load_commit_history(fault_dir, tool='git')
-    C_susp = commit_df.commit_hash.unique().tolist()
-    df = df[df['commit'].isin(C_susp)]
+    bert_df = pd.read_csv(result_path, sep="\t", header=None)[[2, 5]]
+    bert_df.columns = ["commit", "vote"]
+    bert_df["commit"] = bert_df["commit"].apply(lambda x: x[:7])
+    bert_df["vote"] = pd.to_numeric(bert_df["vote"], errors="coerce")
 
     for stage2 in ['skip', 'precise']:
-        excluded = get_style_change_commits(fault_dir, tool='git', stage2=stage2)
-        stage2_df = df[~df['commit'].isin(excluded)].copy()
-        
-        # Add ranking
-        stage2_df["rank"] = stage2_df["vote"].rank(ascending=False, method="max")
-        stage2_df["rank"] = stage2_df["rank"].astype(int)
-        stage2_df = stage2_df.set_index('commit')
+        commit_df = load_commit_history_org(fault_dir, tool='git', stage2=stage2)
+        commit_df = commit_df[commit_df["new_depth"].notna()]
+        commit_df = commit_df["commit_hash"].drop_duplicates().to_frame()
+        commit_df = commit_df.rename(columns={"commit_hash": "commit"})
 
-        res_dict[stage2] = stage2_df
+        merge_df = commit_df.merge(bert_df, on="commit", how="left")
+        merge_df["vote"] = merge_df["vote"].fillna(0).astype(float)
+        merge_df = merge_df[["commit", "vote"]].set_index("commit")
+
+        # Add ranking
+        merge_df["rank"] = merge_df["vote"].rank(ascending=False, method="max")
+        merge_df["rank"] = merge_df["rank"].astype(int)
+
+        res_dict[stage2] = merge_df
     
     #end_time = time.time()
     #log('vote', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')
@@ -241,6 +279,7 @@ def main(pid, vid):
     else:
         res_dict = dict()"""
 
+    """
     # Load feature & vocab for the project
     start_time = time.time()
 
@@ -249,6 +288,7 @@ def main(pid, vid):
     
     with open(os.path.join(DIFF_DATA_DIR, f'{pid}-{vid}b', 'bug_feature.pkl'), 'rb') as file:
         bug_feature_dict = pickle.load(file)
+    """
     
     """print('Feature')
     for stage2, setting_dict in feature_dict.items():
@@ -258,9 +298,10 @@ def main(pid, vid):
             print(json.dumps(sub_dict, indent=4))"""
 
     # Bug2Commit voting
-    bug2commit_vote = vote_bug2commit(feature_dict, bug_feature_dict)
+    bug2commit_vote = vote_bug2commit(pid, vid)
 
-    """print('Vote')
+    """
+    print('Vote')
     for stage2, setting_dict in bug2commit_vote.items():
         print(f'Stage2) {stage2}')
         for setting, sub_dict in setting_dict.items():
@@ -271,7 +312,6 @@ def main(pid, vid):
             #    print(bbb)
             #print(json.dumps(sub_dict, indent=4))
     """
-
     
     with open(os.path.join(savedir, f'bug2commit.pkl'), 'wb') as file:
         pickle.dump(bug2commit_vote, file)
@@ -281,9 +321,11 @@ def main(pid, vid):
     with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
         pickle.dump(fonte_vote, file)
 
+    """
     # Ensemble voting
     with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
         pickle.dump(vote_ensemble(bug2commit_vote, fonte_vote), file)
+    """
     
     # FBL_BERT voting
     with open(os.path.join(savedir, 'fbl_bert.pkl'), 'wb') as file:

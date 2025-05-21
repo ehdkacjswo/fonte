@@ -243,7 +243,7 @@ def BIC_info(pid='Jsoup', vid='46'):
 # method : fonte, bug2commit, ensemble
 # mode : all, project
 # metric : mean rank, mean number of iterations
-def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble', 'bert'], mode: Literal['all', 'project']):
+def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble', 'fbl_bert'], mode: Literal['all', 'project']):
     savepath = f"/root/workspace/analysis/data/{method}/metric_{mode}.pkl"
 
     # If file already exists, read it
@@ -267,7 +267,7 @@ def get_metric_dict(method: Literal['fonte', 'bug2commit', 'ensemble', 'bert'], 
             vote_dict = pickle.load(file)
         
         for stage2, value in vote_dict.items():
-            if method == 'fonte': # Fonte doesn't have extra setting
+            if method == 'fonte' or method == 'fbl_bert': # Fonte doesn't have extra setting
                 rank = value['rank'].get(BIC)
                 setting_key = frozenset({'stage2' : stage2}.items())
 
