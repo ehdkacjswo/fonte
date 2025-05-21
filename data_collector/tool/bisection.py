@@ -97,7 +97,7 @@ def main(pid, vid):
         
         
         # FBL-BERT
-        print(fbl_bert_df["vote"].get(BIC))
+        #print(fbl_bert_df["vote"].get(BIC))
         if float(fbl_bert_df["vote"].get(BIC, 0)) == 0:
             log('bisection', f'[INFO] BIC({BIC}) has 0 FBL-BERT score for stage2({stage2})')
 
