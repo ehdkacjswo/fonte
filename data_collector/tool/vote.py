@@ -298,7 +298,7 @@ def main(pid, vid):
             print(json.dumps(sub_dict, indent=4))"""
 
     # Bug2Commit voting
-    #bug2commit_vote = vote_bug2commit(pid, vid)
+    bug2commit_vote = vote_bug2commit(pid, vid)
 
     """
     print('Vote')
@@ -313,8 +313,8 @@ def main(pid, vid):
             #print(json.dumps(sub_dict, indent=4))
     """
     
-    #with open(os.path.join(savedir, f'bug2commit.pkl'), 'wb') as file:
-    #    pickle.dump(bug2commit_vote, file)
+    with open(os.path.join(savedir, f'bug2commit.pkl'), 'wb') as file:
+        pickle.dump(bug2commit_vote, file)
 
     # Fonte voting
     fonte_vote = vote_fonte(pid, vid)
@@ -328,5 +328,5 @@ def main(pid, vid):
     """
     
     # FBL_BERT voting
-    #with open(os.path.join(savedir, 'fbl_bert.pkl'), 'wb') as file:
-    #    pickle.dump(vote_fbl_bert(pid, vid), file)
+    with open(os.path.join(savedir, 'fbl_bert.pkl'), 'wb') as file:
+        pickle.dump(vote_fbl_bert(pid, vid), file)

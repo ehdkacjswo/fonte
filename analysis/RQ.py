@@ -78,10 +78,9 @@ def RQ1_():
         plt.close()
     
     # Score distribution of Jsoup-24b (Ranked first, iteration 2 -> 5)
-    GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+    all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
+    GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
     
-    
-
     project, pid, vid = 'Jsoup-24b', 'Jsoup', '24'
     BIC = GT.set_index(["pid", "vid"]).loc[(pid, vid), "commit"]
 
@@ -134,6 +133,15 @@ def RQ1_():
         plt.savefig(os.path.join(PLT_DIR, f"RQ1_score_{project}_{'fonte' if ind == 0 else 'bug2commit'}.png"))
         plt.close()
 
+    # Number of votes per commit
+    for _, row in tqdm(GT.iterrows()):
+        pid, vid, BIC = row.pid, row.vid, row.commit
+
+        with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'fonte.pkl'), 'rb') as file:
+            metric_dict = pickle.load(file)
+        
+        fonte_df = metric_dict['precise']
+        
 
 
 def RQ(settings):
