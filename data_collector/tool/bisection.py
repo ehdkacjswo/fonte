@@ -79,7 +79,7 @@ def main(pid, vid):
                 ensemble_iter[stage2][setting] = weighted_bisection(C_BIC, votes, BIC)
             """
         
-        # Bug2Commit 
+        """# Bug2Commit 
         for setting, bug2commit_df in sub_dict.items():
             #print(bug2commit_df['all'])
             if float(bug2commit_df['all'].loc[BIC, "vote"]) == 0:
@@ -111,7 +111,7 @@ def main(pid, vid):
 
         for beta in [0.2, 0.4, 0.6, 0.8, 1.0]:
             new_votes = [vote if vote > 0 else beta * min_vote for vote in votes]
-            fbl_bert_iter[stage2][frozenset({'beta' : beta}.items())] = weighted_bisection(C_BIC, new_votes, BIC)
+            fbl_bert_iter[stage2][frozenset({'beta' : beta}.items())] = weighted_bisection(C_BIC, new_votes, BIC)"""
         
     savedir = os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'iteration')
     os.makedirs(savedir, exist_ok=True)
@@ -119,14 +119,14 @@ def main(pid, vid):
     with open(os.path.join(savedir, 'fonte.pkl'), 'wb') as file:
         pickle.dump(fonte_iter, file)
     
-    with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
-        pickle.dump(bug2commit_iter, file)
+    #with open(os.path.join(savedir, 'bug2commit.pkl'), 'wb') as file:
+    #    pickle.dump(bug2commit_iter, file)
     
     #with open(os.path.join(savedir, 'ensemble.pkl'), 'wb') as file:
     #    pickle.dump(ensemble_iter, file)
     
-    with open(os.path.join(savedir, 'fbl_bert.pkl'), 'wb') as file:
-        pickle.dump(fbl_bert_iter, file)
+    #with open(os.path.join(savedir, 'fbl_bert.pkl'), 'wb') as file:
+    #    pickle.dump(fbl_bert_iter, file)
     
     end_time = time.time()
     log('bisection', f'[INFO] Elapsed time : {time_to_str(start_time, end_time)}')

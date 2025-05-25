@@ -1,5 +1,6 @@
 import os, sys
 import pandas as pd
+import numpy as np
 
 sys.path.append('/root/workspace/lib/')
 from experiment_utils import get_sbfl_scores_from_coverage
@@ -93,11 +94,11 @@ def vote_for_commits_org(fault_dir, tool, formula, decay, voting_func, \
 
         # No score for style change commit
         for commit, depth in zip(com_df.commit_hash, com_df.new_depth):
-            if depth is not None:
-                vote_rows.append([commit, vote * ((1-decay) ** depth)])
+            if not np.isnan(depth):
+                vote_rows.append([commit, vote * ((1-decay) ** depth), 1])
             
-    vote_df = pd.DataFrame(data=vote_rows, columns=["commit", "vote"])
-    agg_vote_df = vote_df.groupby("commit").sum("vote")
+    vote_df = pd.DataFrame(data=vote_rows, columns=["commit", "vote", "num_vote"])
+    agg_vote_df = vote_df.groupby("commit").sum()
     agg_vote_df.sort_values(by="vote", ascending=False, inplace=True)
     return agg_vote_df
 
@@ -183,11 +184,11 @@ def vote_for_commits_new(fault_dir, tool, formula, decay, voting_func, \
 
         # No score for style change commit
         for commit, depth in zip(com_df.commit_hash, com_df.new_depth):
-            if depth is not None:
-                vote_rows.append([commit, vote * ((1-decay) ** depth)])
+            if not np.isnan(depth):
+                vote_rows.append([commit, vote * ((1-decay) ** depth), 1])
             
-    vote_df = pd.DataFrame(data=vote_rows, columns=["commit", "vote"])
-    agg_vote_df = vote_df.groupby("commit").sum("vote")
+    vote_df = pd.DataFrame(data=vote_rows, columns=["commit", "vote", "num_vote"])
+    agg_vote_df = vote_df.groupby("commit").sum()
     agg_vote_df.sort_values(by="vote", ascending=False, inplace=True)
     return agg_vote_df
 
