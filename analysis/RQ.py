@@ -4,6 +4,8 @@ from scipy.stats import wilcoxon
 
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.linear_model import LinearRegression
 
 sys.path.append('/root/workspace/analysis/lib/')
 #from util import *
@@ -107,6 +109,7 @@ def RQ1_():
     
     bug2commit_setting = {'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'gumtree_id', \
         'use_br' : False, 'classify_id' : True, 'use_id' : True, 'decay': 0.1}
+
     bug2commit_df = metric_dict['precise'][frozenset(bug2commit_setting.items())]['all']
 
     bug2commit_metric_dict = get_metric_dict(method='bug2commit', mode='project')
@@ -134,14 +137,68 @@ def RQ1_():
         plt.close()
 
     # Number of votes per commit
+    vote_dict = {'fonte' : {'all' : list(), 'BIC' : list()}, 'bug2commit' : {'all' : list(), 'BIC' : list()}}
+    num_vote_dict = {'all' : list(), 'BIC' : list()}
+    BIC_idx = list()
+
     for _, row in tqdm(GT.iterrows()):
         pid, vid, BIC = row.pid, row.vid, row.commit
 
+        # Load Fonte & Bug2Commit data
         with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'fonte.pkl'), 'rb') as file:
             metric_dict = pickle.load(file)
-        
         fonte_df = metric_dict['precise']
-        
+
+        with open(os.path.join(RESULT_DATA_DIR, f'{pid}-{vid}b', 'vote', 'bug2commit.pkl'), 'rb') as file:
+            metric_dict = pickle.load(file)
+        bug2commit_df = metric_dict['precise'][frozenset((bug2commit_setting | {'decay' : 0.0}).items())]['all']
+
+        # Get vote, num_vote data
+        for commit, commit_df in fonte_df.iterrows():
+            vote_dict['fonte']['all'].append(float(commit_df['org_vote']))
+            vote_dict['bug2commit']['all'].append(float(bug2commit_df.loc[commit, 'vote']))
+            num_vote_dict['all'].append(int(commit_df['num_vote']))
+
+            if commit == BIC:
+                vote_dict['fonte']['BIC'].append(float(commit_df['org_vote']))
+                vote_dict['bug2commit']['BIC'].append(float(bug2commit_df.loc[commit, 'vote']))
+                num_vote_dict['BIC'].append(int(commit_df['num_vote']))
+                BIC_idx.append(len(vote_dict['fonte']['all']) - 1)
+    
+    for method in ['fonte', 'bug2commit']:
+        x, y = np.array(num_vote_dict['all']), np.array(vote_dict[method]['all'])
+
+        highlight = np.zeros_like(x, dtype=bool)
+        highlight[BIC_idx] = True
+
+        model = LinearRegression(fit_intercept=False)
+        model.fit(x.reshape(-1, 1), y)
+        a = model.coef_[0]
+
+        # Generate line for y = ax
+        x_line = np.linspace(x.min(), x.max(), 100)
+        y_line = a * x_line
+
+        # Plot
+        plt.figure(figsize=(8, 6))
+
+        # Plot normal points
+        plt.scatter(x[~highlight], y[~highlight], color='gray', label='Normal', s=80)
+
+        # Plot highlighted points
+        plt.scatter(x[highlight], y[highlight], color='red', label='Highlighted', s=80)
+
+        # Fitted line
+        plt.plot(x_line, y_line, color='blue', linewidth=2, label=f'$y = {a:.2f}x$')
+
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.title('Dotplot with Highlighted Indices and y = ax Fit')
+        #plt.legend()
+        #plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(os.path.join(PLT_DIR, f"RQ1_num_to_vote_{method}.png"))
+        plt.close()
 
 
 def RQ(settings):

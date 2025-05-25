@@ -56,6 +56,6 @@ if __name__ == "__main__":
         # For practical use, execute encode first
         #encode_bug.main(pid, vid)
         vote.main(pid, vid)
-        bisection.main(pid, vid)
+        #bisection.main(pid, vid)
 
         #break
