@@ -1,7 +1,8 @@
-import sys
+import sys, itertools
 import pandas as pd
-from scipy.stats import wilcoxon
+from scipy.stats import wilcoxon, friedmanchisquare
 from collections import Counter
+import matplotlib.pyplot as plt
 
 sys.path.append('/root/workspace/lib/')
 from experiment_utils import load_BIC_GT
@@ -47,36 +48,50 @@ def precise_diff():
     res_dict = dict()
 
     # Aggregate token share ratio data
-    for diff_tool in ['file', 'base', 'gumtree']:
+    for diff_tool in ['base', 'gumtree']:
         res_dict[diff_tool] = dict()
-        share_ratio_dict = token_share_ratio(stage2='skip', \
+        share_ratio_dict, _ = token_share_ratio(stage2='precise', \
             feature_setting={'tracker': 'git', 'diff_tool' : diff_tool, 'diff_type' : 'base'})
 
         for project, bug_type_dict in share_ratio_dict.items():
             for bug_type, commit_type_dict in bug_type_dict.items():
+                """
+                # Relatvie ratio & rank
                 res_dict[diff_tool].setdefault(bug_type, {'rank' : list(), 'rel_ratio' : list()})
-                    
+
                 res_dict[diff_tool][bug_type]['rank'].append(1 / commit_type_dict['diff']['non_id']['rank'])
                 res_dict[diff_tool][bug_type]['rel_ratio'].append(\
                     commit_type_dict['diff']['non_id']['BIC_ratio'] / commit_type_dict['diff']['non_id']['avg_ratio'] \
                     if commit_type_dict['diff']['non_id']['avg_ratio'] > 0 else 1)
+                """
+
+                res_dict[diff_tool].setdefault(bug_type, list())
+                res_dict[diff_tool][bug_type].append(commit_type_dict['diff']['non_id']['BIC'])
     
     # Compare diffencing tools
-    for (org, new) in [('file', 'base'), ('base', 'gumtree')]:
-        print(f'Comparing {org} and {new}')
-        org_dict, new_dict = res_dict[org], res_dict[new]
-        
-        for bug_type in org_dict.keys():
-            print(f'Bug) {bug_type}')
+    org_dict, new_dict = res_dict['base'], res_dict['gumtree']
+    
+    for bug_type in org_dict.keys():
+        print(f'Bug) {bug_type}')
 
-            org_metric_dict, new_metric_dict = org_dict[bug_type], new_dict[bug_type]
+        """
+        # Relatvie ratio & rank
+        org_metric_dict, new_metric_dict = org_dict[bug_type], new_dict[bug_type]
 
-            print(f"Org_MRR : {sum(org_metric_dict['rank']) / len(org_metric_dict['rank'])}, New_MRR : {sum(new_metric_dict['rank']) / len(new_metric_dict['rank'])}")
-            print(f"Org_rel_ratio : {sum(org_metric_dict['rel_ratio']) / len(org_metric_dict['rel_ratio'])}, New_rel_ratio : {sum(new_metric_dict['rel_ratio']) / len(new_metric_dict['rel_ratio'])}")
+        print(f"Org_MRR : {sum(org_metric_dict['rank']) / len(org_metric_dict['rank'])}, New_MRR : {sum(new_metric_dict['rank']) / len(new_metric_dict['rank'])}")
+        print(f"Org_rel_ratio : {sum(org_metric_dict['rel_ratio']) / len(org_metric_dict['rel_ratio'])}, New_rel_ratio : {sum(new_metric_dict['rel_ratio']) / len(new_metric_dict['rel_ratio'])}")
 
-            _, ratio_p = wilcoxon(new_metric_dict['rel_ratio'], org_metric_dict['rel_ratio'], alternative='greater')
-            _, rank_p = wilcoxon(new_metric_dict['rank'], org_metric_dict['rank'], alternative='greater')
-            print(f'Ratio WSR: {ratio_p}, Rank WSR : {rank_p}')
+        _, ratio_p = wilcoxon(new_metric_dict['rel_ratio'], org_metric_dict['rel_ratio'], alternative='greater')
+        _, rank_p = wilcoxon(new_metric_dict['rank'], org_metric_dict['rank'], alternative='greater')
+        print(f'Ratio WSR: {ratio_p}, Rank WSR : {rank_p}')
+        """
+
+        org_share_list, new_share_list = org_dict[bug_type], new_dict[bug_type]
+        print(f'Share ratio on BIC) {sum(org_share_list) / len(org_share_list)} -> {sum(new_share_list) / len(new_share_list)}')
+
+        _, better_p = wilcoxon(new_share_list, org_share_list, alternative='greater')
+        _, worse_p = wilcoxon(org_share_list, new_share_list, alternative='greater')
+        print(f'WSR) better : {better_p}, worse : {worse_p}')
 
 # Check token share ratio change by ignoring style change
 def style_change():
@@ -123,7 +138,7 @@ def style_change():
 # Compare token share ratio change when using full identifiers
 def use_id():
     share_ratio_dict = token_share_ratio(stage2='precise', \
-        feature_setting={'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'classify_id' : False})
+        feature_setting={'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'classify_id' : True})
     res_dict = dict()
 
     # Aggregate token share ratio data
@@ -235,8 +250,9 @@ def use_id_proj(pid='Jsoup', vid='15'):
 def classify_id():
     feature_setting={'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'classify_id' : True}
     
-    # Count distribution of identifiers
-    id_dist_dict = {'class' : 0, 'method' : 0, 'variable' : 0}
+    # Count distribution of identifiers (per commit)
+    id_type_list = ['class', 'method', 'variable', 'comment']
+    id_dist_dict = {id_type : list() for id_type in id_type_list}
 
     all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
@@ -247,37 +263,64 @@ def classify_id():
             feature_dict = pickle.load(file)
 
         # Count tokens of identifiers
-        id_cnt_dict = {'class' : 0, 'method' : 0, 'variable' : 0}
-
         for commit, feature_type_dict in feature_dict['precise'][frozenset(feature_setting.items())].items():
-            for id_type in id_cnt_dict.keys():
-                feature = feature_type_dict[id_type]
-                id_cnt_dict[id_type] += sum((feature['id'] + feature['non_id']).values())
+            id_cnt_dict = {id_type : sum(feature_type_dict[id_type]['non_id'].values()) for id_type in id_dist_dict.keys()}
+            total_id_token = sum(id_cnt_dict.values())
 
-        total_id_token = sum(id_cnt_dict.values())
-        for id_type in id_dist_dict.keys():
-            id_dist_dict[id_type] += id_cnt_dict[id_type] / total_id_token if total_id_token > 0 else 1 / 3
+            for id_type in id_type_list:
+                id_dist_dict[id_type].append(id_cnt_dict[id_type] / total_id_token if total_id_token > 0 else 1 / 4)
     
+    print(f'Total commits) {len(id_dist_dict["class"])}')
     print('Identifer token proportion')
-    for id_type, id_dist in id_dist_dict.items():
-        print(f'{id_type}) {id_dist / len(GT):.3f}')
+    _, p = friedmanchisquare(id_dist_dict['class'], id_dist_dict['method'], id_dist_dict['variable'], id_dist_dict['comment'])
+    print(f'Friedman test) {p}')
+
+    for type1, type2 in itertools.permutations(id_type_list, 2):
+        _, p = wilcoxon(id_dist_dict[type1], id_dist_dict[type2], alternative='greater')
+        if p < 0.05:
+            print(f'{type1} > {type2} ({p})')
+    
+    print('Mean token distribution)')
+    for id_type in id_type_list:
+        print(f'{id_type}) {sum(id_dist_dict[id_type]) / len(id_dist_dict[id_type])}')
+    
+    plt.figure()
+    plt.boxplot([id_dist_dict[id_type] for id_type in id_type_list], tick_labels=id_type_list)
+    #plt.title(f"Code element ")
+    plt.xlabel("Code Element Type")
+    plt.ylabel("Relative Token Frequency")
+    plt.grid(True)
+    plt.savefig('/root/workspace/analysis/plot/id_dist.png')
+    plt.show()
+    plt.close()  # Close the figure to free memory
+    
+    #for id_type, id_dist in id_dist_dict.items():
+    #    print(f'{id_type}) {id_dist / len(GT):.3f}')
     
     # Aggregate token share ratio data
+    print('Token share ratio')
     res_dict = dict()
-    share_ratio_dict = token_share_ratio(stage2='precise', feature_setting=feature_setting)
+    share_ratio_dict, _ = token_share_ratio(stage2='precise', feature_setting=feature_setting)
     
     for project, bug_type_dict in share_ratio_dict.items():
         for bug_type, commit_type_dict in bug_type_dict.items():
+            #print(f'Bug type) {bug_type}')
             res_dict.setdefault(bug_type, dict())
 
-            for commit_type in ['class', 'method', 'variable']:
+            for commit_type in id_type_list:
+                """
                 res_dict[bug_type].setdefault(commit_type, {'rank' : list(), 'rel_ratio' : list()})
 
                 res_dict[bug_type][commit_type]['rank'].append(1 / commit_type_dict[commit_type]['all']['rank'])
                 res_dict[bug_type][commit_type]['rel_ratio'].append(\
                     commit_type_dict[commit_type]['all']['BIC_ratio'] / commit_type_dict[commit_type]['all']['avg_ratio'] \
                     if commit_type_dict[commit_type]['all']['avg_ratio'] > 0 else 1)
-    
+                """
+                res_dict[bug_type].setdefault(commit_type, {'total' : list(), 'BIC' : list()})
+                res_dict[bug_type][commit_type]['total'] += commit_type_dict[commit_type]['non_id']['total']
+                res_dict[bug_type][commit_type]['BIC'].append(commit_type_dict[commit_type]['non_id']['BIC'])
+
+    """
     # Print metric for each bug types
     for bug_type, commit_type_dict in res_dict.items():
         print(f'\nBug) {bug_type}')
@@ -295,13 +338,29 @@ def classify_id():
                 print(f'[{metric_type}] Kruskal P-value) {kruskal_p:.3f}')
             except:
                 print(f'Identical {metric}?')
-        
+    """
 
+    for bug_type, id_type_dict in res_dict.items():
+        print(f'Bug type) {bug_type}')
+
+        for id_type, sub_ratio_dict in id_type_dict.items():
+            print(f'ID_type) {id_type}')
+            print(f'Total) {sum(sub_ratio_dict["total"]) / len(sub_ratio_dict["total"])}, BIC) {sum(sub_ratio_dict["BIC"]) / len(sub_ratio_dict["BIC"])}')
+        
+        for commit_type in ['total', 'BIC']:
+            print(f'Commit type {commit_type}')
+            _, p = friedmanchisquare(id_type_dict['class'][commit_type], id_type_dict['method'][commit_type], id_type_dict['variable'][commit_type], id_type_dict['comment'][commit_type])
+            print(f'Friedman test) {p}')
+            
+            for type1, type2 in itertools.permutations(id_type_list, 2):
+                _, p = wilcoxon(id_type_dict[type1][commit_type], id_type_dict[type2][commit_type], alternative='greater')
+                if p < 0.05:
+                    print(f'{type1} > {type2} ({p})')
 
 if __name__ == "__main__":
     #use_file()
-    #precise_diff()
+    precise_diff()
     #style_change()
     #use_id()
-    use_id_proj(pid='Csv', vid='12')
+    #use_id_proj(pid='Csv', vid='12')
     #classify_id()

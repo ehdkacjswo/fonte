@@ -210,7 +210,7 @@ def token_share_ratio_proj(pid, vid, stage2, feature_setting, BIC=None):
                     res_dict[bug_type][commit_type][id_type]['BIC_ratio'] = BIC_token_ratio
                     res_dict[bug_type][commit_type][id_type]['avg_ratio'] =  sum(total_token_ratio) / len(total_token_ratio)
     
-    return res_dict
+    return token_ratio_dict, res_dict
 
 # Check the number of each identifiers
 # Doesn't work for all_sep (all_sep voting is not working correctly too)
@@ -219,15 +219,16 @@ def token_share_ratio_proj(pid, vid, stage2, feature_setting, BIC=None):
 # {id / non_id / all : 
 # rank / BIC_ratio / rel_BIC_ratio} } } }
 def token_share_ratio(stage2, feature_setting):
-    res_dict = dict()
+    ratio_dict, metric_dict = dict(), dict()
     all_GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
     GT = all_GT[all_GT['provenance'].str.contains("Manual", na=False)]
     
     for _, row in tqdm(GT.iterrows()):
         pid, vid, BIC = row.pid, row.vid, row.commit
-        res_dict[f'{pid}-{vid}b'] = token_share_ratio_proj(pid=pid, vid=vid, stage2=stage2, feature_setting=feature_setting, BIC=BIC)
+        ratio_dict[f'{pid}-{vid}b'], metric_dict[f'{pid}-{vid}b'] = \
+            token_share_ratio_proj(pid=pid, vid=vid, stage2=stage2, feature_setting=feature_setting, BIC=BIC)
     
-    return res_dict
+    return ratio_dict, metric_dict
 
 def BIC_info(pid='Jsoup', vid='46'):
     GT = load_BIC_GT("/root/workspace/data/Defects4J/BIC_dataset")
