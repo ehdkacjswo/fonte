@@ -165,7 +165,7 @@ def token_share_ratio_proj(pid, vid, stage2, feature_setting, BIC=None):
 
                 # Initialize token ratio dictionaries
                 token_ratio_dict[bug_type].setdefault(commit_type, \
-                    {'id' : {'total' : list()}, 'non_id' : {'total' : list()}, 'all' : {'total' : list()}})
+                    {'id' : {'total' : dict()}, 'non_id' : {'total' : dict()}, 'all' : {'total' : dict()}})
                 
                 # Count total, common identifiers
                 for id_type in ['id', 'non_id', 'all']:
@@ -186,7 +186,7 @@ def token_share_ratio_proj(pid, vid, stage2, feature_setting, BIC=None):
                     # Ratio of common identifiers
                     token_ratio = common_token_cnt / total_token_cnt if total_token_cnt > 0 else 0
 
-                    token_ratio_dict[bug_type][commit_type][id_type]['total'].append(token_ratio)
+                    token_ratio_dict[bug_type][commit_type][id_type]['total'][commit] = token_ratio
                     if commit == BIC:
                         token_ratio_dict[bug_type][commit_type][id_type]['BIC'] = token_ratio
         
@@ -199,7 +199,7 @@ def token_share_ratio_proj(pid, vid, stage2, feature_setting, BIC=None):
                 
                 for id_type, sub_ratio_dict in id_type_dict.items():
                     res_dict[bug_type][commit_type][id_type] = dict()
-                    total_token_ratio, BIC_token_ratio = sub_ratio_dict['total'], sub_ratio_dict['BIC']
+                    total_token_ratio, BIC_token_ratio = list(sub_ratio_dict['total'].values()), sub_ratio_dict['BIC']
                     total_token_ratio.sort(reverse=True)
 
                     # Rank of common token ratio
@@ -208,7 +208,7 @@ def token_share_ratio_proj(pid, vid, stage2, feature_setting, BIC=None):
 
                     # Common token ratio
                     res_dict[bug_type][commit_type][id_type]['BIC_ratio'] = BIC_token_ratio
-                    res_dict[bug_type][commit_type][id_type]['avg_ratio'] =  sum(total_token_ratio) / len(total_token_ratio)
+                    res_dict[bug_type][commit_type][id_type]['avg_ratio'] = sum(total_token_ratio) / len(total_token_ratio)
     
     return token_ratio_dict, res_dict
 
@@ -374,5 +374,5 @@ def metrics_to_csv(method: Literal['fonte', 'bug2commit', 'ensemble']):
                     writer.writerow([project] + setting_row + ['num_iter', sub_dict['num_iter']])
 
 if __name__ == "__main__":
-    build_html(pid='Csv', vid='12', stage2='precise', intvl_setting=frozenset({'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id'}.items()))
+    build_html(pid='Jsoup', vid='9', stage2='skip', intvl_setting=frozenset({'tracker': 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id'}.items()))
     #BIC_info()

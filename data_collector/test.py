@@ -1,7 +1,20 @@
+import io
+import json
+import logging
+import os
+import re
+import argparse
+import subprocess
+import sys
 import pickle
-import os, sys
+import time
+
 import pandas as pd
 
+sys.path.append('/root/workspace/data_collector/lib/')
+from utils import log, time_to_str, CustomInterval
+
+CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
 DIFF_DATA_DIR = '/root/workspace/data/Defects4J/diff'
 CORE_DATA_DIR = '/root/workspace/data/Defects4J/core/'
 
@@ -51,4 +64,14 @@ def find_rename():
                         continue"""
 
 if __name__ == "__main__":
-    find_rename()
+    pid, vid = 'Jsoup', '9'
+    # Save the parsed result
+    savedir = f'/root/workspace/data/Defects4J/diff/{pid}-{vid}b'
+    os.makedirs(savedir, exist_ok=True)
+
+    #print(res_dict)
+
+    with open(os.path.join(savedir, 'track_intvl.pkl'), 'rb') as file:
+        res_dict = pickle.load(file)
+    
+    print(res_dict)

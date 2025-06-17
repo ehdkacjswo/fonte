@@ -449,7 +449,7 @@ def compare_settings(org_method, new_method, org_setting, new_setting):
         cost_saving = [a - b for a, b in zip(org_list, new_list)]
 
         plt.figure(figsize=(9, 2))
-        plt.title(f"Improved {metric_key}")
+        #plt.title(f"Improved {metric_key}")
 
         cost_saving = list(reversed(sorted(cost_saving)))
 
@@ -519,19 +519,24 @@ def cmp_id_type(stage2='precise', \
         vote_data = vote_dict[stage2][frozenset((feature_setting | vote_setting).items())]
 
 if __name__ == "__main__":
-    # Compare greedy_id using
-    org_setting = frozenset({'stage2' : 'precise', 'tracker' : 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'greedy_id', 'adddel' : 'add', 'use_id' : True, 'use_br' : False, 'beta' : 0.1}.items())
-    new_setting = frozenset({'stage2' : 'precise', 'tracker' : 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'adddel' : 'add', 'use_id' : True, 'classify_id' : True, 'use_br' : False, 'beta' : 0.1}.items())
-    compare_settings('bug2commit', 'bug2commit', org_setting, new_setting)
-
-    # Compare GumTree ID using
-    #org_setting = frozenset({'stage2' : 'precise', 'tracker' : 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'adddel' : 'all_uni', 'use_id' : False, 'classify_id' : True, 'use_br' : False, 'beta' : 0.1}.items())
-    #new_setting = frozenset({'stage2' : 'precise', 'tracker' : 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'adddel' : 'all_uni', 'use_id' : True, 'classify_id' : True, 'use_br' : False, 'beta' : 0.1}.items())
+    # Compare fine-grained
+    #org_setting = {'stage2' : 'precise', 'tracker': 'git', 'diff_tool': 'base', 'diff_type': 'gumtree_id', 'use_br' : False, 'classify_id' : True, 'use_id' : True, 'beta': 0.2, 'decay': 0.1}
+    #new_setting = {'stage2' : 'precise', 'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'gumtree_id', 'use_br' : False, 'classify_id' : True, 'use_id' : True, 'beta': 0.2, 'decay': 0.1}
     #compare_settings('bug2commit', 'bug2commit', org_setting, new_setting)
 
+    # Compare greedy_id using
+    #org_setting = frozenset({'stage2' : 'precise', 'tracker' : 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'greedy_id', 'adddel' : 'add', 'use_id' : True, 'use_br' : False, 'beta' : 0.1}.items())
+    #new_setting = frozenset({'stage2' : 'precise', 'tracker' : 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'adddel' : 'add', 'use_id' : True, 'classify_id' : True, 'use_br' : False, 'beta' : 0.1}.items())
+    #compare_settings('bug2commit', 'bug2commit', org_setting, new_setting)
+
+    # Compare GumTree ID using
+    org_setting = {'stage2' : 'precise', 'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'gumtree_id', 'use_br' : False, 'classify_id' : True, 'use_id' : False, 'beta': 0.2, 'decay': 0.1}
+    new_setting = {'stage2' : 'precise', 'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'gumtree_id', 'use_br' : False, 'classify_id' : True, 'use_id' : True, 'beta': 0.2, 'decay': 0.1}
+    compare_settings('bug2commit', 'bug2commit', org_setting, new_setting)
+
     # Compare GumTree classification
-    #org_setting = frozenset({'stage2' : 'precise', 'tracker' : 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'adddel' : 'all_uni', 'use_id' : True, 'classify_id' : False, 'use_br' : False, 'beta' : 0.1}.items())
-    #new_setting = frozenset({'stage2' : 'precise', 'tracker' : 'git', 'diff_tool' : 'gumtree', 'diff_type' : 'gumtree_id', 'adddel' : 'all_uni', 'use_id' : True, 'classify_id' : True, 'use_br' : False, 'beta' : 0.1}.items())
+    #org_setting = {'stage2' : 'precise', 'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'gumtree_id', 'use_br' : False, 'classify_id' : False, 'use_id' : True, 'beta': 0.2, 'decay': 0.1}
+    #new_setting = {'stage2' : 'precise', 'tracker': 'git', 'diff_tool': 'gumtree', 'diff_type': 'gumtree_id', 'use_br' : False, 'classify_id' : True, 'use_id' : True, 'beta': 0.2, 'decay': 0.1}
     #compare_settings('bug2commit', 'bug2commit', org_setting, new_setting)
 
     #org_setting = frozenset({'stage2' : 'precise'}.items())

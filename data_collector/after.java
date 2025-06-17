@@ -1,233 +1,83 @@
-<html><head><title>Highlighted Intervals</title></head><body>
-<h2>Commit: 935cab0(BIC)</h2>
-<h3>addition:</h3><ul>
-<li><strong>src/main/java/org/jsoup/nodes/Entities.java:</strong><br>
-<p>
-</p></li>
-<p>        StringBuffer accum = new <span style="color: red; font-weight: bold;">StringBuffer</span>(string.length()); <span style="color: blue; font-weight: bold;">// pity matcher can&#x27;t use stringbuilder, avoid syncs</span>
+package org.jsoup.nodes;
 
-</p></li>
-<p>            int charval = -1;
-</p></li>
-<p>            if (<span style="color: purple; font-weight: bold;">num</span> != null) {
-                try {
-</p></li>
-<p>                    charval = Integer.valueOf(<span style="color: purple; font-weight: bold;">num</span>, <span style="color: purple; font-weight: bold;">base</span>);
-                } catch (NumberFormatException e) {
-</p></li>
-<p>            } else {
-</p></li>
-<p>                if (<span style="color: purple; font-weight: bold;">full</span>.<span style="color: green; font-weight: bold;">containsKey</span>(<span style="color: purple; font-weight: bold;">name</span>))
-                    <span style="color: purple; font-weight: bold;">charval</span> = <span style="color: purple; font-weight: bold;">full</span>.<span style="color: green; font-weight: bold;">get</span>(<span style="color: purple; font-weight: bold;">name</span>);
-            }
-</p></li>
-<p>                String <span style="color: purple; font-weight: bold;">c</span> = <span style="color: purple; font-weight: bold;">Character</span>.<span style="color: green; font-weight: bold;">toString</span>((char) <span style="color: purple; font-weight: bold;">charval</span>);
-                <span style="color: purple; font-weight: bold;">m</span>.<span style="color: green; font-weight: bold;">appendReplacement</span>(<span style="color: purple; font-weight: bold;">accum</span>, <span style="color: purple; font-weight: bold;">c</span>);
-            } else {
-                <span style="color: purple; font-weight: bold;">m</span>.<span style="color: green; font-weight: bold;">appendReplacement</span>(<span style="color: purple; font-weight: bold;">accum</span>, <span style="color: purple; font-weight: bold;">m</span>.<span style="color: green; font-weight: bold;">group</span>(0)); <span style="color: blue; font-weight: bold;">// replace with original string</span>
-            }
-        }
-        <span style="color: purple; font-weight: bold;">m</span>.<span style="color: green; font-weight: bold;">appendTail</span>(<span style="color: purple; font-weight: bold;">accum</span>);
-        return accum.toString();
-</p></li>
-</li>
-</ul>
-<h3>deletion:</h3><ul>
-<li><strong>src/main/java/org/jsoup/nodes/Entities.java:</strong><br>
-<p>        TokenQueue <span style="color: purple; font-weight: bold;">cq</span> = new <span style="color: red; font-weight: bold;">TokenQueue</span>(<span style="color: purple; font-weight: bold;">string</span>);
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.nio.charset.CharsetEncoder;
 
-</p></li>
-<p>        while (!<span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">isEmpty</span>()) {
-            <span style="color: purple; font-weight: bold;">accum</span>.<span style="color: green; font-weight: bold;">append</span>(<span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">consumeTo</span>(&quot;&amp;&quot;));
-            if (!<span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">matches</span>(&quot;&amp;&quot;)) { <span style="color: blue; font-weight: bold;">// ran to end</span>
-                <span style="color: purple; font-weight: bold;">accum</span>.<span style="color: green; font-weight: bold;">append</span>(<span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">remainder</span>());
-                break;
-            }
-            <span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">advance</span>(); <span style="color: blue; font-weight: bold;">// past &amp;</span>
-            String <span style="color: purple; font-weight: bold;">val</span>;
-            int charval = -1;
-</p></li>
-<p>            boolean <span style="color: purple; font-weight: bold;">isNum</span> = false;
-            if (<span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">matches</span>(&quot;#&quot;)) {
-                <span style="color: purple; font-weight: bold;">isNum</span> = true;
-                <span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">consume</span>();
-            }
-            <span style="color: purple; font-weight: bold;">val</span> = <span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">consumeWord</span>(); <span style="color: blue; font-weight: bold;">// and num!</span>
-            if (<span style="color: purple; font-weight: bold;">val</span>.<span style="color: green; font-weight: bold;">length</span>() == 0) {
-                <span style="color: purple; font-weight: bold;">accum</span>.<span style="color: green; font-weight: bold;">append</span>(&quot;&amp;&quot;);
-                continue;
-            }
-            if (<span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">matches</span>(&quot;;&quot;))
-                <span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">advance</span>();
-
-            if (<span style="color: purple; font-weight: bold;">isNum</span>) {
-                try {
-</p></li>
-<p>                        <span style="color: purple; font-weight: bold;">charval</span> = <span style="color: purple; font-weight: bold;">Integer</span>.<span style="color: green; font-weight: bold;">valueOf</span>(<span style="color: purple; font-weight: bold;">val</span>.<span style="color: green; font-weight: bold;">substring</span>(1), 16);
-                    else
-                        <span style="color: purple; font-weight: bold;">charval</span> = <span style="color: purple; font-weight: bold;">Integer</span>.<span style="color: green; font-weight: bold;">valueOf</span>(<span style="color: purple; font-weight: bold;">val</span>, 10);
-                } catch (NumberFormatException <span style="color: purple; font-weight: bold;">e</span>) {
-</p></li>
-<p>                }
-            } else {
-</p></li>
-<p>                    <span style="color: purple; font-weight: bold;">charval</span> = <span style="color: purple; font-weight: bold;">full</span>.<span style="color: green; font-weight: bold;">get</span>(<span style="color: purple; font-weight: bold;">val</span>.<span style="color: green; font-weight: bold;">toLowerCase</span>());
-            }
-</p></li>
-<p>                <span style="color: purple; font-weight: bold;">accum</span>.<span style="color: green; font-weight: bold;">append</span>(&quot;&amp;&quot;).<span style="color: green; font-weight: bold;">append</span>(<span style="color: purple; font-weight: bold;">val</span>).<span style="color: green; font-weight: bold;">append</span>(&quot;;&quot;);
-            else
-                <span style="color: purple; font-weight: bold;">accum</span>.<span style="color: green; font-weight: bold;">append</span>((char) <span style="color: purple; font-weight: bold;">charval</span>);
-        }
-
-</p></li>
-</li>
-</ul>
-<h2>Commit: 528b793</h2>
-<h3>addition:</h3><ul>
-<li><strong>src/main/java/org/jsoup/nodes/Entities.java:</strong><br>
-<p>            {"quot", 0x00022},
-</p></li>
-<p>        baseByVal = new HashMap<Character, String>(baseArray.length);
-</p></li>
-<p>            Character c = Character.valueOf((char) ((Integer) entity[1]).intValue());
-</p></li>
-<p>        }
-</p></li>
-</li>
-</ul>
-<h3>deletion:</h3><ul>
-<li><strong>src/main/java/org/jsoup/nodes/Entities.java:</strong><br>
-<p>            {"quot", 0x00022},
-</p></li>
-<p>        baseByVal = new HashMap<Character, String>(baseArray.length);
-</p></li>
-<p>            Character c = Character.valueOf((char) ((Integer) entity[1]).intValue());
-</p></li>
-<p>        }
-</p></li>
-</li>
-</ul>
-<h2>Commit: f4f2efb</h2>
-<h3>addition:</h3><ul>
-<li><strong>src/main/java/org/jsoup/nodes/Entities.java:</strong><br>
-<p>            {"quot", 0x00022},
-            {"amp", 0x00026},
-            {"apos", 0x00027},
-            {"lt", 0x0003C},
-            {"gt", 0x0003E}
-    };
-
-</p></li>
-<p>        baseByVal = new HashMap<Character, String>(baseArray.length);
-</p></li>
-<p>            Character <span style="color: purple; font-weight: bold;">c</span> = <span style="color: purple; font-weight: bold;">Character</span>.<span style="color: green; font-weight: bold;">valueOf</span>((char) ((Integer) <span style="color: purple; font-weight: bold;">entity</span>[1]).<span style="color: green; font-weight: bold;">intValue</span>());
-            <span style="color: purple; font-weight: bold;">minimumByVal</span>.<span style="color: green; font-weight: bold;">put</span>(<span style="color: purple; font-weight: bold;">c</span>, ((String) <span style="color: purple; font-weight: bold;">entity</span>[0]));
-        }
-</p></li>
-</li>
-</ul>
-<h3>deletion:</h3><ul>
-</ul>
-<h2>Commit: f8841ed</h2>
-<h3>addition:</h3><ul>
-<li><strong>src/main/java/org/jsoup/nodes/Entities.java:</strong><br>
-<p>        if (!<span style="color: purple; font-weight: bold;">string</span>.<span style="color: green; font-weight: bold;">contains</span>(&quot;&amp;&quot;))
-            return <span style="color: purple; font-weight: bold;">string</span>;
-
-        StringBuilder <span style="color: purple; font-weight: bold;">accum</span> = new <span style="color: red; font-weight: bold;">StringBuilder</span>(<span style="color: purple; font-weight: bold;">string</span>.<span style="color: green; font-weight: bold;">length</span>());
-        TokenQueue <span style="color: purple; font-weight: bold;">cq</span> = new <span style="color: red; font-weight: bold;">TokenQueue</span>(<span style="color: purple; font-weight: bold;">string</span>);
-
-        <span style="color: blue; font-weight: bold;">// formats dealt with: [&amp;amp] (no semi), [&amp;amp;], [&amp;#123;] (int), &amp;#</span>
-        while (!<span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">isEmpty</span>()) {
-            <span style="color: purple; font-weight: bold;">accum</span>.<span style="color: green; font-weight: bold;">append</span>(<span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">consumeTo</span>(&quot;&amp;&quot;));
-            if (!<span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">matches</span>(&quot;&amp;&quot;)) { <span style="color: blue; font-weight: bold;">// ran to end</span>
-                <span style="color: purple; font-weight: bold;">accum</span>.<span style="color: green; font-weight: bold;">append</span>(<span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">remainder</span>());
-                break;
-            }
-            <span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">advance</span>(); <span style="color: blue; font-weight: bold;">// past &amp;</span>
-            String <span style="color: purple; font-weight: bold;">val</span>;
-            int <span style="color: purple; font-weight: bold;">charval</span> = -1;
-
-            boolean <span style="color: purple; font-weight: bold;">isNum</span> = false;
-            if (<span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">matches</span>(&quot;#&quot;)) {
-                <span style="color: purple; font-weight: bold;">isNum</span> = true;
-                <span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">consume</span>();
-            }
-            <span style="color: purple; font-weight: bold;">val</span> = <span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">consumeWord</span>(); <span style="color: blue; font-weight: bold;">// and num!</span>
-            if (<span style="color: purple; font-weight: bold;">val</span>.<span style="color: green; font-weight: bold;">length</span>() == 0) {
-                <span style="color: purple; font-weight: bold;">accum</span>.<span style="color: green; font-weight: bold;">append</span>(&quot;&amp;&quot;);
-                continue;
-            }
-            if (<span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">matches</span>(&quot;;&quot;))
-                <span style="color: purple; font-weight: bold;">cq</span>.<span style="color: green; font-weight: bold;">advance</span>();
-
-            if (<span style="color: purple; font-weight: bold;">isNum</span>) {
-                try {
-                    if (<span style="color: purple; font-weight: bold;">val</span>.<span style="color: green; font-weight: bold;">charAt</span>(0) == &#x27;x&#x27; || <span style="color: purple; font-weight: bold;">val</span>.<span style="color: green; font-weight: bold;">charAt</span>(0) == &#x27;X&#x27;)
-                        <span style="color: purple; font-weight: bold;">charval</span> = <span style="color: purple; font-weight: bold;">Integer</span>.<span style="color: green; font-weight: bold;">valueOf</span>(<span style="color: purple; font-weight: bold;">val</span>.<span style="color: green; font-weight: bold;">substring</span>(1), 16);
-                    else
-                        <span style="color: purple; font-weight: bold;">charval</span> = <span style="color: purple; font-weight: bold;">Integer</span>.<span style="color: green; font-weight: bold;">valueOf</span>(<span style="color: purple; font-weight: bold;">val</span>, 10);
-                } catch (NumberFormatException <span style="color: purple; font-weight: bold;">e</span>) {
-                    <span style="color: blue; font-weight: bold;">// skip</span>
-                }
-            } else {
-                if (<span style="color: purple; font-weight: bold;">full</span>.<span style="color: green; font-weight: bold;">containsKey</span>(<span style="color: purple; font-weight: bold;">val</span>.<span style="color: green; font-weight: bold;">toLowerCase</span>()))
-                    <span style="color: purple; font-weight: bold;">charval</span> = <span style="color: purple; font-weight: bold;">full</span>.<span style="color: green; font-weight: bold;">get</span>(<span style="color: purple; font-weight: bold;">val</span>.<span style="color: green; font-weight: bold;">toLowerCase</span>());
-            }
-            if (<span style="color: purple; font-weight: bold;">charval</span> == -1 || <span style="color: purple; font-weight: bold;">charval</span> &gt; 0xFFFF) <span style="color: blue; font-weight: bold;">// out of range</span>
-                <span style="color: purple; font-weight: bold;">accum</span>.<span style="color: green; font-weight: bold;">append</span>(&quot;&amp;&quot;).<span style="color: green; font-weight: bold;">append</span>(<span style="color: purple; font-weight: bold;">val</span>).<span style="color: green; font-weight: bold;">append</span>(&quot;;&quot;);
-            else
-                <span style="color: purple; font-weight: bold;">accum</span>.<span style="color: green; font-weight: bold;">append</span>((char) <span style="color: purple; font-weight: bold;">charval</span>);
-        }
-</p></li>
-<p>            {"AElig", 0x000C6},
-</p></li>
-<p>            {"AElig", 0x000C6},
-</p></li>
-<p>        <span style="color: purple; font-weight: bold;">baseByVal</span> = new HashMap&lt;<span style="color: red; font-weight: bold;">Character</span>, String&gt;(baseArray.length);
-        <span style="color: purple; font-weight: bold;">fullByVal</span> = new <span style="color: red; font-weight: bold;">HashMap&lt;Character, String&gt;</span>(fullArray.length);
-
-</p></li>
-<p>            Character <span style="color: purple; font-weight: bold;">c</span> = <span style="color: purple; font-weight: bold;">Character</span>.<span style="color: green; font-weight: bold;">valueOf</span>((char) ((Integer) <span style="color: purple; font-weight: bold;">entity</span>[1]).<span style="color: green; font-weight: bold;">intValue</span>());
-            <span style="color: purple; font-weight: bold;">base</span>.<span style="color: green; font-weight: bold;">put</span>((String) <span style="color: purple; font-weight: bold;">entity</span>[0], <span style="color: purple; font-weight: bold;">c</span>);
-            <span style="color: purple; font-weight: bold;">baseByVal</span>.put(<span style="color: purple; font-weight: bold;">c</span>, ((String) entity[0]).toLowerCase());
-        }
-</p></li>
-<p>            <span style="color: purple; font-weight: bold;">full</span>.<span style="color: green; font-weight: bold;">put</span>((String) <span style="color: purple; font-weight: bold;">entity</span>[0], <span style="color: purple; font-weight: bold;">c</span>);
-            <span style="color: purple; font-weight: bold;">fullByVal</span>.<span style="color: green; font-weight: bold;">put</span>(<span style="color: purple; font-weight: bold;">c</span>, ((String) <span style="color: purple; font-weight: bold;">entity</span>[0]).<span style="color: green; font-weight: bold;">toLowerCase</span>());
-        }
-</p></li>
-</li>
-</ul>
-<h3>deletion:</h3><ul>
-<li><strong>src/main/java/org/jsoup/Entities.java:</strong><br>
-<p>        }
-</p></li>
-<p>            {"AElig", 0x000C6},
-</p></li>
-<p>            {"AElig", 0x000C6},
-</p></li>
-<p>        full = new HashMap&lt;String, <span style="color: red; font-weight: bold;">Integer</span>&gt;(fullArray.length);
-        <span style="color: purple; font-weight: bold;">fullByVal</span> = new HashMap&lt;<span style="color: red; font-weight: bold;">Integer</span>, String>(fullArray.length);
-
-</p></li>
-<p>        for (Object[] entity : <span style="color: purple; font-weight: bold;">fullArray</span>) {
-</p></li>
-<p>            fullByVal.<span style="color: green; font-weight: bold;">put</span>((Integer) entity[1], ((String) <span style="color: purple; font-weight: bold;">entity</span>[0]));
-        }
-</p></li>
-</li>
-</ul>
-<h2>Commit: 17486e2</h2>
-<h3>addition:</h3><ul>
-<li><strong>src/main/java/org/jsoup/Entities.java:</strong><br>
-<p>        }
-
-        return <span style="color: purple; font-weight: bold;">accum</span>.<span style="color: green; font-weight: bold;">toString</span>();
+/**
+ * HMTL entities, and escape routines.
+ * Source: <a href="http://www.w3.org/TR/html5/named-character-references.html#named-character-references">W3C HTML
+ * named character references</a>.
+ * <p/>
+ * Draft implementation. Do not consume.
+ */
+class Entities {
+    public enum EscapeMode {
+        base, extended
     }
 
-</p></li>
-<p>            {"AElig", 0x000C6},
+    private static final Map<String, Character> base;
+    private static final Map<String, Character> full;
+    private static final Map<Character, String> baseByVal;
+    private static final Map<Character, String> fullByVal;
+    private static final Pattern unescapePattern = Pattern.compile("&(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]+);?");
+
+    static String escape(String string, CharsetEncoder encoder, EscapeMode escapeMode) {
+        StringBuilder accum = new StringBuilder(string.length() * 2);
+        Map<Character, String> map = escapeMode == EscapeMode.extended ? fullByVal : baseByVal;
+
+        for (int pos = 0; pos < string.length(); pos++) {
+            Character c = string.charAt(pos);
+            if (map.containsKey(c))
+                accum.append("&").append(map.get(c)).append(";");
+            else if (encoder.canEncode(c))
+                accum.append(c);
+            else
+                accum.append("&#").append((int) c).append(";");
+        }
+
+        return accum.toString();
+    }
+
+    static String unescape(String string) {
+        if (!string.contains("&"))
+            return string;
+
+        Matcher m = unescapePattern.matcher(string); // &(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]+);?
+        StringBuffer accum = new StringBuffer(string.length()); // pity matcher can't use stringbuilder, avoid syncs
+
+        while (m.find()) {
+            int charval = -1;
+            String num = m.group(3);
+            if (num != null) {
+                try {
+                    int base = m.group(2) != null ? 16 : 10; // 2 is hex indicator
+                    charval = Integer.valueOf(num, base);
+                } catch (NumberFormatException e) {
+                } // skip
+            } else {
+                String name = m.group(1).toLowerCase();
+                if (full.containsKey(name))
+                    charval = full.get(name);
+            }
+
+            if (charval != -1 || charval > 0xFFFF) { // out of range
+                String c = Character.toString((char) charval);
+                m.appendReplacement(accum, c);
+            } else {
+                m.appendReplacement(accum, m.group(0)); // replace with original string
+            }
+        }
+        m.appendTail(accum);
+        return accum.toString();
+    }
+
+    // most common, base entities can be unescaped without trailing ;
+    // e.g. &amp
+    private static final Object[][] baseArray = {
+            {"AElig", 0x000C6},
             {"AMP", 0x00026},
             {"Aacute", 0x000C1},
             {"Acirc", 0x000C2},
@@ -335,8 +185,10 @@
             {"yuml", 0x000FF}
     };
 
-</p></li>
-<p>            {"AElig", 0x000C6},
+    // in most situations, will be better to use UTF8 and use the character directly, or use the numerical escape.
+    // are people really likely to remember "&CounterClockwiseContourIntegral;"? good grief.
+    private static final Object[][] fullArray = {
+            {"AElig", 0x000C6},
             {"AMP", 0x00026},
             {"Aacute", 0x000C1},
             {"Abreve", 0x00102},
@@ -2370,61 +2222,23 @@
             {"zwnj", 0x0200C}
     };
 
-</p></li>
-<p>        <span style="color: purple; font-weight: bold;">full</span> = new <span style="color: red; font-weight: bold;">HashMap&lt;String, Integer&gt;</span>(fullArray.length);
-        <span style="color: purple; font-weight: bold;">fullByVal</span> = new <span style="color: red; font-weight: bold;">HashMap&lt;Integer, String&gt;</span>(fullArray.length);
+    static {
+        base = new HashMap<String, Character>(baseArray.length);
+        full = new HashMap<String, Character>(fullArray.length);
+        baseByVal = new HashMap<Character, String>(baseArray.length);
+        fullByVal = new HashMap<Character, String>(fullArray.length);
 
-</p></li>
-<p>        for (Object[] <span style="color: purple; font-weight: bold;">entity</span> : <span style="color: purple; font-weight: bold;">fullArray</span>) {
-            <span style="color: purple; font-weight: bold;">full</span>.<span style="color: green; font-weight: bold;">put</span>(((String) <span style="color: purple; font-weight: bold;">entity</span>[0]).<span style="color: green; font-weight: bold;">toLowerCase</span>(), (Integer) <span style="color: purple; font-weight: bold;">entity</span>[1]);
-            <span style="color: purple; font-weight: bold;">fullByVal</span>.<span style="color: green; font-weight: bold;">put</span>((Integer) <span style="color: purple; font-weight: bold;">entity</span>[1], ((String) <span style="color: purple; font-weight: bold;">entity</span>[0]));
+        for (Object[] entity : baseArray) {
+            Character c = Character.valueOf((char) ((Integer) entity[1]).intValue());
+            base.put((String) entity[0], c);
+            baseByVal.put(c, ((String) entity[0]).toLowerCase());
         }
-</p></li>
-<p>
-</p></li>
-</li>
-</ul>
-<h3>deletion:</h3><ul>
-</ul>
-<h2>Commit: 5e52f1b</h2>
-<h3>addition:</h3><ul>
-<li><strong>src/main/java/org/jsoup/nodes/Entities.java:</strong><br>
-<p>                if (full.containsKey(name))
-</p></li>
-<p>        }
-</p></li>
-<p>        }
-</p></li>
-</li>
-</ul>
-<h3>deletion:</h3><ul>
-<li><strong>src/main/java/org/jsoup/nodes/Entities.java:</strong><br>
-<p>                if (full.containsKey(name))
-</p></li>
-<p>            <span style="color: purple; font-weight: bold;">baseByVal</span>.<span style="color: green; font-weight: bold;">put</span>(<span style="color: purple; font-weight: bold;">c</span>, ((String) <span style="color: purple; font-weight: bold;">entity</span>[0]).<span style="color: green; font-weight: bold;">toLowerCase</span>());
+        for (Object[] entity : fullArray) {
+            Character c = Character.valueOf((char) ((Integer) entity[1]).intValue());
+            full.put((String) entity[0], c);
+            fullByVal.put(c, ((String) entity[0]).toLowerCase());
         }
-</p></li>
-<p>        }
-</p></li>
-</li>
-</ul>
-<h2>Commit: 20ed24c</h2>
-<h3>addition:</h3><ul>
-<li><strong>src/main/java/org/jsoup/nodes/Entities.java:</strong><br>
-<p>
-</p></li>
-<p>            } else {
-</p></li>
-<p>            }
-</p></li>
-</li>
-</ul>
-<h3>deletion:</h3><ul>
-<li><strong>src/main/java/org/jsoup/nodes/Entities.java:</strong><br>
-<p>            } else {
-</p></li>
-<p>            }
-</p></li>
-</li>
-</ul>
-</body></html>
+    }
+
+
+}

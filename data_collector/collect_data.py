@@ -19,6 +19,7 @@ if __name__ == "__main__":
 
     for _, row in GT.iterrows():
         pid, vid = row.pid, row.vid
+        pid, vid = 'Jsoup', '9'
         """
         pid, vid = 'Closure', '62'
         if pid == 'Closure' and vid == '60':
@@ -46,7 +47,7 @@ if __name__ == "__main__":
             print(f'[ERROR] Moving directory failed {pid}-{vid}b')
             continue
 
-        #track_history.main(pid, vid)
+        track_history.main(pid, vid)
         #parse_gumtree.main(pid, vid)
         #greedy_id.main(pid, vid)
         #gen_intvl.main(pid, vid)
@@ -55,7 +56,7 @@ if __name__ == "__main__":
         # Executing encode_bug right after encode raises error
         # For practical use, execute encode first
         #encode_bug.main(pid, vid)
-        vote.main(pid, vid)
+        #vote.main(pid, vid)
         #bisection.main(pid, vid)
 
-        #break
+        break

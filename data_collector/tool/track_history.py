@@ -136,6 +136,8 @@ class GitParser:
 
             if self.num_after_line > 0:
                 self.intvl_dict[self.commit_hash][self.path_tup]['addition']['method_track'] |= CustomInterval(self.after_line, self.after_line + self.num_after_line - 1)
+            
+            return True
         
         else:
             return False
@@ -244,5 +246,5 @@ def main(pid, vid):
 
     #print(res_dict)
 
-    with open(os.path.join(savedir, 'track_intvl.pkl'), 'wb') as file:
-        pickle.dump(res_dict, file)
+    #with open(os.path.join(savedir, 'track_intvl.pkl'), 'wb') as file:
+    #    pickle.dump(res_dict, file)
